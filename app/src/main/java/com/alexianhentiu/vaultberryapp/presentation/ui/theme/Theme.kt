@@ -1,4 +1,4 @@
-package com.alexianhentiu.vaultberryapp.ui.theme
+package com.alexianhentiu.vaultberryapp.presentation.ui.theme
 
 import android.app.Activity
 import android.os.Build

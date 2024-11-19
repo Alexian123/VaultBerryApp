@@ -1,4 +1,4 @@
-package com.alexianhentiu.vaultberryapp
+package com.alexianhentiu.vaultberryapp.presentation
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -11,7 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.alexianhentiu.vaultberryapp.ui.theme.VaultBerryAppTheme
+import com.alexianhentiu.vaultberryapp.presentation.ui.theme.VaultBerryAppTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
