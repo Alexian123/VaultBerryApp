@@ -6,7 +6,9 @@ interface VaultEntryRepository {
 
     suspend fun getEntries(): List<VaultEntry>?
 
-    suspend fun addEntry(vaultEntry: VaultEntry)
+    suspend fun addEntry(vaultEntry: VaultEntry): Boolean
 
-    suspend fun removeEntry(vaultEntry: VaultEntry)
+    suspend fun modifyEntry(vaultEntry: VaultEntry): Boolean
+
+    suspend fun removeEntry(vaultEntry: VaultEntry): Boolean
 }
