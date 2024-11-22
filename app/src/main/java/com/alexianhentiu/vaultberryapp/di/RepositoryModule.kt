@@ -1,5 +1,6 @@
 package com.alexianhentiu.vaultberryapp.di
 
+import com.alexianhentiu.vaultberryapp.data.api.APIResponseHandler
 import com.alexianhentiu.vaultberryapp.data.api.APIService
 import com.alexianhentiu.vaultberryapp.data.repository.UserRepositoryImpl
 import com.alexianhentiu.vaultberryapp.data.repository.VaultEntryRepositoryImpl
@@ -17,9 +18,11 @@ object RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideUserRepository(apiService: APIService): UserRepository = UserRepositoryImpl(apiService)
+    fun provideUserRepository(apiService: APIService, apiResponseHandler: APIResponseHandler):
+            UserRepository = UserRepositoryImpl(apiService, apiResponseHandler)
 
     @Provides
     @Singleton
-    fun provideVaultEntryRepository(apiService: APIService): VaultEntryRepository = VaultEntryRepositoryImpl(apiService)
+    fun provideVaultEntryRepository(apiService: APIService, apiResponseHandler: APIResponseHandler):
+            VaultEntryRepository = VaultEntryRepositoryImpl(apiService, apiResponseHandler)
 }

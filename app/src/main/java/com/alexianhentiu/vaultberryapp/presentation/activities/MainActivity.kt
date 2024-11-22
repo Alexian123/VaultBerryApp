@@ -1,4 +1,4 @@
-package com.alexianhentiu.vaultberryapp.presentation
+package com.alexianhentiu.vaultberryapp.presentation.activities
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

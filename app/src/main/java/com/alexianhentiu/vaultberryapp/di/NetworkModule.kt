@@ -1,6 +1,9 @@
 package com.alexianhentiu.vaultberryapp.di
 
+import com.alexianhentiu.vaultberryapp.data.api.APIResponseHandler
 import com.alexianhentiu.vaultberryapp.data.api.APIService
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,7 +18,7 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideBaseUrl(): String = "https://youtube.googleapis.com/youtube/v3/"
+    fun provideBaseUrl(): String = "http://localhost:5000/"
 
     @Provides
     @Singleton
@@ -28,4 +31,7 @@ object NetworkModule {
     @Singleton
     fun provideApiService(retrofit: Retrofit): APIService = retrofit.create(APIService::class.java)
 
+    @Provides
+    @Singleton
+    fun provideAPIResponseHandler(): APIResponseHandler = APIResponseHandler()
 }

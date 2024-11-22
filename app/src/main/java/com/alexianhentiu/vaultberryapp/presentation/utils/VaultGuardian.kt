@@ -1,4 +1,4 @@
-package com.alexianhentiu.vaultberryapp.utils
+package com.alexianhentiu.vaultberryapp.presentation.utils
 
 import java.security.SecureRandom
 import java.util.Base64
@@ -29,7 +29,8 @@ class VaultGuardian {
             val encryptedBytes = Base64.getDecoder().decode(vaultKey)
             val iv = encryptedBytes.sliceArray(0 until 16)
             val encryptedVaultKey = encryptedBytes.sliceArray(16 until encryptedBytes.size)
-            val derivedKey = Cryptography.deriveKeyFromPassword(password, Base64.getDecoder().decode(salt))
+            val derivedKey =
+                Cryptography.deriveKeyFromPassword(password, Base64.getDecoder().decode(salt))
             return Cryptography.decrypt(encryptedVaultKey, derivedKey.encoded, iv)
         }
 

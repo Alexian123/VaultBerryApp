@@ -1,11 +1,14 @@
 package com.alexianhentiu.vaultberryapp.presentation.viewmodel
 
+import android.util.Log
 import javax.inject.Inject
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.alexianhentiu.vaultberryapp.data.api.APIResult
 import com.alexianhentiu.vaultberryapp.domain.model.LoginCredentials
 import com.alexianhentiu.vaultberryapp.domain.usecase.LoginUseCase
+import com.alexianhentiu.vaultberryapp.presentation.ui.login.LoginState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,26 +22,18 @@ class LoginViewModel @Inject constructor(
     private val _loginState = MutableStateFlow<LoginState>(LoginState.Idle)
     val loginState: StateFlow<LoginState> = _loginState
 
-    fun login(loginCredentials: LoginCredentials) {
+    fun login(email: String, password: String) {
+        val loginCredentials = LoginCredentials(email, password)
         viewModelScope.launch {
             _loginState.value = LoginState.Loading
-            try {
-                val result = loginUseCase(loginCredentials)
-                if (result) {
-                    _loginState.value = LoginState.Success
-                } else {
-                    _loginState.value = LoginState.Error("Invalid credentials")
+            when (val result = loginUseCase(loginCredentials)) {
+                is APIResult.Success -> {
+                    _loginState.value = LoginState.Success(result.data)
                 }
-            } catch (e: Exception) {
-                _loginState.value = LoginState.Error(e.message ?: "Unknown error occurred")
+                is APIResult.Error -> {
+                    _loginState.value = LoginState.Error(result.message)
+                }
             }
         }
-    }
-
-    sealed class LoginState {
-        object Idle : LoginState()
-        object Loading : LoginState()
-        object Success : LoginState()
-        data class Error(val message: String) : LoginState()
     }
 }

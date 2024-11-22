@@ -1,4 +1,4 @@
-package com.alexianhentiu.vaultberryapp.utils
+package com.alexianhentiu.vaultberryapp.presentation.utils
 
 import java.nio.ByteBuffer
 import javax.crypto.Cipher
