@@ -1,4 +1,4 @@
-package com.alexianhentiu.vaultberryapp.presentation.ui.login
+package com.alexianhentiu.vaultberryapp.presentation.ui.screens.login
 
 import com.alexianhentiu.vaultberryapp.domain.model.LoginResponse
 

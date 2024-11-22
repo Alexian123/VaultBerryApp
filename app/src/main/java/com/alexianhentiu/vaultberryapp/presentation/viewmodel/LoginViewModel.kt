@@ -1,6 +1,5 @@
 package com.alexianhentiu.vaultberryapp.presentation.viewmodel
 
-import android.util.Log
 import javax.inject.Inject
 
 import androidx.lifecycle.ViewModel
@@ -8,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.alexianhentiu.vaultberryapp.data.api.APIResult
 import com.alexianhentiu.vaultberryapp.domain.model.LoginCredentials
 import com.alexianhentiu.vaultberryapp.domain.usecase.LoginUseCase
-import com.alexianhentiu.vaultberryapp.presentation.ui.login.LoginState
+import com.alexianhentiu.vaultberryapp.presentation.ui.screens.login.LoginState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

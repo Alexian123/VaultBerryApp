@@ -17,7 +17,7 @@
         android:theme="@style/Theme.VaultBerryApp"
         tools:targetApi="31">
         <activity
-            android:name=".presentation.activities.LoginActivity"
+            android:name=".presentation.activity.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.VaultBerryApp">
             <intent-filter>
