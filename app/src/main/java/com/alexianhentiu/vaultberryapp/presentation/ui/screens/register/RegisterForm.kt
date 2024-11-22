@@ -1,4 +1,4 @@
-package com.alexianhentiu.vaultberryapp.presentation.ui.screens.login
+package com.alexianhentiu.vaultberryapp.presentation.ui.screens.register
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -23,12 +23,14 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 
 @Composable
-fun LoginForm(
+fun RegisterForm(
     navController: NavController,
-    onLoginClicked: (String, String) -> Unit
+    onRegisterClicked: (String, String, String?, String?) -> Unit
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var firstName by remember { mutableStateOf("") }
+    var lastName by remember { mutableStateOf("") }
 
     Column(
         verticalArrangement = Arrangement.Center,
@@ -50,27 +52,42 @@ fun LoginForm(
             visualTransformation = PasswordVisualTransformation(),
             modifier = Modifier.fillMaxWidth()
         )
+        Spacer(modifier = Modifier.height(8.dp))
+        TextField(
+            value = firstName,
+            onValueChange = { firstName = it },
+            label = { Text("First Name") },
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(8.dp))
+        TextField(
+            value = lastName,
+            onValueChange = { lastName = it },
+            label = { Text("Last Name") },
+            modifier = Modifier.fillMaxWidth()
+        )
         Spacer(modifier = Modifier.height(16.dp))
         Button(
-            onClick = { onLoginClicked(email, password) },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Login")
-        }
-        Button(
-            onClick = { navController.navigate("register") },
+            onClick = { onRegisterClicked(email, password, firstName, lastName) },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("Register")
+        }
+        Button(
+            onClick = { navController.navigate("login") },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Already have an account? Go to login")
         }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun LoginFormPreview() {
-    LoginForm(
+fun RegisterFormPreview() {
+    RegisterForm(
         navController = NavController(LocalContext.current),
-        onLoginClicked = { _, _ -> }
+        onRegisterClicked = { _, _, _, _ -> }
     )
 }

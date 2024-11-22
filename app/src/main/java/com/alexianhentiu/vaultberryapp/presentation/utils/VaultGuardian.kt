@@ -8,11 +8,13 @@ class VaultGuardian {
     companion object {
 
         /**
-         * Encrypts the vault key with a key generated from the password and appends it to the IV.
+         * Generates and encrypts a vault key with a key generated from the password
+         * and appends it to the IV.
          * @return The encrypted vault key concatenated to the IV as a Base64 string
          * and the salt as a Base64 string
          */
-        fun exportVaultKey(vaultKey: ByteArray, password: String): Pair<String, String> {
+        fun exportVaultKey(password: String): Pair<String, String> {
+            val vaultKey = Cryptography.generateKey().encoded
             val iv = ByteArray(16).apply { SecureRandom().nextBytes(this) }
             val salt = Cryptography.generateSaltFromTimestamp()
             val derivedKey = Cryptography.deriveKeyFromPassword(password, salt)

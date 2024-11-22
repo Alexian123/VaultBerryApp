@@ -2,6 +2,7 @@ package com.alexianhentiu.vaultberryapp.presentation.utils
 
 import java.nio.ByteBuffer
 import javax.crypto.Cipher
+import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.PBEKeySpec
@@ -13,6 +14,12 @@ class Cryptography {
 
         const val algorithm = "AES"
         const val mode = "CBC/PKCS5Padding"
+
+        fun generateKey(size: Int = 256): SecretKey {
+            val keyGenerator = KeyGenerator.getInstance(algorithm)
+            keyGenerator.init(size)
+            return keyGenerator.generateKey()
+        }
 
         fun encrypt(bytes: ByteArray, keyBytes: ByteArray, iv: ByteArray): ByteArray {
             val cipher = Cipher.getInstance("$algorithm/$mode")

@@ -1,4 +1,4 @@
-package com.alexianhentiu.vaultberryapp.presentation.viewmodel;
+package com.alexianhentiu.vaultberryapp.presentation.viewmodel
 
-public class VaultViewModel {
+class VaultViewModel {
 }

@@ -48,6 +48,4 @@ class UserRepositoryImpl(
     private fun LoginResponseDTO.toDomainModel(): LoginResponse {
         return LoginResponse(salt, vaultKey, recoveryKey)
     }
-
-
 }

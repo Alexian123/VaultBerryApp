@@ -7,5 +7,5 @@ data class User(
     val vaultKey: String,
     val recoveryKey: String,
     val firstName: String?,
-    val lastName: String?
+    val lastName: String?,
 )

@@ -1,7 +1,9 @@
 package com.alexianhentiu.vaultberryapp.data.model
 
+import com.squareup.moshi.Json
+
 data class LoginResponseDTO(
-    val salt: String,
-    val vaultKey: String,
-    val recoveryKey: String
+    @Json(name = "salt") val salt: String,
+    @Json(name = "vault_key") val vaultKey: String,
+    @Json(name = "recovery_key") val recoveryKey: String
 )

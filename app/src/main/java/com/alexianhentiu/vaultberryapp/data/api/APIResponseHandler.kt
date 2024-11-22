@@ -13,7 +13,6 @@ class APIResponseHandler {
         return try {
             val response = apiCall()
             if (response.isSuccessful) {
-                Log.e("ApiResponseHandler", "success")
                 val body = response.body()
                 if (body != null) {
                     APIResult.Success(transform(body))
@@ -24,7 +23,6 @@ class APIResponseHandler {
                 APIResult.Error(response.errorBody()?.string() ?: "Unknown error")
             }
         } catch (e: Exception) {
-            Log.e("APIResponseHandler", "Error: ${e.message}", e)
             APIResult.Error(e.message ?: "An unexpected error occurred")
         }
     }

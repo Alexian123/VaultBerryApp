@@ -29,6 +29,7 @@ class LoginViewModel @Inject constructor(
                 is APIResult.Success -> {
                     _loginState.value = LoginState.Success(result.data)
                 }
+
                 is APIResult.Error -> {
                     _loginState.value = LoginState.Error(result.message)
                 }
