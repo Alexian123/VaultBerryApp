@@ -1,7 +1,7 @@
 package com.alexianhentiu.vaultberryapp.data.api
 
 import com.alexianhentiu.vaultberryapp.data.model.LoginCredentialsDTO
-import com.alexianhentiu.vaultberryapp.data.model.LoginResponseDTO
+import com.alexianhentiu.vaultberryapp.data.model.EncryptedVaultKeyDTO
 import com.alexianhentiu.vaultberryapp.data.model.UserDTO
 import com.alexianhentiu.vaultberryapp.data.model.VaultEntryDTO
 import retrofit2.Response
@@ -15,7 +15,7 @@ interface APIService {
     suspend fun register(@Body user: UserDTO): Response<Unit>
 
     @POST("login")
-    suspend fun login(@Body loginCredentialsDTO: LoginCredentialsDTO): Response<LoginResponseDTO>
+    suspend fun login(@Body loginCredentialsDTO: LoginCredentialsDTO): Response<EncryptedVaultKeyDTO>
 
     @POST("logout")
     suspend fun logout(): Response<Unit>

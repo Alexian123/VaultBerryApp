@@ -26,7 +26,7 @@ fun LoginScreen(viewModel: LoginViewModel, navController: NavController) {
             CircularProgressIndicator(modifier = Modifier.fillMaxSize())
         }
         is LoginState.Success -> {
-            val loginResponse = (loginState as LoginState.Success).loginResponse
+            val vaultKey = (loginState as LoginState.Success).decryptedVaultKey
             Text("Login successful!")
         }
         is LoginState.Error -> {

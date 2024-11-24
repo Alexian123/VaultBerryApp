@@ -4,11 +4,11 @@ import com.alexianhentiu.vaultberryapp.data.api.APIResponseHandler
 import com.alexianhentiu.vaultberryapp.data.api.APIResult
 import com.alexianhentiu.vaultberryapp.data.api.APIService
 import com.alexianhentiu.vaultberryapp.data.model.LoginCredentialsDTO
-import com.alexianhentiu.vaultberryapp.data.model.LoginResponseDTO
+import com.alexianhentiu.vaultberryapp.data.model.EncryptedVaultKeyDTO
 import com.alexianhentiu.vaultberryapp.data.model.UserDTO
 import com.alexianhentiu.vaultberryapp.domain.model.LoginCredentials
-import com.alexianhentiu.vaultberryapp.domain.model.LoginResponse
 import com.alexianhentiu.vaultberryapp.domain.model.User
+import com.alexianhentiu.vaultberryapp.domain.model.EncryptedVaultKey
 import com.alexianhentiu.vaultberryapp.domain.repository.UserRepository
 
 class UserRepositoryImpl(
@@ -23,7 +23,7 @@ class UserRepositoryImpl(
         )
     }
 
-    override suspend fun login(loginCredentials: LoginCredentials): APIResult<LoginResponse> {
+    override suspend fun login(loginCredentials: LoginCredentials): APIResult<EncryptedVaultKey> {
         return apiResponseHandler.safeApiCall(
             apiCall = { apiService.login(loginCredentials.toDBModel()) },
             transform = { it.toDomainModel() }
@@ -45,7 +45,7 @@ class UserRepositoryImpl(
         return LoginCredentialsDTO(email, password)
     }
 
-    private fun LoginResponseDTO.toDomainModel(): LoginResponse {
-        return LoginResponse(salt, vaultKey, recoveryKey)
+    private fun EncryptedVaultKeyDTO.toDomainModel(): EncryptedVaultKey {
+        return EncryptedVaultKey(salt, vaultKey)
     }
 }

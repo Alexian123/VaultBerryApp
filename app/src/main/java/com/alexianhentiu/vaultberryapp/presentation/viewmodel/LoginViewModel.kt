@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alexianhentiu.vaultberryapp.data.api.APIResult
 import com.alexianhentiu.vaultberryapp.domain.model.LoginCredentials
+import com.alexianhentiu.vaultberryapp.domain.usecase.KeyImportUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.LoginUseCase
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.login.LoginState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,7 +16,8 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val loginUseCase: LoginUseCase
+    private val loginUseCase: LoginUseCase,
+    private val keyImportUseCase: KeyImportUseCase
 ) : ViewModel() {
 
     private val _loginState = MutableStateFlow<LoginState>(LoginState.Idle)
@@ -27,7 +29,8 @@ class LoginViewModel @Inject constructor(
             _loginState.value = LoginState.Loading
             when (val result = loginUseCase(loginCredentials)) {
                 is APIResult.Success -> {
-                    _loginState.value = LoginState.Success(result.data)
+                    val decryptedVaultKey = keyImportUseCase(password, result.data)
+                    _loginState.value = LoginState.Success(decryptedVaultKey)
                 }
 
                 is APIResult.Error -> {
