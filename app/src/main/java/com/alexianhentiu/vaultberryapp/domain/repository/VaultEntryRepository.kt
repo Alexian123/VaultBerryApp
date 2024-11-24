@@ -1,15 +1,16 @@
 package com.alexianhentiu.vaultberryapp.domain.repository
 
 import com.alexianhentiu.vaultberryapp.data.api.APIResult
-import com.alexianhentiu.vaultberryapp.domain.model.VaultEntry
+import com.alexianhentiu.vaultberryapp.domain.model.EncryptedVaultEntry
+import com.alexianhentiu.vaultberryapp.domain.model.NewEncryptedVaultEntry
 
 interface VaultEntryRepository {
 
-    suspend fun getEntries(): APIResult<List<VaultEntry>>
+    suspend fun getEntries(): APIResult<List<EncryptedVaultEntry>>
 
-    suspend fun addEntry(vaultEntry: VaultEntry): APIResult<Unit>
+    suspend fun addEntry(newEncryptedVaultEntry: NewEncryptedVaultEntry): APIResult<EncryptedVaultEntry>
 
-    suspend fun modifyEntry(vaultEntry: VaultEntry): APIResult<Unit>
+    suspend fun modifyEntry(encryptedVaultEntry: EncryptedVaultEntry): APIResult<Unit>
 
-    suspend fun removeEntry(vaultEntry: VaultEntry): APIResult<Unit>
+    suspend fun removeEntry(encryptedVaultEntry: EncryptedVaultEntry): APIResult<Unit>
 }

@@ -1,4 +1,4 @@
-package com.alexianhentiu.vaultberryapp.presentation.ui.screens.login
+package com.alexianhentiu.vaultberryapp.presentation.ui.screens.auth
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
@@ -9,6 +9,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavController
+import com.alexianhentiu.vaultberryapp.presentation.ui.state.LoginState
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.LoginViewModel
 
 @Composable

@@ -1,4 +1,4 @@
-package com.alexianhentiu.vaultberryapp.presentation.ui.screens.register
+package com.alexianhentiu.vaultberryapp.presentation.ui.screens.auth
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -74,11 +75,11 @@ fun RegisterForm(
         ) {
             Text("Register")
         }
-        Button(
+        TextButton(
             onClick = { navController.navigate("login") },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Already have an account? Go to login")
+            Text("Already have an account?")
         }
     }
 }

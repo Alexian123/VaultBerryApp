@@ -45,25 +45,25 @@ class VaultGuardian(
 
     /**
      * Encrypts the text field with the vault key and appends it to the IV.
-     * @return The encrypted field concatenated to the IV as a Base64 string
+     * @return The encrypted field data concatenated to the IV as a Base64 string
      */
     fun exportField(plainText: String, decryptedVaultKey: DecryptedVaultKey): String {
         val iv = ByteArray(16).apply { SecureRandom().nextBytes(this) }
-        val encryptedField =
+        val encryptedFieldData =
             cryptoHandler.encrypt(plainText.toByteArray(), decryptedVaultKey.key, iv)
-        return Base64.getEncoder().encodeToString(iv + encryptedField)
+        return Base64.getEncoder().encodeToString(iv + encryptedFieldData)
     }
 
     /**
      * Retrieves the IV and decrypts the field.
-     * @return The decrypted field as a String
+     * @return The decrypted field data as a String
      */
-    fun importField(field: String, decryptedVaultKey: DecryptedVaultKey): String {
-        val encryptedBytes = Base64.getDecoder().decode(field)
+    fun importField(encryptedField: String, decryptedVaultKey: DecryptedVaultKey): String {
+        val encryptedBytes = Base64.getDecoder().decode(encryptedField)
         val iv = encryptedBytes.sliceArray(0 until 16)
-        val encryptedField = encryptedBytes.sliceArray(16 until encryptedBytes.size)
-        val decryptedField = cryptoHandler.decrypt(encryptedField, decryptedVaultKey.key, iv)
-        return String(decryptedField)
+        val encryptedFieldData = encryptedBytes.sliceArray(16 until encryptedBytes.size)
+        val decryptedFieldData = cryptoHandler.decrypt(encryptedFieldData, decryptedVaultKey.key, iv)
+        return String(decryptedFieldData)
     }
 
     /**

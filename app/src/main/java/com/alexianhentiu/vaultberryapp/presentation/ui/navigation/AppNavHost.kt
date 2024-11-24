@@ -5,8 +5,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.login.LoginScreen
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.register.RegisterScreen
+import com.alexianhentiu.vaultberryapp.presentation.ui.screens.auth.LoginScreen
+import com.alexianhentiu.vaultberryapp.presentation.ui.screens.auth.RegisterScreen
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.LoginViewModel
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.RegisterViewModel
 
@@ -22,6 +22,9 @@ fun AppNavHost() {
         composable("register") {
             val registerViewModel: RegisterViewModel = hiltViewModel()
             RegisterScreen(registerViewModel, navController)
+        }
+        composable("vault") {
+
         }
     }
 }

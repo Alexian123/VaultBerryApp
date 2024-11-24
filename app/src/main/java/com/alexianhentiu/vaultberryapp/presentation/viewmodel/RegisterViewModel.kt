@@ -4,9 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alexianhentiu.vaultberryapp.data.api.APIResult
 import com.alexianhentiu.vaultberryapp.domain.model.User
-import com.alexianhentiu.vaultberryapp.domain.usecase.KeyExportUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.RegisterUseCase
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.register.RegisterState
+import com.alexianhentiu.vaultberryapp.domain.usecase.auth.KeyExportUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.auth.RegisterUseCase
+import com.alexianhentiu.vaultberryapp.presentation.ui.state.RegisterState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

@@ -3,15 +3,18 @@ package com.alexianhentiu.vaultberryapp.di
 
 import com.alexianhentiu.vaultberryapp.domain.repository.UserRepository
 import com.alexianhentiu.vaultberryapp.domain.repository.VaultEntryRepository
-import com.alexianhentiu.vaultberryapp.domain.usecase.AddEntryUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.GetEntriesUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.KeyExportUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.KeyImportUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.LoginUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.LogoutUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.ModifyEntryUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.RegisterUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.RemoveEntryUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.vault.AddEntryUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.vault.GetEntriesUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.auth.KeyExportUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.auth.KeyImportUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.auth.LoginUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.auth.LogoutUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.vault.ModifyEntryUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.auth.RegisterUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.vault.EncryptVaultEntryUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.vault.DecryptVaultEntryUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.vault.EncryptNewVaultEntryUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.vault.RemoveEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.utils.VaultGuardian
 import dagger.Module
 import dagger.Provides
@@ -49,4 +52,12 @@ object UseCaseModule {
     @Provides
     fun provideKeyImportUseCase(vaultGuardian: VaultGuardian): KeyImportUseCase = KeyImportUseCase(vaultGuardian)
 
+    @Provides
+    fun provideDecryptVaultEntryUseCase(vaultGuardian: VaultGuardian): DecryptVaultEntryUseCase = DecryptVaultEntryUseCase(vaultGuardian)
+
+    @Provides
+    fun provideEncryptVaultEntryUseCase(vaultGuardian: VaultGuardian): EncryptVaultEntryUseCase = EncryptVaultEntryUseCase(vaultGuardian)
+
+    @Provides
+    fun provideEncryptNewVaultEntryUseCase(vaultGuardian: VaultGuardian): EncryptNewVaultEntryUseCase = EncryptNewVaultEntryUseCase(vaultGuardian)
 }

@@ -6,9 +6,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alexianhentiu.vaultberryapp.data.api.APIResult
 import com.alexianhentiu.vaultberryapp.domain.model.LoginCredentials
-import com.alexianhentiu.vaultberryapp.domain.usecase.KeyImportUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.LoginUseCase
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.login.LoginState
+import com.alexianhentiu.vaultberryapp.domain.usecase.auth.KeyImportUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.auth.LoginUseCase
+import com.alexianhentiu.vaultberryapp.presentation.ui.state.LoginState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

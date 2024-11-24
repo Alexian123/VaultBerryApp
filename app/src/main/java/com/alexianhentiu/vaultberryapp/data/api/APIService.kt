@@ -3,7 +3,8 @@ package com.alexianhentiu.vaultberryapp.data.api
 import com.alexianhentiu.vaultberryapp.data.model.LoginCredentialsDTO
 import com.alexianhentiu.vaultberryapp.data.model.EncryptedVaultKeyDTO
 import com.alexianhentiu.vaultberryapp.data.model.UserDTO
-import com.alexianhentiu.vaultberryapp.data.model.VaultEntryDTO
+import com.alexianhentiu.vaultberryapp.data.model.EncryptedVaultEntryDTO
+import com.alexianhentiu.vaultberryapp.data.model.NewEncryptedVaultEntryDTO
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -21,14 +22,14 @@ interface APIService {
     suspend fun logout(): Response<Unit>
 
     @GET("entries")
-    suspend fun getEntries(): Response<List<VaultEntryDTO>?>
+    suspend fun getEntries(): Response<List<EncryptedVaultEntryDTO>?>
 
     @POST("entries/add")
-    suspend fun addEntry(@Body vaultEntry: VaultEntryDTO): Response<Unit>
+    suspend fun addEntry(@Body vaultEntry: NewEncryptedVaultEntryDTO): Response<EncryptedVaultEntryDTO>
 
     @POST("entries/modify")
-    suspend fun modifyEntry(@Body vaultEntry: VaultEntryDTO): Response<Unit>
+    suspend fun modifyEntry(@Body vaultEntry: EncryptedVaultEntryDTO): Response<Unit>
 
     @POST("entries/remove")
-    suspend fun removeEntry(@Body vaultEntry: VaultEntryDTO): Response<Unit>
+    suspend fun removeEntry(@Body vaultEntry: EncryptedVaultEntryDTO): Response<Unit>
 }

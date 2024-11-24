@@ -16,7 +16,7 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideBaseUrl(): String = "http://localhost:5000/"
+    fun provideBaseUrl(): String = "http://127.0.0.1:5000/"
 
     @Provides
     @Singleton
