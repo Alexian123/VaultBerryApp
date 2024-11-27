@@ -3,13 +3,14 @@ package com.alexianhentiu.vaultberryapp.domain.utils
 import com.alexianhentiu.vaultberryapp.domain.model.DecryptedVaultKey
 import com.alexianhentiu.vaultberryapp.domain.model.EncryptedVaultKey
 import com.alexianhentiu.vaultberryapp.domain.utils.cryptography.CryptographyHandler
-import java.nio.ByteBuffer
 import java.security.SecureRandom
 import java.util.Base64
 
 class VaultGuardian(
     private val cryptoHandler: CryptographyHandler
 ) {
+
+    private val secureRandom = SecureRandom()
 
     /**
      * Generates and encrypts a vault key with a key generated from the password
@@ -19,12 +20,11 @@ class VaultGuardian(
      */
     fun exportNewVaultKey(password: String): EncryptedVaultKey {
         val vaultKey = cryptoHandler.generateKey().encoded
-        val iv = ByteArray(16).apply { SecureRandom().nextBytes(this) }
-        val salt = generateSaltFromTimestamp()
+        val iv = ByteArray(16).apply { secureRandom.nextBytes(this) }
+        val salt = ByteArray(16).apply { secureRandom.nextBytes(this) }
         val derivedKey = cryptoHandler.deriveKeyFromPassword(password, salt)
         val encryptedVaultKey = cryptoHandler.encrypt(vaultKey, derivedKey.encoded, iv)
-        return EncryptedVaultKey(Base64.getEncoder().encodeToString(iv + encryptedVaultKey),
-            Base64.getEncoder().encodeToString(salt))
+        return EncryptedVaultKey(salt.toBase64(), (iv + encryptedVaultKey).toBase64())
     }
 
     /**
@@ -35,11 +35,11 @@ class VaultGuardian(
         password: String,
         encryptedVaultKeyData: EncryptedVaultKey
     ): DecryptedVaultKey {
-        val encryptedBytes = Base64.getDecoder().decode(encryptedVaultKeyData.ivAndKey)
+        val encryptedBytes = encryptedVaultKeyData.ivAndKey.fromBase64()
         val iv = encryptedBytes.sliceArray(0 until 16)
         val encryptedVaultKey = encryptedBytes.sliceArray(16 until encryptedBytes.size)
-        val derivedKey = cryptoHandler.deriveKeyFromPassword(password,
-            Base64.getDecoder().decode(encryptedVaultKeyData.salt))
+        val salt = encryptedVaultKeyData.salt.fromBase64()
+        val derivedKey = cryptoHandler.deriveKeyFromPassword(password, salt)
         return DecryptedVaultKey(cryptoHandler.decrypt(encryptedVaultKey, derivedKey.encoded, iv))
     }
 
@@ -66,17 +66,7 @@ class VaultGuardian(
         return String(decryptedFieldData)
     }
 
-    /**
-     * Generates a salt from the current timestamp and a random set of bytes.
-     * @return The salt as a ByteArray
-     */
-    private fun generateSaltFromTimestamp(): ByteArray {
-        val timestamp = System.currentTimeMillis()
-        val randomBytes = ByteArray(8)
-        java.util.Random().nextBytes(randomBytes)
-        val byteBuffer = ByteBuffer.allocate(16)
-        byteBuffer.putLong(timestamp)
-        byteBuffer.put(randomBytes)
-        return byteBuffer.array()
-    }
+    private fun ByteArray.toBase64(): String = Base64.getEncoder().encodeToString(this)
+
+    private fun String.fromBase64(): ByteArray = Base64.getDecoder().decode(this)
 }

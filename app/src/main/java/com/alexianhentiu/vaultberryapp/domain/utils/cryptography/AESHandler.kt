@@ -22,19 +22,28 @@ class AESHandler(
 
     override fun encrypt(bytes: ByteArray, keyBytes: ByteArray, iv: ByteArray?): ByteArray {
         val cipher = Cipher.getInstance("$algorithm/$mode")
-        val ivSpec = IvParameterSpec(iv)
-        cipher.init(Cipher.ENCRYPT_MODE, SecretKeySpec(keyBytes, algorithm), ivSpec)
+        if (iv == null) {
+            cipher.init(Cipher.ENCRYPT_MODE, SecretKeySpec(keyBytes, algorithm))
+        } else {
+            cipher.init(Cipher.ENCRYPT_MODE, SecretKeySpec(keyBytes, algorithm), IvParameterSpec(iv))
+        }
         return cipher.doFinal(bytes)
     }
 
     override fun decrypt(bytes: ByteArray, keyBytes: ByteArray, iv: ByteArray?): ByteArray {
         val cipher = Cipher.getInstance("$algorithm/$mode")
-        val ivSpec = IvParameterSpec(iv)
-        cipher.init(Cipher.DECRYPT_MODE, SecretKeySpec(keyBytes, algorithm), ivSpec)
+        if (iv == null) {
+            cipher.init(Cipher.DECRYPT_MODE, SecretKeySpec(keyBytes, algorithm))
+        } else {
+            cipher.init(Cipher.DECRYPT_MODE, SecretKeySpec(keyBytes, algorithm), IvParameterSpec(iv))
+        }
         return cipher.doFinal(bytes)
     }
 
     override fun deriveKeyFromPassword(password: String, salt: ByteArray): SecretKey {
+        if (password.isBlank()) {
+            throw IllegalArgumentException("Password cannot be empty")
+        }
         val keySpec = PBEKeySpec(password.toCharArray(), salt, 65536, keySize)
         val keyFactory = javax.crypto.SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256")
         val keyBytes = keyFactory.generateSecret(keySpec).encoded
