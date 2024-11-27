@@ -1,6 +1,5 @@
 package com.alexianhentiu.vaultberryapp.data.api
 
-import android.util.Log
 import retrofit2.Response
 
 class APIResponseHandler {
