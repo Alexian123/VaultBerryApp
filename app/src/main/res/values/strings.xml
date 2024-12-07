@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">VaultBerryApp</string>
+    <string name="add_entry_action_icon_content_description">Add entry icon</string>
 </resources>

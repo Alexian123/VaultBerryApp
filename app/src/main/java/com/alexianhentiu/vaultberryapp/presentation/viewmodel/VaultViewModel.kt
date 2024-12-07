@@ -6,11 +6,9 @@ import com.alexianhentiu.vaultberryapp.data.api.APIResult
 import com.alexianhentiu.vaultberryapp.domain.model.DecryptedVaultEntry
 import com.alexianhentiu.vaultberryapp.domain.model.DecryptedVaultKey
 import com.alexianhentiu.vaultberryapp.domain.model.EncryptedVaultEntry
-import com.alexianhentiu.vaultberryapp.domain.model.NewDecryptedVaultEntry
 import com.alexianhentiu.vaultberryapp.domain.usecase.vault.AddEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.vault.EncryptVaultEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.vault.DecryptVaultEntryUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.vault.EncryptNewVaultEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.vault.GetEntriesUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.vault.ModifyEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.vault.RemoveEntryUseCase
@@ -30,7 +28,6 @@ class VaultViewModel @Inject constructor(
     private val modifyEntryUseCase: ModifyEntryUseCase,
     private val decryptVaultEntryUseCase: DecryptVaultEntryUseCase,
     private val encryptVaultEntryUseCase: EncryptVaultEntryUseCase,
-    private val encryptNewVaultEntryUseCase: EncryptNewVaultEntryUseCase
 ): ViewModel() {
 
     private val _vaultState = MutableStateFlow<VaultState>(VaultState.Locked)
@@ -57,12 +54,12 @@ class VaultViewModel @Inject constructor(
 
     fun addEntry(
         decryptedVaultKey: DecryptedVaultKey,
-        newDecryptedVaultEntry: NewDecryptedVaultEntry
+        decryptedVaultEntry: DecryptedVaultEntry
     ) {
         viewModelScope.launch {
             _vaultState.value = VaultState.Loading
             val newEncryptedVaultEntry =
-                encryptNewVaultEntryUseCase(newDecryptedVaultEntry, decryptedVaultKey)
+                encryptVaultEntryUseCase(decryptedVaultEntry, decryptedVaultKey)
             when (val result = addEntryUseCase(newEncryptedVaultEntry)) {
                 is APIResult.Success -> {
                     _vaultState.value = VaultState.Unlocked

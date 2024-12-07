@@ -13,7 +13,6 @@ import com.alexianhentiu.vaultberryapp.domain.usecase.vault.ModifyEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.auth.RegisterUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.vault.EncryptVaultEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.vault.DecryptVaultEntryUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.vault.EncryptNewVaultEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.vault.RemoveEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.utils.VaultGuardian
 import dagger.Module
@@ -57,7 +56,4 @@ object UseCaseModule {
 
     @Provides
     fun provideEncryptVaultEntryUseCase(vaultGuardian: VaultGuardian): EncryptVaultEntryUseCase = EncryptVaultEntryUseCase(vaultGuardian)
-
-    @Provides
-    fun provideEncryptNewVaultEntryUseCase(vaultGuardian: VaultGuardian): EncryptNewVaultEntryUseCase = EncryptNewVaultEntryUseCase(vaultGuardian)
 }
