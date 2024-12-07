@@ -33,7 +33,7 @@ class VaultViewModel @Inject constructor(
     private val encryptNewVaultEntryUseCase: EncryptNewVaultEntryUseCase
 ): ViewModel() {
 
-    private val _vaultState = MutableStateFlow<VaultState>(VaultState.Idle)
+    private val _vaultState = MutableStateFlow<VaultState>(VaultState.Locked)
     val vaultState: StateFlow<VaultState> = _vaultState
 
     private val _decryptedEntries = MutableStateFlow<List<DecryptedVaultEntry>>(emptyList())
@@ -44,7 +44,7 @@ class VaultViewModel @Inject constructor(
             _vaultState.value = VaultState.Loading
             when (val result = getEntriesUseCase()) {
                 is APIResult.Success -> {
-                    _vaultState.value = VaultState.Success
+                    _vaultState.value = VaultState.Unlocked
                     _decryptedEntries.value = decryptAllEntries(result.data, decryptedVaultKey)
                 }
 
@@ -65,7 +65,7 @@ class VaultViewModel @Inject constructor(
                 encryptNewVaultEntryUseCase(newDecryptedVaultEntry, decryptedVaultKey)
             when (val result = addEntryUseCase(newEncryptedVaultEntry)) {
                 is APIResult.Success -> {
-                    _vaultState.value = VaultState.Success
+                    _vaultState.value = VaultState.Unlocked
                     _decryptedEntries.update { currentList ->
                         currentList + decryptVaultEntryUseCase(result.data, decryptedVaultKey)
                     }
@@ -88,7 +88,7 @@ class VaultViewModel @Inject constructor(
                 encryptVaultEntryUseCase(decryptedVaultEntry, decryptedVaultKey)
             when (val result = removeEntryUseCase(encryptedVaultEntry)) {
                 is APIResult.Success -> {
-                    _vaultState.value = VaultState.Success
+                    _vaultState.value = VaultState.Unlocked
                     _decryptedEntries.update { currentList ->
                         currentList.filter { it.id != decryptedVaultEntry.id }
                     }
@@ -111,7 +111,7 @@ class VaultViewModel @Inject constructor(
                 encryptVaultEntryUseCase(decryptedVaultEntry, decryptedVaultKey)
             when (val result = modifyEntryUseCase(encryptedVaultEntry)) {
                 is APIResult.Success -> {
-                    _vaultState.value = VaultState.Success
+                    _vaultState.value = VaultState.Unlocked
                     _decryptedEntries.update { currentList ->
                         currentList.map {
                             if (it.id == decryptedVaultEntry.id) decryptedVaultEntry else it
