@@ -16,7 +16,7 @@ class EncryptVaultEntryUseCase(private val vaultGuardian: VaultGuardian) {
         val encryptedPassword =
             vaultGuardian.exportField(decryptedVaultEntry.password, decryptedVaultKey)
         return EncryptedVaultEntry(
-            decryptedVaultEntry.id,
+            decryptedVaultEntry.timestamp,
             decryptedVaultEntry.title,
             decryptedVaultEntry.url,
             encryptedUsername,

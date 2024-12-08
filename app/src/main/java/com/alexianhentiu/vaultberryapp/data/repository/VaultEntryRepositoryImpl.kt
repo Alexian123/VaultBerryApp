@@ -4,6 +4,7 @@ import com.alexianhentiu.vaultberryapp.data.api.APIResponseHandler
 import com.alexianhentiu.vaultberryapp.data.api.APIResult
 import com.alexianhentiu.vaultberryapp.data.api.APIService
 import com.alexianhentiu.vaultberryapp.data.model.EncryptedVaultEntryDTO
+import com.alexianhentiu.vaultberryapp.domain.model.DecryptedVaultEntry
 import com.alexianhentiu.vaultberryapp.domain.model.EncryptedVaultEntry
 import com.alexianhentiu.vaultberryapp.domain.repository.VaultEntryRepository
 
@@ -19,10 +20,10 @@ class VaultEntryRepositoryImpl(
         )
     }
 
-    override suspend fun addEntry(encryptedVaultEntry: EncryptedVaultEntry): APIResult<EncryptedVaultEntry> {
+    override suspend fun addEntry(encryptedVaultEntry: EncryptedVaultEntry): APIResult<Unit> {
         return apiResponseHandler.safeApiCall(
             apiCall = { apiService.addEntry(encryptedVaultEntry.toDBModel()) },
-            transform = { it.toDomainModel() }
+            transform = { }
         )
     }
 
@@ -33,18 +34,18 @@ class VaultEntryRepositoryImpl(
         )
     }
 
-    override suspend fun removeEntry(encryptedVaultEntry: EncryptedVaultEntry): APIResult<Unit> {
+    override suspend fun removeEntry(decryptedVaultEntry: DecryptedVaultEntry): APIResult<Unit> {
         return apiResponseHandler.safeApiCall(
-            apiCall = { apiService.removeEntry(encryptedVaultEntry.toDBModel()) },
+            apiCall = { apiService.removeEntry(decryptedVaultEntry.timestamp) },
             transform = { }
         )
     }
 
     private fun EncryptedVaultEntry.toDBModel() : EncryptedVaultEntryDTO {
-        return EncryptedVaultEntryDTO(id, title, url, encryptedUsername, encryptedPassword, notes)
+        return EncryptedVaultEntryDTO(timestamp, title, url, encryptedUsername, encryptedPassword, notes)
     }
 
     private fun EncryptedVaultEntryDTO.toDomainModel() : EncryptedVaultEntry {
-        return EncryptedVaultEntry(id, title, url, encryptedUsername, encryptedPassword, notes)
+        return EncryptedVaultEntry(timestamp, title, url, encryptedUsername, encryptedPassword, notes)
     }
 }

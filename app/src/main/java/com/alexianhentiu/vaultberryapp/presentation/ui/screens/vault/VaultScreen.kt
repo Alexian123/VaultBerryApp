@@ -15,6 +15,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -22,6 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.alexianhentiu.vaultberryapp.R
+import com.alexianhentiu.vaultberryapp.domain.model.DecryptedVaultEntry
 import com.alexianhentiu.vaultberryapp.domain.model.DecryptedVaultKey
 import com.alexianhentiu.vaultberryapp.presentation.ui.state.VaultState
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.VaultViewModel
@@ -41,6 +45,11 @@ fun VaultScreen(
     val vaultState by viewmodel.vaultState.collectAsState()
     val decryptedEntries by viewmodel.decryptedEntries.collectAsState()
 
+    var showAddEntryDialog by remember { mutableStateOf(false) }
+
+    var pressedEntry by remember { mutableStateOf(null as DecryptedVaultEntry?) }
+    var showModifyEntryDialog by remember { mutableStateOf(false) }
+
     when (vaultState) {
         is VaultState.Locked -> {
             viewmodel.getEntries(vaultKey)
@@ -51,7 +60,10 @@ fun VaultScreen(
         is VaultState.Unlocked -> {
             LazyColumn {
                 items(decryptedEntries) { decryptedEntry ->
-                    VaultEntryItem(decryptedEntry)
+                    VaultEntryItem(viewmodel, decryptedEntry) { newValue ->
+                        showModifyEntryDialog = newValue
+                        pressedEntry = decryptedEntry
+                    }
                 }
             }
             Box(modifier = Modifier.fillMaxSize()) {
@@ -59,13 +71,34 @@ fun VaultScreen(
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
                         .padding(16.dp),
-                    onClick = {  }
+                    onClick = { showAddEntryDialog = true }
                 ) {
                     Icon(
                         Icons.Filled.Add,
                         stringResource(R.string.add_entry_action_icon_content_description)
                     )
                 }
+            }
+            if (showAddEntryDialog) {
+                VaultEntryDialog(
+                    formTitle = stringResource(R.string.add_entry_form_title),
+                    onDismissRequest = { showAddEntryDialog = false },
+                    onSubmit = {
+                        viewmodel.addEntry(vaultKey, it)
+                        showAddEntryDialog = false
+                    }
+                )
+            } else if (showModifyEntryDialog) {
+                Log.e("VaultScreen", "pressedEntry: $pressedEntry")
+                VaultEntryDialog(
+                    formTitle = stringResource(R.string.modify_entry_form_title),
+                    initialEntry = pressedEntry,
+                    onDismissRequest = { showModifyEntryDialog = false },
+                    onSubmit = {
+                        viewmodel.modifyEntry(vaultKey, it)
+                        showModifyEntryDialog = false
+                    }
+                )
             }
         }
         is VaultState.Error ->  {

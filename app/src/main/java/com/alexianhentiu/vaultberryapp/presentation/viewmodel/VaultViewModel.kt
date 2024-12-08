@@ -64,7 +64,7 @@ class VaultViewModel @Inject constructor(
                 is APIResult.Success -> {
                     _vaultState.value = VaultState.Unlocked
                     _decryptedEntries.update { currentList ->
-                        currentList + decryptVaultEntryUseCase(result.data, decryptedVaultKey)
+                        currentList + decryptedVaultEntry
                     }
                 }
 
@@ -75,19 +75,14 @@ class VaultViewModel @Inject constructor(
         }
     }
 
-    fun removeEntry(
-        decryptedVaultKey: DecryptedVaultKey,
-        decryptedVaultEntry: DecryptedVaultEntry
-    ) {
+    fun removeEntry(decryptedVaultEntry: DecryptedVaultEntry) {
         viewModelScope.launch {
             _vaultState.value = VaultState.Loading
-            val encryptedVaultEntry =
-                encryptVaultEntryUseCase(decryptedVaultEntry, decryptedVaultKey)
-            when (val result = removeEntryUseCase(encryptedVaultEntry)) {
+            when (val result = removeEntryUseCase(decryptedVaultEntry)) {
                 is APIResult.Success -> {
                     _vaultState.value = VaultState.Unlocked
                     _decryptedEntries.update { currentList ->
-                        currentList.filter { it.id != decryptedVaultEntry.id }
+                        currentList.filter { it.timestamp != decryptedVaultEntry.timestamp }
                     }
                 }
 
@@ -111,7 +106,9 @@ class VaultViewModel @Inject constructor(
                     _vaultState.value = VaultState.Unlocked
                     _decryptedEntries.update { currentList ->
                         currentList.map {
-                            if (it.id == decryptedVaultEntry.id) decryptedVaultEntry else it
+                            if (it.timestamp == decryptedVaultEntry.timestamp)
+                                decryptedVaultEntry
+                            else it
                         }
                     }
                 }
@@ -133,5 +130,21 @@ class VaultViewModel @Inject constructor(
             decryptedEntries.add(decryptedEntry)
         }
         return decryptedEntries
+    }
+
+    private fun validateEntry(decryptedEntry: DecryptedVaultEntry): Boolean {
+        if (decryptedEntry.title.isBlank()) {
+            _vaultState.value = VaultState.Error("Title cannot be empty")
+            return false
+        }
+        if (decryptedEntry.username.isBlank()) {
+            _vaultState.value = VaultState.Error("Username cannot be empty")
+            return false
+        }
+        if (decryptedEntry.password.isBlank()) {
+            _vaultState.value = VaultState.Error("Password cannot be empty")
+            return false
+        }
+        return true
     }
 }

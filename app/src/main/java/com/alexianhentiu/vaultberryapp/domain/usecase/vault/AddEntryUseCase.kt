@@ -6,7 +6,7 @@ import com.alexianhentiu.vaultberryapp.domain.repository.VaultEntryRepository
 
 class AddEntryUseCase(private val vaultEntryRepository: VaultEntryRepository) {
 
-    suspend operator fun invoke(newEncryptedVaultEntry: EncryptedVaultEntry): APIResult<EncryptedVaultEntry> {
+    suspend operator fun invoke(newEncryptedVaultEntry: EncryptedVaultEntry): APIResult<Unit> {
         return vaultEntryRepository.addEntry(newEncryptedVaultEntry)
     }
 }

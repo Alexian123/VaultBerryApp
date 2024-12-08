@@ -108,13 +108,25 @@ fun VaultEntryDialog(
                                     .weight(0.5f)
                                     .padding(16.dp),
                                 onClick = {
-                                    val entry = DecryptedVaultEntry(
-                                        title = entryTitle,
-                                        url = entryUrl,
-                                        username = entryUsername,
-                                        password = entryPassword,
-                                        notes = entryNotes
-                                    )
+                                    val entry: DecryptedVaultEntry
+                                    if (initialEntry != null) {
+                                        entry = initialEntry.copy(
+                                            title = entryTitle,
+                                            url = entryUrl,
+                                            username = entryUsername,
+                                            password = entryPassword,
+                                            notes = entryNotes
+                                        )
+                                    } else {
+                                        entry = DecryptedVaultEntry(
+                                            timestamp = System.currentTimeMillis(),
+                                            title = entryTitle,
+                                            url = entryUrl,
+                                            username = entryUsername,
+                                            password = entryPassword,
+                                            notes = entryNotes
+                                        )
+                                    }
                                     onSubmit(entry)
                                 }
                             ) {

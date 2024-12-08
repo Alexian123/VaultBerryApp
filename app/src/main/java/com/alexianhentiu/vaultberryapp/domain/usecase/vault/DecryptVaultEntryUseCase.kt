@@ -16,7 +16,7 @@ class DecryptVaultEntryUseCase(private val vaultGuardian: VaultGuardian) {
         val decryptedPassword =
             vaultGuardian.importField(encryptedVaultEntry.encryptedPassword, decryptedVaultKey)
         return DecryptedVaultEntry(
-            encryptedVaultEntry.id,
+            encryptedVaultEntry.timestamp,
             encryptedVaultEntry.title,
             encryptedVaultEntry.url,
             decryptedUsername,

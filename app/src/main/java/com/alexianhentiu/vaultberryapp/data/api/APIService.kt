@@ -6,8 +6,10 @@ import com.alexianhentiu.vaultberryapp.data.model.UserDTO
 import com.alexianhentiu.vaultberryapp.data.model.EncryptedVaultEntryDTO
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 
 interface APIService {
 
@@ -24,11 +26,11 @@ interface APIService {
     suspend fun getEntries(): Response<List<EncryptedVaultEntryDTO>?>
 
     @POST("entries/add")
-    suspend fun addEntry(@Body vaultEntry: EncryptedVaultEntryDTO): Response<EncryptedVaultEntryDTO>
+    suspend fun addEntry(@Body vaultEntry: EncryptedVaultEntryDTO): Response<Unit>
 
     @POST("entries/modify")
     suspend fun modifyEntry(@Body vaultEntry: EncryptedVaultEntryDTO): Response<Unit>
 
-    @POST("entries/remove")
-    suspend fun removeEntry(@Body vaultEntry: EncryptedVaultEntryDTO): Response<Unit>
+    @DELETE("entries/remove/{timestamp}")
+    suspend fun removeEntry(@Path("timestamp") timestamp: Long): Response<Unit>
 }
