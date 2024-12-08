@@ -27,6 +27,7 @@ import androidx.navigation.NavController
 import com.alexianhentiu.vaultberryapp.R
 import com.alexianhentiu.vaultberryapp.domain.model.DecryptedVaultEntry
 import com.alexianhentiu.vaultberryapp.domain.model.DecryptedVaultKey
+import com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc.LoadingScreen
 import com.alexianhentiu.vaultberryapp.presentation.ui.state.VaultState
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.VaultViewModel
 
@@ -55,7 +56,7 @@ fun VaultScreen(
             viewmodel.getEntries(vaultKey)
         }
         is VaultState.Loading -> {
-            CircularProgressIndicator(modifier = Modifier.fillMaxSize())
+            LoadingScreen()
         }
         is VaultState.Unlocked -> {
             LazyColumn {
@@ -89,7 +90,6 @@ fun VaultScreen(
                     }
                 )
             } else if (showModifyEntryDialog) {
-                Log.e("VaultScreen", "pressedEntry: $pressedEntry")
                 VaultEntryDialog(
                     formTitle = stringResource(R.string.modify_entry_form_title),
                     initialEntry = pressedEntry,

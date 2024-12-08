@@ -10,6 +10,7 @@ import com.alexianhentiu.vaultberryapp.domain.usecase.auth.KeyImportUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.auth.LoginUseCase
 import com.alexianhentiu.vaultberryapp.presentation.ui.state.LoginState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -27,6 +28,7 @@ class LoginViewModel @Inject constructor(
         val loginCredentials = LoginCredentials(email, password)
         viewModelScope.launch {
             _loginState.value = LoginState.Loading
+            delay(1000)
             when (val result = loginUseCase(loginCredentials)) {
                 is APIResult.Success -> {
                     val decryptedVaultKey = keyImportUseCase(password, result.data)

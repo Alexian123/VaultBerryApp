@@ -137,14 +137,6 @@ class VaultViewModel @Inject constructor(
             _vaultState.value = VaultState.Error("Title cannot be empty")
             return false
         }
-        if (decryptedEntry.username.isBlank()) {
-            _vaultState.value = VaultState.Error("Username cannot be empty")
-            return false
-        }
-        if (decryptedEntry.password.isBlank()) {
-            _vaultState.value = VaultState.Error("Password cannot be empty")
-            return false
-        }
         return true
     }
 }

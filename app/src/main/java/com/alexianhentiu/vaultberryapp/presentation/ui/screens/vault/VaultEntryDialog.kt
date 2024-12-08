@@ -47,10 +47,8 @@ fun VaultEntryDialog(
         properties = DialogProperties(usePlatformDefaultWidth = false)
     ) {
         Box(
-            contentAlignment = Alignment.Center,
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.Black.copy(alpha = 0.6f)) // Dim background
         ) {
             Card(
                 modifier = Modifier
@@ -79,7 +77,7 @@ fun VaultEntryDialog(
                         OutlinedTextField(
                             value = entryTitle,
                             onValueChange = { entryTitle = it },
-                            label = { Text("Title") }
+                            label = { Text("Title") },
                         )
                         OutlinedTextField(
                             value = entryUrl,
