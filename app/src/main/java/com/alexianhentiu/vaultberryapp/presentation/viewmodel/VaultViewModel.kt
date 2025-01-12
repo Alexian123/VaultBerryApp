@@ -10,8 +10,8 @@ import com.alexianhentiu.vaultberryapp.domain.usecase.vault.AddEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.vault.EncryptVaultEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.vault.DecryptVaultEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.vault.GetEntriesUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.vault.ModifyEntryUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.vault.RemoveEntryUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.vault.UpdateEntryUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.vault.DeleteEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.utils.InputValidator
 import com.alexianhentiu.vaultberryapp.presentation.ui.state.VaultState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,8 +25,8 @@ import javax.inject.Inject
 class VaultViewModel @Inject constructor(
     private val getEntriesUseCase: GetEntriesUseCase,
     private val addEntryUseCase: AddEntryUseCase,
-    private val removeEntryUseCase: RemoveEntryUseCase,
-    private val modifyEntryUseCase: ModifyEntryUseCase,
+    private val deleteEntryUseCase: DeleteEntryUseCase,
+    private val updateEntryUseCase: UpdateEntryUseCase,
     private val decryptVaultEntryUseCase: DecryptVaultEntryUseCase,
     private val encryptVaultEntryUseCase: EncryptVaultEntryUseCase,
     val inputValidator: InputValidator
@@ -77,10 +77,10 @@ class VaultViewModel @Inject constructor(
         }
     }
 
-    fun removeEntry(decryptedVaultEntry: DecryptedVaultEntry) {
+    fun deleteEntry(decryptedVaultEntry: DecryptedVaultEntry) {
         viewModelScope.launch {
             _vaultState.value = VaultState.Loading
-            when (val result = removeEntryUseCase(decryptedVaultEntry)) {
+            when (val result = deleteEntryUseCase(decryptedVaultEntry)) {
                 is APIResult.Success -> {
                     _vaultState.value = VaultState.Unlocked
                     _decryptedEntries.update { currentList ->
@@ -95,7 +95,7 @@ class VaultViewModel @Inject constructor(
         }
     }
 
-    fun modifyEntry(
+    fun updateEntry(
         decryptedVaultKey: DecryptedVaultKey,
         decryptedVaultEntry: DecryptedVaultEntry
     ) {
@@ -103,7 +103,7 @@ class VaultViewModel @Inject constructor(
             _vaultState.value = VaultState.Loading
             val encryptedVaultEntry =
                 encryptVaultEntryUseCase(decryptedVaultEntry, decryptedVaultKey)
-            when (val result = modifyEntryUseCase(encryptedVaultEntry)) {
+            when (val result = updateEntryUseCase(encryptedVaultEntry)) {
                 is APIResult.Success -> {
                     _vaultState.value = VaultState.Unlocked
                     _decryptedEntries.update { currentList ->

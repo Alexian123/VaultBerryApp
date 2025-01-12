@@ -22,8 +22,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.alexianhentiu.vaultberryapp.domain.utils.InputValidator
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc.fields.ValidatedInputField
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc.fields.PasswordInputField
+import com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc.fields.ValidatedTextField
+import com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc.fields.PasswordField
 
 @Composable
 fun RegisterForm(
@@ -45,20 +45,20 @@ fun RegisterForm(
             .padding(16.dp)
             .fillMaxSize()
     ) {
-        ValidatedInputField(
+        ValidatedTextField(
             label = "Email",
-            onInputChange = { newEmail, isValid ->
+            onInputChange = { newEmail, valid ->
                 email = newEmail
-                isEmailValid = isValid
+                isEmailValid = valid
             },
             isValid = inputValidator::validateEmail,
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(8.dp))
-        PasswordInputField(
-            onPasswordChange = { newPassword, isValid ->
+        PasswordField(
+            onPasswordChange = { newPassword, valid ->
                 password = newPassword
-                isPasswordValid = isValid
+                isPasswordValid = valid
             },
             isValid = inputValidator::validatePassword,
             modifier = Modifier.fillMaxWidth()

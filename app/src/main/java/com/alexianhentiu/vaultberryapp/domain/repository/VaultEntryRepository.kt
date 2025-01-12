@@ -10,7 +10,7 @@ interface VaultEntryRepository {
 
     suspend fun addEntry(encryptedVaultEntry: EncryptedVaultEntry): APIResult<Unit>
 
-    suspend fun modifyEntry(encryptedVaultEntry: EncryptedVaultEntry): APIResult<Unit>
+    suspend fun updateEntry(encryptedVaultEntry: EncryptedVaultEntry): APIResult<Unit>
 
-    suspend fun removeEntry(decryptedVaultEntry: DecryptedVaultEntry): APIResult<Unit>
+    suspend fun deleteEntry(decryptedVaultEntry: DecryptedVaultEntry): APIResult<Unit>
 }

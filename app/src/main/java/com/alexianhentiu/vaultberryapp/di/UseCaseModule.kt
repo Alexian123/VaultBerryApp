@@ -9,11 +9,11 @@ import com.alexianhentiu.vaultberryapp.domain.usecase.auth.KeyExportUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.auth.KeyImportUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.auth.LoginUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.auth.LogoutUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.vault.ModifyEntryUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.vault.UpdateEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.auth.RegisterUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.vault.EncryptVaultEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.vault.DecryptVaultEntryUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.vault.RemoveEntryUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.vault.DeleteEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.utils.VaultGuardian
 import dagger.Module
 import dagger.Provides
@@ -40,10 +40,10 @@ object UseCaseModule {
     fun provideAddEntryUseCase(vaultEntryRepository: VaultEntryRepository): AddEntryUseCase = AddEntryUseCase(vaultEntryRepository)
 
     @Provides
-    fun provideModifyEntryUseCase(vaultEntryRepository: VaultEntryRepository): ModifyEntryUseCase = ModifyEntryUseCase(vaultEntryRepository)
+    fun provideUpdateEntryUseCase(vaultEntryRepository: VaultEntryRepository): UpdateEntryUseCase = UpdateEntryUseCase(vaultEntryRepository)
 
     @Provides
-    fun provideRemoveEntryUseCase(vaultEntryRepository: VaultEntryRepository): RemoveEntryUseCase = RemoveEntryUseCase(vaultEntryRepository)
+    fun provideDeleteEntryUseCase(vaultEntryRepository: VaultEntryRepository): DeleteEntryUseCase = DeleteEntryUseCase(vaultEntryRepository)
 
     @Provides
     fun provideKeyExportUseCase(vaultGuardian: VaultGuardian): KeyExportUseCase = KeyExportUseCase(vaultGuardian)

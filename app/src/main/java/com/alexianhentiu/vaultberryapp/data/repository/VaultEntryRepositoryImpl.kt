@@ -27,16 +27,16 @@ class VaultEntryRepositoryImpl(
         )
     }
 
-    override suspend fun modifyEntry(encryptedVaultEntry: EncryptedVaultEntry): APIResult<Unit> {
+    override suspend fun updateEntry(encryptedVaultEntry: EncryptedVaultEntry): APIResult<Unit> {
         return apiResponseHandler.safeApiCall(
-            apiCall = { apiService.modifyEntry(encryptedVaultEntry.toDBModel()) },
+            apiCall = { apiService.updateEntry(encryptedVaultEntry.toDBModel()) },
             transform = { }
         )
     }
 
-    override suspend fun removeEntry(decryptedVaultEntry: DecryptedVaultEntry): APIResult<Unit> {
+    override suspend fun deleteEntry(decryptedVaultEntry: DecryptedVaultEntry): APIResult<Unit> {
         return apiResponseHandler.safeApiCall(
-            apiCall = { apiService.removeEntry(decryptedVaultEntry.timestamp) },
+            apiCall = { apiService.deleteEntry(decryptedVaultEntry.timestamp) },
             transform = { }
         )
     }

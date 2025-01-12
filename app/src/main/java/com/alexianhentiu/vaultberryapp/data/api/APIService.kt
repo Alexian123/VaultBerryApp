@@ -28,9 +28,9 @@ interface APIService {
     @POST("entries/add")
     suspend fun addEntry(@Body vaultEntry: EncryptedVaultEntryDTO): Response<Unit>
 
-    @POST("entries/modify")
-    suspend fun modifyEntry(@Body vaultEntry: EncryptedVaultEntryDTO): Response<Unit>
+    @POST("entries/update")
+    suspend fun updateEntry(@Body vaultEntry: EncryptedVaultEntryDTO): Response<Unit>
 
-    @DELETE("entries/remove/{timestamp}")
-    suspend fun removeEntry(@Path("timestamp") timestamp: Long): Response<Unit>
+    @DELETE("entries/delete/{timestamp}")
+    suspend fun deleteEntry(@Path("timestamp") timestamp: Long): Response<Unit>
 }

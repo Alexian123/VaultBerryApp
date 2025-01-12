@@ -1,11 +1,19 @@
 <resources>
     <string name="app_name">VaultBerryApp</string>
-    <string name="add_entry_action_icon_content_description">Add entry icon</string>
+    <string name="add_entry_action_content_description">Add entry</string>
     <string name="add_entry_form_title">Add new entry</string>
-    <string name="delete_entry_action_content_description">Delete entry</string>
-    <string name="modify_entry_action_content_description">Modify entry</string>
-    <string name="modify_entry_form_title">Modify entry</string>
+    <string name="toggle_entry_expansion_action_content_description">Toggle expansion</string>
+    <string name="entry_edit_mode_action_content_description">Edit mode</string>
+    <string name="delete_entry_action_content_description">Delete</string>
+    <string name="update_entry_action_content_description">Update</string>
+    <string name="cancel_entry_action_content_description">Discard</string>
     <string name="copy_password_content_description">Copy password</string>
     <string name="hide_content_description">Hide</string>
     <string name="show_content_description">Show</string>
+    <string name="cancel_entry_dialog_title">Discard changes?</string>
+    <string name="cancel_entry_dialog_message">All changes will be lost.</string>
+    <string name="delete_entry_dialog_title">Delete entry?</string>
+    <string name="delete_entry_dialog_message">This cannot be undone.</string>
+    <string name="update_entry_dialog_title">Update entry?</string>
+    <string name="update_entry_dialog_message">The data will be overwritten.</string>
 </resources>
