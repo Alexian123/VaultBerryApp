@@ -8,7 +8,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -33,7 +32,7 @@ import com.alexianhentiu.vaultberryapp.presentation.viewmodel.VaultViewModel
 
 @Composable
 fun VaultScreen(
-    viewmodel: VaultViewModel,
+    viewModel: VaultViewModel,
     navController: NavController
 ) {
     val vaultKey = navController
@@ -43,17 +42,17 @@ fun VaultScreen(
             return
         }
 
-    val vaultState by viewmodel.vaultState.collectAsState()
-    val decryptedEntries by viewmodel.decryptedEntries.collectAsState()
+    val vaultState by viewModel.vaultState.collectAsState()
+    val decryptedEntries by viewModel.decryptedEntries.collectAsState()
 
     var showAddEntryDialog by remember { mutableStateOf(false) }
 
-    var pressedEntry by remember { mutableStateOf(null as DecryptedVaultEntry?) }
+    var entryToModify by remember { mutableStateOf(null as DecryptedVaultEntry?) }
     var showModifyEntryDialog by remember { mutableStateOf(false) }
 
     when (vaultState) {
         is VaultState.Locked -> {
-            viewmodel.getEntries(vaultKey)
+            viewModel.getEntries(vaultKey)
         }
         is VaultState.Loading -> {
             LoadingScreen()
@@ -61,9 +60,9 @@ fun VaultScreen(
         is VaultState.Unlocked -> {
             LazyColumn {
                 items(decryptedEntries) { decryptedEntry ->
-                    VaultEntryItem(viewmodel, decryptedEntry) { newValue ->
+                    VaultEntryItem(viewModel, decryptedEntry) { newValue ->
                         showModifyEntryDialog = newValue
-                        pressedEntry = decryptedEntry
+                        entryToModify = decryptedEntry
                     }
                 }
             }
@@ -85,17 +84,17 @@ fun VaultScreen(
                     formTitle = stringResource(R.string.add_entry_form_title),
                     onDismissRequest = { showAddEntryDialog = false },
                     onSubmit = {
-                        viewmodel.addEntry(vaultKey, it)
+                        viewModel.addEntry(vaultKey, it)
                         showAddEntryDialog = false
                     }
                 )
             } else if (showModifyEntryDialog) {
                 VaultEntryDialog(
                     formTitle = stringResource(R.string.modify_entry_form_title),
-                    initialEntry = pressedEntry,
+                    initialEntry = entryToModify,
                     onDismissRequest = { showModifyEntryDialog = false },
                     onSubmit = {
-                        viewmodel.modifyEntry(vaultKey, it)
+                        viewModel.modifyEntry(vaultKey, it)
                         showModifyEntryDialog = false
                     }
                 )

@@ -2,6 +2,10 @@
     <string name="app_name">VaultBerryApp</string>
     <string name="add_entry_action_icon_content_description">Add entry icon</string>
     <string name="add_entry_form_title">Add new entry</string>
-    <string name="delete_entry_action_icon_content_description">Delete entry</string>
+    <string name="delete_entry_action_content_description">Delete entry</string>
+    <string name="modify_entry_action_content_description">Modify entry</string>
     <string name="modify_entry_form_title">Modify entry</string>
+    <string name="hide_password_content_description">Hide password</string>
+    <string name="show_password_content_description">Show password</string>
+    <string name="copy_password_content_description">Copy password</string>
 </resources>
