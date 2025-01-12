@@ -8,6 +8,7 @@ import com.alexianhentiu.vaultberryapp.data.api.APIResult
 import com.alexianhentiu.vaultberryapp.domain.model.LoginCredentials
 import com.alexianhentiu.vaultberryapp.domain.usecase.auth.KeyImportUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.auth.LoginUseCase
+import com.alexianhentiu.vaultberryapp.domain.utils.InputValidator
 import com.alexianhentiu.vaultberryapp.presentation.ui.state.LoginState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -18,7 +19,8 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
-    private val keyImportUseCase: KeyImportUseCase
+    private val keyImportUseCase: KeyImportUseCase,
+    val inputValidator: InputValidator
 ) : ViewModel() {
 
     private val _loginState = MutableStateFlow<LoginState>(LoginState.Idle)

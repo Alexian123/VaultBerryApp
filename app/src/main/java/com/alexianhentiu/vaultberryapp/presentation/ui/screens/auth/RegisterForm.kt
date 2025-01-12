@@ -18,20 +18,26 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.alexianhentiu.vaultberryapp.domain.utils.InputValidator
+import com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc.fields.ValidatedInputField
+import com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc.fields.PasswordInputField
 
 @Composable
 fun RegisterForm(
     navController: NavController,
-    onRegisterClicked: (String, String, String?, String?) -> Unit
+    onRegisterClicked: (String, String, String?, String?) -> Unit,
+    inputValidator: InputValidator
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var firstName by remember { mutableStateOf("") }
     var lastName by remember { mutableStateOf("") }
+
+    var isEmailValid by remember { mutableStateOf(false) }
+    var isPasswordValid by remember { mutableStateOf(false) }
 
     Column(
         verticalArrangement = Arrangement.Center,
@@ -39,18 +45,21 @@ fun RegisterForm(
             .padding(16.dp)
             .fillMaxSize()
     ) {
-        TextField(
-            value = email,
-            onValueChange = { email = it },
-            label = { Text("Email") },
+        ValidatedInputField(
+            label = "Email",
+            onInputChange = { newEmail, isValid ->
+                email = newEmail
+                isEmailValid = isValid
+            },
+            isValid = inputValidator::validateEmail,
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(8.dp))
-        TextField(
-            value = password,
-            onValueChange = { password = it },
-            label = { Text("Password") },
-            visualTransformation = PasswordVisualTransformation(),
+        PasswordInputField(
+            onPasswordChange = { newPassword, isValid ->
+                password = newPassword
+                isPasswordValid = isValid
+            },
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(8.dp))
@@ -71,7 +80,8 @@ fun RegisterForm(
         Spacer(modifier = Modifier.height(16.dp))
         Button(
             onClick = { onRegisterClicked(email, password, firstName, lastName) },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            enabled = isEmailValid && isPasswordValid
         ) {
             Text("Register")
         }
@@ -89,6 +99,7 @@ fun RegisterForm(
 fun RegisterFormPreview() {
     RegisterForm(
         navController = NavController(LocalContext.current),
-        onRegisterClicked = { _, _, _, _ -> }
+        onRegisterClicked = { _, _, _, _ -> },
+        inputValidator = InputValidator()
     )
 }

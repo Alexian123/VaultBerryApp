@@ -1,5 +1,6 @@
 package com.alexianhentiu.vaultberryapp.di
 
+import com.alexianhentiu.vaultberryapp.domain.utils.InputValidator
 import com.alexianhentiu.vaultberryapp.domain.utils.VaultGuardian
 import com.alexianhentiu.vaultberryapp.domain.utils.cryptography.AESHandler
 import com.alexianhentiu.vaultberryapp.domain.utils.cryptography.CryptographyHandler
@@ -11,7 +12,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object VaultModule {
+object UtilityModule {
 
     @Provides
     @Singleton
@@ -20,4 +21,8 @@ object VaultModule {
     @Provides
     @Singleton
     fun provideVaultGuardian(cryptoHandler: CryptographyHandler): VaultGuardian = VaultGuardian(cryptoHandler)
+
+    @Provides
+    @Singleton
+    fun provideInputValidator(): InputValidator = InputValidator()
 }

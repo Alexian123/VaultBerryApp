@@ -6,7 +6,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavController
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc.LoadingScreen
+import com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc.animations.LoadingScreen
 import com.alexianhentiu.vaultberryapp.presentation.ui.state.LoginState
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.LoginViewModel
 
@@ -18,7 +18,8 @@ fun LoginScreen(viewModel: LoginViewModel, navController: NavController) {
         is LoginState.Idle -> {
             LoginForm(
                 navController = navController,
-                onLoginClicked = { email, password -> viewModel.login(email, password) }
+                onLoginClicked = { email, password -> viewModel.login(email, password) },
+                inputValidator = viewModel.inputValidator
             )
         }
         is LoginState.Loading -> {

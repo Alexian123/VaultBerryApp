@@ -5,7 +5,7 @@
     <string name="delete_entry_action_content_description">Delete entry</string>
     <string name="modify_entry_action_content_description">Modify entry</string>
     <string name="modify_entry_form_title">Modify entry</string>
-    <string name="hide_password_content_description">Hide password</string>
-    <string name="show_password_content_description">Show password</string>
     <string name="copy_password_content_description">Copy password</string>
+    <string name="hide_content_description">Hide</string>
+    <string name="show_content_description">Show</string>
 </resources>

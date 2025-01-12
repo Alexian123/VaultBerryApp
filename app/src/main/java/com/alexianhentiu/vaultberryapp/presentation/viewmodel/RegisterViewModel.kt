@@ -6,6 +6,7 @@ import com.alexianhentiu.vaultberryapp.data.api.APIResult
 import com.alexianhentiu.vaultberryapp.domain.model.User
 import com.alexianhentiu.vaultberryapp.domain.usecase.auth.KeyExportUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.auth.RegisterUseCase
+import com.alexianhentiu.vaultberryapp.domain.utils.InputValidator
 import com.alexianhentiu.vaultberryapp.presentation.ui.state.RegisterState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,6 +18,7 @@ import javax.inject.Inject
 class RegisterViewModel @Inject constructor(
     private val registerUseCase: RegisterUseCase,
     private val keyExportUseCase: KeyExportUseCase,
+    val inputValidator: InputValidator
 ) : ViewModel() {
 
     private val _registerState = MutableStateFlow<RegisterState>(RegisterState.Idle)

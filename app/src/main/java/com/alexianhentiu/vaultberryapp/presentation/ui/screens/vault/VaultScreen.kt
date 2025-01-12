@@ -26,7 +26,8 @@ import androidx.navigation.NavController
 import com.alexianhentiu.vaultberryapp.R
 import com.alexianhentiu.vaultberryapp.domain.model.DecryptedVaultEntry
 import com.alexianhentiu.vaultberryapp.domain.model.DecryptedVaultKey
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc.LoadingScreen
+import com.alexianhentiu.vaultberryapp.domain.utils.InputValidator
+import com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc.animations.LoadingScreen
 import com.alexianhentiu.vaultberryapp.presentation.ui.state.VaultState
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.VaultViewModel
 
@@ -60,8 +61,8 @@ fun VaultScreen(
         is VaultState.Unlocked -> {
             LazyColumn {
                 items(decryptedEntries) { decryptedEntry ->
-                    VaultEntryItem(viewModel, decryptedEntry) { newValue ->
-                        showModifyEntryDialog = newValue
+                    VaultEntryItem(viewModel, decryptedEntry) {
+                        showModifyEntryDialog = it
                         entryToModify = decryptedEntry
                     }
                 }

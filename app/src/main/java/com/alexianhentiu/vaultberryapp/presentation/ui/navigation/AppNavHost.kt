@@ -1,12 +1,10 @@
 package com.alexianhentiu.vaultberryapp.presentation.ui.navigation
 
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.alexianhentiu.vaultberryapp.domain.model.DecryptedVaultKey
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.auth.LoginScreen
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.auth.RegisterScreen
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.vault.VaultScreen

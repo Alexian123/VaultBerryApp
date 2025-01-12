@@ -12,6 +12,7 @@ import com.alexianhentiu.vaultberryapp.domain.usecase.vault.DecryptVaultEntryUse
 import com.alexianhentiu.vaultberryapp.domain.usecase.vault.GetEntriesUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.vault.ModifyEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.vault.RemoveEntryUseCase
+import com.alexianhentiu.vaultberryapp.domain.utils.InputValidator
 import com.alexianhentiu.vaultberryapp.presentation.ui.state.VaultState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,6 +29,7 @@ class VaultViewModel @Inject constructor(
     private val modifyEntryUseCase: ModifyEntryUseCase,
     private val decryptVaultEntryUseCase: DecryptVaultEntryUseCase,
     private val encryptVaultEntryUseCase: EncryptVaultEntryUseCase,
+    val inputValidator: InputValidator
 ): ViewModel() {
 
     private val _vaultState = MutableStateFlow<VaultState>(VaultState.Locked)
@@ -130,13 +132,5 @@ class VaultViewModel @Inject constructor(
             decryptedEntries.add(decryptedEntry)
         }
         return decryptedEntries
-    }
-
-    private fun validateEntry(decryptedEntry: DecryptedVaultEntry): Boolean {
-        if (decryptedEntry.title.isBlank()) {
-            _vaultState.value = VaultState.Error("Title cannot be empty")
-            return false
-        }
-        return true
     }
 }
