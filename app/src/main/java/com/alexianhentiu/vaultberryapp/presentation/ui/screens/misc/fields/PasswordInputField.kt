@@ -2,8 +2,6 @@ package com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc.fields
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -18,24 +16,18 @@ import com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc.buttons.Togg
 @Composable
 fun PasswordInputField(
     modifier: Modifier = Modifier,
-    onPasswordChange: (String, Boolean) -> Unit
+    onPasswordChange: (String, Boolean) -> Unit,
+    isValid: (String) -> Boolean = { true }
 ) {
-    var password by remember { mutableStateOf("") }
-    var isValid by remember { mutableStateOf(false) }
     var isVisible by remember { mutableStateOf(false) }
 
     Box(modifier = modifier) {
-        TextField(
-            value = password,
-            onValueChange = {
-                password = it
-                isValid = it.isNotBlank()
-                onPasswordChange(it, isValid)
-            },
-            label = { Text("Password") },
-            visualTransformation = if (isVisible) VisualTransformation.None else PasswordVisualTransformation(),
-            isError = !isValid,
-            modifier = Modifier.fillMaxWidth()
+        ValidatedInputField(
+            modifier = Modifier.fillMaxWidth(),
+            onInputChange = onPasswordChange,
+            label = "Password",
+            isValid = isValid,
+            visualTransformation = if (isVisible) VisualTransformation.None else PasswordVisualTransformation()
         )
         ToggleVisibilityButton(
             onVisibilityChanged = { isVisible = it },

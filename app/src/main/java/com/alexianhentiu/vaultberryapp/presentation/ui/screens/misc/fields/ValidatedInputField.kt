@@ -8,6 +8,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.VisualTransformation
 
 @Composable
 fun ValidatedInputField(
@@ -15,7 +16,8 @@ fun ValidatedInputField(
     onInputChange: (String, Boolean) -> Unit,
     label: String = "",
     initialText: String = "",
-    isValid: (String) -> Boolean = { true }
+    isValid: (String) -> Boolean = { true },
+    visualTransformation: VisualTransformation = VisualTransformation.None
 ) {
     var text by remember { mutableStateOf(initialText) }
     var isTextValid by remember { mutableStateOf(isValid(text)) }
@@ -29,6 +31,7 @@ fun ValidatedInputField(
         },
         label = { Text(label) },
         isError = !isTextValid,
-        modifier = modifier
+        modifier = modifier,
+        visualTransformation = visualTransformation
     )
 }

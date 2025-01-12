@@ -57,6 +57,7 @@ fun LoginForm(
                 password = newPassword
                 isPasswordValid = isValid
             },
+            isValid = inputValidator::validatePassword,
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(16.dp))

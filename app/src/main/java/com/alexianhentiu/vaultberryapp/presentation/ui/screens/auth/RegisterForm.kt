@@ -60,6 +60,7 @@ fun RegisterForm(
                 password = newPassword
                 isPasswordValid = isValid
             },
+            isValid = inputValidator::validatePassword,
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(8.dp))
