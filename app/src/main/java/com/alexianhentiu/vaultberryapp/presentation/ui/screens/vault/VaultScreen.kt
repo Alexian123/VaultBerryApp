@@ -10,6 +10,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -17,7 +18,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -49,7 +49,7 @@ fun VaultScreen(
     var showAddEntryDialog by remember { mutableStateOf(false) }
 
     var modifyEntryEvent by remember { mutableStateOf(ModifyEntryEvent.NO_EVENT) }
-    var modfiedEntry by remember { mutableStateOf(null as DecryptedVaultEntry?) }
+    var modifiedEntry by remember { mutableStateOf(null as DecryptedVaultEntry?) }
 
     when (vaultState) {
         is VaultState.Locked -> {
@@ -59,77 +59,82 @@ fun VaultScreen(
             LoadingScreen()
         }
         is VaultState.Unlocked -> {
-            LazyColumn {
-                items(decryptedEntries) { decryptedEntry ->
-                    VaultEntryItem(
-                        decryptedEntry = decryptedEntry,
-                        onModifyEntryEvent = { event, entry ->
-                            modifyEntryEvent = event
-                            modfiedEntry = entry
-                        },
-                        inputValidator = viewModel.inputValidator
-                    )
-                }
-            }
-            Box(modifier = Modifier.fillMaxSize()) {
-                FloatingActionButton(
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .padding(16.dp),
-                    onClick = { showAddEntryDialog = true }
-                ) {
-                    Icon(
-                        Icons.Filled.Add,
-                        stringResource(R.string.add_entry_action_content_description)
-                    )
-                }
-            }
-
-            if (showAddEntryDialog) {
-                AddEntryDialog(
-                    formTitle = stringResource(R.string.add_entry_form_title),
-                    onDismissRequest = { showAddEntryDialog = false },
-                    onSubmit = {
-                        viewModel.addEntry(vaultKey, it)
-                        showAddEntryDialog = false
+            Scaffold(
+                topBar = { TopBar() },
+                floatingActionButton = {
+                    FloatingActionButton(
+                        onClick = { showAddEntryDialog = true },
+                        modifier = Modifier.padding(16.dp)
+                    ) {
+                        Icon(
+                            Icons.Filled.Add,
+                            stringResource(R.string.add_entry_action_content_description)
+                        )
                     }
-                )
-            }
-
-            when (modifyEntryEvent) {
-                ModifyEntryEvent.DELETE -> {
-                    ConfirmActionDialog(
-                        title = stringResource(R.string.delete_entry_dialog_title),
-                        message = stringResource(R.string.delete_entry_dialog_message),
-                        confirmButtonText = stringResource(R.string.delete_entry_action_content_description),
-                        onDismissRequest = { modifyEntryEvent = ModifyEntryEvent.NO_EVENT },
-                        onSubmit = {
-                            if (it && modfiedEntry != null) { // delete entry
-                                viewModel.deleteEntry(modfiedEntry!!)
-                                modifyEntryEvent = ModifyEntryEvent.NO_EVENT
-                                modfiedEntry = null
-                            }
-                        }
-                    )
                 }
-
-                ModifyEntryEvent.UPDATE -> {
-                    ConfirmActionDialog(
-                        title = stringResource(R.string.update_entry_dialog_title),
-                        message = stringResource(R.string.update_entry_dialog_message),
-                        confirmButtonText = stringResource(R.string.update_entry_action_content_description),
-                        onDismissRequest = { modifyEntryEvent = ModifyEntryEvent.NO_EVENT },
-                        onSubmit = {
-                            if (it && modfiedEntry != null) { // update entry
-                                viewModel.updateEntry(vaultKey, modfiedEntry!!)
-                                modifyEntryEvent = ModifyEntryEvent.NO_EVENT
-                                modfiedEntry = null
-                            }
+            ) { contentPadding ->
+                Box(modifier = Modifier.fillMaxSize().padding(contentPadding)) {
+                    LazyColumn {
+                        items(decryptedEntries) { decryptedEntry ->
+                            VaultEntryItem(
+                                decryptedEntry = decryptedEntry,
+                                onModifyEntryEvent = { event, entry ->
+                                    modifyEntryEvent = event
+                                    modifiedEntry = entry
+                                },
+                                inputValidator = viewModel.inputValidator
+                            )
                         }
-                    )
-                }
+                    }
 
-                ModifyEntryEvent.NO_EVENT -> {}
+                    if (showAddEntryDialog) {
+                        AddEntryDialog(
+                            formTitle = stringResource(R.string.add_entry_form_title),
+                            onDismissRequest = { showAddEntryDialog = false },
+                            onSubmit = {
+                                viewModel.addEntry(vaultKey, it)
+                                showAddEntryDialog = false
+                            },
+                            inputValidator = viewModel.inputValidator
+                        )
+                    }
+
+                    when (modifyEntryEvent) {
+                        ModifyEntryEvent.DELETE -> {
+                            ConfirmActionDialog(
+                                title = stringResource(R.string.delete_entry_dialog_title),
+                                message = stringResource(R.string.delete_entry_dialog_message),
+                                confirmButtonText = stringResource(R.string.delete_entry_action_content_description),
+                                onDismissRequest = { modifyEntryEvent = ModifyEntryEvent.NO_EVENT },
+                                onSubmit = {
+                                    if (it && modifiedEntry != null) { // delete entry
+                                        viewModel.deleteEntry(modifiedEntry!!)
+                                        modifyEntryEvent = ModifyEntryEvent.NO_EVENT
+                                        modifiedEntry = null
+                                    }
+                                }
+                            )
+                        }
+
+                        ModifyEntryEvent.UPDATE -> {
+                            ConfirmActionDialog(
+                                title = stringResource(R.string.update_entry_dialog_title),
+                                message = stringResource(R.string.update_entry_dialog_message),
+                                confirmButtonText = stringResource(R.string.update_entry_action_content_description),
+                                onDismissRequest = { modifyEntryEvent = ModifyEntryEvent.NO_EVENT },
+                                onSubmit = {
+                                    if (it && modifiedEntry != null) { // update entry
+                                        viewModel.updateEntry(vaultKey, modifiedEntry!!)
+                                        modifyEntryEvent = ModifyEntryEvent.NO_EVENT
+                                        modifiedEntry = null
+                                    }
+                                }
+                            )
+                        }
+
+                        ModifyEntryEvent.NO_EVENT -> {}
+                    }
+                }
             }
         }
         is VaultState.Error ->  {

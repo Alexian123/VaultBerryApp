@@ -240,6 +240,7 @@ fun VaultEntryItem(
                                         .padding(8.dp)
                                         .weight(0.1f),
                                     onClick = {
+
                                         editMode = false
                                         if (unsavedChanges) {
                                             unsavedChanges = false

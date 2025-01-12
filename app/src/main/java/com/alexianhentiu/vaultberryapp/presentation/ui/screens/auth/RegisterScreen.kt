@@ -26,7 +26,6 @@ fun RegisterScreen(viewModel: RegisterViewModel, navController: NavController) {
         is RegisterState.Idle -> {
             RegisterForm(
                 navController = navController,
-                // TODO: Implement email & password validation
                 onRegisterClicked = { email, password, firstName, lastName ->
                     viewModel.register(email, password,  firstName, lastName) },
                 inputValidator = viewModel.inputValidator

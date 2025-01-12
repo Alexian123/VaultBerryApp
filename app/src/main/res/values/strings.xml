@@ -10,6 +10,10 @@
     <string name="copy_password_content_description">Copy password</string>
     <string name="hide_content_description">Hide</string>
     <string name="show_content_description">Show</string>
+    <string name="menu_content_description">Menu</string>
+    <string name="close_content_description">Close</string>
+    <string name="search_content_description">Search</string>
+    <string name="search_bar_text">Search…</string>
     <string name="cancel_entry_dialog_title">Discard changes?</string>
     <string name="cancel_entry_dialog_message">All changes will be lost.</string>
     <string name="delete_entry_dialog_title">Delete entry?</string>

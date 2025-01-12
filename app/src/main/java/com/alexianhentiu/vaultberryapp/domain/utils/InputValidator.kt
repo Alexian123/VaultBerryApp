@@ -4,15 +4,15 @@ class InputValidator {
 
     fun validateEmail(email: String): Boolean {
         if (email.isBlank()) return false
-        /* TODO("Uncomment after testing")
+        /* TODO: Uncomment after testing
         val emailRegex = Regex("^\\w+([.-]?\\w+)*@\\w+([.-]?\\w+)*(\\.\\w{2,})+\$")
         return email.matches(emailRegex)*/
-        return true;
+        return true
     }
 
     fun validatePassword(password: String): Boolean {
         if (password.isBlank()) return false
-        // TODO("Implement password validation")
+        // TODO: Implement better password validation
         return true
     }
 

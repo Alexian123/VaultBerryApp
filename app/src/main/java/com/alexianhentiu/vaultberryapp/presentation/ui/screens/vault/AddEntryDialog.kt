@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -27,18 +26,24 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.alexianhentiu.vaultberryapp.domain.model.DecryptedVaultEntry
+import com.alexianhentiu.vaultberryapp.domain.utils.InputValidator
+import com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc.fields.PasswordField
+import com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc.fields.ValidatedTextField
 
 @Composable
 fun AddEntryDialog(
     formTitle: String,
     onDismissRequest: () -> Unit,
-    onSubmit: (DecryptedVaultEntry) -> Unit
+    onSubmit: (DecryptedVaultEntry) -> Unit,
+    inputValidator: InputValidator
 ) {
-    var entryTitle by remember { mutableStateOf( "") }
-    var entryUrl by remember { mutableStateOf( "") }
-    var entryUsername by remember { mutableStateOf( "") }
-    var entryPassword by remember { mutableStateOf( "") }
-    var entryNotes by remember { mutableStateOf( "") }
+    var title by remember { mutableStateOf( "") }
+    var url by remember { mutableStateOf( "") }
+    var username by remember { mutableStateOf( "") }
+    var password by remember { mutableStateOf( "") }
+    var notes by remember { mutableStateOf( "") }
+
+    var isTitleValid by remember { mutableStateOf(false) }
 
     Dialog(
         onDismissRequest = onDismissRequest,
@@ -72,30 +77,42 @@ fun AddEntryDialog(
                             fontSize = 26.sp
                         )
 
-                        OutlinedTextField(
-                            value = entryTitle,
-                            onValueChange = { entryTitle = it },
-                            label = { Text("Title") },
+                        ValidatedTextField(
+                            modifier = Modifier.fillMaxWidth(),
+                            label = "Title",
+                            onInputChange = { newTitle, valid ->
+                                title = newTitle
+                                isTitleValid = valid
+                            },
+                            isValid = inputValidator::validateEntryTitle
                         )
-                        OutlinedTextField(
-                            value = entryUrl,
-                            onValueChange = { entryUrl = it },
-                            label = { Text("URL") }
+                        ValidatedTextField(
+                            modifier = Modifier.fillMaxWidth(),
+                            label = "URL",
+                            onInputChange = { newUrl, _ ->
+                                url = newUrl
+                            }
                         )
-                        OutlinedTextField(
-                            value = entryUsername,
-                            onValueChange = { entryUsername = it },
-                            label = { Text("Username") }
+                        ValidatedTextField(
+                            modifier = Modifier.fillMaxWidth(),
+                            label = "Username",
+                            onInputChange = { newUsername, _ ->
+                                username = newUsername
+                            }
                         )
-                        OutlinedTextField(
-                            value = entryPassword,
-                            onValueChange = { entryPassword = it },
-                            label = { Text("Password") }
+                        PasswordField(
+                            onPasswordChange = { newPassword, _ ->
+                                password = newPassword
+                            },
+                            modifier = Modifier.fillMaxWidth()
                         )
-                        OutlinedTextField(
-                            value = entryNotes,
-                            onValueChange = { entryNotes = it },
-                            label = { Text("Notes") }
+                        ValidatedTextField(
+                            modifier = Modifier.fillMaxWidth(),
+                            label = "Notes",
+                            initialText = notes,
+                            onInputChange = { newNotes, _ ->
+                                notes = newNotes
+                            }
                         )
 
                         Row {
@@ -108,17 +125,18 @@ fun AddEntryDialog(
                                 Text("Cancel")
                             }
                             Button(
+                                enabled = isTitleValid,
                                 modifier = Modifier
                                     .weight(0.5f)
                                     .padding(16.dp),
                                 onClick = {
                                     val entry = DecryptedVaultEntry(
                                         timestamp = System.currentTimeMillis(),
-                                        title = entryTitle,
-                                        url = entryUrl,
-                                        username = entryUsername,
-                                        password = entryPassword,
-                                        notes = entryNotes
+                                        title = title,
+                                        url = url,
+                                        username = username,
+                                        password = password,
+                                        notes = notes
                                     )
                                     onSubmit(entry)
                                 }
@@ -139,6 +157,7 @@ fun AddEntryDialogPreview() {
     AddEntryDialog(
         formTitle = "Add new entry",
         onDismissRequest = {},
-        onSubmit = {}
+        onSubmit = {},
+        inputValidator = InputValidator()
     )
 }
