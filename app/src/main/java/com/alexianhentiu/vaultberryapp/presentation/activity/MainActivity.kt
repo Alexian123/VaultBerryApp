@@ -9,6 +9,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    // TODO: Add icon to unlock vault page
     // TODO: Implement error dialog
     // TODO: Add title to login/register pages
     // TODO: Implement statistics & suggestions for entry password security
