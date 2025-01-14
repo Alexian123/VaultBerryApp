@@ -1,4 +1,4 @@
-package com.alexianhentiu.vaultberryapp.presentation.ui.screens.vault
+package com.alexianhentiu.vaultberryapp.presentation.ui.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.BasicTextField
@@ -18,19 +18,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
-import com.alexianhentiu.vaultberryapp.R
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun TopBar(
-) {
+fun TopNavigationBarWithSearch() {
     var isSearching by remember { mutableStateOf(false) }
     var searchText by remember { mutableStateOf(TextFieldValue("")) }
-
-    // TODO: Implement search functionality
 
     TopAppBar(
         title = {
@@ -41,24 +36,18 @@ fun TopBar(
                     modifier = Modifier.fillMaxWidth(),
                     decorationBox = { innerTextField ->
                         if (searchText.text.isEmpty()) {
-                            Text(
-                                text = stringResource(R.string.search_bar_text),
-                                style = MaterialTheme.typography.bodyMedium
-                            )
+                            Text("Search...", style = MaterialTheme.typography.bodyMedium)
                         }
                         innerTextField()
                     }
                 )
             } else {
-                Text(stringResource(R.string.app_name))
+                Text("My App")
             }
         },
         navigationIcon = {
-            IconButton(onClick = { /* TODO: Handle menu click */ }) {
-                Icon(
-                    Icons.Filled.Menu,
-                    stringResource(R.string.menu_content_description)
-                )
+            IconButton(onClick = { /* Handle menu click */ }) {
+                Icon(Icons.Filled.Menu, contentDescription = "Menu")
             }
         },
         actions = {
@@ -67,17 +56,11 @@ fun TopBar(
                     isSearching = false
                     searchText = TextFieldValue("")
                 }) {
-                    Icon(
-                        Icons.Filled.Close,
-                        stringResource(R.string.close_content_description)
-                    )
+                    Icon(Icons.Filled.Close, contentDescription = "Close")
                 }
             } else {
                 IconButton(onClick = { isSearching = true }) {
-                    Icon(
-                        Icons.Filled.Search,
-                        stringResource(R.string.search_content_description)
-                    )
+                    Icon(Icons.Filled.Search, contentDescription = "Search")
                 }
             }
         },
@@ -88,5 +71,7 @@ fun TopBar(
 @Preview
 @Composable
 fun PreviewTopNavigationBarWithSearch() {
-    TopBar()
+    MaterialTheme {
+        TopNavigationBarWithSearch()
+    }
 }

@@ -1,4 +1,4 @@
-package com.alexianhentiu.vaultberryapp.presentation.ui.screens.auth
+package com.alexianhentiu.vaultberryapp.presentation.ui.components.forms
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -21,17 +22,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.alexianhentiu.vaultberryapp.domain.utils.InputValidator
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc.fields.ValidatedTextField
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc.fields.PasswordField
+import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.ValidatedTextField
+import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.PasswordField
 
 @Composable
-fun LoginForm(
+fun RegisterForm(
     navController: NavController,
-    onLoginClicked: (String, String) -> Unit,
+    onRegisterClicked: (String, String, String?, String?) -> Unit,
     inputValidator: InputValidator
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var firstName by remember { mutableStateOf("") }
+    var lastName by remember { mutableStateOf("") }
 
     var isEmailValid by remember { mutableStateOf(false) }
     var isPasswordValid by remember { mutableStateOf(false) }
@@ -60,29 +63,44 @@ fun LoginForm(
             isValid = inputValidator::validatePassword,
             modifier = Modifier.fillMaxWidth()
         )
+        Spacer(modifier = Modifier.height(8.dp))
+        TextField(
+            value = firstName,
+            onValueChange = { firstName = it },
+            label = { Text("First Name") },
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(8.dp))
+        TextField(
+            value = lastName,
+            onValueChange = { lastName = it },
+            label = { Text("Last Name") },
+            modifier = Modifier.fillMaxWidth()
+        )
         Spacer(modifier = Modifier.height(16.dp))
         Button(
-            onClick = { onLoginClicked(email, password) },
+            onClick = { onRegisterClicked(email, password, firstName, lastName) },
             modifier = Modifier.fillMaxWidth(),
             enabled = isEmailValid && isPasswordValid
         ) {
-            Text("Login")
+            Text("Register")
         }
         TextButton(
-            onClick = { navController.navigate("register") },
-            modifier = Modifier.fillMaxWidth(),
+            onClick = { navController.navigate("login") },
+            modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Register")
+            Text("Already have an account?")
         }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun LoginFormPreview() {
-    LoginForm(
+fun RegisterFormPreview() {
+    RegisterForm(
         navController = NavController(LocalContext.current),
-        onLoginClicked = { _, _ -> },
+        onRegisterClicked = { _, _, _, _ -> },
         inputValidator = InputValidator()
     )
 }

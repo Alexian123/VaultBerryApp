@@ -1,4 +1,4 @@
-package com.alexianhentiu.vaultberryapp.presentation.ui.screens.vault
+package com.alexianhentiu.vaultberryapp.presentation.ui.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
@@ -19,6 +19,7 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.DeleteOutline
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Key
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -36,14 +37,15 @@ import androidx.compose.ui.unit.dp
 import com.alexianhentiu.vaultberryapp.R
 import com.alexianhentiu.vaultberryapp.domain.model.DecryptedVaultEntry
 import com.alexianhentiu.vaultberryapp.domain.utils.InputValidator
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc.dialogs.ConfirmActionDialog
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc.fields.PasswordField
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc.fields.ValidatedTextField
+import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ConfirmActionDialog
+import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.PasswordField
+import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.ValidatedTextField
+import com.alexianhentiu.vaultberryapp.presentation.ui.enums.EntryModification
 
 @Composable
 fun VaultEntryItem(
     decryptedEntry: DecryptedVaultEntry,
-    onModifyEntryEvent: (ModifyEntryEvent, DecryptedVaultEntry) -> Unit,
+    onEntryModification: (EntryModification, DecryptedVaultEntry) -> Unit,
     inputValidator: InputValidator
 ) {
     var title by remember { mutableStateOf(decryptedEntry.title) }
@@ -99,12 +101,24 @@ fun VaultEntryItem(
                     visible = !isExpanded,
                 ) {
                     Box(modifier = Modifier.fillMaxWidth()) {
-                        Text(
-                            text = decryptedEntry.title,
-                            modifier = Modifier
+                        Row(
+                            modifier = Modifier.fillMaxWidth()
                                 .align(Alignment.CenterStart)
-                                .padding(12.dp)
-                        )
+
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Key,
+                                contentDescription = stringResource(R.string
+                                    .entry_content_description),
+                                modifier = Modifier.padding(10.dp)
+                            )
+                            Text(
+                                text = decryptedEntry.title,
+                                modifier = Modifier
+                                    .align(Alignment.CenterVertically)
+                            )
+                        }
+
                         IconButton(
                             onClick = { isExpanded = true },
                             modifier = Modifier.align(Alignment.CenterEnd)
@@ -209,7 +223,7 @@ fun VaultEntryItem(
                                         .padding(8.dp)
                                         .weight(0.1f),
                                     onClick = {
-                                        onModifyEntryEvent(ModifyEntryEvent.DELETE, decryptedEntry)
+                                        onEntryModification(EntryModification.DELETE, decryptedEntry)
                                     }
                                 ) {
                                     Icon(
@@ -251,7 +265,7 @@ fun VaultEntryItem(
                                                 password = password,
                                                 notes = notes
                                             )
-                                            onModifyEntryEvent(ModifyEntryEvent.UPDATE, updatedEntry)
+                                            onEntryModification(EntryModification.UPDATE, updatedEntry)
                                         }
                                     }
                                 ) {
@@ -281,7 +295,7 @@ fun VaultEntryPreview() {
             "password123",
             "Lorem ipsum dolor"
         ),
-        onModifyEntryEvent = { _, _ -> },
+        onEntryModification = { _, _ -> },
         inputValidator = InputValidator()
     )
 }

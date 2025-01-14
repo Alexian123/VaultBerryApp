@@ -1,4 +1,4 @@
-package com.alexianhentiu.vaultberryapp.presentation.ui.screens.auth
+package com.alexianhentiu.vaultberryapp.presentation.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.RegisterForm
 import com.alexianhentiu.vaultberryapp.presentation.ui.state.RegisterState
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.RegisterViewModel
 

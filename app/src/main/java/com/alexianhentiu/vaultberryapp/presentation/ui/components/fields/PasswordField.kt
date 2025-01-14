@@ -1,4 +1,4 @@
-package com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc.fields
+package com.alexianhentiu.vaultberryapp.presentation.ui.components.fields
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -13,8 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc.buttons.CopyToClipboardButton
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc.buttons.ToggleVisibilityButton
+import com.alexianhentiu.vaultberryapp.presentation.ui.components.buttons.CopyToClipboardButton
+import com.alexianhentiu.vaultberryapp.presentation.ui.components.buttons.ToggleVisibilityButton
 
 @Composable
 fun PasswordField(

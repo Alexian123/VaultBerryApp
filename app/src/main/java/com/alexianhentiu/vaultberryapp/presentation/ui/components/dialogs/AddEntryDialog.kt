@@ -1,4 +1,4 @@
-package com.alexianhentiu.vaultberryapp.presentation.ui.screens.vault
+package com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -27,8 +27,8 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.alexianhentiu.vaultberryapp.domain.model.DecryptedVaultEntry
 import com.alexianhentiu.vaultberryapp.domain.utils.InputValidator
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc.fields.PasswordField
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc.fields.ValidatedTextField
+import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.PasswordField
+import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.ValidatedTextField
 
 @Composable
 fun AddEntryDialog(

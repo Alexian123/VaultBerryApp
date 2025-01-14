@@ -1,4 +1,4 @@
-package com.alexianhentiu.vaultberryapp.presentation.ui.screens.vault
+package com.alexianhentiu.vaultberryapp.presentation.ui.screens
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,8 +28,11 @@ import androidx.navigation.NavController
 import com.alexianhentiu.vaultberryapp.R
 import com.alexianhentiu.vaultberryapp.domain.model.DecryptedVaultEntry
 import com.alexianhentiu.vaultberryapp.domain.model.DecryptedVaultKey
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc.animations.LoadingScreen
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc.dialogs.ConfirmActionDialog
+import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.AddEntryDialog
+import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ConfirmActionDialog
+import com.alexianhentiu.vaultberryapp.presentation.ui.components.TopBar
+import com.alexianhentiu.vaultberryapp.presentation.ui.components.VaultEntryItem
+import com.alexianhentiu.vaultberryapp.presentation.ui.enums.EntryModification
 import com.alexianhentiu.vaultberryapp.presentation.ui.state.VaultState
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.LoginViewModel
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.MotionViewModel
@@ -50,7 +53,7 @@ fun VaultScreen(
     val motionDetected by motionViewModel.motionDetected.collectAsState()
 
     var showAddEntryDialog by remember { mutableStateOf(false) }
-    var modifyEntryEvent by remember { mutableStateOf(ModifyEntryEvent.NO_EVENT) }
+    var entryModification by remember { mutableStateOf(EntryModification.NONE) }
     var modifiedEntry by remember { mutableStateOf(null as DecryptedVaultEntry?) }
 
     when (vaultState) {
@@ -107,8 +110,8 @@ fun VaultScreen(
                         items(decryptedEntries) { decryptedEntry ->
                             VaultEntryItem(
                                 decryptedEntry = decryptedEntry,
-                                onModifyEntryEvent = { event, entry ->
-                                    modifyEntryEvent = event
+                                onEntryModification = { event, entry ->
+                                    entryModification = event
                                     modifiedEntry = entry
                                 },
                                 inputValidator = vaultViewModel.inputValidator
@@ -128,40 +131,40 @@ fun VaultScreen(
                         )
                     }
 
-                    when (modifyEntryEvent) {
-                        ModifyEntryEvent.DELETE -> {
+                    when (entryModification) {
+                        EntryModification.DELETE -> {
                             ConfirmActionDialog(
                                 title = stringResource(R.string.delete_entry_dialog_title),
                                 message = stringResource(R.string.delete_entry_dialog_message),
                                 confirmButtonText = stringResource(R.string.delete_entry_action_content_description),
-                                onDismissRequest = { modifyEntryEvent = ModifyEntryEvent.NO_EVENT },
+                                onDismissRequest = { entryModification = EntryModification.NONE },
                                 onSubmit = {
                                     if (it && modifiedEntry != null) { // delete entry
                                         vaultViewModel.deleteEntry(modifiedEntry!!)
-                                        modifyEntryEvent = ModifyEntryEvent.NO_EVENT
+                                        entryModification = EntryModification.NONE
                                         modifiedEntry = null
                                     }
                                 }
                             )
                         }
 
-                        ModifyEntryEvent.UPDATE -> {
+                        EntryModification.UPDATE -> {
                             ConfirmActionDialog(
                                 title = stringResource(R.string.update_entry_dialog_title),
                                 message = stringResource(R.string.update_entry_dialog_message),
                                 confirmButtonText = stringResource(R.string.update_entry_action_content_description),
-                                onDismissRequest = { modifyEntryEvent = ModifyEntryEvent.NO_EVENT },
+                                onDismissRequest = { entryModification = EntryModification.NONE },
                                 onSubmit = {
                                     if (it && modifiedEntry != null) { // update entry
                                         vaultViewModel.updateEntry(modifiedEntry!!)
-                                        modifyEntryEvent = ModifyEntryEvent.NO_EVENT
+                                        entryModification = EntryModification.NONE
                                         modifiedEntry = null
                                     }
                                 }
                             )
                         }
 
-                        ModifyEntryEvent.NO_EVENT -> {}
+                        EntryModification.NONE -> {}
                     }
                 }
             }

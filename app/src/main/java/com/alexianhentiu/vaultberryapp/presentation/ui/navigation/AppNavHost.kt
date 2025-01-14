@@ -5,9 +5,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.auth.LoginScreen
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.auth.RegisterScreen
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.vault.VaultScreen
+import com.alexianhentiu.vaultberryapp.presentation.ui.screens.LoginScreen
+import com.alexianhentiu.vaultberryapp.presentation.ui.screens.RegisterScreen
+import com.alexianhentiu.vaultberryapp.presentation.ui.screens.VaultScreen
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.LoginViewModel
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.MotionViewModel
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.RegisterViewModel

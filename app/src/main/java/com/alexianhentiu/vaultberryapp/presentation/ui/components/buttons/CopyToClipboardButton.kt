@@ -1,11 +1,13 @@
-package com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc.buttons
+package com.alexianhentiu.vaultberryapp.presentation.ui.components.buttons
 
+import androidx.compose.foundation.background
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
@@ -20,7 +22,7 @@ fun CopyToClipboardButton(
 
     IconButton(
         onClick = { clipboardManager.setText(AnnotatedString(textToCopy)) },
-        modifier = modifier
+        modifier = modifier.background(Color.Transparent)
     ) {
         Icon(
             Icons.Filled.ContentCopy,

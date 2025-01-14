@@ -1,4 +1,4 @@
-package com.alexianhentiu.vaultberryapp.presentation.ui.screens.auth
+package com.alexianhentiu.vaultberryapp.presentation.ui.screens
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -6,7 +6,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavController
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc.animations.LoadingScreen
+import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.LoginForm
 import com.alexianhentiu.vaultberryapp.presentation.ui.state.LoginState
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.LoginViewModel
 

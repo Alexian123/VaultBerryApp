@@ -1,4 +1,4 @@
-package com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc.buttons
+package com.alexianhentiu.vaultberryapp.presentation.ui.components.buttons
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
