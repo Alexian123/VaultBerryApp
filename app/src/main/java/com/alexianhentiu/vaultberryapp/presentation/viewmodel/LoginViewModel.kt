@@ -6,8 +6,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alexianhentiu.vaultberryapp.data.api.APIResult
 import com.alexianhentiu.vaultberryapp.domain.model.LoginCredentials
-import com.alexianhentiu.vaultberryapp.domain.usecase.auth.KeyImportUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.security.DecryptVaultKeyUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.auth.LoginUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.auth.LogoutUseCase
 import com.alexianhentiu.vaultberryapp.domain.utils.InputValidator
 import com.alexianhentiu.vaultberryapp.presentation.ui.state.LoginState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,11 +20,12 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
-    private val keyImportUseCase: KeyImportUseCase,
+    private val decryptVaultKeyUseCase: DecryptVaultKeyUseCase,
+    private val logoutUseCase: LogoutUseCase,
     val inputValidator: InputValidator
 ) : ViewModel() {
 
-    private val _loginState = MutableStateFlow<LoginState>(LoginState.Idle)
+    private val _loginState = MutableStateFlow<LoginState>(LoginState.LoggedOut)
     val loginState: StateFlow<LoginState> = _loginState
 
     fun login(email: String, password: String) {
@@ -33,8 +35,23 @@ class LoginViewModel @Inject constructor(
             delay(1000)
             when (val result = loginUseCase(loginCredentials)) {
                 is APIResult.Success -> {
-                    val decryptedVaultKey = keyImportUseCase(password, result.data)
-                    _loginState.value = LoginState.Success(decryptedVaultKey)
+                    val decryptedVaultKey = decryptVaultKeyUseCase(password, result.data)
+                    _loginState.value = LoginState.LoggedIn(decryptedVaultKey)
+                }
+
+                is APIResult.Error -> {
+                    _loginState.value = LoginState.Error(result.message)
+                }
+            }
+        }
+    }
+
+    fun logout() {
+        viewModelScope.launch {
+            _loginState.value = LoginState.Loading
+            when (val result = logoutUseCase()) {
+                is APIResult.Success -> {
+                    _loginState.value = LoginState.LoggedOut
                 }
 
                 is APIResult.Error -> {

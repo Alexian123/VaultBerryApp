@@ -9,16 +9,19 @@ import com.alexianhentiu.vaultberryapp.presentation.ui.screens.auth.LoginScreen
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.auth.RegisterScreen
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.vault.VaultScreen
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.LoginViewModel
+import com.alexianhentiu.vaultberryapp.presentation.viewmodel.MotionViewModel
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.RegisterViewModel
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.VaultViewModel
 
 @Composable
 fun AppNavHost() {
+
     val navController = rememberNavController()
+
+    val loginViewModel: LoginViewModel = hiltViewModel()
 
     NavHost(navController = navController, startDestination = "login") {
         composable("login") {
-            val loginViewModel: LoginViewModel = hiltViewModel()
             LoginScreen(loginViewModel, navController)
         }
         composable("register") {
@@ -27,7 +30,8 @@ fun AppNavHost() {
         }
         composable("vault") {
             val vaultViewModel: VaultViewModel = hiltViewModel()
-            VaultScreen(vaultViewModel, navController)
+            val motionViewModel: MotionViewModel = hiltViewModel()
+            VaultScreen(vaultViewModel, loginViewModel, motionViewModel, navController)
         }
     }
 }

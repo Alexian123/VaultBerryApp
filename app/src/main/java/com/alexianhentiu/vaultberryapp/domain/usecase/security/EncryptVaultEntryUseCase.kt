@@ -1,4 +1,4 @@
-package com.alexianhentiu.vaultberryapp.domain.usecase.vault
+package com.alexianhentiu.vaultberryapp.domain.usecase.security
 
 import com.alexianhentiu.vaultberryapp.domain.model.DecryptedVaultEntry
 import com.alexianhentiu.vaultberryapp.domain.model.DecryptedVaultKey

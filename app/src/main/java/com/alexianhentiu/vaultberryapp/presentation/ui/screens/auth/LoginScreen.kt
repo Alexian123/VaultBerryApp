@@ -15,7 +15,7 @@ fun LoginScreen(viewModel: LoginViewModel, navController: NavController) {
     val loginState by viewModel.loginState.collectAsState()
 
     when (loginState) {
-        is LoginState.Idle -> {
+        is LoginState.LoggedOut -> {
             LoginForm(
                 navController = navController,
                 onLoginClicked = { email, password -> viewModel.login(email, password) },
@@ -25,8 +25,8 @@ fun LoginScreen(viewModel: LoginViewModel, navController: NavController) {
         is LoginState.Loading -> {
             LoadingScreen()
         }
-        is LoginState.Success -> {
-            val vaultKey = (loginState as LoginState.Success).decryptedVaultKey
+        is LoginState.LoggedIn -> {
+            val vaultKey = (loginState as LoginState.LoggedIn).decryptedVaultKey
             navController.currentBackStackEntry?.savedStateHandle?.set(
                 key = "vaultKey",
                 value = vaultKey

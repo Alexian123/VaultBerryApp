@@ -1,5 +1,6 @@
 package com.alexianhentiu.vaultberryapp.presentation.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alexianhentiu.vaultberryapp.data.api.APIResult
@@ -7,8 +8,8 @@ import com.alexianhentiu.vaultberryapp.domain.model.DecryptedVaultEntry
 import com.alexianhentiu.vaultberryapp.domain.model.DecryptedVaultKey
 import com.alexianhentiu.vaultberryapp.domain.model.EncryptedVaultEntry
 import com.alexianhentiu.vaultberryapp.domain.usecase.vault.AddEntryUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.vault.EncryptVaultEntryUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.vault.DecryptVaultEntryUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.security.EncryptVaultEntryUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.security.DecryptVaultEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.vault.GetEntriesUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.vault.UpdateEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.vault.DeleteEntryUseCase
@@ -38,13 +39,28 @@ class VaultViewModel @Inject constructor(
     private val _decryptedEntries = MutableStateFlow<List<DecryptedVaultEntry>>(emptyList())
     val decryptedEntries: StateFlow<List<DecryptedVaultEntry>> = _decryptedEntries
 
-    fun getEntries(decryptedVaultKey: DecryptedVaultKey) {
+    private lateinit var vaultKey: DecryptedVaultKey
+
+    fun unlockVault(decryptedVaultKey: DecryptedVaultKey?) {
+        viewModelScope.launch {
+            _vaultState.value = VaultState.Loading
+            if (decryptedVaultKey == null) {
+                Log.e("VaultViewModel", "decryptedVaultKey is null")
+                _vaultState.value = VaultState.Error("Invalid vault key")
+                return@launch
+            }
+            vaultKey = decryptedVaultKey
+            _vaultState.value = VaultState.Unlocked
+        }
+    }
+
+    fun getEntries() {
         viewModelScope.launch {
             _vaultState.value = VaultState.Loading
             when (val result = getEntriesUseCase()) {
                 is APIResult.Success -> {
-                    _vaultState.value = VaultState.Unlocked
-                    _decryptedEntries.value = decryptAllEntries(result.data, decryptedVaultKey)
+                    _vaultState.value = VaultState.Ready
+                    _decryptedEntries.value = decryptAllEntries(result.data, vaultKey)
                 }
 
                 is APIResult.Error -> {
@@ -54,17 +70,14 @@ class VaultViewModel @Inject constructor(
         }
     }
 
-    fun addEntry(
-        decryptedVaultKey: DecryptedVaultKey,
-        decryptedVaultEntry: DecryptedVaultEntry
-    ) {
+    fun addEntry(decryptedVaultEntry: DecryptedVaultEntry) {
         viewModelScope.launch {
             _vaultState.value = VaultState.Loading
             val newEncryptedVaultEntry =
-                encryptVaultEntryUseCase(decryptedVaultEntry, decryptedVaultKey)
+                encryptVaultEntryUseCase(decryptedVaultEntry, vaultKey)
             when (val result = addEntryUseCase(newEncryptedVaultEntry)) {
                 is APIResult.Success -> {
-                    _vaultState.value = VaultState.Unlocked
+                    _vaultState.value = VaultState.Ready
                     _decryptedEntries.update { currentList ->
                         currentList + decryptedVaultEntry
                     }
@@ -82,7 +95,7 @@ class VaultViewModel @Inject constructor(
             _vaultState.value = VaultState.Loading
             when (val result = deleteEntryUseCase(decryptedVaultEntry)) {
                 is APIResult.Success -> {
-                    _vaultState.value = VaultState.Unlocked
+                    _vaultState.value = VaultState.Ready
                     _decryptedEntries.update { currentList ->
                         currentList.filter { it.timestamp != decryptedVaultEntry.timestamp }
                     }
@@ -95,17 +108,14 @@ class VaultViewModel @Inject constructor(
         }
     }
 
-    fun updateEntry(
-        decryptedVaultKey: DecryptedVaultKey,
-        decryptedVaultEntry: DecryptedVaultEntry
-    ) {
+    fun updateEntry(decryptedVaultEntry: DecryptedVaultEntry) {
         viewModelScope.launch {
             _vaultState.value = VaultState.Loading
             val encryptedVaultEntry =
-                encryptVaultEntryUseCase(decryptedVaultEntry, decryptedVaultKey)
+                encryptVaultEntryUseCase(decryptedVaultEntry, vaultKey)
             when (val result = updateEntryUseCase(encryptedVaultEntry)) {
                 is APIResult.Success -> {
-                    _vaultState.value = VaultState.Unlocked
+                    _vaultState.value = VaultState.Ready
                     _decryptedEntries.update { currentList ->
                         currentList.map {
                             if (it.timestamp == decryptedVaultEntry.timestamp)

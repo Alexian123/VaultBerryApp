@@ -1,10 +1,10 @@
-package com.alexianhentiu.vaultberryapp.domain.usecase.auth
+package com.alexianhentiu.vaultberryapp.domain.usecase.security
 
 import com.alexianhentiu.vaultberryapp.domain.model.DecryptedVaultKey
 import com.alexianhentiu.vaultberryapp.domain.model.EncryptedVaultKey
 import com.alexianhentiu.vaultberryapp.domain.utils.VaultGuardian
 
-class KeyImportUseCase(private val vaultGuardian: VaultGuardian) {
+class DecryptVaultKeyUseCase(private val vaultGuardian: VaultGuardian) {
 
     operator fun invoke(
         password: String,

@@ -1,5 +1,8 @@
 package com.alexianhentiu.vaultberryapp.di
 
+import android.content.Context
+import android.hardware.Sensor
+import android.hardware.SensorManager
 import com.alexianhentiu.vaultberryapp.domain.utils.InputValidator
 import com.alexianhentiu.vaultberryapp.domain.utils.VaultGuardian
 import com.alexianhentiu.vaultberryapp.domain.utils.cryptography.AESHandler
@@ -7,6 +10,7 @@ import com.alexianhentiu.vaultberryapp.domain.utils.cryptography.CryptographyHan
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -25,4 +29,14 @@ object UtilityModule {
     @Provides
     @Singleton
     fun provideInputValidator(): InputValidator = InputValidator()
+
+    @Provides
+    @Singleton
+    fun provideSensorManager(@ApplicationContext context: Context): SensorManager =
+        context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+
+    @Provides
+    @Singleton
+    fun provideAccelerometer(sensorManager: SensorManager): Sensor? =
+        sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
 }

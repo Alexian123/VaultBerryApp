@@ -26,9 +26,10 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(sessionCookieJar: SessionCookieJar): OkHttpClient = OkHttpClient.Builder()
-        .cookieJar(sessionCookieJar)
-        .build()
+    fun provideOkHttpClient(sessionCookieJar: SessionCookieJar): OkHttpClient =
+        OkHttpClient.Builder()
+            .cookieJar(sessionCookieJar)
+            .build()
 
     @Provides
     @Singleton

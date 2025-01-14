@@ -1,6 +1,5 @@
 package com.alexianhentiu.vaultberryapp.presentation.ui.screens.vault
 
-import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -8,16 +7,19 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.Button
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -29,36 +31,63 @@ import com.alexianhentiu.vaultberryapp.domain.model.DecryptedVaultKey
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc.animations.LoadingScreen
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc.dialogs.ConfirmActionDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.state.VaultState
+import com.alexianhentiu.vaultberryapp.presentation.viewmodel.LoginViewModel
+import com.alexianhentiu.vaultberryapp.presentation.viewmodel.MotionViewModel
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.VaultViewModel
 
 @Composable
 fun VaultScreen(
-    viewModel: VaultViewModel,
+    vaultViewModel: VaultViewModel,
+    loginViewModel: LoginViewModel,
+    motionViewModel: MotionViewModel,
     navController: NavController
 ) {
     val vaultKey = navController
-        .previousBackStackEntry?.savedStateHandle?.get<DecryptedVaultKey>("vaultKey") ?: run {
-            Log.e("VaultScreen", "decryptedVaultKey is null")
-            navController.popBackStack() // Navigate back to the previous screen
-            return
-        }
+        .previousBackStackEntry?.savedStateHandle?.get<DecryptedVaultKey>("vaultKey")
 
-    val vaultState by viewModel.vaultState.collectAsState()
-    val decryptedEntries by viewModel.decryptedEntries.collectAsState()
+    val vaultState by vaultViewModel.vaultState.collectAsState()
+    val decryptedEntries by vaultViewModel.decryptedEntries.collectAsState()
+    val motionDetected by motionViewModel.motionDetected.collectAsState()
 
     var showAddEntryDialog by remember { mutableStateOf(false) }
-
     var modifyEntryEvent by remember { mutableStateOf(ModifyEntryEvent.NO_EVENT) }
     var modifiedEntry by remember { mutableStateOf(null as DecryptedVaultEntry?) }
 
     when (vaultState) {
-        is VaultState.Locked -> {
-            viewModel.getEntries(vaultKey)
-        }
+
         is VaultState.Loading -> {
             LoadingScreen()
         }
+
+        is VaultState.Locked -> {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Button(onClick = { vaultViewModel.unlockVault(vaultKey) }) {
+                    Text(stringResource(R.string.unlock_vault_button_text))
+                }
+            }
+        }
+
         is VaultState.Unlocked -> {
+            vaultViewModel.getEntries()
+        }
+
+        is VaultState.Ready -> {
+            DisposableEffect(vaultState) {
+                motionViewModel.registerSensorListener()
+                onDispose {
+                    motionViewModel.unregisterSensorListener()
+                }
+            }
+
+            if (motionDetected) {
+                motionViewModel.resetMotionDetected()
+                loginViewModel.logout()
+                navController.navigate("login")
+            }
+
             Scaffold(
                 topBar = { TopBar() },
                 floatingActionButton = {
@@ -82,7 +111,7 @@ fun VaultScreen(
                                     modifyEntryEvent = event
                                     modifiedEntry = entry
                                 },
-                                inputValidator = viewModel.inputValidator
+                                inputValidator = vaultViewModel.inputValidator
                             )
                         }
                     }
@@ -92,10 +121,10 @@ fun VaultScreen(
                             formTitle = stringResource(R.string.add_entry_form_title),
                             onDismissRequest = { showAddEntryDialog = false },
                             onSubmit = {
-                                viewModel.addEntry(vaultKey, it)
+                                vaultViewModel.addEntry(it)
                                 showAddEntryDialog = false
                             },
-                            inputValidator = viewModel.inputValidator
+                            inputValidator = vaultViewModel.inputValidator
                         )
                     }
 
@@ -108,7 +137,7 @@ fun VaultScreen(
                                 onDismissRequest = { modifyEntryEvent = ModifyEntryEvent.NO_EVENT },
                                 onSubmit = {
                                     if (it && modifiedEntry != null) { // delete entry
-                                        viewModel.deleteEntry(modifiedEntry!!)
+                                        vaultViewModel.deleteEntry(modifiedEntry!!)
                                         modifyEntryEvent = ModifyEntryEvent.NO_EVENT
                                         modifiedEntry = null
                                     }
@@ -124,7 +153,7 @@ fun VaultScreen(
                                 onDismissRequest = { modifyEntryEvent = ModifyEntryEvent.NO_EVENT },
                                 onSubmit = {
                                     if (it && modifiedEntry != null) { // update entry
-                                        viewModel.updateEntry(vaultKey, modifiedEntry!!)
+                                        vaultViewModel.updateEntry(modifiedEntry!!)
                                         modifyEntryEvent = ModifyEntryEvent.NO_EVENT
                                         modifiedEntry = null
                                     }
