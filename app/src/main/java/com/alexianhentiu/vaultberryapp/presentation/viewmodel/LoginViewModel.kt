@@ -1,5 +1,6 @@
 package com.alexianhentiu.vaultberryapp.presentation.viewmodel
 
+import android.util.Log
 import javax.inject.Inject
 
 import androidx.lifecycle.ViewModel
@@ -10,7 +11,7 @@ import com.alexianhentiu.vaultberryapp.domain.usecase.security.DecryptVaultKeyUs
 import com.alexianhentiu.vaultberryapp.domain.usecase.auth.LoginUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.auth.LogoutUseCase
 import com.alexianhentiu.vaultberryapp.domain.utils.InputValidator
-import com.alexianhentiu.vaultberryapp.presentation.ui.state.LoginState
+import com.alexianhentiu.vaultberryapp.presentation.ui.screens.state.LoginState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -41,6 +42,7 @@ class LoginViewModel @Inject constructor(
 
                 is APIResult.Error -> {
                     _loginState.value = LoginState.Error(result.message)
+                    Log.e("LoginViewModel", "Login failed: ${result.message}")
                 }
             }
         }
@@ -56,8 +58,13 @@ class LoginViewModel @Inject constructor(
 
                 is APIResult.Error -> {
                     _loginState.value = LoginState.Error(result.message)
+                    Log.e("LoginViewModel", "Logout failed: ${result.message}")
                 }
             }
         }
+    }
+
+    fun resetState() {
+        _loginState.value = LoginState.LoggedOut
     }
 }

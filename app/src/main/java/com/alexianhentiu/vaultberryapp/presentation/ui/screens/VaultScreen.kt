@@ -10,7 +10,6 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
@@ -19,7 +18,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -30,8 +28,9 @@ import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.AddEnt
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ConfirmActionDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.TopBar
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.VaultEntryItem
+import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ErrorDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.enums.EntryModification
-import com.alexianhentiu.vaultberryapp.presentation.ui.state.VaultState
+import com.alexianhentiu.vaultberryapp.presentation.ui.screens.state.VaultState
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.LoginViewModel
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.MotionViewModel
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.VaultViewModel
@@ -168,7 +167,11 @@ fun VaultScreen(
         }
         is VaultState.Error ->  {
             val errorMessage = (vaultState as VaultState.Error).message
-            Text("Error: $errorMessage", color = Color.Red)
+            ErrorDialog(
+                onConfirm = { vaultViewModel.resetState() },
+                title = "Vault Error",
+                message = errorMessage
+            )
         }
     }
 }

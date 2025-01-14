@@ -14,7 +14,7 @@ import com.alexianhentiu.vaultberryapp.domain.usecase.vault.GetEntriesUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.vault.UpdateEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.vault.DeleteEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.utils.InputValidator
-import com.alexianhentiu.vaultberryapp.presentation.ui.state.VaultState
+import com.alexianhentiu.vaultberryapp.presentation.ui.screens.state.VaultState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -84,6 +84,7 @@ class VaultViewModel @Inject constructor(
 
                 is APIResult.Error -> {
                     _vaultState.value = VaultState.Error(result.message)
+                    Log.e("VaultViewModel", "Failed to get entries: ${result.message}")
                 }
             }
         }
@@ -105,6 +106,7 @@ class VaultViewModel @Inject constructor(
 
                 is APIResult.Error -> {
                     _vaultState.value = VaultState.Error(result.message)
+                    Log.e("VaultViewModel", "Failed to add entry: ${result.message}")
                 }
             }
         }
@@ -124,6 +126,7 @@ class VaultViewModel @Inject constructor(
 
                 is APIResult.Error -> {
                     _vaultState.value = VaultState.Error(result.message)
+                    Log.e("VaultViewModel", "Failed to delete entry: ${result.message}")
                 }
             }
         }
@@ -149,9 +152,14 @@ class VaultViewModel @Inject constructor(
 
                 is APIResult.Error -> {
                     _vaultState.value = VaultState.Error(result.message)
+                    Log.e("VaultViewModel", "Failed to update entry: ${result.message}")
                 }
             }
         }
+    }
+
+    fun resetState() {
+        _vaultState.value = VaultState.Locked
     }
 
     private fun decryptAllEntries(

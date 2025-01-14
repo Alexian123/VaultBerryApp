@@ -1,5 +1,6 @@
 package com.alexianhentiu.vaultberryapp.presentation.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alexianhentiu.vaultberryapp.data.api.APIResult
@@ -7,7 +8,7 @@ import com.alexianhentiu.vaultberryapp.domain.model.User
 import com.alexianhentiu.vaultberryapp.domain.usecase.security.EncryptVaultKeyUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.auth.RegisterUseCase
 import com.alexianhentiu.vaultberryapp.domain.utils.InputValidator
-import com.alexianhentiu.vaultberryapp.presentation.ui.state.RegisterState
+import com.alexianhentiu.vaultberryapp.presentation.ui.screens.state.RegisterState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -40,8 +41,13 @@ class RegisterViewModel @Inject constructor(
 
                 is APIResult.Error -> {
                     _registerState.value = RegisterState.Error(result.message)
+                    Log.e("RegisterViewModel", "Registration failed: ${result.message}")
                 }
             }
         }
+    }
+
+    fun resetState() {
+        _registerState.value = RegisterState.Idle
     }
 }

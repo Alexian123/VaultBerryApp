@@ -43,12 +43,16 @@ class MotionViewModel @Inject constructor(
     }
 
     fun registerSensorListener() {
-        accelerometer?.let {
-            registerListenerUseCase(sensorEventListener, it)
+        Log.d("MotionViewModel", "Registering sensor listener")
+        if (accelerometer == null) {
+            Log.e("MotionViewModel", "Missing accelerometer sensor")
+        } else {
+            registerListenerUseCase(sensorEventListener, accelerometer)
         }
     }
 
     fun unregisterSensorListener() {
+        Log.d("MotionViewModel", "Unregistering sensor listener")
         unregisterListenerUseCase(sensorEventListener)
     }
 

@@ -24,4 +24,7 @@
     <string name="logout_menu_item_text">Logout</string>
     <string name="unlock_vault_icon_content_description">Unlock vault</string>
     <string name="unlock_vault_text">Tap the screen to unlock the vault</string>
+    <string name="error_dialog_title_default">Error</string>
+    <string name="error_dialog_message_default">An error occurred. Please try again.</string>
+    <string name="error_dialog_confirm_button_text">OK</string>
 </resources>

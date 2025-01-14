@@ -5,18 +5,17 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ErrorDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.RegisterForm
-import com.alexianhentiu.vaultberryapp.presentation.ui.state.RegisterState
+import com.alexianhentiu.vaultberryapp.presentation.ui.screens.state.RegisterState
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.RegisterViewModel
 
 @Composable
@@ -34,9 +33,7 @@ fun RegisterScreen(viewModel: RegisterViewModel, navController: NavController) {
             )
         }
         is RegisterState.Loading -> {
-            CircularProgressIndicator(
-                modifier = Modifier.fillMaxSize()
-            )
+            LoadingScreen()
         }
         is RegisterState.Success -> {
             Column(
@@ -58,7 +55,11 @@ fun RegisterScreen(viewModel: RegisterViewModel, navController: NavController) {
         }
         is RegisterState.Error -> {
             val errorMessage = (registerState as RegisterState.Error).message
-            Text("Error: $errorMessage", color = Color.Red)
+            ErrorDialog(
+                onConfirm = { viewModel.resetState() },
+                title = "Registration Error",
+                message = errorMessage
+            )
         }
     }
 }
