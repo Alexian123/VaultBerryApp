@@ -26,18 +26,22 @@ import com.alexianhentiu.vaultberryapp.R
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun TopBar(
+    onSearch: (String) -> Unit,
+    onLogout: () -> Unit
 ) {
     var isSearching by remember { mutableStateOf(false) }
     var searchText by remember { mutableStateOf(TextFieldValue("")) }
-
-    // TODO: Implement search functionality
+    var showMenu by remember { mutableStateOf(false) }
 
     TopAppBar(
         title = {
             if (isSearching) {
                 BasicTextField(
                     value = searchText,
-                    onValueChange = { searchText = it },
+                    onValueChange = {
+                        searchText = it
+                        onSearch(it.text)
+                    },
                     modifier = Modifier.fillMaxWidth(),
                     decorationBox = { innerTextField ->
                         if (searchText.text.isEmpty()) {
@@ -54,18 +58,24 @@ fun TopBar(
             }
         },
         navigationIcon = {
-            IconButton(onClick = { /* TODO: Handle menu click */ }) {
+            IconButton(onClick = { showMenu = !showMenu }) {
                 Icon(
                     Icons.Filled.Menu,
                     stringResource(R.string.menu_content_description)
                 )
             }
+            MainMenu(
+                onDismissRequest = { showMenu = false },
+                expanded = showMenu,
+                onLogout = onLogout
+            )
         },
         actions = {
             if (isSearching) {
                 IconButton(onClick = {
                     isSearching = false
                     searchText = TextFieldValue("")
+                    onSearch("")
                 }) {
                     Icon(
                         Icons.Filled.Close,
@@ -88,5 +98,8 @@ fun TopBar(
 @Preview
 @Composable
 fun PreviewTopBar() {
-    TopBar()
+    TopBar(
+        onSearch = { },
+        onLogout = { }
+    )
 }

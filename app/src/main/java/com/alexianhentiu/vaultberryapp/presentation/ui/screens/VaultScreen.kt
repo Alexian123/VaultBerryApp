@@ -49,7 +49,7 @@ fun VaultScreen(
         .previousBackStackEntry?.savedStateHandle?.get<DecryptedVaultKey>("vaultKey")
 
     val vaultState by vaultViewModel.vaultState.collectAsState()
-    val decryptedEntries by vaultViewModel.decryptedEntries.collectAsState()
+    val decryptedEntries by vaultViewModel.filteredEntries.collectAsState()
     val motionDetected by motionViewModel.motionDetected.collectAsState()
 
     var showAddEntryDialog by remember { mutableStateOf(false) }
@@ -92,7 +92,13 @@ fun VaultScreen(
             }
 
             Scaffold(
-                topBar = { TopBar() },
+                topBar = { TopBar(
+                    onSearch = { vaultViewModel.searchEntriesByTitle(it) },
+                    onLogout = {
+                        loginViewModel.logout()
+                        navController.navigate("login")
+                    }
+                ) },
                 floatingActionButton = {
                     FloatingActionButton(
                         onClick = { showAddEntryDialog = true },

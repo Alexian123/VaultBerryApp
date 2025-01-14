@@ -36,8 +36,9 @@ class VaultViewModel @Inject constructor(
     private val _vaultState = MutableStateFlow<VaultState>(VaultState.Locked)
     val vaultState: StateFlow<VaultState> = _vaultState
 
-    private val _decryptedEntries = MutableStateFlow<List<DecryptedVaultEntry>>(emptyList())
-    val decryptedEntries: StateFlow<List<DecryptedVaultEntry>> = _decryptedEntries
+    private val allEntries = MutableStateFlow<List<DecryptedVaultEntry>>(emptyList())
+    private val _filteredEntries = MutableStateFlow<List<DecryptedVaultEntry>>(emptyList())
+    val filteredEntries: StateFlow<List<DecryptedVaultEntry>> = _filteredEntries
 
     private lateinit var vaultKey: DecryptedVaultKey
 
@@ -54,13 +55,29 @@ class VaultViewModel @Inject constructor(
         }
     }
 
+    fun searchEntriesByTitle(query: String) {
+        viewModelScope.launch {
+            _vaultState.value = VaultState.Loading
+            if (query.isEmpty()) {
+                _filteredEntries.value = allEntries.value
+            }
+            else {
+                _filteredEntries.value = allEntries.value.filter {
+                    it.title.contains(query, ignoreCase = true)
+                }
+            }
+            _vaultState.value = VaultState.Ready
+        }
+    }
+
     fun getEntries() {
         viewModelScope.launch {
             _vaultState.value = VaultState.Loading
             when (val result = getEntriesUseCase()) {
                 is APIResult.Success -> {
                     _vaultState.value = VaultState.Ready
-                    _decryptedEntries.value = decryptAllEntries(result.data, vaultKey)
+                    allEntries.value = decryptAllEntries(result.data, vaultKey)
+                    resetShownEntries()
                 }
 
                 is APIResult.Error -> {
@@ -78,9 +95,10 @@ class VaultViewModel @Inject constructor(
             when (val result = addEntryUseCase(newEncryptedVaultEntry)) {
                 is APIResult.Success -> {
                     _vaultState.value = VaultState.Ready
-                    _decryptedEntries.update { currentList ->
+                    allEntries.update { currentList ->
                         currentList + decryptedVaultEntry
                     }
+                    resetShownEntries()
                 }
 
                 is APIResult.Error -> {
@@ -96,9 +114,10 @@ class VaultViewModel @Inject constructor(
             when (val result = deleteEntryUseCase(decryptedVaultEntry)) {
                 is APIResult.Success -> {
                     _vaultState.value = VaultState.Ready
-                    _decryptedEntries.update { currentList ->
+                    allEntries.update { currentList ->
                         currentList.filter { it.timestamp != decryptedVaultEntry.timestamp }
                     }
+                    resetShownEntries()
                 }
 
                 is APIResult.Error -> {
@@ -116,13 +135,14 @@ class VaultViewModel @Inject constructor(
             when (val result = updateEntryUseCase(encryptedVaultEntry)) {
                 is APIResult.Success -> {
                     _vaultState.value = VaultState.Ready
-                    _decryptedEntries.update { currentList ->
+                    allEntries.update { currentList ->
                         currentList.map {
                             if (it.timestamp == decryptedVaultEntry.timestamp)
                                 decryptedVaultEntry
                             else it
                         }
                     }
+                    resetShownEntries()
                 }
 
                 is APIResult.Error -> {
@@ -142,5 +162,9 @@ class VaultViewModel @Inject constructor(
             decryptedEntries.add(decryptedEntry)
         }
         return decryptedEntries
+    }
+
+    private fun resetShownEntries() {
+        _filteredEntries.value = allEntries.value
     }
 }

@@ -22,4 +22,5 @@
     <string name="update_entry_dialog_message">The data will be overwritten.</string>
     <string name="unlock_vault_button_text">Unlock Vault</string>
     <string name="entry_content_description">Entry</string>
+    <string name="logout_menu_item_text">Logout</string>
 </resources>
