@@ -42,6 +42,8 @@ class VaultViewModel @Inject constructor(
 
     private lateinit var vaultKey: DecryptedVaultKey
 
+    // TODO: Implement statistics & suggestions for entry password security
+
     fun unlockVault(decryptedVaultKey: DecryptedVaultKey?) {
         viewModelScope.launch {
             _vaultState.value = VaultState.Loading

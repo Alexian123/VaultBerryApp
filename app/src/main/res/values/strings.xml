@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">VaultBerryApp</string>
+    <string name="app_name">VaultBerry</string>
     <string name="add_entry_action_content_description">Add entry</string>
     <string name="add_entry_form_title">Add new entry</string>
     <string name="toggle_entry_expansion_action_content_description">Toggle expansion</string>
