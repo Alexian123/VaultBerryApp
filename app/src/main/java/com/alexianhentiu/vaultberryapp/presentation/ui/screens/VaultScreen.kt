@@ -31,14 +31,14 @@ import com.alexianhentiu.vaultberryapp.presentation.ui.components.VaultEntryItem
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ErrorDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.enums.EntryModification
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.state.VaultState
-import com.alexianhentiu.vaultberryapp.presentation.viewmodel.LoginViewModel
+import com.alexianhentiu.vaultberryapp.presentation.viewmodel.AuthViewModel
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.MotionViewModel
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.VaultViewModel
 
 @Composable
 fun VaultScreen(
     vaultViewModel: VaultViewModel,
-    loginViewModel: LoginViewModel,
+    authViewModel: AuthViewModel,
     motionViewModel: MotionViewModel,
     navController: NavController
 ) {
@@ -77,16 +77,16 @@ fun VaultScreen(
 
             if (motionDetected) {
                 motionViewModel.resetMotionDetected()
-                loginViewModel.logout()
-                navController.navigate("login")
+                authViewModel.logout()
+                navController.navigate("auth")
             }
 
             Scaffold(
                 topBar = { TopBar(
                     onSearch = { vaultViewModel.searchEntriesByTitle(it) },
                     onLogout = {
-                        loginViewModel.logout()
-                        navController.navigate("login")
+                        authViewModel.logout()
+                        navController.navigate("auth")
                     }
                 ) },
                 floatingActionButton = {

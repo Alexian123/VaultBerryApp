@@ -7,10 +7,10 @@ import androidx.navigation.NavController
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ErrorDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.LoginForm
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.state.LoginState
-import com.alexianhentiu.vaultberryapp.presentation.viewmodel.LoginViewModel
+import com.alexianhentiu.vaultberryapp.presentation.viewmodel.AuthViewModel
 
 @Composable
-fun LoginScreen(viewModel: LoginViewModel, navController: NavController) {
+fun LoginScreen(viewModel: AuthViewModel, navController: NavController) {
     val loginState by viewModel.loginState.collectAsState()
 
     when (loginState) {

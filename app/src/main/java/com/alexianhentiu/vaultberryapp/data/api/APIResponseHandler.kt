@@ -1,5 +1,7 @@
 package com.alexianhentiu.vaultberryapp.data.api
 
+import org.json.JSONException
+import org.json.JSONObject
 import retrofit2.Response
 
 class APIResponseHandler {
@@ -19,7 +21,14 @@ class APIResponseHandler {
                     APIResult.Error("Empty response body")
                 }
             } else {
-                APIResult.Error(response.errorBody()?.string() ?: "Unknown error")
+                val errorBody = response.errorBody()?.string()
+                try {
+                    val jsonObject = errorBody?.let { JSONObject(it) } // Parse as JSON
+                    val errorMessage = jsonObject?.getString("error") ?: "Unknown error"
+                    APIResult.Error(errorMessage)
+                } catch (e: JSONException) {
+                    APIResult.Error(errorBody ?: "Unknown error") // Fallback if not JSON
+                }
             }
         } catch (e: Exception) {
             APIResult.Error(e.message ?: "An unexpected error occurred")

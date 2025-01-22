@@ -19,7 +19,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 @HiltViewModel
-class LoginViewModel @Inject constructor(
+class AuthViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
     private val decryptVaultKeyUseCase: DecryptVaultKeyUseCase,
     private val logoutUseCase: LogoutUseCase,
