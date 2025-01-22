@@ -6,10 +6,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -23,27 +25,30 @@ import com.alexianhentiu.vaultberryapp.R
 fun UnlockVaultScreen(
     onUnlock: () -> Unit,
 ) {
-    Box(
-        modifier = Modifier.fillMaxSize()
-            .clickable { onUnlock() },
-        contentAlignment = Alignment.Center
-    ) {
-        Column(
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,
+    Scaffold { contentPadding ->
+        Box(
             modifier = Modifier.fillMaxSize()
-                .align(Alignment.Center),
+                .padding(contentPadding)
+                .clickable { onUnlock() },
+            contentAlignment = Alignment.Center
         ) {
-            Icon(
-                imageVector = Icons.Filled.Lock,
-                contentDescription = stringResource(R.string.unlock_vault_icon_content_description),
-                modifier = Modifier
-                    .width(100.dp)
-                    .height(100.dp)
-            )
-            Text(
-                text = stringResource(R.string.unlock_vault_text),
-            )
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxSize()
+                    .align(Alignment.Center),
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Lock,
+                    contentDescription = stringResource(R.string.unlock_vault_icon_content_description),
+                    modifier = Modifier
+                        .width(100.dp)
+                        .height(100.dp)
+                )
+                Text(
+                    text = stringResource(R.string.unlock_vault_text),
+                )
+            }
         }
     }
 }

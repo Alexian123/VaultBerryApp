@@ -1,10 +1,12 @@
 package com.alexianhentiu.vaultberryapp.presentation.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -24,13 +26,17 @@ fun RegisterScreen(viewModel: RegisterViewModel, navController: NavController) {
 
     when (registerState) {
         is RegisterState.Idle -> {
-            RegisterForm(
-                navController = navController,
-                onRegisterClicked = { email, password, firstName, lastName ->
-                    viewModel.register(email, password,  firstName, lastName)
-                },
-                inputValidator = viewModel.inputValidator
-            )
+            Scaffold { contentPadding ->
+                Box(modifier = Modifier.fillMaxSize().padding(contentPadding)) {
+                    RegisterForm(
+                        navController = navController,
+                        onRegisterClicked = { email, password, firstName, lastName ->
+                            viewModel.register(email, password, firstName, lastName)
+                        },
+                        inputValidator = viewModel.inputValidator
+                    )
+                }
+            }
         }
         is RegisterState.Loading -> {
             LoadingScreen()

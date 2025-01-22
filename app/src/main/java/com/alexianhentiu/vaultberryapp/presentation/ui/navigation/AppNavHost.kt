@@ -20,8 +20,8 @@ fun AppNavHost() {
 
     val authViewModel: AuthViewModel = hiltViewModel()
 
-    NavHost(navController = navController, startDestination = "auth") {
-        composable("auth") {
+    NavHost(navController = navController, startDestination = "login") {
+        composable("login") {
             LoginScreen(authViewModel, navController)
         }
         composable("register") {

@@ -78,7 +78,7 @@ fun VaultScreen(
             if (motionDetected) {
                 motionViewModel.resetMotionDetected()
                 authViewModel.logout()
-                navController.navigate("auth")
+                navController.navigate("login")
             }
 
             Scaffold(
@@ -86,7 +86,7 @@ fun VaultScreen(
                     onSearch = { vaultViewModel.searchEntriesByTitle(it) },
                     onLogout = {
                         authViewModel.logout()
-                        navController.navigate("auth")
+                        navController.navigate("login")
                     }
                 ) },
                 floatingActionButton = {

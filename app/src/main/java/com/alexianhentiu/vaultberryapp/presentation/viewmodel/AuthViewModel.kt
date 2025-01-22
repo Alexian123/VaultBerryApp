@@ -11,7 +11,7 @@ import com.alexianhentiu.vaultberryapp.domain.usecase.security.DecryptVaultKeyUs
 import com.alexianhentiu.vaultberryapp.domain.usecase.auth.LoginUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.auth.LogoutUseCase
 import com.alexianhentiu.vaultberryapp.domain.utils.InputValidator
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.state.LoginState
+import com.alexianhentiu.vaultberryapp.presentation.ui.screens.state.AuthState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,22 +26,22 @@ class AuthViewModel @Inject constructor(
     val inputValidator: InputValidator
 ) : ViewModel() {
 
-    private val _loginState = MutableStateFlow<LoginState>(LoginState.LoggedOut)
-    val loginState: StateFlow<LoginState> = _loginState
+    private val _authState = MutableStateFlow<AuthState>(AuthState.LoggedOut)
+    val authState: StateFlow<AuthState> = _authState
 
     fun login(email: String, password: String) {
         val loginCredentials = LoginCredentials(email, password)
         viewModelScope.launch {
-            _loginState.value = LoginState.Loading
+            _authState.value = AuthState.Loading
             delay(1000)
             when (val result = loginUseCase(loginCredentials)) {
                 is APIResult.Success -> {
                     val decryptedVaultKey = decryptVaultKeyUseCase(password, result.data)
-                    _loginState.value = LoginState.LoggedIn(decryptedVaultKey)
+                    _authState.value = AuthState.LoggedIn(decryptedVaultKey)
                 }
 
                 is APIResult.Error -> {
-                    _loginState.value = LoginState.Error(result.message)
+                    _authState.value = AuthState.Error(result.message)
                     Log.e("LoginViewModel", "Login failed: ${result.message}")
                 }
             }
@@ -50,14 +50,14 @@ class AuthViewModel @Inject constructor(
 
     fun logout() {
         viewModelScope.launch {
-            _loginState.value = LoginState.Loading
+            _authState.value = AuthState.Loading
             when (val result = logoutUseCase()) {
                 is APIResult.Success -> {
-                    _loginState.value = LoginState.LoggedOut
+                    _authState.value = AuthState.LoggedOut
                 }
 
                 is APIResult.Error -> {
-                    _loginState.value = LoginState.Error(result.message)
+                    _authState.value = AuthState.Error(result.message)
                     Log.e("LoginViewModel", "Logout failed: ${result.message}")
                 }
             }
@@ -65,6 +65,6 @@ class AuthViewModel @Inject constructor(
     }
 
     fun resetState() {
-        _loginState.value = LoginState.LoggedOut
+        _authState.value = AuthState.LoggedOut
     }
 }
