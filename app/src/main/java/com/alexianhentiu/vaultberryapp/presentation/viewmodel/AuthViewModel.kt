@@ -56,6 +56,7 @@ class AuthViewModel @Inject constructor(
             when (val result = logoutUseCase()) {
                 is APIResult.Success -> {
                     _authState.value = AuthState.LoggedOut
+                    Log.d("LoginViewModel", "API success: ${result.data}")
                 }
 
                 is APIResult.Error -> {

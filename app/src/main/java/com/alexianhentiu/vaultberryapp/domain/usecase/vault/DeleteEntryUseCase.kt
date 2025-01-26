@@ -6,7 +6,7 @@ import com.alexianhentiu.vaultberryapp.domain.repository.VaultEntryRepository
 
 class DeleteEntryUseCase(private val vaultEntryRepository: VaultEntryRepository) {
 
-    suspend operator fun invoke(decryptedVaultEntry: DecryptedVaultEntry): APIResult<Unit> {
+    suspend operator fun invoke(decryptedVaultEntry: DecryptedVaultEntry): APIResult<String> {
         return vaultEntryRepository.deleteEntry(decryptedVaultEntry)
     }
 }

@@ -13,25 +13,25 @@ class AccountRepositoryImpl(
     private val modelConverter: ModelConverter
 ) : AccountRepository {
 
-    override suspend fun updateAccount(account: Account): APIResult<Unit> {
+    override suspend fun updateAccount(account: Account): APIResult<String> {
         val accountDTO = modelConverter.accountToDTO(account)
         return apiResponseHandler.safeApiCall(
             apiCall = { apiService.updateAccount(accountDTO) },
-            transform = {  }
+            transform = { it.message }
         )
     }
 
-    override suspend fun deleteAccount(): APIResult<Unit> {
+    override suspend fun deleteAccount(): APIResult<String> {
         return apiResponseHandler.safeApiCall(
             apiCall = { apiService.deleteAccount() },
-            transform = {  }
+            transform = { it.message }
         )
     }
 
-    override suspend fun updateKeyChain(keychain: KeyChain): APIResult<Unit> {
+    override suspend fun updateKeyChain(keychain: KeyChain): APIResult<String> {
         return apiResponseHandler.safeApiCall(
             apiCall = { apiService.updateKeyChain(modelConverter.keyChainToDTO(keychain)) },
-            transform = {  }
+            transform = { it.message }
         )
     }
 }

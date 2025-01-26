@@ -7,7 +7,7 @@ import org.json.JSONObject
 import retrofit2.Response
 
 class APIResponseHandler {
-
+// TODO: Implement better error handling with more suggestive errors
     // Generic function to handle API calls and map responses
     suspend fun <T, R> safeApiCall(
         apiCall: suspend () -> Response<T>,

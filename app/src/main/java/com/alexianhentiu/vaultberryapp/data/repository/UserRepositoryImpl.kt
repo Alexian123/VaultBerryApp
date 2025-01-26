@@ -22,11 +22,11 @@ class UserRepositoryImpl(
         )
     }
 
-    override suspend fun register(user: User): APIResult<Unit> {
+    override suspend fun register(user: User): APIResult<String> {
         val userDTO = modelConverter.userToDTO(user)
         return apiResponseHandler.safeApiCall(
             apiCall = { apiService.register(userDTO) },
-            transform = { }
+            transform = { it.message }
         )
     }
 
@@ -38,10 +38,10 @@ class UserRepositoryImpl(
         )
     }
 
-    override suspend fun logout(): APIResult<Unit> {
+    override suspend fun logout(): APIResult<String> {
         return apiResponseHandler.safeApiCall(
             apiCall = { apiService.logout() },
-            transform = { }
+            transform = { it.message }
         )
     }
 }

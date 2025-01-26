@@ -6,7 +6,7 @@ import com.alexianhentiu.vaultberryapp.domain.repository.UserRepository
 
 class RegisterUseCase(private val userRepository: UserRepository) {
 
-    suspend operator fun invoke(user: User): APIResult<Unit> {
+    suspend operator fun invoke(user: User): APIResult<String> {
         return userRepository.register(user)
     }
 }

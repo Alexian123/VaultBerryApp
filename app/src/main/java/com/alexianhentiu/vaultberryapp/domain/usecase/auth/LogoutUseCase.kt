@@ -5,7 +5,7 @@ import com.alexianhentiu.vaultberryapp.domain.repository.UserRepository
 
 class LogoutUseCase(private val userRepository: UserRepository) {
 
-    suspend operator fun invoke(): APIResult<Unit> {
+    suspend operator fun invoke(): APIResult<String> {
         return userRepository.logout()
     }
 }

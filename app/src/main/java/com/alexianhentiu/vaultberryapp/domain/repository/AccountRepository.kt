@@ -6,9 +6,9 @@ import com.alexianhentiu.vaultberryapp.domain.model.KeyChain
 
 interface AccountRepository {
 
-    suspend fun updateAccount(account: Account): APIResult<Unit>
+    suspend fun updateAccount(account: Account): APIResult<String>
 
-    suspend fun deleteAccount(): APIResult<Unit>
+    suspend fun deleteAccount(): APIResult<String>
 
-    suspend fun updateKeyChain(keychain: KeyChain): APIResult<Unit>
+    suspend fun updateKeyChain(keychain: KeyChain): APIResult<String>
 }

@@ -102,6 +102,7 @@ class VaultViewModel @Inject constructor(
                         currentList + decryptedVaultEntry
                     }
                     resetShownEntries()
+                    Log.d("VaultViewModel", "API success: ${result.data}")
                 }
 
                 is APIResult.Error -> {
@@ -122,6 +123,7 @@ class VaultViewModel @Inject constructor(
                         currentList.filter { it.timestamp != decryptedVaultEntry.timestamp }
                     }
                     resetShownEntries()
+                    Log.d("VaultViewModel", "API success: ${result.data}")
                 }
 
                 is APIResult.Error -> {
@@ -148,6 +150,7 @@ class VaultViewModel @Inject constructor(
                         }
                     }
                     resetShownEntries()
+                    Log.d("VaultViewModel", "API success: ${result.data}")
                 }
 
                 is APIResult.Error -> {

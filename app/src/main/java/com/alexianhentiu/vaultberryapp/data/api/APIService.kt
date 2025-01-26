@@ -4,6 +4,7 @@ import com.alexianhentiu.vaultberryapp.data.model.AccountDTO
 import com.alexianhentiu.vaultberryapp.data.model.LoginCredentialsDTO
 import com.alexianhentiu.vaultberryapp.data.model.EncryptedVaultEntryDTO
 import com.alexianhentiu.vaultberryapp.data.model.KeyChainDTO
+import com.alexianhentiu.vaultberryapp.data.model.MessageResponse
 import com.alexianhentiu.vaultberryapp.data.model.RecoveryKeyDTO
 import com.alexianhentiu.vaultberryapp.data.model.UserDTO
 import retrofit2.Response
@@ -20,32 +21,32 @@ interface APIService {
     suspend fun getRecoveryKey(@Query("email") email: String): Response<RecoveryKeyDTO>
 
     @POST("register")
-    suspend fun register(@Body user: UserDTO): Response<Unit>
+    suspend fun register(@Body user: UserDTO): Response<MessageResponse>
 
     @POST("login")
     suspend fun login(@Body loginCredentialsDTO: LoginCredentialsDTO): Response<KeyChainDTO>
 
     @POST("logout")
-    suspend fun logout(): Response<Unit>
+    suspend fun logout(): Response<MessageResponse>
 
     @GET("entries")
     suspend fun getEntries(): Response<List<EncryptedVaultEntryDTO>?>
 
     @POST("entries/add")
-    suspend fun addEntry(@Body vaultEntry: EncryptedVaultEntryDTO): Response<Unit>
+    suspend fun addEntry(@Body vaultEntry: EncryptedVaultEntryDTO): Response<MessageResponse>
 
     @POST("entries/update")
-    suspend fun updateEntry(@Body vaultEntry: EncryptedVaultEntryDTO): Response<Unit>
+    suspend fun updateEntry(@Body vaultEntry: EncryptedVaultEntryDTO): Response<MessageResponse>
 
     @DELETE("entries/delete/{timestamp}")
-    suspend fun deleteEntry(@Path("timestamp") timestamp: Long): Response<Unit>
+    suspend fun deleteEntry(@Path("timestamp") timestamp: Long): Response<MessageResponse>
 
     @POST("account")
-    suspend fun updateAccount(@Body account: AccountDTO): Response<Unit>
+    suspend fun updateAccount(@Body account: AccountDTO): Response<MessageResponse>
 
     @DELETE("account")
-    suspend fun deleteAccount(): Response<Unit>
+    suspend fun deleteAccount(): Response<MessageResponse>
 
     @POST("account/keychain")
-    suspend fun updateKeyChain(@Body keychain: KeyChainDTO): Response<Unit>
+    suspend fun updateKeyChain(@Body keychain: KeyChainDTO): Response<MessageResponse>
 }

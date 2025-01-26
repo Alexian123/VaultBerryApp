@@ -42,6 +42,7 @@ class RegisterViewModel @Inject constructor(
             when (val result = registerUseCase(user)) {
                 is APIResult.Success -> {
                     _registerState.value = RegisterState.Success
+                    Log.d("RegisterViewModel", "API success: ${result.data}")
                 }
 
                 is APIResult.Error -> {

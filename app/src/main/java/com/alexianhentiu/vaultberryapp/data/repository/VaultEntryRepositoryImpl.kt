@@ -24,26 +24,26 @@ class VaultEntryRepositoryImpl(
         )
     }
 
-    override suspend fun addEntry(encryptedVaultEntry: EncryptedVaultEntry): APIResult<Unit> {
+    override suspend fun addEntry(encryptedVaultEntry: EncryptedVaultEntry): APIResult<String> {
         val encryptedVaultEntryDTO = modelConverter.encryptedVaultEntryToDTO(encryptedVaultEntry)
         return apiResponseHandler.safeApiCall(
             apiCall = { apiService.addEntry(encryptedVaultEntryDTO) },
-            transform = { }
+            transform = { it.message }
         )
     }
 
-    override suspend fun updateEntry(encryptedVaultEntry: EncryptedVaultEntry): APIResult<Unit> {
+    override suspend fun updateEntry(encryptedVaultEntry: EncryptedVaultEntry): APIResult<String> {
         val encryptedVaultEntryDTO = modelConverter.encryptedVaultEntryToDTO(encryptedVaultEntry)
         return apiResponseHandler.safeApiCall(
             apiCall = { apiService.updateEntry(encryptedVaultEntryDTO) },
-            transform = { }
+            transform = { it.message }
         )
     }
 
-    override suspend fun deleteEntry(decryptedVaultEntry: DecryptedVaultEntry): APIResult<Unit> {
+    override suspend fun deleteEntry(decryptedVaultEntry: DecryptedVaultEntry): APIResult<String> {
         return apiResponseHandler.safeApiCall(
             apiCall = { apiService.deleteEntry(decryptedVaultEntry.timestamp) },
-            transform = { }
+            transform = { it.message }
         )
     }
 }

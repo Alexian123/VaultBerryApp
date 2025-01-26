@@ -10,9 +10,9 @@ interface UserRepository {
 
     suspend fun getRecoveryKey(email: String): APIResult<RecoveryKey>
 
-    suspend fun register(user: User): APIResult<Unit>
+    suspend fun register(user: User): APIResult<String>
 
     suspend fun login(loginCredentials: LoginCredentials): APIResult<KeyChain>
 
-    suspend fun logout(): APIResult<Unit>
+    suspend fun logout(): APIResult<String>
 }
