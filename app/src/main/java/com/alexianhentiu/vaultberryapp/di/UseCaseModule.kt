@@ -1,8 +1,13 @@
 package com.alexianhentiu.vaultberryapp.di
 
 import android.hardware.SensorManager
+import com.alexianhentiu.vaultberryapp.domain.repository.AccountRepository
 import com.alexianhentiu.vaultberryapp.domain.repository.UserRepository
 import com.alexianhentiu.vaultberryapp.domain.repository.VaultEntryRepository
+import com.alexianhentiu.vaultberryapp.domain.usecase.account.DeleteAccountUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.account.UpdateAccountUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.account.UpdateKeyChainUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.auth.GetRecoveryKeyUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.vault.AddEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.vault.GetEntriesUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.security.GenerateKeyChainUseCase
@@ -25,6 +30,10 @@ import dagger.hilt.android.components.ViewModelComponent
 @Module
 @InstallIn(ViewModelComponent::class)
 object UseCaseModule {
+
+    @Provides
+    fun provideGetRecoveryKeyUseCase(userRepository: UserRepository): GetRecoveryKeyUseCase =
+        GetRecoveryKeyUseCase(userRepository)
 
     @Provides
     fun provideRegisterUseCase(userRepository: UserRepository): RegisterUseCase =
@@ -77,4 +86,16 @@ object UseCaseModule {
     @Provides
     fun provideUnregisterListenerUseCase(sensorManager: SensorManager): UnregisterListenerUseCase =
         UnregisterListenerUseCase(sensorManager)
+
+    @Provides
+    fun provideUpdateKeyChainUseCase(accountRepository: AccountRepository): UpdateKeyChainUseCase =
+        UpdateKeyChainUseCase(accountRepository)
+
+    @Provides
+    fun provideUpdateAccountUseCase(accountRepository: AccountRepository): UpdateAccountUseCase =
+        UpdateAccountUseCase(accountRepository)
+
+    @Provides
+    fun provideDeleteAccountUseCase(accountRepository: AccountRepository): DeleteAccountUseCase =
+        DeleteAccountUseCase(accountRepository)
 }
