@@ -33,5 +33,11 @@ fun AppNavHost() {
             val motionViewModel: MotionViewModel = hiltViewModel()
             VaultScreen(vaultViewModel, authViewModel, motionViewModel, navController)
         }
+        composable("account") {
+            // TODO: Implement account screen
+        }
+        composable("settings") {
+            // TODO: Implement settings screen
+        }
     }
 }

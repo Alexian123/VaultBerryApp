@@ -1,7 +1,7 @@
 package com.alexianhentiu.vaultberryapp.domain.usecase.security
 
 import com.alexianhentiu.vaultberryapp.domain.model.DecryptedVaultEntry
-import com.alexianhentiu.vaultberryapp.domain.model.DecryptedVaultKey
+import com.alexianhentiu.vaultberryapp.domain.model.DecryptedKey
 import com.alexianhentiu.vaultberryapp.domain.model.EncryptedVaultEntry
 import com.alexianhentiu.vaultberryapp.domain.utils.VaultGuardian
 
@@ -9,12 +9,12 @@ class EncryptVaultEntryUseCase(private val vaultGuardian: VaultGuardian) {
 
     operator fun invoke(
         decryptedVaultEntry: DecryptedVaultEntry,
-        decryptedVaultKey: DecryptedVaultKey
+        decryptedKey: DecryptedKey
     ): EncryptedVaultEntry {
         val encryptedUsername =
-            vaultGuardian.exportField(decryptedVaultEntry.username, decryptedVaultKey)
+            vaultGuardian.encryptField(decryptedVaultEntry.username, decryptedKey.key)
         val encryptedPassword =
-            vaultGuardian.exportField(decryptedVaultEntry.password, decryptedVaultKey)
+            vaultGuardian.encryptField(decryptedVaultEntry.password, decryptedKey.key)
         return EncryptedVaultEntry(
             decryptedVaultEntry.timestamp,
             decryptedVaultEntry.title,

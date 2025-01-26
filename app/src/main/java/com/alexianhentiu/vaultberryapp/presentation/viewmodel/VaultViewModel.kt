@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alexianhentiu.vaultberryapp.data.api.APIResult
 import com.alexianhentiu.vaultberryapp.domain.model.DecryptedVaultEntry
-import com.alexianhentiu.vaultberryapp.domain.model.DecryptedVaultKey
+import com.alexianhentiu.vaultberryapp.domain.model.DecryptedKey
 import com.alexianhentiu.vaultberryapp.domain.model.EncryptedVaultEntry
 import com.alexianhentiu.vaultberryapp.domain.usecase.vault.AddEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.security.EncryptVaultEntryUseCase
@@ -40,19 +40,19 @@ class VaultViewModel @Inject constructor(
     private val _filteredEntries = MutableStateFlow<List<DecryptedVaultEntry>>(emptyList())
     val filteredEntries: StateFlow<List<DecryptedVaultEntry>> = _filteredEntries
 
-    private lateinit var vaultKey: DecryptedVaultKey
+    private lateinit var vaultKey: DecryptedKey
 
     // TODO: Implement statistics & suggestions for entry password security
 
-    fun unlockVault(decryptedVaultKey: DecryptedVaultKey?) {
+    fun unlockVault(decryptedKey: DecryptedKey?) {
         viewModelScope.launch {
             _vaultState.value = VaultState.Loading
-            if (decryptedVaultKey == null) {
+            if (decryptedKey == null) {
                 Log.e("VaultViewModel", "decryptedVaultKey is null")
                 _vaultState.value = VaultState.Error("Invalid vault key")
                 return@launch
             }
-            vaultKey = decryptedVaultKey
+            vaultKey = decryptedKey
             _vaultState.value = VaultState.Unlocked
         }
     }
@@ -164,11 +164,11 @@ class VaultViewModel @Inject constructor(
 
     private fun decryptAllEntries(
         encryptedEntries: List<EncryptedVaultEntry>,
-        decryptedVaultKey: DecryptedVaultKey
+        decryptedKey: DecryptedKey
     ): List<DecryptedVaultEntry> {
         val decryptedEntries = mutableListOf<DecryptedVaultEntry>()
         for (entry in encryptedEntries) {
-            val decryptedEntry = decryptVaultEntryUseCase(entry, decryptedVaultKey)
+            val decryptedEntry = decryptVaultEntryUseCase(entry, decryptedKey)
             decryptedEntries.add(decryptedEntry)
         }
         return decryptedEntries

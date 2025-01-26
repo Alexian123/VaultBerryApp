@@ -42,20 +42,25 @@ fun RegisterScreen(viewModel: RegisterViewModel, navController: NavController) {
             LoadingScreen()
         }
         is RegisterState.Success -> {
-            Column(
-                verticalArrangement = Arrangement.Center,
-                modifier = Modifier
-                    .padding(16.dp)
-                    .fillMaxSize()
-            ) {
-                Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = "Registration successful!")
-                TextButton(
-                    onClick = { navController.navigate("auth") },
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text("Go to login")
+            Scaffold { contentPadding ->
+                Box(modifier = Modifier.fillMaxSize().padding(contentPadding)) {
+                    Column(
+                        verticalArrangement = Arrangement.Center,
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .fillMaxSize()
+                    ) {
+                        Text(
+                            modifier = Modifier.fillMaxWidth(),
+                            text = "Registration successful!"
+                        )
+                        TextButton(
+                            onClick = { navController.navigate("login") },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text("Go to login")
+                        }
+                    }
                 }
             }
         }

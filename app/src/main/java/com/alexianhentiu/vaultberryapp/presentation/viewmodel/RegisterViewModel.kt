@@ -4,8 +4,9 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alexianhentiu.vaultberryapp.data.api.APIResult
+import com.alexianhentiu.vaultberryapp.domain.model.Account
 import com.alexianhentiu.vaultberryapp.domain.model.User
-import com.alexianhentiu.vaultberryapp.domain.usecase.security.EncryptVaultKeyUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.security.GenerateKeyChainUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.auth.RegisterUseCase
 import com.alexianhentiu.vaultberryapp.domain.utils.InputValidator
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.state.RegisterState
@@ -18,7 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
     private val registerUseCase: RegisterUseCase,
-    private val encryptVaultKeyUseCase: EncryptVaultKeyUseCase,
+    private val generateKeyChainUseCase: GenerateKeyChainUseCase,
     val inputValidator: InputValidator
 ) : ViewModel() {
 
@@ -26,11 +27,15 @@ class RegisterViewModel @Inject constructor(
     val registerState: StateFlow<RegisterState> = _registerState
 
     fun register(email: String, password: String, firstName: String?, lastName: String?) {
+        val account = Account(
+            email = email,
+            password = password,
+            firstName = firstName,
+            lastName = lastName
+        )
         // TODO: Generate recovery key
-        val exportedVaultKey = encryptVaultKeyUseCase(password)
-        val vaultKey = exportedVaultKey.ivAndKey
-        val salt = exportedVaultKey.salt
-        val user = User(email, password, salt, vaultKey, vaultKey, firstName, lastName)
+        val keyChain = generateKeyChainUseCase(password, "test")
+        val user = User(account, keyChain)
 
         viewModelScope.launch {
             _registerState.value = RegisterState.Loading

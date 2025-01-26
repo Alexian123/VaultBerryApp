@@ -3,33 +3,39 @@ package com.alexianhentiu.vaultberryapp.data.repository
 import com.alexianhentiu.vaultberryapp.data.api.APIResponseHandler
 import com.alexianhentiu.vaultberryapp.data.api.APIResult
 import com.alexianhentiu.vaultberryapp.data.api.APIService
-import com.alexianhentiu.vaultberryapp.data.model.EncryptedVaultEntryDTO
 import com.alexianhentiu.vaultberryapp.domain.model.DecryptedVaultEntry
 import com.alexianhentiu.vaultberryapp.domain.model.EncryptedVaultEntry
 import com.alexianhentiu.vaultberryapp.domain.repository.VaultEntryRepository
 
 class VaultEntryRepositoryImpl(
     private val apiService: APIService,
-    private val apiResponseHandler: APIResponseHandler
+    private val apiResponseHandler: APIResponseHandler,
+    private val modelConverter: ModelConverter
 ) : VaultEntryRepository {
 
     override suspend fun getEntries(): APIResult<List<EncryptedVaultEntry>> {
         return apiResponseHandler.safeApiCall(
             apiCall = { apiService.getEntries() },
-            transform = { it?.map { entryDTO -> entryDTO.toDomainModel() } ?: emptyList() }
+            transform = {
+                it?.map {
+                    entryDTO -> modelConverter.encryptedVaultEntryFromDTO(entryDTO)
+                } ?: emptyList()
+            }
         )
     }
 
     override suspend fun addEntry(encryptedVaultEntry: EncryptedVaultEntry): APIResult<Unit> {
+        val encryptedVaultEntryDTO = modelConverter.encryptedVaultEntryToDTO(encryptedVaultEntry)
         return apiResponseHandler.safeApiCall(
-            apiCall = { apiService.addEntry(encryptedVaultEntry.toDBModel()) },
+            apiCall = { apiService.addEntry(encryptedVaultEntryDTO) },
             transform = { }
         )
     }
 
     override suspend fun updateEntry(encryptedVaultEntry: EncryptedVaultEntry): APIResult<Unit> {
+        val encryptedVaultEntryDTO = modelConverter.encryptedVaultEntryToDTO(encryptedVaultEntry)
         return apiResponseHandler.safeApiCall(
-            apiCall = { apiService.updateEntry(encryptedVaultEntry.toDBModel()) },
+            apiCall = { apiService.updateEntry(encryptedVaultEntryDTO) },
             transform = { }
         )
     }
@@ -39,13 +45,5 @@ class VaultEntryRepositoryImpl(
             apiCall = { apiService.deleteEntry(decryptedVaultEntry.timestamp) },
             transform = { }
         )
-    }
-
-    private fun EncryptedVaultEntry.toDBModel() : EncryptedVaultEntryDTO {
-        return EncryptedVaultEntryDTO(timestamp, title, url, encryptedUsername, encryptedPassword, notes)
-    }
-
-    private fun EncryptedVaultEntryDTO.toDomainModel() : EncryptedVaultEntry {
-        return EncryptedVaultEntry(timestamp, title, url, encryptedUsername, encryptedPassword, notes)
     }
 }

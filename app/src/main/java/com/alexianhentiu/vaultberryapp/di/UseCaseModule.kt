@@ -5,8 +5,8 @@ import com.alexianhentiu.vaultberryapp.domain.repository.UserRepository
 import com.alexianhentiu.vaultberryapp.domain.repository.VaultEntryRepository
 import com.alexianhentiu.vaultberryapp.domain.usecase.vault.AddEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.vault.GetEntriesUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.security.EncryptVaultKeyUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.security.DecryptVaultKeyUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.security.GenerateKeyChainUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.security.DecryptKeyUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.auth.LoginUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.auth.LogoutUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.vault.UpdateEntryUseCase
@@ -55,12 +55,12 @@ object UseCaseModule {
         DeleteEntryUseCase(vaultEntryRepository)
 
     @Provides
-    fun provideEncryptVaultKeyUseCase(vaultGuardian: VaultGuardian): EncryptVaultKeyUseCase =
-        EncryptVaultKeyUseCase(vaultGuardian)
+    fun provideGenerateKeyChainUseCase(vaultGuardian: VaultGuardian): GenerateKeyChainUseCase =
+        GenerateKeyChainUseCase(vaultGuardian)
 
     @Provides
-    fun provideDecryptVaultKeyUseCase(vaultGuardian: VaultGuardian): DecryptVaultKeyUseCase =
-        DecryptVaultKeyUseCase(vaultGuardian)
+    fun provideDecryptKeyUseCase(vaultGuardian: VaultGuardian): DecryptKeyUseCase =
+        DecryptKeyUseCase(vaultGuardian)
 
     @Provides
     fun provideDecryptVaultEntryUseCase(vaultGuardian: VaultGuardian): DecryptVaultEntryUseCase =

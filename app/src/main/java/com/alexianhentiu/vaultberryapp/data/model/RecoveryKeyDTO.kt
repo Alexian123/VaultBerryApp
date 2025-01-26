@@ -4,7 +4,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class EncryptedVaultKeyDTO(
+data class RecoveryKeyDTO(
     @Json(name = "salt") val salt: String,
-    @Json(name = "vault_key") val vaultKey: String
+    @Json(name = "recovery_key") val key: String
 )

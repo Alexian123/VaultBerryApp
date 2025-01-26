@@ -34,7 +34,7 @@ fun LoginScreen(viewModel: AuthViewModel, navController: NavController) {
             LoadingScreen()
         }
         is AuthState.LoggedIn -> {
-            val vaultKey = (loginState as AuthState.LoggedIn).decryptedVaultKey
+            val vaultKey = (loginState as AuthState.LoggedIn).decryptedKey
             navController.currentBackStackEntry?.savedStateHandle?.set(
                 key = "vaultKey",
                 value = vaultKey

@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.alexianhentiu.vaultberryapp.R
 import com.alexianhentiu.vaultberryapp.domain.model.DecryptedVaultEntry
-import com.alexianhentiu.vaultberryapp.domain.model.DecryptedVaultKey
+import com.alexianhentiu.vaultberryapp.domain.model.DecryptedKey
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.AddEntryDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ConfirmActionDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.TopBar
@@ -43,7 +43,7 @@ fun VaultScreen(
     navController: NavController
 ) {
     val vaultKey = navController
-        .previousBackStackEntry?.savedStateHandle?.get<DecryptedVaultKey>("vaultKey")
+        .previousBackStackEntry?.savedStateHandle?.get<DecryptedKey>("vaultKey")
 
     val vaultState by vaultViewModel.vaultState.collectAsState()
     val decryptedEntries by vaultViewModel.filteredEntries.collectAsState()

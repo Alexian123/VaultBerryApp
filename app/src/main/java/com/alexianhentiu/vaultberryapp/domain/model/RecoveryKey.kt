@@ -1,6 +1,6 @@
 package com.alexianhentiu.vaultberryapp.domain.model
 
-data class EncryptedVaultKey(
+data class RecoveryKey(
     val salt: String,
-    val ivAndKey: String
+    val key: String
 )

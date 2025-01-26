@@ -19,42 +19,43 @@ class VaultGuardianTest {
     }
 
     @Test
-    fun givenNonEmptyPassword_whenExportNewVaultKey_thenReturnEncryptedVaultKeyWithNonEmptyFields() {
-        val encryptedVaultKey = guardian.exportNewVaultKey("password")
-        assert(encryptedVaultKey.ivAndKey.isNotEmpty())
-        assert(encryptedVaultKey.salt.isNotEmpty())
+    fun givenNonEmptyPassword_whenGenerateKeyChainWithNonEmptyFields() {
+        val keyChain = guardian.generateKeyChain("password", "a")
+        assert(keyChain.vaultKey.isNotEmpty())
+        assert(keyChain.recoveryKey.isNotEmpty())
+        assert(keyChain.salt.isNotEmpty())
     }
 
     @Test
-    fun givenEmptyPassword_whenExportNewVaultKey_thenThrowIllegalArgumentException() {
+    fun givenEmptyPasswordOrRecoveryPassword_whenGenerateKeyChain_thenThrowIllegalArgumentException() {
         try {
-            guardian.exportNewVaultKey("")
+            guardian.generateKeyChain("", "")
         } catch (e: IllegalArgumentException) {
             assert(e.message == "Password cannot be empty")
         }
     }
 
     @Test
-    fun givenNonEmptyPasswordAndEncryptedVaultKey_whenImportExistingVaultKey_thenReturnDecryptedVaultKeyWithNonEmptyKey() {
-        val encryptedVaultKey = guardian.exportNewVaultKey("password")
-        val decryptedVaultKey = guardian.importExistingVaultKey("password", encryptedVaultKey)
-        assert(decryptedVaultKey.key.isNotEmpty())
+    fun givenNonEmptyPasswordAndEncryptedVaultKey_whenDecryptVaultKey_thenReturnDecryptedKeyWithNonEmptyKey() {
+        val keyChain = guardian.generateKeyChain("password", "a")
+        val decryptedVaultKey = guardian.decryptKey("password", keyChain.salt, keyChain.vaultKey)
+        assert(decryptedVaultKey.isNotEmpty())
     }
 
     @Test
-    fun givenDecryptedVaultKey_whenExportField_thenReturnEncryptedVaultField() {
-        val encryptedVaultKey = guardian.exportNewVaultKey("password")
-        val decryptedVaultKey = guardian.importExistingVaultKey("password", encryptedVaultKey)
-        val encryptedField = guardian.exportField("test", decryptedVaultKey)
+    fun givenDecryptedVaultKey_whenEncryptField_thenReturnEncryptedVaultField() {
+        val keyChain = guardian.generateKeyChain("password", "a")
+        val decryptedVaultKey = guardian.decryptKey("password", keyChain.salt, keyChain.vaultKey)
+        val encryptedField = guardian.encryptField("test", decryptedVaultKey)
         assert(encryptedField.isNotEmpty())
     }
 
     @Test
-    fun givenEncryptedVaultField_whenImportField_thenReturnInitialField() {
-        val encryptedVaultKey = guardian.exportNewVaultKey("password")
-        val decryptedVaultKey = guardian.importExistingVaultKey("password", encryptedVaultKey)
-        val encryptedField = guardian.exportField("test", decryptedVaultKey)
-        val decryptedField = guardian.importField(encryptedField, decryptedVaultKey)
+    fun givenEncryptedVaultField_whenDecryptField_thenReturnInitialField() {
+        val keyChain = guardian.generateKeyChain("password", "a")
+        val decryptedVaultKey = guardian.decryptKey("password", keyChain.salt, keyChain.vaultKey)
+        val encryptedField = guardian.encryptField("test", decryptedVaultKey)
+        val decryptedField = guardian.decryptField(encryptedField, decryptedVaultKey)
         assert(decryptedField == "test")
     }
 

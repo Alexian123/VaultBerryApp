@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alexianhentiu.vaultberryapp.data.api.APIResult
 import com.alexianhentiu.vaultberryapp.domain.model.LoginCredentials
-import com.alexianhentiu.vaultberryapp.domain.usecase.security.DecryptVaultKeyUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.security.DecryptKeyUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.auth.LoginUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.auth.LogoutUseCase
 import com.alexianhentiu.vaultberryapp.domain.utils.InputValidator
@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class AuthViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
-    private val decryptVaultKeyUseCase: DecryptVaultKeyUseCase,
+    private val decryptKeyUseCase: DecryptKeyUseCase,
     private val logoutUseCase: LogoutUseCase,
     val inputValidator: InputValidator
 ) : ViewModel() {
@@ -36,7 +36,9 @@ class AuthViewModel @Inject constructor(
             delay(1000)
             when (val result = loginUseCase(loginCredentials)) {
                 is APIResult.Success -> {
-                    val decryptedVaultKey = decryptVaultKeyUseCase(password, result.data)
+                    val keyChain = result.data
+                    val decryptedVaultKey = decryptKeyUseCase(password, keyChain.salt,
+                        keyChain.vaultKey)
                     _authState.value = AuthState.LoggedIn(decryptedVaultKey)
                 }
 
