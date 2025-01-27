@@ -10,12 +10,18 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ErrorDialog
+import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.ForgotPasswordForm
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.LoginForm
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.state.AuthState
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.AuthViewModel
+import com.alexianhentiu.vaultberryapp.presentation.viewmodel.VaultViewModel
 
 @Composable
-fun LoginScreen(viewModel: AuthViewModel, navController: NavController) {
+fun LoginScreen(
+    viewModel: AuthViewModel,
+    vaultViewModel: VaultViewModel,
+    navController: NavController
+) {
     val loginState by viewModel.authState.collectAsState()
 
     when (loginState) {
@@ -25,22 +31,44 @@ fun LoginScreen(viewModel: AuthViewModel, navController: NavController) {
                     LoginForm(
                         navController = navController,
                         onLoginClicked = { email, password -> viewModel.login(email, password) },
+                        onForgotPasswordClicked = { viewModel.forgotPassword() },
                         inputValidator = viewModel.inputValidator
                     )
                 }
             }
         }
+
         is AuthState.Loading -> {
             LoadingScreen()
         }
+
         is AuthState.LoggedIn -> {
-            val vaultKey = (loginState as AuthState.LoggedIn).decryptedKey
+            val currentLoginState = loginState as AuthState.LoggedIn
+            val vaultKey = currentLoginState.decryptedKey
             navController.currentBackStackEntry?.savedStateHandle?.set(
                 key = "vaultKey",
                 value = vaultKey
             )
+            if (currentLoginState.recoveryMode) {
+                vaultViewModel.enterRecoveryMode()
+            }
             navController.navigate("vault")
         }
+
+        is AuthState.ForgotPassword -> {
+            Scaffold { contentPadding ->
+                Box(modifier = Modifier.fillMaxSize().padding(contentPadding)) {
+                    ForgotPasswordForm(
+                        onContinueClicked = { email, recoveryPassword ->
+                            viewModel.recoveryLogin(email, recoveryPassword)
+                        },
+                        onCancelClicked = { viewModel.resetState() },
+                        inputValidator = viewModel.inputValidator
+                    )
+                }
+            }
+        }
+
         is AuthState.Error -> {
             val errorMessage = (loginState as AuthState.Error).message
             ErrorDialog(

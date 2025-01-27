@@ -10,36 +10,30 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.alexianhentiu.vaultberryapp.R
 import com.alexianhentiu.vaultberryapp.domain.utils.InputValidator
-import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.ValidatedTextField
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.PasswordField
 
 @Composable
-fun LoginForm(
-    navController: NavController,
-    onLoginClicked: (String, String) -> Unit,
-    onForgotPasswordClicked: () -> Unit,
+fun ResetPasswordForm(
+    onConfirmClick: (String) -> Unit,
     inputValidator: InputValidator
 ) {
-    var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var confirmPassword by remember { mutableStateOf("") }
 
-    var isEmailValid by remember { mutableStateOf(false) }
     var isPasswordValid by remember { mutableStateOf(false) }
+    var isConfirmPasswordValid by remember { mutableStateOf(false) }
 
     Column(
         verticalArrangement = Arrangement.Center,
@@ -48,61 +42,48 @@ fun LoginForm(
             .fillMaxSize()
     ) {
         Text(
-            text = stringResource(R.string.app_name),
+            text = stringResource(R.string.reset_password_form_title),
             style = MaterialTheme.typography.headlineMedium,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 16.dp),
             textAlign = TextAlign.Center
         )
-        ValidatedTextField(
-            label = "Email",
-            onInputChange = { newEmail, valid ->
-                email = newEmail
-                isEmailValid = valid
-            },
-            isValid = inputValidator::validateEmail,
-            modifier = Modifier.fillMaxWidth()
-        )
-        Spacer(modifier = Modifier.height(8.dp))
         PasswordField(
             onPasswordChange = { newPassword, valid ->
                 password = newPassword
                 isPasswordValid = valid
             },
             isValid = inputValidator::validatePassword,
+            label = stringResource(R.string.new_password_label),
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        PasswordField(
+            onPasswordChange = { newPassword, valid ->
+                confirmPassword = newPassword
+                isConfirmPasswordValid = valid
+            },
+            isValid = inputValidator::validatePassword,
+            label = stringResource(R.string.confirm_new_password_label),
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(16.dp))
         Button(
-            onClick = { onLoginClicked(email, password) },
+            onClick = { onConfirmClick(password) },
             modifier = Modifier.fillMaxWidth(),
-            enabled = isEmailValid && isPasswordValid
+            enabled = isPasswordValid && isConfirmPasswordValid && password == confirmPassword
         ) {
-            Text("Login")
-        }
-        TextButton(
-            onClick = { navController.navigate("register") },
-            modifier = Modifier.fillMaxWidth(),
-        ) {
-            Text("Register")
-        }
-        TextButton(
-            onClick = { onForgotPasswordClicked() },
-            modifier = Modifier.fillMaxWidth(),
-        ) {
-            Text("Forgot password")
+            Text("Confirm")
         }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun LoginFormPreview() {
-    LoginForm(
-        navController = NavController(LocalContext.current),
-        onLoginClicked = { _, _ -> },
-        onForgotPasswordClicked = {},
+fun ResetPasswordFormPreview() {
+    ResetPasswordForm(
+        onConfirmClick = { },
         inputValidator = InputValidator()
     )
 }

@@ -24,7 +24,8 @@ fun PasswordField(
     isValid: (String) -> Boolean = { true },
     showCopyToClipboardButton: Boolean = false,
     enabled: Boolean = true,
-    readOnly: Boolean = false
+    readOnly: Boolean = false,
+    label: String = "Password"
 ) {
     var password by remember { mutableStateOf("") }
     var isVisible by remember { mutableStateOf(false) }
@@ -36,7 +37,7 @@ fun PasswordField(
                 password = newPassword
                 onPasswordChange(newPassword, valid)
             },
-            label = "Password",
+            label = label,
             initialText = initialText,
             isValid = isValid,
             visualTransformation = if (isVisible) VisualTransformation.None else PasswordVisualTransformation(),

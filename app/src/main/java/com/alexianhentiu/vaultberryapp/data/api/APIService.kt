@@ -20,11 +20,14 @@ interface APIService {
     @GET("recovery")
     suspend fun getRecoveryKey(@Query("email") email: String): Response<RecoveryKeyDTO>
 
+    @POST("recovery")
+    suspend fun recoveryLogin(@Body credentialsDTO: LoginCredentialsDTO): Response<MessageResponse>
+
     @POST("register")
     suspend fun register(@Body user: UserDTO): Response<MessageResponse>
 
     @POST("login")
-    suspend fun login(@Body loginCredentialsDTO: LoginCredentialsDTO): Response<KeyChainDTO>
+    suspend fun login(@Body credentialsDTO: LoginCredentialsDTO): Response<KeyChainDTO>
 
     @POST("logout")
     suspend fun logout(): Response<MessageResponse>
@@ -40,6 +43,9 @@ interface APIService {
 
     @DELETE("entries/delete/{timestamp}")
     suspend fun deleteEntry(@Path("timestamp") timestamp: Long): Response<MessageResponse>
+
+    @GET("account")
+    suspend fun getAccount(): Response<AccountDTO>
 
     @POST("account")
     suspend fun updateAccount(@Body account: AccountDTO): Response<MessageResponse>

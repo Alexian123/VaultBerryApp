@@ -10,33 +10,31 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.alexianhentiu.vaultberryapp.R
 import com.alexianhentiu.vaultberryapp.domain.utils.InputValidator
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.ValidatedTextField
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.PasswordField
 
 @Composable
-fun LoginForm(
-    navController: NavController,
-    onLoginClicked: (String, String) -> Unit,
-    onForgotPasswordClicked: () -> Unit,
+fun UpdateAccountForm(
+    onConfirmClicked: (String, String?, String, String) -> Unit,
     inputValidator: InputValidator
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var firstName by remember { mutableStateOf("") }
+    var lastName by remember { mutableStateOf("") }
 
     var isEmailValid by remember { mutableStateOf(false) }
     var isPasswordValid by remember { mutableStateOf(false) }
@@ -48,7 +46,7 @@ fun LoginForm(
             .fillMaxSize()
     ) {
         Text(
-            text = stringResource(R.string.app_name),
+            text = stringResource(R.string.update_account_form_title),
             style = MaterialTheme.typography.headlineMedium,
             modifier = Modifier
                 .fillMaxWidth()
@@ -73,36 +71,37 @@ fun LoginForm(
             isValid = inputValidator::validatePassword,
             modifier = Modifier.fillMaxWidth()
         )
+        Spacer(modifier = Modifier.height(8.dp))
+        TextField(
+            value = firstName,
+            onValueChange = { firstName = it },
+            label = { Text("First Name") },
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(8.dp))
+        TextField(
+            value = lastName,
+            onValueChange = { lastName = it },
+            label = { Text("Last Name") },
+            modifier = Modifier.fillMaxWidth()
+        )
         Spacer(modifier = Modifier.height(16.dp))
         Button(
-            onClick = { onLoginClicked(email, password) },
+            onClick = { onConfirmClicked(email, password.ifBlank { null }, firstName, lastName) },
             modifier = Modifier.fillMaxWidth(),
             enabled = isEmailValid && isPasswordValid
         ) {
-            Text("Login")
-        }
-        TextButton(
-            onClick = { navController.navigate("register") },
-            modifier = Modifier.fillMaxWidth(),
-        ) {
-            Text("Register")
-        }
-        TextButton(
-            onClick = { onForgotPasswordClicked() },
-            modifier = Modifier.fillMaxWidth(),
-        ) {
-            Text("Forgot password")
+            Text("Confirm")
         }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun LoginFormPreview() {
-    LoginForm(
-        navController = NavController(LocalContext.current),
-        onLoginClicked = { _, _ -> },
-        onForgotPasswordClicked = {},
+fun UpdateAccountFormPreview() {
+    UpdateAccountForm(
+        onConfirmClicked = { _, _, _, _ -> },
         inputValidator = InputValidator()
     )
 }

@@ -33,7 +33,7 @@ class RegisterViewModel @Inject constructor(
             firstName = firstName,
             lastName = lastName
         )
-        // TODO: Generate recovery key
+        // TODO: Generate recovery password
         val keyChain = generateKeyChainUseCase(password, "test")
         val user = User(account, keyChain)
 

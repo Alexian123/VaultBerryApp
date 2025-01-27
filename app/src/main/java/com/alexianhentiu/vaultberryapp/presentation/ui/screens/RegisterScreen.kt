@@ -55,7 +55,10 @@ fun RegisterScreen(viewModel: RegisterViewModel, navController: NavController) {
                             text = "Registration successful!"
                         )
                         TextButton(
-                            onClick = { navController.navigate("login") },
+                            onClick = {
+                                viewModel.resetState()
+                                navController.navigate("login")
+                            },
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             Text("Go to login")

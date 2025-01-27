@@ -31,6 +31,7 @@ import com.alexianhentiu.vaultberryapp.presentation.ui.components.VaultEntryItem
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ErrorDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.enums.EntryModification
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.state.VaultState
+import com.alexianhentiu.vaultberryapp.presentation.viewmodel.AccountViewModel
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.AuthViewModel
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.MotionViewModel
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.VaultViewModel
@@ -39,6 +40,7 @@ import com.alexianhentiu.vaultberryapp.presentation.viewmodel.VaultViewModel
 fun VaultScreen(
     vaultViewModel: VaultViewModel,
     authViewModel: AuthViewModel,
+    accountViewModel: AccountViewModel,
     motionViewModel: MotionViewModel,
     navController: NavController
 ) {
@@ -54,20 +56,15 @@ fun VaultScreen(
     var modifiedEntry by remember { mutableStateOf(null as DecryptedVaultEntry?) }
 
     when (vaultState) {
-
         is VaultState.Loading -> {
             LoadingScreen()
         }
 
         is VaultState.Locked -> {
-            UnlockVaultScreen(onUnlock = { vaultViewModel.unlockVault(vaultKey) })
+            UnlockVaultScreen(onUnlock = { vaultViewModel.getEntries(vaultKey) })
         }
 
         is VaultState.Unlocked -> {
-            vaultViewModel.getEntries()
-        }
-
-        is VaultState.Ready -> {
             DisposableEffect(vaultState) {
                 motionViewModel.registerSensorListener()
                 onDispose {
@@ -78,6 +75,7 @@ fun VaultScreen(
             if (motionDetected) {
                 motionViewModel.resetMotionDetected()
                 authViewModel.logout()
+                vaultViewModel.resetState()
                 navController.navigate("login")
             }
 
@@ -86,6 +84,7 @@ fun VaultScreen(
                     onSearch = { vaultViewModel.searchEntriesByTitle(it) },
                     onLogout = {
                         authViewModel.logout()
+                        vaultViewModel.resetState()
                         navController.navigate("login")
                     }
                 ) },
@@ -165,6 +164,17 @@ fun VaultScreen(
                 }
             }
         }
+
+        is VaultState.RecoveryMode -> {
+            vaultViewModel.getEntries(vaultKey)
+            accountViewModel.forcePasswordReset()
+            navController.navigate("account")
+        }
+
+        is VaultState.ReEncrypting -> {
+            vaultViewModel.reEncryptAllEntries()
+        }
+
         is VaultState.Error ->  {
             val errorMessage = (vaultState as VaultState.Error).message
             ErrorDialog(

@@ -44,19 +44,6 @@ class VaultViewModel @Inject constructor(
 
     // TODO: Implement statistics & suggestions for entry password security
 
-    fun unlockVault(decryptedKey: DecryptedKey?) {
-        viewModelScope.launch {
-            _vaultState.value = VaultState.Loading
-            if (decryptedKey == null) {
-                Log.e("VaultViewModel", "decryptedVaultKey is null")
-                _vaultState.value = VaultState.Error("Invalid vault key")
-                return@launch
-            }
-            vaultKey = decryptedKey
-            _vaultState.value = VaultState.Unlocked
-        }
-    }
-
     fun searchEntriesByTitle(query: String) {
         viewModelScope.launch {
             _vaultState.value = VaultState.Loading
@@ -68,16 +55,22 @@ class VaultViewModel @Inject constructor(
                     it.title.contains(query, ignoreCase = true)
                 }
             }
-            _vaultState.value = VaultState.Ready
+            _vaultState.value = VaultState.Unlocked
         }
     }
 
-    fun getEntries() {
+    fun getEntries(decryptedKey: DecryptedKey?) {
         viewModelScope.launch {
             _vaultState.value = VaultState.Loading
+            if (decryptedKey == null) {
+                Log.e("VaultViewModel", "decryptedVaultKey is null")
+                _vaultState.value = VaultState.Error("Invalid vault key")
+                return@launch
+            }
+            vaultKey = decryptedKey
             when (val result = getEntriesUseCase()) {
                 is APIResult.Success -> {
-                    _vaultState.value = VaultState.Ready
+                    _vaultState.value = VaultState.Unlocked
                     allEntries.value = decryptAllEntries(result.data, vaultKey)
                     resetShownEntries()
                 }
@@ -93,11 +86,10 @@ class VaultViewModel @Inject constructor(
     fun addEntry(decryptedVaultEntry: DecryptedVaultEntry) {
         viewModelScope.launch {
             _vaultState.value = VaultState.Loading
-            val newEncryptedVaultEntry =
-                encryptVaultEntryUseCase(decryptedVaultEntry, vaultKey)
+            val newEncryptedVaultEntry = encryptVaultEntryUseCase(decryptedVaultEntry, vaultKey)
             when (val result = addEntryUseCase(newEncryptedVaultEntry)) {
                 is APIResult.Success -> {
-                    _vaultState.value = VaultState.Ready
+                    _vaultState.value = VaultState.Unlocked
                     allEntries.update { currentList ->
                         currentList + decryptedVaultEntry
                     }
@@ -118,7 +110,7 @@ class VaultViewModel @Inject constructor(
             _vaultState.value = VaultState.Loading
             when (val result = deleteEntryUseCase(decryptedVaultEntry)) {
                 is APIResult.Success -> {
-                    _vaultState.value = VaultState.Ready
+                    _vaultState.value = VaultState.Unlocked
                     allEntries.update { currentList ->
                         currentList.filter { it.timestamp != decryptedVaultEntry.timestamp }
                     }
@@ -137,11 +129,10 @@ class VaultViewModel @Inject constructor(
     fun updateEntry(decryptedVaultEntry: DecryptedVaultEntry) {
         viewModelScope.launch {
             _vaultState.value = VaultState.Loading
-            val encryptedVaultEntry =
-                encryptVaultEntryUseCase(decryptedVaultEntry, vaultKey)
+            val encryptedVaultEntry = encryptVaultEntryUseCase(decryptedVaultEntry, vaultKey)
             when (val result = updateEntryUseCase(encryptedVaultEntry)) {
                 is APIResult.Success -> {
-                    _vaultState.value = VaultState.Ready
+                    _vaultState.value = VaultState.Unlocked
                     allEntries.update { currentList ->
                         currentList.map {
                             if (it.timestamp == decryptedVaultEntry.timestamp)
@@ -161,7 +152,48 @@ class VaultViewModel @Inject constructor(
         }
     }
 
+    fun reEncryptAllEntries() {
+        viewModelScope.launch {
+            _vaultState.value = VaultState.Loading
+            for (entry in allEntries.value) {
+                val encryptedEntry = encryptVaultEntryUseCase(entry, vaultKey)
+                when (val result = updateEntryUseCase(encryptedEntry)) {
+                    is APIResult.Success -> {
+                        allEntries.update { currentList ->
+                            currentList.map {
+                                if (it.timestamp == entry.timestamp)
+                                    entry
+                                else it
+                            }
+                        }
+                        Log.d("VaultViewModel", "API success: ${result.data}")
+                    }
+
+                    is APIResult.Error -> {
+                        _vaultState.value = VaultState.Error(result.message)
+                        Log.e("VaultViewModel",
+                            "Failed to update entry: ${result.message}")
+                    }
+                }
+            }
+            _vaultState.value = VaultState.Unlocked
+            resetShownEntries()
+        }
+    }
+
+    fun enterRecoveryMode() {
+        _vaultState.value = VaultState.RecoveryMode
+    }
+
+    fun startReEncrypting(newVaultKey: DecryptedKey) {
+        _vaultState.value = VaultState.ReEncrypting
+        vaultKey = newVaultKey
+    }
+
     fun resetState() {
+        allEntries.value = emptyList()
+        _filteredEntries.value = emptyList()
+        vaultKey = DecryptedKey(ByteArray(0))
         _vaultState.value = VaultState.Locked
     }
 

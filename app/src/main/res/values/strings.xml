@@ -27,4 +27,8 @@
     <string name="error_dialog_title_default">Error</string>
     <string name="error_dialog_message_default">An error occurred. Please try again.</string>
     <string name="error_dialog_confirm_button_text">OK</string>
+    <string name="reset_password_form_title">Reset password</string>
+    <string name="new_password_label">New password</string>
+    <string name="confirm_new_password_label">Confirm new password</string>
+    <string name="update_account_form_title">Update account</string>
 </resources>

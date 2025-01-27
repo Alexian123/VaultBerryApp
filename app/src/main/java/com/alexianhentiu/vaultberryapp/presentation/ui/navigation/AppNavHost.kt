@@ -5,9 +5,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.alexianhentiu.vaultberryapp.presentation.ui.screens.AccountScreen
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.LoginScreen
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.RegisterScreen
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.VaultScreen
+import com.alexianhentiu.vaultberryapp.presentation.viewmodel.AccountViewModel
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.AuthViewModel
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.MotionViewModel
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.RegisterViewModel
@@ -19,22 +21,29 @@ fun AppNavHost() {
     val navController = rememberNavController()
 
     val authViewModel: AuthViewModel = hiltViewModel()
+    val registerViewModel: RegisterViewModel = hiltViewModel()
+    val vaultViewModel: VaultViewModel = hiltViewModel()
+    val accountViewModel: AccountViewModel = hiltViewModel()
+    val motionViewModel: MotionViewModel = hiltViewModel()
 
     NavHost(navController = navController, startDestination = "login") {
         composable("login") {
-            LoginScreen(authViewModel, navController)
+            LoginScreen(authViewModel, vaultViewModel, navController)
         }
         composable("register") {
-            val registerViewModel: RegisterViewModel = hiltViewModel()
             RegisterScreen(registerViewModel, navController)
         }
         composable("vault") {
-            val vaultViewModel: VaultViewModel = hiltViewModel()
-            val motionViewModel: MotionViewModel = hiltViewModel()
-            VaultScreen(vaultViewModel, authViewModel, motionViewModel, navController)
+            VaultScreen(
+                vaultViewModel,
+                authViewModel,
+                accountViewModel,
+                motionViewModel,
+                navController
+            )
         }
         composable("account") {
-            // TODO: Implement account screen
+            AccountScreen(vaultViewModel, authViewModel, accountViewModel, navController)
         }
         composable("settings") {
             // TODO: Implement settings screen

@@ -17,6 +17,7 @@ class ModelConverter {
 
     fun recoveryKeyFromDTO(recoveryKeyDTO: RecoveryKeyDTO): RecoveryKey {
         return RecoveryKey(
+            oneTimePassword = recoveryKeyDTO.oneTimePassword,
             salt = recoveryKeyDTO.salt,
             key = recoveryKeyDTO.key
         )
@@ -35,6 +36,15 @@ class ModelConverter {
             password = account.password,
             firstName = account.firstName,
             lastName = account.lastName
+        )
+    }
+
+    fun accountFromDTO(accountDTO: AccountDTO): Account {
+        return Account(
+            email = accountDTO.email,
+            password = accountDTO.password,
+            firstName = accountDTO.firstName,
+            lastName = accountDTO.lastName
         )
     }
 

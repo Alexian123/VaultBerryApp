@@ -6,6 +6,8 @@ import com.alexianhentiu.vaultberryapp.domain.model.KeyChain
 
 interface AccountRepository {
 
+    suspend fun getAccount(): APIResult<Account>
+
     suspend fun updateAccount(account: Account): APIResult<String>
 
     suspend fun deleteAccount(): APIResult<String>

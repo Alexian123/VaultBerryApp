@@ -13,6 +13,13 @@ class AccountRepositoryImpl(
     private val modelConverter: ModelConverter
 ) : AccountRepository {
 
+    override suspend fun getAccount(): APIResult<Account> {
+        return apiResponseHandler.safeApiCall(
+            apiCall = { apiService.getAccount() },
+            transform = { modelConverter.accountFromDTO(it) }
+        )
+    }
+
     override suspend fun updateAccount(account: Account): APIResult<String> {
         val accountDTO = modelConverter.accountToDTO(account)
         return apiResponseHandler.safeApiCall(

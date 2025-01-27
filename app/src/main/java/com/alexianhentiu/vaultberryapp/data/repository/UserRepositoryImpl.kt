@@ -22,6 +22,14 @@ class UserRepositoryImpl(
         )
     }
 
+    override suspend fun recoveryLogin(loginCredentials: LoginCredentials): APIResult<String> {
+        val loginCredentialsDTO = modelConverter.loginCredentialsToDTO(loginCredentials)
+        return apiResponseHandler.safeApiCall(
+            apiCall = { apiService.recoveryLogin(loginCredentialsDTO) },
+            transform = { it.message }
+        )
+    }
+
     override suspend fun register(user: User): APIResult<String> {
         val userDTO = modelConverter.userToDTO(user)
         return apiResponseHandler.safeApiCall(

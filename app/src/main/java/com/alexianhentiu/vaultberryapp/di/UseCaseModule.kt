@@ -5,6 +5,7 @@ import com.alexianhentiu.vaultberryapp.domain.repository.AccountRepository
 import com.alexianhentiu.vaultberryapp.domain.repository.UserRepository
 import com.alexianhentiu.vaultberryapp.domain.repository.VaultEntryRepository
 import com.alexianhentiu.vaultberryapp.domain.usecase.account.DeleteAccountUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.account.GetAccountUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.account.UpdateAccountUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.account.UpdateKeyChainUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.auth.GetRecoveryKeyUseCase
@@ -14,6 +15,7 @@ import com.alexianhentiu.vaultberryapp.domain.usecase.security.GenerateKeyChainU
 import com.alexianhentiu.vaultberryapp.domain.usecase.security.DecryptKeyUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.auth.LoginUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.auth.LogoutUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.auth.RecoveryLoginUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.vault.UpdateEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.auth.RegisterUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.sensor.RegisterListenerUseCase
@@ -34,6 +36,10 @@ object UseCaseModule {
     @Provides
     fun provideGetRecoveryKeyUseCase(userRepository: UserRepository): GetRecoveryKeyUseCase =
         GetRecoveryKeyUseCase(userRepository)
+
+    @Provides
+    fun provideRecoveryLoginUseCase(userRepository: UserRepository): RecoveryLoginUseCase =
+        RecoveryLoginUseCase(userRepository)
 
     @Provides
     fun provideRegisterUseCase(userRepository: UserRepository): RegisterUseCase =
@@ -90,6 +96,10 @@ object UseCaseModule {
     @Provides
     fun provideUpdateKeyChainUseCase(accountRepository: AccountRepository): UpdateKeyChainUseCase =
         UpdateKeyChainUseCase(accountRepository)
+
+    @Provides
+    fun provideGetAccountUseCase(accountRepository: AccountRepository): GetAccountUseCase =
+        GetAccountUseCase(accountRepository)
 
     @Provides
     fun provideUpdateAccountUseCase(accountRepository: AccountRepository): UpdateAccountUseCase =
