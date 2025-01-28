@@ -79,6 +79,7 @@ fun AccountScreen(
         is AccountState.UpdatedPassword -> {
             val decryptedKey = (accountState as AccountState.UpdatedPassword).decryptedKey
             vaultViewModel.startReEncrypting(decryptedKey)
+            accountViewModel.resetState()
             navController.navigate("vault")
         }
 

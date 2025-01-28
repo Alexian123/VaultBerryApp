@@ -16,9 +16,12 @@ data class MenuItem(
 fun MainMenu(
     onDismissRequest: () -> Unit,
     expanded: Boolean,
-    onLogout: () -> Unit
+    onLogout: () -> Unit,
+    onAccountClick: () -> Unit
 ) {
     val menuItems = listOf(
+        MenuItem(stringResource(R.string.account_menu_item_text), onAccountClick),
+        MenuItem(stringResource(R.string.settings_menu_item_text), {}),
         MenuItem(stringResource(R.string.logout_menu_item_text), onLogout)
     )
 

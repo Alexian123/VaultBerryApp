@@ -86,6 +86,9 @@ fun VaultScreen(
                         authViewModel.logout()
                         vaultViewModel.resetState()
                         navController.navigate("login")
+                    },
+                    onAccountClick = {
+                        navController.navigate("account")
                     }
                 ) },
                 floatingActionButton = {

@@ -29,7 +29,8 @@ import com.alexianhentiu.vaultberryapp.R
 @OptIn(ExperimentalMaterial3Api::class)
 fun TopBar(
     onSearch: (String) -> Unit,
-    onLogout: () -> Unit
+    onLogout: () -> Unit,
+    onAccountClick: () -> Unit
 ) {
     var isSearching by remember { mutableStateOf(false) }
     var searchText by remember { mutableStateOf(TextFieldValue("")) }
@@ -76,7 +77,8 @@ fun TopBar(
             MainMenu(
                 onDismissRequest = { showMenu = false },
                 expanded = showMenu,
-                onLogout = onLogout
+                onLogout = onLogout,
+                onAccountClick = onAccountClick
             )
         },
         actions = {
@@ -109,6 +111,7 @@ fun TopBar(
 fun PreviewTopBar() {
     TopBar(
         onSearch = { },
-        onLogout = { }
+        onLogout = { },
+        onAccountClick = { }
     )
 }
