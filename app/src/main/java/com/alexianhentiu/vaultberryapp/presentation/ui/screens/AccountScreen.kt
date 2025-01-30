@@ -10,25 +10,19 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ErrorDialog
-import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.ResetPasswordForm
-import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.UpdateAccountForm
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.state.AccountState
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.AccountViewModel
-import com.alexianhentiu.vaultberryapp.presentation.viewmodel.AuthViewModel
-import com.alexianhentiu.vaultberryapp.presentation.viewmodel.VaultViewModel
 
 @Composable
 fun AccountScreen(
-    vaultViewModel: VaultViewModel,
-    authViewModel: AuthViewModel,
-    accountViewModel: AccountViewModel,
-    navController: NavController,
+    viewModel: AccountViewModel,
+    navController: NavController
 ) {
-    val accountState by accountViewModel.accountState.collectAsState()
+    val accountState by viewModel.accountState.collectAsState()
 
     when (accountState) {
         is AccountState.Init -> {
-            accountViewModel.getAccount()
+            viewModel.getAccount()
         }
 
         is AccountState.Loading -> {
@@ -38,55 +32,33 @@ fun AccountScreen(
         is AccountState.Idle -> {
             Scaffold { contentPadding ->
                 Box(modifier = Modifier.fillMaxSize().padding(contentPadding)) {
-                    UpdateAccountForm(
-                        onConfirmClicked = { email, password, firstName, lastName ->
-                            accountViewModel.updateAccount(email, password, firstName, lastName)
-                        },
-                        inputValidator = authViewModel.inputValidator
-                    )
+
                 }
             }
         }
 
-        is AccountState.Updated -> {
-            accountViewModel.resetState()
+        is AccountState.UpdatedEmail -> {
+            viewModel.resetState()
         }
 
-        is AccountState.Deleted -> {
-            authViewModel.logout()
-            accountViewModel.resetState()
-            navController.navigate("login")
-        }
-
-        is AccountState.ForcedPasswordReset -> {
-            Scaffold { contentPadding ->
-                Box(modifier = Modifier.fillMaxSize().padding(contentPadding)) {
-                    ResetPasswordForm(
-                        onConfirmClick = { newPassword ->
-                            accountViewModel.updateAccount(
-                                email = accountViewModel.account.value!!.email,
-                                password = newPassword,
-                                firstName = accountViewModel.account.value!!.firstName,
-                                lastName = accountViewModel.account.value!!.lastName
-                            )
-                        },
-                        inputValidator = vaultViewModel.inputValidator
-                    )
-                }
-            }
+        is AccountState.UpdatedName -> {
+            viewModel.resetState()
         }
 
         is AccountState.UpdatedPassword -> {
-            val decryptedKey = (accountState as AccountState.UpdatedPassword).decryptedKey
-            vaultViewModel.startReEncrypting(decryptedKey)
-            accountViewModel.resetState()
+            viewModel.resetState()
             navController.navigate("vault")
+        }
+
+        is AccountState.Deleted -> {
+            viewModel.resetState()
+            navController.navigate("login")
         }
 
         is AccountState.Error -> {
             val errorMessage = (accountState as AccountState.Error).message
             ErrorDialog(
-                onConfirm = { accountViewModel.resetState() },
+                onConfirm = { viewModel.resetState() },
                 title = "Account Error",
                 message = errorMessage
             )

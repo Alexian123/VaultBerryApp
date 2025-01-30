@@ -31,16 +31,12 @@ import com.alexianhentiu.vaultberryapp.presentation.ui.components.VaultEntryItem
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ErrorDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.enums.EntryModification
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.state.VaultState
-import com.alexianhentiu.vaultberryapp.presentation.viewmodel.AccountViewModel
-import com.alexianhentiu.vaultberryapp.presentation.viewmodel.AuthViewModel
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.MotionViewModel
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.VaultViewModel
 
 @Composable
 fun VaultScreen(
     vaultViewModel: VaultViewModel,
-    authViewModel: AuthViewModel,
-    accountViewModel: AccountViewModel,
     motionViewModel: MotionViewModel,
     navController: NavController
 ) {
@@ -74,8 +70,7 @@ fun VaultScreen(
 
             if (motionDetected) {
                 motionViewModel.resetMotionDetected()
-                authViewModel.logout()
-                vaultViewModel.resetState()
+                vaultViewModel.logout()
                 navController.navigate("login")
             }
 
@@ -83,8 +78,7 @@ fun VaultScreen(
                 topBar = { TopBar(
                     onSearch = { vaultViewModel.searchEntriesByTitle(it) },
                     onLogout = {
-                        authViewModel.logout()
-                        vaultViewModel.resetState()
+                        vaultViewModel.logout()
                         navController.navigate("login")
                     },
                     onAccountClick = {
@@ -166,16 +160,6 @@ fun VaultScreen(
                     }
                 }
             }
-        }
-
-        is VaultState.RecoveryMode -> {
-            vaultViewModel.getEntries(vaultKey)
-            accountViewModel.forcePasswordReset()
-            navController.navigate("account")
-        }
-
-        is VaultState.ReEncrypting -> {
-            vaultViewModel.reEncryptAllEntries()
         }
 
         is VaultState.Error ->  {

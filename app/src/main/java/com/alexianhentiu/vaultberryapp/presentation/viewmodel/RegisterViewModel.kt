@@ -5,9 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alexianhentiu.vaultberryapp.data.api.APIResult
 import com.alexianhentiu.vaultberryapp.domain.model.Account
-import com.alexianhentiu.vaultberryapp.domain.model.User
-import com.alexianhentiu.vaultberryapp.domain.usecase.security.GenerateKeyChainUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.auth.RegisterUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.core.auth.RegisterUseCase
 import com.alexianhentiu.vaultberryapp.domain.utils.InputValidator
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.state.RegisterState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,7 +17,6 @@ import javax.inject.Inject
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
     private val registerUseCase: RegisterUseCase,
-    private val generateKeyChainUseCase: GenerateKeyChainUseCase,
     val inputValidator: InputValidator
 ) : ViewModel() {
 
@@ -33,13 +30,9 @@ class RegisterViewModel @Inject constructor(
             firstName = firstName,
             lastName = lastName
         )
-        // TODO: Generate recovery password
-        val keyChain = generateKeyChainUseCase(password, "test")
-        val user = User(account, keyChain)
-
         viewModelScope.launch {
             _registerState.value = RegisterState.Loading
-            when (val result = registerUseCase(user)) {
+            when (val result = registerUseCase(account)) {
                 is APIResult.Success -> {
                     _registerState.value = RegisterState.Success
                     Log.d("RegisterViewModel", "API success: ${result.data}")

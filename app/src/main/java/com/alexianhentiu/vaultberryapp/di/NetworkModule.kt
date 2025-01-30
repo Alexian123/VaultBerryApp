@@ -27,14 +27,18 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(sessionCookieJar: SessionCookieJar): OkHttpClient =
-        OkHttpClient.Builder()
-            .cookieJar(sessionCookieJar)
-            .build()
+    fun provideOkHttpClient(
+        sessionCookieJar: SessionCookieJar
+    ): OkHttpClient = OkHttpClient.Builder()
+        .cookieJar(sessionCookieJar)
+        .build()
 
     @Provides
     @Singleton
-    fun provideRetrofit(baseUrl: String, client: OkHttpClient): Retrofit = Retrofit.Builder()
+    fun provideRetrofit(
+        baseUrl: String,
+        client: OkHttpClient
+    ): Retrofit = Retrofit.Builder()
         .baseUrl(baseUrl)
         .client(client)
         .addConverterFactory(MoshiConverterFactory.create())
@@ -42,7 +46,9 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideApiService(retrofit: Retrofit): APIService = retrofit.create(APIService::class.java)
+    fun provideApiService(
+        retrofit: Retrofit
+    ): APIService = retrofit.create(APIService::class.java)
 
     @Provides
     @Singleton

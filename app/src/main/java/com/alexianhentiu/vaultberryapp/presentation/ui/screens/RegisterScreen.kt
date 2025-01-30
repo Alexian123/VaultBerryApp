@@ -38,9 +38,11 @@ fun RegisterScreen(viewModel: RegisterViewModel, navController: NavController) {
                 }
             }
         }
+
         is RegisterState.Loading -> {
             LoadingScreen()
         }
+
         is RegisterState.Success -> {
             Scaffold { contentPadding ->
                 Box(modifier = Modifier.fillMaxSize().padding(contentPadding)) {
@@ -67,6 +69,7 @@ fun RegisterScreen(viewModel: RegisterViewModel, navController: NavController) {
                 }
             }
         }
+
         is RegisterState.Error -> {
             val errorMessage = (registerState as RegisterState.Error).message
             ErrorDialog(

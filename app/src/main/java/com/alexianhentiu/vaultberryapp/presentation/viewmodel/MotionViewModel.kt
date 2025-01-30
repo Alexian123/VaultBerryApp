@@ -6,8 +6,8 @@ import android.hardware.SensorEventListener
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.alexianhentiu.vaultberryapp.domain.usecase.sensor.RegisterListenerUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.sensor.UnregisterListenerUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.core.sensor.RegisterListenerUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.core.sensor.UnregisterListenerUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
