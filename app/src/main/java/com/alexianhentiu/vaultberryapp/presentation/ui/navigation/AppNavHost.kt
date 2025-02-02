@@ -9,17 +9,20 @@ import com.alexianhentiu.vaultberryapp.presentation.ui.screens.main.AccountScree
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.main.LoginScreen
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.main.RecoveryScreen
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.main.RegisterScreen
+import com.alexianhentiu.vaultberryapp.presentation.ui.screens.main.SettingsScreen
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.main.VaultScreen
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.AccountViewModel
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.LoginViewModel
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.MotionViewModel
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.RecoveryViewModel
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.RegisterViewModel
+import com.alexianhentiu.vaultberryapp.presentation.viewmodel.SettingsViewModel
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.VaultViewModel
 
 @Composable
 fun AppNavHost() {
     val navController = rememberNavController()
+    val settingsViewModel: SettingsViewModel = hiltViewModel()
 
     NavHost(navController = navController, startDestination = "login") {
         composable("login") {
@@ -44,7 +47,7 @@ fun AppNavHost() {
             AccountScreen(accountViewModel, navController)
         }
         composable("settings") {
-            // TODO: Implement settings screen
+            SettingsScreen(settingsViewModel)
         }
     }
 }

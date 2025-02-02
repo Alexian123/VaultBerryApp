@@ -29,7 +29,7 @@ import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.Confir
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.bars.VaultTopBar
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.items.VaultEntryItem
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ErrorDialog
-import com.alexianhentiu.vaultberryapp.presentation.ui.components.enums.EntryModification
+import com.alexianhentiu.vaultberryapp.presentation.ui.enums.EntryModification
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.miscellaneous.LoadingScreen
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.miscellaneous.UnlockVaultScreen
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.main.state.VaultState
@@ -90,6 +90,9 @@ fun VaultScreen(
                             value = vaultKey
                         )
                         navController.navigate("account")
+                    },
+                    onSettingsClick = {
+                        navController.navigate("settings")
                     }
                 ) },
                 floatingActionButton = {
