@@ -1,4 +1,4 @@
-package com.alexianhentiu.vaultberryapp.presentation.ui.screens
+package com.alexianhentiu.vaultberryapp.presentation.ui.screens.main
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,11 +26,13 @@ import com.alexianhentiu.vaultberryapp.domain.model.DecryptedVaultEntry
 import com.alexianhentiu.vaultberryapp.domain.model.DecryptedKey
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.AddEntryDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ConfirmActionDialog
-import com.alexianhentiu.vaultberryapp.presentation.ui.components.TopBar
-import com.alexianhentiu.vaultberryapp.presentation.ui.components.VaultEntryItem
+import com.alexianhentiu.vaultberryapp.presentation.ui.components.bars.VaultTopBar
+import com.alexianhentiu.vaultberryapp.presentation.ui.components.items.VaultEntryItem
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ErrorDialog
-import com.alexianhentiu.vaultberryapp.presentation.ui.enums.EntryModification
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.state.VaultState
+import com.alexianhentiu.vaultberryapp.presentation.ui.components.enums.EntryModification
+import com.alexianhentiu.vaultberryapp.presentation.ui.screens.miscellaneous.LoadingScreen
+import com.alexianhentiu.vaultberryapp.presentation.ui.screens.miscellaneous.UnlockVaultScreen
+import com.alexianhentiu.vaultberryapp.presentation.ui.screens.main.state.VaultState
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.MotionViewModel
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.VaultViewModel
 
@@ -75,13 +77,18 @@ fun VaultScreen(
             }
 
             Scaffold(
-                topBar = { TopBar(
+                topBar = { VaultTopBar(
                     onSearch = { vaultViewModel.searchEntriesByTitle(it) },
                     onLogout = {
                         vaultViewModel.logout()
                         navController.navigate("login")
                     },
                     onAccountClick = {
+                        // send key to account screen
+                        navController.currentBackStackEntry?.savedStateHandle?.set(
+                            key = "vaultKey",
+                            value = vaultKey
+                        )
                         navController.navigate("account")
                     }
                 ) },

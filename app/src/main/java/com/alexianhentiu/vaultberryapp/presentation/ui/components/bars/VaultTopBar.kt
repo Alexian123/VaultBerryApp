@@ -1,4 +1,4 @@
-package com.alexianhentiu.vaultberryapp.presentation.ui.components
+package com.alexianhentiu.vaultberryapp.presentation.ui.components.bars
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.BasicTextField
@@ -24,10 +24,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import com.alexianhentiu.vaultberryapp.R
+import com.alexianhentiu.vaultberryapp.presentation.ui.components.menus.MainMenu
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun TopBar(
+fun VaultTopBar(
     onSearch: (String) -> Unit,
     onLogout: () -> Unit,
     onAccountClick: () -> Unit
@@ -108,8 +109,8 @@ fun TopBar(
 
 @Preview
 @Composable
-fun PreviewTopBar() {
-    TopBar(
+fun PreviewVaultTopBar() {
+    VaultTopBar(
         onSearch = { },
         onLogout = { },
         onAccountClick = { }

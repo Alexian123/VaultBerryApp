@@ -4,6 +4,7 @@ import com.alexianhentiu.vaultberryapp.data.model.AccountDTO
 import com.alexianhentiu.vaultberryapp.data.model.EncryptedVaultEntryDTO
 import com.alexianhentiu.vaultberryapp.data.model.KeyChainDTO
 import com.alexianhentiu.vaultberryapp.data.model.LoginCredentialsDTO
+import com.alexianhentiu.vaultberryapp.data.model.PasswordChangeDTO
 import com.alexianhentiu.vaultberryapp.data.model.RecoveryKeyDTO
 import com.alexianhentiu.vaultberryapp.data.model.UserDTO
 import com.alexianhentiu.vaultberryapp.domain.model.Account
@@ -33,7 +34,6 @@ class ModelConverter {
     fun accountToDTO(account: Account): AccountDTO {
         return AccountDTO(
             email = account.email,
-            password = account.password,
             firstName = account.firstName,
             lastName = account.lastName
         )
@@ -42,9 +42,14 @@ class ModelConverter {
     fun accountFromDTO(accountDTO: AccountDTO): Account {
         return Account(
             email = accountDTO.email,
-            password = accountDTO.password,
             firstName = accountDTO.firstName,
             lastName = accountDTO.lastName
+        )
+    }
+
+    fun passwordToDTO(password: String): PasswordChangeDTO {
+        return PasswordChangeDTO(
+            password = password
         )
     }
 

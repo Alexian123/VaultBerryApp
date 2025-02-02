@@ -1,4 +1,4 @@
-package com.alexianhentiu.vaultberryapp.presentation.ui.screens
+package com.alexianhentiu.vaultberryapp.presentation.ui.screens.miscellaneous
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement

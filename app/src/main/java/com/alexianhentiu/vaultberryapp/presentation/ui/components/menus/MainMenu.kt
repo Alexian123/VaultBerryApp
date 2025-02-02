@@ -1,4 +1,4 @@
-package com.alexianhentiu.vaultberryapp.presentation.ui.components
+package com.alexianhentiu.vaultberryapp.presentation.ui.components.menus
 
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem

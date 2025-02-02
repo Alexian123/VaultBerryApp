@@ -35,6 +35,13 @@ class AccountRepositoryImpl(
         )
     }
 
+    override suspend fun changePassword(password: String): APIResult<String> {
+        return apiResponseHandler.safeApiCall(
+            apiCall = { apiService.changePassword(modelConverter.passwordToDTO(password)) },
+            transform = { it.message }
+        )
+    }
+
     override suspend fun updateKeyChain(keychain: KeyChain): APIResult<String> {
         return apiResponseHandler.safeApiCall(
             apiCall = { apiService.updateKeyChain(modelConverter.keyChainToDTO(keychain)) },

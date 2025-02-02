@@ -1,4 +1,4 @@
-package com.alexianhentiu.vaultberryapp.presentation.ui.screens.state
+package com.alexianhentiu.vaultberryapp.presentation.ui.screens.main.state
 
 import com.alexianhentiu.vaultberryapp.domain.model.DecryptedKey
 

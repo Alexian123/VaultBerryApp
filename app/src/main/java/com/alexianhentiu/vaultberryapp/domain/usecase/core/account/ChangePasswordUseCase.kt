@@ -19,52 +19,43 @@ class ChangePasswordUseCase(
         decryptedKey: DecryptedKey,
         newPassword: String
     ): APIResult<String> {
-        when (val account = accountRepository.getAccount()) {
+        val recoveryPassword = generatePasswordUseCase()
+        val newKeyChain = generateKeyChainUseCase(newPassword, recoveryPassword)
+        val newDecryptedKey = decryptKeyUseCase(
+            password = newPassword,
+            salt = newKeyChain.salt,
+            encryptedKey = newKeyChain.vaultKey
+        )
+        when (val changeResult = accountRepository.changePassword(newPassword)) {
             is APIResult.Success -> {
-                val newAccount = account.data.copy(password = newPassword)
-                val recoveryPassword = generatePasswordUseCase()
-                val newKeyChain = generateKeyChainUseCase(newPassword, recoveryPassword)
-                val newDecryptedKey = decryptKeyUseCase(
-                    password = newPassword,
-                    salt = newKeyChain.salt,
-                    encryptedKey = newKeyChain.vaultKey
-                )
-                when (val updateResult = accountRepository.updateAccount(newAccount)) {
+                when (val reEncryptResult = reEncryptAllEntriesUseCase(
+                    oldKey = decryptedKey,
+                    newKey = newDecryptedKey
+                )) {
                     is APIResult.Success -> {
-                        when (val reEncryptResult = reEncryptAllEntriesUseCase(
-                            oldKey = decryptedKey,
-                            newKey = newDecryptedKey
-                        )) {
+                        return when (
+                            val updateKeyResult = accountRepository.updateKeyChain(
+                                keychain = newKeyChain
+                            )
+                        ) {
                             is APIResult.Success -> {
-                                return when (
-                                    val updateKeyResult = accountRepository.updateKeyChain(
-                                        keychain = newKeyChain
-                                    )
-                                ) {
-                                    is APIResult.Success -> {
-                                        APIResult.Success(recoveryPassword)
-                                    }
-
-                                    is APIResult.Error -> {
-                                        APIResult.Error(updateKeyResult.message)
-                                    }
-                                }
+                                APIResult.Success(recoveryPassword)
                             }
 
                             is APIResult.Error -> {
-                                return APIResult.Error(reEncryptResult.message)
+                                APIResult.Error(updateKeyResult.message)
                             }
                         }
                     }
 
                     is APIResult.Error -> {
-                        return APIResult.Error(updateResult.message)
+                        return APIResult.Error(reEncryptResult.message)
                     }
                 }
             }
 
             is APIResult.Error -> {
-                return APIResult.Error(account.message)
+                return APIResult.Error(changeResult.message)
             }
         }
     }

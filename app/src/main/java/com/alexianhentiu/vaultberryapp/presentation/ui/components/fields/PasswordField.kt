@@ -15,6 +15,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.buttons.CopyToClipboardButton
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.buttons.ToggleVisibilityButton
+import com.alexianhentiu.vaultberryapp.presentation.ui.components.enums.TextFieldType
 
 @Composable
 fun PasswordField(
@@ -25,7 +26,8 @@ fun PasswordField(
     showCopyToClipboardButton: Boolean = false,
     enabled: Boolean = true,
     readOnly: Boolean = false,
-    label: String = "Password"
+    label: String = "Password",
+    textFieldType: TextFieldType = TextFieldType.REGULAR
 ) {
     var password by remember { mutableStateOf("") }
     var isVisible by remember { mutableStateOf(false) }
@@ -42,7 +44,8 @@ fun PasswordField(
             isValid = isValid,
             visualTransformation = if (isVisible) VisualTransformation.None else PasswordVisualTransformation(),
             enabled = enabled,
-            readOnly = readOnly
+            readOnly = readOnly,
+            textFieldType = textFieldType
         )
         Row(
             modifier = Modifier.align(Alignment.CenterEnd)

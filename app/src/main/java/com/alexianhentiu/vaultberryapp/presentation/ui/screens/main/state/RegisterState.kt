@@ -1,4 +1,4 @@
-package com.alexianhentiu.vaultberryapp.presentation.ui.screens.state
+package com.alexianhentiu.vaultberryapp.presentation.ui.screens.main.state
 
 sealed class RegisterState {
     data object Idle : RegisterState()

@@ -12,7 +12,7 @@ import com.alexianhentiu.vaultberryapp.domain.usecase.core.vault.GetEntriesUseCa
 import com.alexianhentiu.vaultberryapp.domain.usecase.core.vault.UpdateEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.core.vault.DeleteEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.utils.InputValidator
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.state.VaultState
+import com.alexianhentiu.vaultberryapp.presentation.ui.screens.main.state.VaultState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

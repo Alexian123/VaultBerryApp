@@ -1,4 +1,4 @@
-package com.alexianhentiu.vaultberryapp.presentation.ui.screens.state
+package com.alexianhentiu.vaultberryapp.presentation.ui.screens.main.state
 
 sealed class VaultState {
     data object Loading : VaultState()

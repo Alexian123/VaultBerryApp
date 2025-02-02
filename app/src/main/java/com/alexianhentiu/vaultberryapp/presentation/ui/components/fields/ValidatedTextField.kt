@@ -2,6 +2,7 @@ package com.alexianhentiu.vaultberryapp.presentation.ui.components.fields
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -14,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.buttons.CopyToClipboardButton
+import com.alexianhentiu.vaultberryapp.presentation.ui.components.enums.TextFieldType
 
 @Composable
 fun ValidatedTextField(
@@ -25,26 +27,46 @@ fun ValidatedTextField(
     visualTransformation: VisualTransformation = VisualTransformation.None,
     showCopyToClipboardButton: Boolean = false,
     enabled: Boolean = true,
-    readOnly: Boolean = false
+    readOnly: Boolean = false,
+    textFieldType: TextFieldType = TextFieldType.REGULAR
 ) {
     var input by remember { mutableStateOf(initialText) }
     var isInputValid by remember { mutableStateOf(isValid(input)) }
 
     Box(modifier = modifier) {
-        TextField(
-            value = input,
-            onValueChange = {
-                input = it
-                isInputValid = isValid(it)
-                onInputChange(it, isInputValid)
-            },
-            label = { Text(label) },
-            isError = !isInputValid,
-            modifier = Modifier.fillMaxWidth(),
-            visualTransformation = visualTransformation,
-            enabled = enabled,
-            readOnly = readOnly
-        )
+        when (textFieldType) {
+            TextFieldType.REGULAR ->
+                TextField(
+                    value = input,
+                    onValueChange = {
+                        input = it
+                        isInputValid = isValid(it)
+                        onInputChange(it, isInputValid)
+                    },
+                    label = { Text(label) },
+                    isError = !isInputValid,
+                    modifier = Modifier.fillMaxWidth(),
+                    visualTransformation = visualTransformation,
+                    enabled = enabled,
+                    readOnly = readOnly
+                )
+            TextFieldType.OUTLINED ->
+                OutlinedTextField(
+                    value = input,
+                    onValueChange = {
+                        input = it
+                        isInputValid = isValid(it)
+                        onInputChange(it, isInputValid)
+                    },
+                    label = { Text(label) },
+                    isError = !isInputValid,
+                    modifier = Modifier.fillMaxWidth(),
+                    visualTransformation = visualTransformation,
+                    enabled = enabled,
+                    readOnly = readOnly
+                )
+        }
+
         if (showCopyToClipboardButton) {
             CopyToClipboardButton(
                 textToCopy = input,

@@ -12,9 +12,9 @@ class RegisterUseCase(
     private val generatePasswordUseCase: GeneratePasswordUseCase,
     private val generateKeyChainUseCase: GenerateKeyChainUseCase
 ) {
-    suspend operator fun invoke(account: Account): APIResult<String> {
+    suspend operator fun invoke(account: Account, password: String): APIResult<String> {
         val recoveryPassword = generatePasswordUseCase()
-        val keyChain = generateKeyChainUseCase(account.password, "test")
+        val keyChain = generateKeyChainUseCase(password, recoveryPassword)
         val user = User(account, keyChain)
         return when (val result = userRepository.register(user)) {
             is APIResult.Success -> {

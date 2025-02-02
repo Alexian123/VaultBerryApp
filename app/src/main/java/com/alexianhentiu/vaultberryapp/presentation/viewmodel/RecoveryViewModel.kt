@@ -3,7 +3,7 @@ package com.alexianhentiu.vaultberryapp.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import com.alexianhentiu.vaultberryapp.domain.model.Account
 import com.alexianhentiu.vaultberryapp.domain.utils.InputValidator
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.state.RecoveryState
+import com.alexianhentiu.vaultberryapp.presentation.ui.screens.main.state.RecoveryState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject

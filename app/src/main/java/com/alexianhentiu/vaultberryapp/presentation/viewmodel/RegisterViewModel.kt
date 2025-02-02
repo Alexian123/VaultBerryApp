@@ -7,7 +7,7 @@ import com.alexianhentiu.vaultberryapp.data.api.APIResult
 import com.alexianhentiu.vaultberryapp.domain.model.Account
 import com.alexianhentiu.vaultberryapp.domain.usecase.core.auth.RegisterUseCase
 import com.alexianhentiu.vaultberryapp.domain.utils.InputValidator
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.state.RegisterState
+import com.alexianhentiu.vaultberryapp.presentation.ui.screens.main.state.RegisterState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -26,13 +26,12 @@ class RegisterViewModel @Inject constructor(
     fun register(email: String, password: String, firstName: String?, lastName: String?) {
         val account = Account(
             email = email,
-            password = password,
             firstName = firstName,
             lastName = lastName
         )
         viewModelScope.launch {
             _registerState.value = RegisterState.Loading
-            when (val result = registerUseCase(account)) {
+            when (val result = registerUseCase(account, password)) {
                 is APIResult.Success -> {
                     _registerState.value = RegisterState.Success
                     Log.d("RegisterViewModel", "API success: ${result.data}")

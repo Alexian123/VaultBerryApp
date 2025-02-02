@@ -12,5 +12,7 @@ interface AccountRepository {
 
     suspend fun deleteAccount(): APIResult<String>
 
+    suspend fun changePassword(password: String): APIResult<String>
+
     suspend fun updateKeyChain(keychain: KeyChain): APIResult<String>
 }

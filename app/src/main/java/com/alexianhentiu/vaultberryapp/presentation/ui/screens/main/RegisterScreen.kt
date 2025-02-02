@@ -1,4 +1,4 @@
-package com.alexianhentiu.vaultberryapp.presentation.ui.screens
+package com.alexianhentiu.vaultberryapp.presentation.ui.screens.main
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,7 +17,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ErrorDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.RegisterForm
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.state.RegisterState
+import com.alexianhentiu.vaultberryapp.presentation.ui.screens.miscellaneous.LoadingScreen
+import com.alexianhentiu.vaultberryapp.presentation.ui.screens.main.state.RegisterState
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.RegisterViewModel
 
 @Composable

@@ -1,4 +1,4 @@
-package com.alexianhentiu.vaultberryapp.presentation.ui.components
+package com.alexianhentiu.vaultberryapp.presentation.ui.components.items
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
@@ -40,7 +40,7 @@ import com.alexianhentiu.vaultberryapp.domain.utils.InputValidator
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ConfirmActionDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.PasswordField
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.ValidatedTextField
-import com.alexianhentiu.vaultberryapp.presentation.ui.enums.EntryModification
+import com.alexianhentiu.vaultberryapp.presentation.ui.components.enums.EntryModification
 
 @Composable
 fun VaultEntryItem(
