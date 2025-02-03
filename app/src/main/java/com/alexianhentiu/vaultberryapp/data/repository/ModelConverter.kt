@@ -27,7 +27,8 @@ class ModelConverter {
     fun userToDTO(user: User): UserDTO {
         return UserDTO(
             accountDTO = accountToDTO(user.account),
-            keyChainDTO = keyChainToDTO(user.keyChain)
+            keyChainDTO = keyChainToDTO(user.keyChain),
+            password = user.password
         )
     }
 

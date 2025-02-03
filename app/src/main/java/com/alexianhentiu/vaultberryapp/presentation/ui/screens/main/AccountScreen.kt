@@ -57,7 +57,6 @@ fun AccountScreen(
                             if (vaultKey != null) {
                                 viewModel.changePassword(vaultKey, newPassword)
                             }
-                            // TODO: Obtain the new key and send it back to the vault screen
                         },
                         onDeleteAccount = {
                             viewModel.deleteAccount()

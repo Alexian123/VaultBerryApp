@@ -6,5 +6,6 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class UserDTO(
     @Json(name = "account") val accountDTO: AccountDTO,
-    @Json(name = "keychain") val keyChainDTO: KeyChainDTO
+    @Json(name = "keychain") val keyChainDTO: KeyChainDTO,
+    @Json(name = "password") val password: String
 )

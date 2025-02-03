@@ -13,12 +13,17 @@ import com.alexianhentiu.vaultberryapp.presentation.ui.theme.VaultBerryAppTheme
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.SettingsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
-// TODO: 1. Confirm dialogs for account updates
-// TODO: 2. More generic return type for use cases (not APIResult)
-// TODO: 3. Exception handling for security use cases
-// TODO: 4. One time prompt with the newly generated recovery password
-// TODO: 5. Recovery screen
-// TODO: 6. Integrate VPN connection
+/*
+    TODO: High Priority Tasks
+    1. Obtain the new key and send it back to the vault screen after changing the password
+    2. Confirm dialogs for account updates
+    3. More generic return type for use cases (not APIResult)
+    4. Exception handling for security use cases
+    5. One time prompt with the newly generated recovery password
+    6. Recovery screen
+    7. Handle back button/gesture in the vault screen
+    8. Integrate VPN connection
+*/
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
