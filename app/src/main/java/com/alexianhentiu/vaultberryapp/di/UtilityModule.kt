@@ -22,6 +22,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object UtilityModule {
 
+    // Set up DataStore
     private val Context.userDataStore: DataStore<Preferences> by preferencesDataStore(
         name = "com.alexianhentiu.vaultberryapp.user_settings"
     )

@@ -77,24 +77,26 @@ fun VaultScreen(
             }
 
             Scaffold(
-                topBar = { VaultTopBar(
-                    onSearch = { vaultViewModel.searchEntriesByTitle(it) },
-                    onLogout = {
-                        vaultViewModel.logout()
-                        navController.navigate("login")
-                    },
-                    onAccountClick = {
-                        // send key to account screen
-                        navController.currentBackStackEntry?.savedStateHandle?.set(
-                            key = "vaultKey",
-                            value = vaultKey
-                        )
-                        navController.navigate("account")
-                    },
-                    onSettingsClick = {
-                        navController.navigate("settings")
-                    }
-                ) },
+                topBar = {
+                    VaultTopBar(
+                        onSearch = { vaultViewModel.searchEntriesByTitle(it) },
+                        onLogout = {
+                            vaultViewModel.logout()
+                            navController.navigate("login")
+                        },
+                        onAccountClick = {
+                            // send key to account screen
+                            navController.currentBackStackEntry?.savedStateHandle?.set(
+                                key = "vaultKey",
+                                value = vaultKey
+                            )
+                            navController.navigate("account")
+                        },
+                        onSettingsClick = {
+                            navController.navigate("settings")
+                        }
+                    )
+                },
                 floatingActionButton = {
                     FloatingActionButton(
                         onClick = { showAddEntryDialog = true },

@@ -10,6 +10,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import com.alexianhentiu.vaultberryapp.domain.model.DecryptedKey
+import com.alexianhentiu.vaultberryapp.presentation.ui.components.bars.TopBarWithBackButton
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ErrorDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.AccountForm
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.miscellaneous.LoadingScreen
@@ -37,7 +38,14 @@ fun AccountScreen(
         }
 
         is AccountState.Idle -> {
-            Scaffold { contentPadding ->
+            Scaffold(
+                topBar = {
+                    TopBarWithBackButton(
+                        onBackClick = { navController.popBackStack() },
+                        title = "Account"
+                    )
+                }
+            ) { contentPadding ->
                 Box(modifier = Modifier.fillMaxSize().padding(contentPadding)) {
                     AccountForm(
                         account = account!!,
@@ -49,6 +57,7 @@ fun AccountScreen(
                             if (vaultKey != null) {
                                 viewModel.changePassword(vaultKey, newPassword)
                             }
+                            // TODO: Obtain the new key and send it back to the vault screen
                         },
                         onDeleteAccount = {
                             viewModel.deleteAccount()

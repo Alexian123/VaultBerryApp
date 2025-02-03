@@ -12,17 +12,30 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.alexianhentiu.vaultberryapp.presentation.ui.components.bars.TopBarWithBackButton
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.items.SwitchSettingItem
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.SettingsViewModel
 
 @Composable
-fun SettingsScreen(viewModel: SettingsViewModel? = null) {
+fun SettingsScreen(
+    viewModel: SettingsViewModel? = null,
+    navController: NavController
+) {
     var useSystemTheme by remember { mutableStateOf(viewModel?.useSystemTheme?.value ?: true) }
     var darkTheme by remember { mutableStateOf(viewModel?.darkTheme?.value ?: false) }
 
-    Scaffold { contentPadding ->
+    Scaffold(
+        topBar = {
+            TopBarWithBackButton(
+                onBackClick = { navController.popBackStack() },
+                title = "Settings"
+            )
+        }
+    ) { contentPadding ->
         Box(
             modifier = Modifier.fillMaxSize()
                 .padding(contentPadding)
@@ -57,5 +70,8 @@ fun SettingsScreen(viewModel: SettingsViewModel? = null) {
 @Composable
 @Preview(showBackground = true)
 fun SettingsScreenPreview() {
-    SettingsScreen()
+    SettingsScreen(
+        viewModel = null,
+        navController = NavController(LocalContext.current)
+    )
 }

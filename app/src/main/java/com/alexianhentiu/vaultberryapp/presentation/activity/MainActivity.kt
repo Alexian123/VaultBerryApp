@@ -13,6 +13,13 @@ import com.alexianhentiu.vaultberryapp.presentation.ui.theme.VaultBerryAppTheme
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.SettingsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
+// TODO: 1. Confirm dialogs for account updates
+// TODO: 2. More generic return type for use cases (not APIResult)
+// TODO: 3. Exception handling for security use cases
+// TODO: 4. One time prompt with the newly generated recovery password
+// TODO: 5. Recovery screen
+// TODO: 6. Integrate VPN connection
+
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

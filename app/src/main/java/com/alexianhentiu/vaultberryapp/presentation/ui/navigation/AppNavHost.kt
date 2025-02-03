@@ -47,7 +47,7 @@ fun AppNavHost() {
             AccountScreen(accountViewModel, navController)
         }
         composable("settings") {
-            SettingsScreen(settingsViewModel)
+            SettingsScreen(settingsViewModel, navController)
         }
     }
 }
