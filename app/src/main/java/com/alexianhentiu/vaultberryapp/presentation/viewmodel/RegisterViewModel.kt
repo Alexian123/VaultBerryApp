@@ -3,9 +3,9 @@ package com.alexianhentiu.vaultberryapp.presentation.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.alexianhentiu.vaultberryapp.data.api.APIResult
 import com.alexianhentiu.vaultberryapp.domain.model.Account
 import com.alexianhentiu.vaultberryapp.domain.usecase.core.auth.RegisterUseCase
+import com.alexianhentiu.vaultberryapp.domain.utils.ActionResult
 import com.alexianhentiu.vaultberryapp.domain.utils.InputValidator
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.state.RegisterState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -32,11 +32,11 @@ class RegisterViewModel @Inject constructor(
         viewModelScope.launch {
             _registerState.value = RegisterState.Loading
             when (val result = registerUseCase(account, password)) {
-                is APIResult.Success -> {
+                is ActionResult.Success -> {
                     _registerState.value = RegisterState.Success(result.data)
                 }
 
-                is APIResult.Error -> {
+                is ActionResult.Error -> {
                     _registerState.value = RegisterState.Error(result.message)
                     Log.e("RegisterViewModel", "Registration failed: ${result.message}")
                 }

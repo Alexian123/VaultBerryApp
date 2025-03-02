@@ -1,6 +1,5 @@
 package com.alexianhentiu.vaultberryapp.di
 
-import android.hardware.SensorManager
 import com.alexianhentiu.vaultberryapp.domain.repository.AccountRepository
 import com.alexianhentiu.vaultberryapp.domain.repository.UserRepository
 import com.alexianhentiu.vaultberryapp.domain.repository.VaultEntryRepository
@@ -19,8 +18,6 @@ import com.alexianhentiu.vaultberryapp.domain.usecase.core.auth.LogoutUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.core.auth.RecoveryLoginUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.core.vault.UpdateEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.core.auth.RegisterUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.core.sensor.RegisterListenerUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.core.sensor.UnregisterListenerUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.extra.security.EncryptVaultEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.extra.security.DecryptVaultEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.core.vault.DeleteEntryUseCase
@@ -90,16 +87,6 @@ object CoreUseCaseModule {
     fun provideDeleteEntryUseCase(
         vaultEntryRepository: VaultEntryRepository
     ): DeleteEntryUseCase = DeleteEntryUseCase(vaultEntryRepository)
-
-    @Provides
-    fun provideRegisterListenerUseCase(
-        sensorManager: SensorManager
-    ): RegisterListenerUseCase = RegisterListenerUseCase(sensorManager)
-
-    @Provides
-    fun provideUnregisterListenerUseCase(
-        sensorManager: SensorManager
-    ): UnregisterListenerUseCase = UnregisterListenerUseCase(sensorManager)
 
     @Provides
     fun provideChangeEmailUseCase(

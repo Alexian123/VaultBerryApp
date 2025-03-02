@@ -7,6 +7,7 @@ import com.alexianhentiu.vaultberryapp.domain.usecase.extra.security.DecryptKeyU
 import com.alexianhentiu.vaultberryapp.domain.usecase.extra.security.GenerateKeyChainUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.extra.security.GeneratePasswordUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.extra.vault.ReEncryptAllEntriesUseCase
+import com.alexianhentiu.vaultberryapp.domain.utils.ActionResult
 
 class ChangePasswordUseCase(
     private val accountRepository: AccountRepository,
@@ -18,44 +19,55 @@ class ChangePasswordUseCase(
     suspend operator fun invoke(
         decryptedKey: DecryptedKey,
         newPassword: String
-    ): APIResult<String> {
-        val recoveryPassword = generatePasswordUseCase()
-        val newKeyChain = generateKeyChainUseCase(newPassword, recoveryPassword)
-        val newDecryptedKey = decryptKeyUseCase(
+    ): ActionResult<String> {
+        val generatePasswordResult = generatePasswordUseCase()
+        if (generatePasswordResult is ActionResult.Error) {
+            return generatePasswordResult
+        }
+        val recoveryPassword = (generatePasswordResult as ActionResult.Success).data
+
+        val generateKeyChainResult = generateKeyChainUseCase(newPassword, recoveryPassword)
+        if (generateKeyChainResult is ActionResult.Error) {
+            return generateKeyChainResult
+        }
+        val newKeyChain = (generateKeyChainResult as ActionResult.Success).data
+
+        val decryptKeyResult = decryptKeyUseCase(
             password = newPassword,
             salt = newKeyChain.salt,
             encryptedKey = newKeyChain.vaultKey
         )
+        if (decryptKeyResult is ActionResult.Error) {
+            return decryptKeyResult
+        }
+        val newDecryptedKey = (decryptKeyResult as ActionResult.Success).data
+
         when (val changeResult = accountRepository.changePassword(newPassword)) {
             is APIResult.Success -> {
-                when (val reEncryptResult = reEncryptAllEntriesUseCase(
+                val reEncryptResult = reEncryptAllEntriesUseCase(
                     oldKey = decryptedKey,
                     newKey = newDecryptedKey
-                )) {
-                    is APIResult.Success -> {
-                        return when (
-                            val updateKeyResult = accountRepository.updateKeyChain(
-                                keychain = newKeyChain
-                            )
-                        ) {
-                            is APIResult.Success -> {
-                                APIResult.Success(recoveryPassword)
-                            }
+                )
+                if (reEncryptResult is ActionResult.Error) {
+                    return reEncryptResult
+                }
 
-                            is APIResult.Error -> {
-                                APIResult.Error(updateKeyResult.message)
-                            }
-                        }
+                return when (val updateKeyResult = accountRepository.updateKeyChain(
+                        keychain = newKeyChain
+                    )
+                ) {
+                    is APIResult.Success -> {
+                        ActionResult.Success(recoveryPassword)
                     }
 
                     is APIResult.Error -> {
-                        return APIResult.Error(reEncryptResult.message)
+                        ActionResult.Error(updateKeyResult.message)
                     }
                 }
             }
 
             is APIResult.Error -> {
-                return APIResult.Error(changeResult.message)
+                return ActionResult.Error(changeResult.message)
             }
         }
     }

@@ -4,15 +4,23 @@ import com.alexianhentiu.vaultberryapp.data.model.AccountDTO
 import com.alexianhentiu.vaultberryapp.data.model.EncryptedVaultEntryDTO
 import com.alexianhentiu.vaultberryapp.data.model.KeyChainDTO
 import com.alexianhentiu.vaultberryapp.data.model.LoginCredentialsDTO
+import com.alexianhentiu.vaultberryapp.data.model.MessageResponseDTO
 import com.alexianhentiu.vaultberryapp.data.model.PasswordChangeDTO
 import com.alexianhentiu.vaultberryapp.data.model.UserDTO
 import com.alexianhentiu.vaultberryapp.domain.model.Account
 import com.alexianhentiu.vaultberryapp.domain.model.EncryptedVaultEntry
 import com.alexianhentiu.vaultberryapp.domain.model.KeyChain
 import com.alexianhentiu.vaultberryapp.domain.model.LoginCredentials
+import com.alexianhentiu.vaultberryapp.domain.model.MessageResponse
 import com.alexianhentiu.vaultberryapp.domain.model.User
 
 class ModelConverter {
+
+    fun messageResponseFromDTO(messageResponseDTO: MessageResponseDTO): MessageResponse {
+        return MessageResponse(
+            message = messageResponseDTO.message
+        )
+    }
 
     fun userToDTO(user: User): UserDTO {
         return UserDTO(

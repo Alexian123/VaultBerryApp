@@ -5,9 +5,9 @@ import javax.inject.Inject
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.alexianhentiu.vaultberryapp.data.api.APIResult
 import com.alexianhentiu.vaultberryapp.domain.model.LoginCredentials
 import com.alexianhentiu.vaultberryapp.domain.usecase.core.auth.LoginUseCase
+import com.alexianhentiu.vaultberryapp.domain.utils.ActionResult
 import com.alexianhentiu.vaultberryapp.domain.utils.InputValidator
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.state.LoginState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,11 +31,11 @@ class LoginViewModel @Inject constructor(
             _loginState.value = LoginState.Loading
             delay(1000) // Simulate network delay
             when (val result = loginUseCase(loginCredentials)) {
-                is APIResult.Success -> {
+                is ActionResult.Success -> {
                     _loginState.value = LoginState.LoggedIn(result.data)
                 }
 
-                is APIResult.Error -> {
+                is ActionResult.Error -> {
                     _loginState.value = LoginState.Error(result.message)
                     Log.e("LoginViewModel", "Login failed: ${result.message}")
                 }

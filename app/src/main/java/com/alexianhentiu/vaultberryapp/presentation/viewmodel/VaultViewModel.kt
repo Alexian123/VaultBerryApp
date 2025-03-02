@@ -3,7 +3,6 @@ package com.alexianhentiu.vaultberryapp.presentation.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.alexianhentiu.vaultberryapp.data.api.APIResult
 import com.alexianhentiu.vaultberryapp.domain.model.DecryptedVaultEntry
 import com.alexianhentiu.vaultberryapp.domain.model.DecryptedKey
 import com.alexianhentiu.vaultberryapp.domain.usecase.core.auth.LogoutUseCase
@@ -11,6 +10,7 @@ import com.alexianhentiu.vaultberryapp.domain.usecase.core.vault.AddEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.core.vault.GetEntriesUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.core.vault.UpdateEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.core.vault.DeleteEntryUseCase
+import com.alexianhentiu.vaultberryapp.domain.utils.ActionResult
 import com.alexianhentiu.vaultberryapp.domain.utils.InputValidator
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.state.VaultState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -45,7 +45,7 @@ class VaultViewModel @Inject constructor(
         viewModelScope.launch {
             _vaultState.value = VaultState.Loading
             when (val result = logoutUseCase()) {
-                is APIResult.Success -> {
+                is ActionResult.Success -> {
                     allEntries.value = emptyList()
                     _filteredEntries.value = emptyList()
                     vaultKey = DecryptedKey(ByteArray(0))
@@ -53,7 +53,7 @@ class VaultViewModel @Inject constructor(
                     Log.d("VaultViewModel", "API success: ${result.data}")
                 }
 
-                is APIResult.Error -> {
+                is ActionResult.Error -> {
                     _vaultState.value = VaultState.Error(result.message)
                     Log.e("VaultViewModel", "Logout failed: ${result.message}")
                 }
@@ -86,13 +86,13 @@ class VaultViewModel @Inject constructor(
             }
             vaultKey = decryptedKey
             when (val result = getEntriesUseCase(vaultKey)) {
-                is APIResult.Success -> {
+                is ActionResult.Success -> {
                     _vaultState.value = VaultState.Unlocked
                     allEntries.value = result.data
                     resetShownEntries()
                 }
 
-                is APIResult.Error -> {
+                is ActionResult.Error -> {
                     _vaultState.value = VaultState.Error(result.message)
                     Log.e("VaultViewModel", "Failed to get entries: ${result.message}")
                 }
@@ -104,7 +104,7 @@ class VaultViewModel @Inject constructor(
         viewModelScope.launch {
             _vaultState.value = VaultState.Loading
             when (val result = addEntryUseCase(decryptedVaultEntry, vaultKey)) {
-                is APIResult.Success -> {
+                is ActionResult.Success -> {
                     _vaultState.value = VaultState.Unlocked
                     allEntries.update { currentList ->
                         currentList + decryptedVaultEntry
@@ -113,7 +113,7 @@ class VaultViewModel @Inject constructor(
                     Log.d("VaultViewModel", "API success: ${result.data}")
                 }
 
-                is APIResult.Error -> {
+                is ActionResult.Error -> {
                     _vaultState.value = VaultState.Error(result.message)
                     Log.e("VaultViewModel", "Failed to add entry: ${result.message}")
                 }
@@ -125,7 +125,7 @@ class VaultViewModel @Inject constructor(
         viewModelScope.launch {
             _vaultState.value = VaultState.Loading
             when (val result = deleteEntryUseCase(decryptedVaultEntry)) {
-                is APIResult.Success -> {
+                is ActionResult.Success -> {
                     _vaultState.value = VaultState.Unlocked
                     allEntries.update { currentList ->
                         currentList.filter { it.timestamp != decryptedVaultEntry.timestamp }
@@ -134,7 +134,7 @@ class VaultViewModel @Inject constructor(
                     Log.d("VaultViewModel", "API success: ${result.data}")
                 }
 
-                is APIResult.Error -> {
+                is ActionResult.Error -> {
                     _vaultState.value = VaultState.Error(result.message)
                     Log.e("VaultViewModel", "Failed to delete entry: ${result.message}")
                 }
@@ -146,7 +146,7 @@ class VaultViewModel @Inject constructor(
         viewModelScope.launch {
             _vaultState.value = VaultState.Loading
             when (val result = updateEntryUseCase(decryptedVaultEntry, vaultKey)) {
-                is APIResult.Success -> {
+                is ActionResult.Success -> {
                     _vaultState.value = VaultState.Unlocked
                     allEntries.update { currentList ->
                         currentList.map {
@@ -159,7 +159,7 @@ class VaultViewModel @Inject constructor(
                     Log.d("VaultViewModel", "API success: ${result.data}")
                 }
 
-                is APIResult.Error -> {
+                is ActionResult.Error -> {
                     _vaultState.value = VaultState.Error(result.message)
                     Log.e("VaultViewModel", "Failed to update entry: ${result.message}")
                 }

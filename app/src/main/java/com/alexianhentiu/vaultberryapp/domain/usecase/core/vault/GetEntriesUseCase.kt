@@ -5,24 +5,29 @@ import com.alexianhentiu.vaultberryapp.domain.model.DecryptedKey
 import com.alexianhentiu.vaultberryapp.domain.model.DecryptedVaultEntry
 import com.alexianhentiu.vaultberryapp.domain.repository.VaultEntryRepository
 import com.alexianhentiu.vaultberryapp.domain.usecase.extra.security.DecryptVaultEntryUseCase
+import com.alexianhentiu.vaultberryapp.domain.utils.ActionResult
 
 class GetEntriesUseCase(
     private val vaultEntryRepository: VaultEntryRepository,
     private val decryptVaultEntryUseCase: DecryptVaultEntryUseCase
 ) {
-    suspend operator fun invoke(key: DecryptedKey): APIResult<List<DecryptedVaultEntry>> {
+    suspend operator fun invoke(key: DecryptedKey): ActionResult<List<DecryptedVaultEntry>> {
         when (val result = vaultEntryRepository.getEntries()) {
             is APIResult.Success -> {
                 val encryptedVaultEntries = result.data
                 val decryptedVaultEntries = mutableListOf<DecryptedVaultEntry>()
                 for (entry in encryptedVaultEntries) {
-                    decryptedVaultEntries.add(decryptVaultEntryUseCase(entry, key))
+                    val decryptEntryResult = decryptVaultEntryUseCase(entry, key)
+                    if (decryptEntryResult is ActionResult.Error) {
+                        return decryptEntryResult
+                    }
+                    decryptedVaultEntries.add((decryptEntryResult as ActionResult.Success).data)
                 }
-                return APIResult.Success(decryptedVaultEntries)
+                return ActionResult.Success(decryptedVaultEntries)
             }
 
             is APIResult.Error -> {
-                return APIResult.Error(result.message)
+                return ActionResult.Error(result.message)
             }
         }
     }

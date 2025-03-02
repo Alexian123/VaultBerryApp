@@ -6,6 +6,7 @@ import com.alexianhentiu.vaultberryapp.data.api.APIService
 import com.alexianhentiu.vaultberryapp.domain.model.LoginCredentials
 import com.alexianhentiu.vaultberryapp.domain.model.User
 import com.alexianhentiu.vaultberryapp.domain.model.KeyChain
+import com.alexianhentiu.vaultberryapp.domain.model.MessageResponse
 import com.alexianhentiu.vaultberryapp.domain.repository.UserRepository
 
 class UserRepositoryImpl(
@@ -14,10 +15,10 @@ class UserRepositoryImpl(
     private val modelConverter: ModelConverter
 ) : UserRepository {
 
-    override suspend fun getRecoveryOTP(email: String): APIResult<String> {
+    override suspend fun getRecoveryOTP(email: String): APIResult<MessageResponse> {
         return apiResponseHandler.safeApiCall(
             apiCall = { apiService.getRecoveryKey(email) },
-            transform = { it.message }
+            transform = { modelConverter.messageResponseFromDTO(it) }
         )
     }
 
@@ -29,11 +30,11 @@ class UserRepositoryImpl(
         )
     }
 
-    override suspend fun register(user: User): APIResult<String> {
+    override suspend fun register(user: User): APIResult<MessageResponse> {
         val userDTO = modelConverter.userToDTO(user)
         return apiResponseHandler.safeApiCall(
             apiCall = { apiService.register(userDTO) },
-            transform = { it.message }
+            transform = { modelConverter.messageResponseFromDTO(it) }
         )
     }
 
@@ -45,10 +46,10 @@ class UserRepositoryImpl(
         )
     }
 
-    override suspend fun logout(): APIResult<String> {
+    override suspend fun logout(): APIResult<MessageResponse> {
         return apiResponseHandler.safeApiCall(
             apiCall = { apiService.logout() },
-            transform = { it.message }
+            transform = { modelConverter.messageResponseFromDTO(it) }
         )
     }
 }

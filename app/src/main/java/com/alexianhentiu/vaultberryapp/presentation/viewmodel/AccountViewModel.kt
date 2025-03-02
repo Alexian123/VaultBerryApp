@@ -3,7 +3,6 @@ package com.alexianhentiu.vaultberryapp.presentation.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.alexianhentiu.vaultberryapp.data.api.APIResult
 import com.alexianhentiu.vaultberryapp.domain.model.Account
 import com.alexianhentiu.vaultberryapp.domain.model.DecryptedKey
 import com.alexianhentiu.vaultberryapp.domain.usecase.core.account.ChangeEmailUseCase
@@ -11,6 +10,7 @@ import com.alexianhentiu.vaultberryapp.domain.usecase.core.account.ChangeNameUse
 import com.alexianhentiu.vaultberryapp.domain.usecase.core.account.ChangePasswordUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.core.account.DeleteAccountUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.core.account.GetAccountUseCase
+import com.alexianhentiu.vaultberryapp.domain.utils.ActionResult
 import com.alexianhentiu.vaultberryapp.domain.utils.InputValidator
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.state.AccountState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -39,12 +39,12 @@ class AccountViewModel @Inject constructor(
         viewModelScope.launch {
             _accountState.value = AccountState.Loading
             when (val result = getAccountUseCase()) {
-                is APIResult.Success -> {
+                is ActionResult.Success -> {
                     _accountState.value = AccountState.Idle
                     _account.value = result.data
                 }
 
-                is APIResult.Error -> {
+                is ActionResult.Error -> {
                     _accountState.value = AccountState.Error(result.message)
                 }
             }
@@ -55,12 +55,12 @@ class AccountViewModel @Inject constructor(
         viewModelScope.launch {
             _accountState.value = AccountState.Loading
             when (val result = deleteAccountUseCase()) {
-                is APIResult.Success -> {
+                is ActionResult.Success -> {
                     _accountState.value = AccountState.Deleted
                     Log.d("AccountViewModel", "API success: ${result.data}")
                 }
 
-                is APIResult.Error -> {
+                is ActionResult.Error -> {
                     _accountState.value = AccountState.Error(result.message)
                     Log.e("AccountViewModel", "Delete failed: ${result.message}")
                 }
@@ -72,12 +72,12 @@ class AccountViewModel @Inject constructor(
         viewModelScope.launch {
             _accountState.value = AccountState.Loading
             when (val result = changeEmailUseCase(newEmail)) {
-                is APIResult.Success -> {
+                is ActionResult.Success -> {
                     _accountState.value = AccountState.Idle
                     Log.d("AccountViewModel", "API success: ${result.data}")
                 }
 
-                is APIResult.Error -> {
+                is ActionResult.Error -> {
                     _accountState.value = AccountState.Error(result.message)
                     Log.e("AccountViewModel", "Change email failed: ${result.message}")
                 }
@@ -89,12 +89,12 @@ class AccountViewModel @Inject constructor(
         viewModelScope.launch {
             _accountState.value = AccountState.Loading
             when (val result = changeNameUseCase(firstName, lastName)) {
-                is APIResult.Success -> {
+                is ActionResult.Success -> {
                     _accountState.value = AccountState.Idle
                     Log.d("AccountViewModel", "API success: ${result.data}")
                 }
 
-                is APIResult.Error -> {
+                is ActionResult.Error -> {
                     _accountState.value = AccountState.Error(result.message)
                     Log.e("AccountViewModel", "Change name failed: ${result.message}")
                 }
@@ -106,11 +106,11 @@ class AccountViewModel @Inject constructor(
         viewModelScope.launch {
             _accountState.value = AccountState.Loading
             when (val result = changePasswordUseCase(decryptedKey, newPassword)) {
-                is APIResult.Success -> {
+                is ActionResult.Success -> {
                     _accountState.value = AccountState.ChangedPassword(result.data)
                 }
 
-                is APIResult.Error -> {
+                is ActionResult.Error -> {
                     _accountState.value = AccountState.Error(result.message)
                     Log.e("AccountViewModel", "Change password failed: ${result.message}")
                 }

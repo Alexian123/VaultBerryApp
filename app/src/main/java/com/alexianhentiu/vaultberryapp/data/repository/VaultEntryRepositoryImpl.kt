@@ -5,6 +5,7 @@ import com.alexianhentiu.vaultberryapp.data.api.APIResult
 import com.alexianhentiu.vaultberryapp.data.api.APIService
 import com.alexianhentiu.vaultberryapp.domain.model.DecryptedVaultEntry
 import com.alexianhentiu.vaultberryapp.domain.model.EncryptedVaultEntry
+import com.alexianhentiu.vaultberryapp.domain.model.MessageResponse
 import com.alexianhentiu.vaultberryapp.domain.repository.VaultEntryRepository
 
 class VaultEntryRepositoryImpl(
@@ -24,26 +25,32 @@ class VaultEntryRepositoryImpl(
         )
     }
 
-    override suspend fun addEntry(encryptedVaultEntry: EncryptedVaultEntry): APIResult<String> {
+    override suspend fun addEntry(
+        encryptedVaultEntry: EncryptedVaultEntry
+    ): APIResult<MessageResponse> {
         val encryptedVaultEntryDTO = modelConverter.encryptedVaultEntryToDTO(encryptedVaultEntry)
         return apiResponseHandler.safeApiCall(
             apiCall = { apiService.addEntry(encryptedVaultEntryDTO) },
-            transform = { it.message }
+            transform = { modelConverter.messageResponseFromDTO(it) }
         )
     }
 
-    override suspend fun updateEntry(encryptedVaultEntry: EncryptedVaultEntry): APIResult<String> {
+    override suspend fun updateEntry(
+        encryptedVaultEntry: EncryptedVaultEntry
+    ): APIResult<MessageResponse> {
         val encryptedVaultEntryDTO = modelConverter.encryptedVaultEntryToDTO(encryptedVaultEntry)
         return apiResponseHandler.safeApiCall(
             apiCall = { apiService.updateEntry(encryptedVaultEntryDTO) },
-            transform = { it.message }
+            transform = { modelConverter.messageResponseFromDTO(it) }
         )
     }
 
-    override suspend fun deleteEntry(decryptedVaultEntry: DecryptedVaultEntry): APIResult<String> {
+    override suspend fun deleteEntry(
+        decryptedVaultEntry: DecryptedVaultEntry
+    ): APIResult<MessageResponse> {
         return apiResponseHandler.safeApiCall(
             apiCall = { apiService.deleteEntry(decryptedVaultEntry.timestamp) },
-            transform = { it.message }
+            transform = { modelConverter.messageResponseFromDTO(it) }
         )
     }
 }
