@@ -1,5 +1,6 @@
 package com.alexianhentiu.vaultberryapp.presentation.ui.screens.base
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -49,6 +50,12 @@ fun VaultScreen(
     var entryModification by remember { mutableStateOf(EntryModification.NONE) }
     var modifiedEntry by remember { mutableStateOf(null as DecryptedVaultEntry?) }
 
+    var showLogoutDialog by remember { mutableStateOf(false) }
+
+    BackHandler(enabled = true) {
+        showLogoutDialog = true
+    }
+
     when (vaultState) {
         is VaultState.Loading -> {
             LoadingScreen()
@@ -92,7 +99,9 @@ fun VaultScreen(
                     }
                 }
             ) { contentPadding ->
-                Box(modifier = Modifier.fillMaxSize().padding(contentPadding)) {
+                Box(modifier = Modifier
+                    .fillMaxSize()
+                    .padding(contentPadding)) {
                     LazyColumn {
                         items(decryptedEntries) { decryptedEntry ->
                             VaultEntryItem(
@@ -104,6 +113,20 @@ fun VaultScreen(
                                 inputValidator = vaultViewModel.inputValidator
                             )
                         }
+                    }
+
+                    if (showLogoutDialog) {
+                        ConfirmActionDialog(
+                            title = "Log Out",
+                            message = "Are you sure you want to log out?",
+                            onDismissRequest = { showLogoutDialog = false },
+                            onSubmit = {
+                                if (it) {
+                                    vaultViewModel.logout()
+                                    navController.navigate("login")
+                                }
+                            }
+                        )
                     }
 
                     if (showAddEntryDialog) {
