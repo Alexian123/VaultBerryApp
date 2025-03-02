@@ -1,4 +1,4 @@
-package com.alexianhentiu.vaultberryapp.presentation.ui.components.items
+package com.alexianhentiu.vaultberryapp.presentation.ui.components.misc
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween

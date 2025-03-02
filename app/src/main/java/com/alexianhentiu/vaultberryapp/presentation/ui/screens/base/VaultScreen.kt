@@ -1,4 +1,4 @@
-package com.alexianhentiu.vaultberryapp.presentation.ui.screens.main
+package com.alexianhentiu.vaultberryapp.presentation.ui.screens.base
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,7 +11,6 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -27,19 +26,17 @@ import com.alexianhentiu.vaultberryapp.domain.model.DecryptedKey
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.AddEntryDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ConfirmActionDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.bars.VaultTopBar
-import com.alexianhentiu.vaultberryapp.presentation.ui.components.items.VaultEntryItem
+import com.alexianhentiu.vaultberryapp.presentation.ui.components.misc.VaultEntryItem
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ErrorDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.enums.EntryModification
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.miscellaneous.LoadingScreen
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.miscellaneous.UnlockVaultScreen
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.main.state.VaultState
-import com.alexianhentiu.vaultberryapp.presentation.viewmodel.MotionViewModel
+import com.alexianhentiu.vaultberryapp.presentation.ui.screens.extra.LoadingScreen
+import com.alexianhentiu.vaultberryapp.presentation.ui.screens.extra.UnlockVaultScreen
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.VaultViewModel
+import com.alexianhentiu.vaultberryapp.presentation.viewmodel.state.VaultState
 
 @Composable
 fun VaultScreen(
     vaultViewModel: VaultViewModel,
-    motionViewModel: MotionViewModel,
     navController: NavController
 ) {
     val vaultKey = navController
@@ -47,7 +44,6 @@ fun VaultScreen(
 
     val vaultState by vaultViewModel.vaultState.collectAsState()
     val decryptedEntries by vaultViewModel.filteredEntries.collectAsState()
-    val motionDetected by motionViewModel.motionDetected.collectAsState()
 
     var showAddEntryDialog by remember { mutableStateOf(false) }
     var entryModification by remember { mutableStateOf(EntryModification.NONE) }
@@ -63,19 +59,6 @@ fun VaultScreen(
         }
 
         is VaultState.Unlocked -> {
-            DisposableEffect(vaultState) {
-                motionViewModel.registerSensorListener()
-                onDispose {
-                    motionViewModel.unregisterSensorListener()
-                }
-            }
-
-            if (motionDetected) {
-                motionViewModel.resetMotionDetected()
-                vaultViewModel.logout()
-                navController.navigate("login")
-            }
-
             Scaffold(
                 topBar = {
                     VaultTopBar(

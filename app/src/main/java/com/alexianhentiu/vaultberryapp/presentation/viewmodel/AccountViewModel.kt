@@ -12,7 +12,7 @@ import com.alexianhentiu.vaultberryapp.domain.usecase.core.account.ChangePasswor
 import com.alexianhentiu.vaultberryapp.domain.usecase.core.account.DeleteAccountUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.core.account.GetAccountUseCase
 import com.alexianhentiu.vaultberryapp.domain.utils.InputValidator
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.main.state.AccountState
+import com.alexianhentiu.vaultberryapp.presentation.viewmodel.state.AccountState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -107,8 +107,7 @@ class AccountViewModel @Inject constructor(
             _accountState.value = AccountState.Loading
             when (val result = changePasswordUseCase(decryptedKey, newPassword)) {
                 is APIResult.Success -> {
-                    _accountState.value = AccountState.Idle
-                    Log.d("AccountViewModel", "API success: ${result.data}")
+                    _accountState.value = AccountState.ChangedPassword(result.data)
                 }
 
                 is APIResult.Error -> {

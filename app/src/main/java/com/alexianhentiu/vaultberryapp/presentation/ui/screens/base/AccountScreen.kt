@@ -1,4 +1,4 @@
-package com.alexianhentiu.vaultberryapp.presentation.ui.screens.main
+package com.alexianhentiu.vaultberryapp.presentation.ui.screens.base
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,14 +8,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.text.AnnotatedString
 import androidx.navigation.NavController
 import com.alexianhentiu.vaultberryapp.domain.model.DecryptedKey
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.bars.TopBarWithBackButton
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ErrorDialog
+import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.InfoDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.AccountForm
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.miscellaneous.LoadingScreen
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.main.state.AccountState
+import com.alexianhentiu.vaultberryapp.presentation.ui.screens.extra.LoadingScreen
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.AccountViewModel
+import com.alexianhentiu.vaultberryapp.presentation.viewmodel.state.AccountState
 
 @Composable
 fun AccountScreen(
@@ -52,6 +55,7 @@ fun AccountScreen(
                         onSaveInfo = { firstName, lastName, email ->
                             email?.let { viewModel.changeEmail(it) }
                             viewModel.changeName(firstName, lastName)
+                            viewModel.resetState()
                         },
                         onChangePassword = { newPassword ->
                             if (vaultKey != null) {
@@ -70,6 +74,20 @@ fun AccountScreen(
         is AccountState.Deleted -> {
             viewModel.resetState()
             navController.navigate("login")
+        }
+
+        is AccountState.ChangedPassword -> {
+            val recoveryPassword = (accountState as AccountState.ChangedPassword).recoveryPassword
+            val clipboardManager = LocalClipboardManager.current
+            InfoDialog(
+                title = "Password changed successfully",
+                message = "Your new recovery password is: \"$recoveryPassword\". " +
+                        "It will be copied into the clipboard upon confirmation.",
+                onDismissRequest = {
+                    clipboardManager.setText(AnnotatedString(recoveryPassword))
+                    viewModel.resetState()
+                }
+            )
         }
 
         is AccountState.Error -> {

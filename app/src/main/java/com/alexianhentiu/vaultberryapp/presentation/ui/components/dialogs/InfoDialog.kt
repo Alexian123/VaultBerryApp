@@ -2,16 +2,15 @@ package com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -20,12 +19,11 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 
 @Composable
-fun ConfirmActionDialog(
-    title: String,
+fun InfoDialog(
+    title: String = "Info",
     message: String,
-    confirmButtonText: String = "Confirm",
+    confirmButtonText: String = "OK",
     onDismissRequest: () -> Unit,
-    onSubmit: (Boolean) -> Unit
 ) {
     Dialog(
         onDismissRequest = onDismissRequest
@@ -45,36 +43,20 @@ fun ConfirmActionDialog(
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(message)
                 Spacer(modifier = Modifier.height(16.dp))
-                Row {
-                    OutlinedButton(
-                        modifier = Modifier
-                            .weight(0.5f)
-                            .padding(6.dp),
-                        onClick = onDismissRequest
-                    ) {
-                        Text("Cancel")
-                    }
-                    Button(
-                        modifier = Modifier
-                            .weight(0.5f)
-                            .padding(6.dp),
-                        onClick = { onSubmit(true) }
-                    ) {
-                        Text(confirmButtonText)
-                    }
+                Button(
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally),
+                    onClick = { onDismissRequest() }
+                ) {
+                    Text(confirmButtonText)
                 }
             }
         }
     }
 }
 
-@Preview(showBackground = true)
 @Composable
-fun ConfirmActionDialogPreview() {
-    ConfirmActionDialog(
-        title = "Confirm Action",
-        message = "Are you sure you want to perform this action?",
-        onDismissRequest = {},
-        onSubmit = {}
-    )
+@Preview(showBackground = true)
+fun InfoDialogPreview() {
+    InfoDialog(message = "This is an info message", onDismissRequest = {})
 }

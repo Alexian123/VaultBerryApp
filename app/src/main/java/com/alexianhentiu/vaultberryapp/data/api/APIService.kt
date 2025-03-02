@@ -6,7 +6,6 @@ import com.alexianhentiu.vaultberryapp.data.model.EncryptedVaultEntryDTO
 import com.alexianhentiu.vaultberryapp.data.model.KeyChainDTO
 import com.alexianhentiu.vaultberryapp.data.model.MessageResponse
 import com.alexianhentiu.vaultberryapp.data.model.PasswordChangeDTO
-import com.alexianhentiu.vaultberryapp.data.model.RecoveryKeyDTO
 import com.alexianhentiu.vaultberryapp.data.model.UserDTO
 import retrofit2.Response
 import retrofit2.http.Body
@@ -19,10 +18,10 @@ import retrofit2.http.Query
 interface APIService {
 
     @GET("recovery")
-    suspend fun getRecoveryKey(@Query("email") email: String): Response<RecoveryKeyDTO>
+    suspend fun getRecoveryKey(@Query("email") email: String): Response<MessageResponse>
 
     @POST("recovery")
-    suspend fun recoveryLogin(@Body credentialsDTO: LoginCredentialsDTO): Response<MessageResponse>
+    suspend fun recoveryLogin(@Body credentialsDTO: LoginCredentialsDTO): Response<KeyChainDTO>
 
     @POST("register")
     suspend fun register(@Body user: UserDTO): Response<MessageResponse>

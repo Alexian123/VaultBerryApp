@@ -23,19 +23,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.alexianhentiu.vaultberryapp.domain.utils.InputValidator
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.ValidatedTextField
-import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.PasswordField
 
 @Composable
-fun ForgotPasswordForm(
-    onContinueClicked: (String, String) -> Unit,
+fun OTPRequestForm(
+    onContinueClicked: (String) -> Unit,
     onCancelClicked: () -> Unit,
     inputValidator: InputValidator
 ) {
     var email by remember { mutableStateOf("") }
-    var recoveryPassword by remember { mutableStateOf("") }
-
     var isEmailValid by remember { mutableStateOf(false) }
-    var isRecoveryPasswordValid by remember { mutableStateOf(false) }
 
     Column(
         verticalArrangement = Arrangement.Center,
@@ -44,30 +40,29 @@ fun ForgotPasswordForm(
             .fillMaxSize()
     ) {
         Text(
-            text = "Account Recovery",
+            text = "Password Recovery",
             style = MaterialTheme.typography.headlineMedium,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 16.dp),
             textAlign = TextAlign.Center
         )
+        Spacer(modifier = Modifier.height(32.dp))
+        Text(
+            text = "A one-time password will be sent to your email.",
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp),
+            textAlign = TextAlign.Left
+        )
         ValidatedTextField(
             label = "Email",
             onInputChange = { newEmail, valid ->
                 email = newEmail
                 isEmailValid = valid
-            },
+                },
             isValid = inputValidator::validateEmail,
-            modifier = Modifier.fillMaxWidth()
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        PasswordField(
-            onPasswordChange = { newPassword, valid ->
-                recoveryPassword = newPassword
-                isRecoveryPasswordValid = valid
-            },
-            label = "Recovery Password",
-            isValid = inputValidator::validatePassword,
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(16.dp))
@@ -80,9 +75,9 @@ fun ForgotPasswordForm(
             }
             Spacer(modifier = Modifier.weight(0.2f))
             Button(
-                onClick = { onContinueClicked(email, recoveryPassword) },
+                onClick = { onContinueClicked(email) },
                 modifier = Modifier.weight(0.4f),
-                enabled = isEmailValid && isRecoveryPasswordValid
+                enabled = isEmailValid
             ) {
                 Text("Continue")
             }
@@ -90,11 +85,11 @@ fun ForgotPasswordForm(
     }
 }
 
-@Preview(showBackground = true)
 @Composable
-fun ForgotPasswordFormPreview() {
-    ForgotPasswordForm(
-        onContinueClicked = { _, _ -> },
+@Preview(showBackground = true)
+fun OTPRequestFormPreview() {
+    OTPRequestForm(
+        onContinueClicked = {},
         onCancelClicked = {},
         inputValidator = InputValidator()
     )

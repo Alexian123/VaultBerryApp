@@ -6,7 +6,6 @@ import com.alexianhentiu.vaultberryapp.data.api.APIService
 import com.alexianhentiu.vaultberryapp.domain.model.LoginCredentials
 import com.alexianhentiu.vaultberryapp.domain.model.User
 import com.alexianhentiu.vaultberryapp.domain.model.KeyChain
-import com.alexianhentiu.vaultberryapp.domain.model.RecoveryKey
 import com.alexianhentiu.vaultberryapp.domain.repository.UserRepository
 
 class UserRepositoryImpl(
@@ -15,18 +14,18 @@ class UserRepositoryImpl(
     private val modelConverter: ModelConverter
 ) : UserRepository {
 
-    override suspend fun getRecoveryKey(email: String): APIResult<RecoveryKey> {
+    override suspend fun getRecoveryOTP(email: String): APIResult<String> {
         return apiResponseHandler.safeApiCall(
             apiCall = { apiService.getRecoveryKey(email) },
-            transform = { modelConverter.recoveryKeyFromDTO(it) }
+            transform = { it.message }
         )
     }
 
-    override suspend fun recoveryLogin(loginCredentials: LoginCredentials): APIResult<String> {
+    override suspend fun recoveryLogin(loginCredentials: LoginCredentials): APIResult<KeyChain> {
         val loginCredentialsDTO = modelConverter.loginCredentialsToDTO(loginCredentials)
         return apiResponseHandler.safeApiCall(
             apiCall = { apiService.recoveryLogin(loginCredentialsDTO) },
-            transform = { it.message }
+            transform = { modelConverter.keyChainFromDTO(it) }
         )
     }
 

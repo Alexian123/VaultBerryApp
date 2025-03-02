@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.alexianhentiu.vaultberryapp.domain.model.Account
 import com.alexianhentiu.vaultberryapp.domain.utils.InputValidator
-import com.alexianhentiu.vaultberryapp.presentation.ui.components.items.ExpandableSectionItem
+import com.alexianhentiu.vaultberryapp.presentation.ui.components.misc.ExpandableSectionItem
 
 @Composable
 fun AccountForm(

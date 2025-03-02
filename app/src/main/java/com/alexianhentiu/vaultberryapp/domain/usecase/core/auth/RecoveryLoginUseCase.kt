@@ -10,33 +10,23 @@ class RecoveryLoginUseCase(
     private val userRepository: UserRepository,
     private val decryptKeyUseCase: DecryptKeyUseCase
 ) {
-    suspend operator fun invoke(email: String, recoveryPassword: String): APIResult<DecryptedKey> {
-       when (val result = userRepository.getRecoveryKey(email)) {
-           is APIResult.Success -> {
-                val recoveryKey = result.data
-                val loginCredentials = LoginCredentials(
-                    email = email,
-                    password = recoveryKey.oneTimePassword
+    suspend operator fun invoke(
+        loginCredentials: LoginCredentials,
+        recoveryPassword: String
+    ): APIResult<DecryptedKey> {
+        when (val result = userRepository.recoveryLogin(loginCredentials)) {
+            is APIResult.Success -> {
+                val keyChain = result.data
+                val decryptedVaultKey = decryptKeyUseCase(
+                    password = recoveryPassword,
+                    salt = keyChain.salt,
+                    encryptedKey = keyChain.recoveryKey
                 )
-                when (val loginResult = userRepository.recoveryLogin(loginCredentials)) {
-                    is APIResult.Success -> {
-                        val decryptedVaultKey = decryptKeyUseCase(
-                            password = recoveryPassword,
-                            salt = recoveryKey.salt,
-                            encryptedKey = recoveryKey.key
-                        )
-                        return APIResult.Success(decryptedVaultKey)
-                    }
-
-                    is APIResult.Error -> {
-                        return APIResult.Error(loginResult.message)
-                    }
-                }
-           }
-
-           is APIResult.Error -> {
-               return APIResult.Error(result.message)
-           }
-       }
+                return APIResult.Success(decryptedVaultKey)
+            }
+            is APIResult.Error -> {
+                return APIResult.Error(result.message)
+            }
+        }
     }
 }

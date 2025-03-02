@@ -1,25 +1,22 @@
-package com.alexianhentiu.vaultberryapp.presentation.ui.screens.main
+package com.alexianhentiu.vaultberryapp.presentation.ui.screens.base
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.text.AnnotatedString
 import androidx.navigation.NavController
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ErrorDialog
+import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.InfoDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.RegisterForm
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.miscellaneous.LoadingScreen
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.main.state.RegisterState
+import com.alexianhentiu.vaultberryapp.presentation.ui.screens.extra.LoadingScreen
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.RegisterViewModel
+import com.alexianhentiu.vaultberryapp.presentation.viewmodel.state.RegisterState
 
 @Composable
 fun RegisterScreen(viewModel: RegisterViewModel, navController: NavController) {
@@ -45,30 +42,19 @@ fun RegisterScreen(viewModel: RegisterViewModel, navController: NavController) {
         }
 
         is RegisterState.Success -> {
-            Scaffold { contentPadding ->
-                Box(modifier = Modifier.fillMaxSize().padding(contentPadding)) {
-                    Column(
-                        verticalArrangement = Arrangement.Center,
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .fillMaxSize()
-                    ) {
-                        Text(
-                            modifier = Modifier.fillMaxWidth(),
-                            text = "Registration successful!"
-                        )
-                        TextButton(
-                            onClick = {
-                                viewModel.resetState()
-                                navController.navigate("login")
-                            },
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Text("Go to login")
-                        }
-                    }
+            val clipboardManager = LocalClipboardManager.current
+            val recoveryPassword = (registerState as RegisterState.Success).recoveryPassword
+            InfoDialog(
+                title = "Password reset successfully",
+                message = "Your new recovery password is: \"$recoveryPassword\". " +
+                        "It will be copied into the clipboard upon confirmation. " +
+                        "Make sure to write it down!",
+                onDismissRequest = {
+                    clipboardManager.setText(AnnotatedString(recoveryPassword))
+                    viewModel.resetState()
+                    navController.navigate("login")
                 }
-            }
+            )
         }
 
         is RegisterState.Error -> {

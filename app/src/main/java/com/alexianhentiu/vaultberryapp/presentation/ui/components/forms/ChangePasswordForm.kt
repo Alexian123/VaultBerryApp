@@ -20,7 +20,8 @@ import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.Passwor
 @Composable
 fun ChangePasswordForm(
     onChangePassword: (String) -> Unit,
-    inputValidator: InputValidator
+    inputValidator: InputValidator,
+    textFieldType: TextFieldType = TextFieldType.OUTLINED
 ) {
     var password by remember { mutableStateOf("") }
     var isPasswordValid by remember { mutableStateOf(false) }
@@ -35,7 +36,7 @@ fun ChangePasswordForm(
             },
             isValid = inputValidator::validatePassword,
             label = "New Password",
-            textFieldType = TextFieldType.OUTLINED
+            textFieldType = textFieldType
         )
         PasswordField(
             onPasswordChange = { newPassword, valid ->
@@ -44,7 +45,7 @@ fun ChangePasswordForm(
             },
             isValid = password::equals,
             label = "Confirm New Password",
-            textFieldType = TextFieldType.OUTLINED
+            textFieldType = textFieldType
         )
         Button(
             enabled = isPasswordValid && isConfirmPasswordValid && password == confirmPassword,

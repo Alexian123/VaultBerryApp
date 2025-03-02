@@ -16,6 +16,12 @@ class InputValidator {
         return true
     }
 
+    fun validateOTP(otp: String): Boolean {
+        if (otp.isBlank()) return false
+        // TODO: Implement better OTP validation
+        return true
+    }
+
     fun validateEntryTitle(title: String): Boolean {
         return title.isNotBlank()
     }

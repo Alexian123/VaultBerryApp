@@ -56,12 +56,12 @@ fun AddEntryDialog(
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .fillMaxHeight(0.9f) // Adjust height as needed
+                    .fillMaxHeight(0.9f)
                     .padding(16.dp)
             ) {
-                Box( // Wrap Column in Box for centering
+                Box(
                     contentAlignment = Alignment.Center,
-                    modifier = Modifier.fillMaxWidth() // Make Box fill Card width
+                    modifier = Modifier.fillMaxWidth()
                 ) {
                     Column(
                         verticalArrangement = Arrangement.SpaceEvenly,

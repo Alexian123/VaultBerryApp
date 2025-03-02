@@ -1,4 +1,4 @@
-package com.alexianhentiu.vaultberryapp.presentation.ui.screens.main
+package com.alexianhentiu.vaultberryapp.presentation.ui.screens.base
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,9 +11,9 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ErrorDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.LoginForm
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.miscellaneous.LoadingScreen
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.main.state.LoginState
+import com.alexianhentiu.vaultberryapp.presentation.ui.screens.extra.LoadingScreen
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.LoginViewModel
+import com.alexianhentiu.vaultberryapp.presentation.viewmodel.state.LoginState
 
 @Composable
 fun LoginScreen(

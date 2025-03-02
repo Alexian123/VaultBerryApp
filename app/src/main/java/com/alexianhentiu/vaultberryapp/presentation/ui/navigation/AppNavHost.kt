@@ -5,15 +5,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.main.AccountScreen
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.main.LoginScreen
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.main.RecoveryScreen
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.main.RegisterScreen
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.main.SettingsScreen
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.main.VaultScreen
+import com.alexianhentiu.vaultberryapp.presentation.ui.screens.base.AccountScreen
+import com.alexianhentiu.vaultberryapp.presentation.ui.screens.base.LoginScreen
+import com.alexianhentiu.vaultberryapp.presentation.ui.screens.base.RecoveryScreen
+import com.alexianhentiu.vaultberryapp.presentation.ui.screens.base.RegisterScreen
+import com.alexianhentiu.vaultberryapp.presentation.ui.screens.base.SettingsScreen
+import com.alexianhentiu.vaultberryapp.presentation.ui.screens.base.VaultScreen
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.AccountViewModel
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.LoginViewModel
-import com.alexianhentiu.vaultberryapp.presentation.viewmodel.MotionViewModel
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.RecoveryViewModel
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.RegisterViewModel
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.SettingsViewModel
@@ -39,8 +38,7 @@ fun AppNavHost() {
         }
         composable("vault") {
             val vaultViewModel: VaultViewModel = hiltViewModel()
-            val motionViewModel: MotionViewModel = hiltViewModel()
-            VaultScreen(vaultViewModel, motionViewModel, navController)
+            VaultScreen(vaultViewModel, navController)
         }
         composable("account") {
             val accountViewModel: AccountViewModel = hiltViewModel()

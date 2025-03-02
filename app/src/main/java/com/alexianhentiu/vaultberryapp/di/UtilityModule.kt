@@ -1,8 +1,6 @@
 package com.alexianhentiu.vaultberryapp.di
 
 import android.content.Context
-import android.hardware.Sensor
-import android.hardware.SensorManager
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
@@ -44,18 +42,6 @@ object UtilityModule {
     @Provides
     @Singleton
     fun provideInputValidator(): InputValidator = InputValidator()
-
-    @Provides
-    @Singleton
-    fun provideSensorManager(
-        @ApplicationContext context: Context
-    ): SensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
-
-    @Provides
-    @Singleton
-    fun provideAccelerometer(
-        sensorManager: SensorManager
-    ): Sensor? = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
 
     @Singleton
     @Provides

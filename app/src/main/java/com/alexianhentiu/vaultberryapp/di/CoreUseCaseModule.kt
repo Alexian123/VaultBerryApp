@@ -9,6 +9,7 @@ import com.alexianhentiu.vaultberryapp.domain.usecase.core.account.ChangeNameUse
 import com.alexianhentiu.vaultberryapp.domain.usecase.core.account.ChangePasswordUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.core.account.DeleteAccountUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.core.account.GetAccountUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.core.auth.GetRecoveryOTPUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.core.vault.AddEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.core.vault.GetEntriesUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.extra.security.GenerateKeyChainUseCase
@@ -33,6 +34,12 @@ import dagger.hilt.android.components.ViewModelComponent
 @Module
 @InstallIn(ViewModelComponent::class)
 object CoreUseCaseModule {
+
+    @Provides
+    fun provideGetRecoveryOTPUseCase(
+        userRepository: UserRepository
+    ): GetRecoveryOTPUseCase = GetRecoveryOTPUseCase(userRepository)
+
     @Provides
     fun provideRecoveryLoginUseCase(
         userRepository: UserRepository,

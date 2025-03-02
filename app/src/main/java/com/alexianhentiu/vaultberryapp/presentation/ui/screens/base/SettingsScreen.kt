@@ -1,4 +1,4 @@
-package com.alexianhentiu.vaultberryapp.presentation.ui.screens.main
+package com.alexianhentiu.vaultberryapp.presentation.ui.screens.base
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,7 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.bars.TopBarWithBackButton
-import com.alexianhentiu.vaultberryapp.presentation.ui.components.items.SwitchSettingItem
+import com.alexianhentiu.vaultberryapp.presentation.ui.components.misc.SwitchSettingItem
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.SettingsViewModel
 
 @Composable

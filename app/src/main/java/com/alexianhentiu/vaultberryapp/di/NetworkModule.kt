@@ -20,7 +20,7 @@ object NetworkModule {
     @Provides
     @Singleton
     //fun provideBaseUrl(): String = "http://10.0.2.2:5000/"        /* emulator */
-    fun provideBaseUrl(): String = "http://192.168.1.136:5000/"   /* physical device */
+    fun provideBaseUrl(): String = "http://192.168.1.131:5000/"   /* physical device */
 
     @Provides
     @Singleton
