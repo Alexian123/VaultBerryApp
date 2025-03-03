@@ -12,6 +12,7 @@ import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -35,27 +36,27 @@ interface APIService {
     @GET("entries")
     suspend fun getEntries(): Response<List<EncryptedVaultEntryDTO>?>
 
-    @POST("entries/add")
+    @POST("entries")
     suspend fun addEntry(@Body vaultEntry: EncryptedVaultEntryDTO): Response<MessageResponseDTO>
 
-    @POST("entries/update")
+    @PUT("entries")
     suspend fun updateEntry(@Body vaultEntry: EncryptedVaultEntryDTO): Response<MessageResponseDTO>
 
-    @DELETE("entries/delete/{timestamp}")
+    @DELETE("entries/{timestamp}")
     suspend fun deleteEntry(@Path("timestamp") timestamp: Long): Response<MessageResponseDTO>
 
     @GET("account")
     suspend fun getAccount(): Response<AccountDTO>
 
-    @POST("account")
+    @PUT("account")
     suspend fun updateAccount(@Body account: AccountDTO): Response<MessageResponseDTO>
 
     @DELETE("account")
     suspend fun deleteAccount(): Response<MessageResponseDTO>
 
-    @POST("account/password")
+    @PUT("account/password")
     suspend fun changePassword(@Body passwordDTO: PasswordChangeDTO): Response<MessageResponseDTO>
 
-    @POST("account/keychain")
+    @PUT("account/keychain")
     suspend fun updateKeyChain(@Body keychain: KeyChainDTO): Response<MessageResponseDTO>
 }
