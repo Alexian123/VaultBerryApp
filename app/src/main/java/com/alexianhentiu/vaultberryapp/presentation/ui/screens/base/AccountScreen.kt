@@ -29,11 +29,12 @@ fun AccountScreen(
         .previousBackStackEntry?.savedStateHandle?.get<DecryptedKey>("vaultKey")
 
     val accountState by viewModel.accountState.collectAsState()
-    val account by viewModel.account.collectAsState()
+
+    val clipboardManager = LocalClipboardManager.current
 
     when (accountState) {
         is AccountState.Init -> {
-            viewModel.getAccount()
+            viewModel.getAccountInfo()
         }
 
         is AccountState.Loading -> {
@@ -41,6 +42,10 @@ fun AccountScreen(
         }
 
         is AccountState.Idle -> {
+            val state = accountState as AccountState.Idle
+            val account = state.account
+            val is2FAEnabled = state.is2FAEnabled
+
             Scaffold(
                 topBar = {
                     TopBarWithBackButton(
@@ -51,7 +56,8 @@ fun AccountScreen(
             ) { contentPadding ->
                 Box(modifier = Modifier.fillMaxSize().padding(contentPadding)) {
                     AccountForm(
-                        account = account!!,
+                        account = account,
+                        is2FAEnabled = is2FAEnabled,
                         onSaveInfo = { firstName, lastName, email ->
                             email?.let { viewModel.changeEmail(it) }
                             viewModel.changeName(firstName, lastName)
@@ -61,6 +67,12 @@ fun AccountScreen(
                             if (vaultKey != null) {
                                 viewModel.changePassword(vaultKey, newPassword)
                             }
+                        },
+                        onEnable2FA = {
+                            viewModel.setup2FA()
+                        },
+                        onDisable2FA = {
+                            viewModel.disable2FA()
                         },
                         onDeleteAccount = {
                             viewModel.deleteAccount()
@@ -78,13 +90,25 @@ fun AccountScreen(
 
         is AccountState.ChangedPassword -> {
             val recoveryPassword = (accountState as AccountState.ChangedPassword).recoveryPassword
-            val clipboardManager = LocalClipboardManager.current
             InfoDialog(
                 title = "Password changed successfully",
                 message = "Your new recovery password is: \"$recoveryPassword\". " +
                         "It will be copied into the clipboard upon confirmation.",
                 onDismissRequest = {
                     clipboardManager.setText(AnnotatedString(recoveryPassword))
+                    viewModel.resetState()
+                }
+            )
+        }
+
+        is AccountState.Setup2FA -> {
+            val secretKey = (accountState as AccountState.Setup2FA).secretKey
+            InfoDialog(
+                title = "2FA Setup",
+                message = "Your secret key is: \"$secretKey\". " +
+                        "It will be copied into the clipboard upon confirmation.",
+                onDismissRequest = {
+                    clipboardManager.setText(AnnotatedString(secretKey))
                     viewModel.resetState()
                 }
             )

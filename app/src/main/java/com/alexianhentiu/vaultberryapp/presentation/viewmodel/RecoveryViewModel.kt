@@ -45,11 +45,15 @@ class RecoveryViewModel @Inject constructor(
         }
     }
 
-    fun recoveryLogin(email: String, otp: String, recoveryPassword: String) {
-        val loginCredentials = LoginCredentials(email, otp)
+    fun recoveryLogin(email: String, recoveryPassword: String, otp: String) {
+        val credentials = LoginCredentials(
+            email = email,
+            password = recoveryPassword,
+            token = otp
+        )
         viewModelScope.launch {
             _recoveryState.value = RecoveryState.Loading
-            when (val result = recoveryLoginUseCase(loginCredentials, recoveryPassword)) {
+            when (val result = recoveryLoginUseCase(credentials)) {
                 is ActionResult.Success -> {
                     _recoveryState.value = RecoveryState.LoggedIn(result.data)
                 }

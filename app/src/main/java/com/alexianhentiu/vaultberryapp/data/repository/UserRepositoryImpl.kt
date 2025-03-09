@@ -15,6 +15,14 @@ class UserRepositoryImpl(
     private val modelConverter: ModelConverter
 ) : UserRepository {
 
+    override suspend fun verify2FA(loginCredentials: LoginCredentials): APIResult<KeyChain> {
+        val loginCredentialsDTO = modelConverter.loginCredentialsToDTO(loginCredentials)
+        return apiResponseHandler.safeApiCall(
+            apiCall = { apiService.verify2FA(loginCredentialsDTO) },
+            transform = { modelConverter.keyChainFromDTO(it) }
+        )
+    }
+
     override suspend fun getRecoveryOTP(email: String): APIResult<MessageResponse> {
         return apiResponseHandler.safeApiCall(
             apiCall = { apiService.getRecoveryKey(email) },

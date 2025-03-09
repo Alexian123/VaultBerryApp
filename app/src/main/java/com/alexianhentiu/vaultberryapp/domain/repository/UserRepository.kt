@@ -8,6 +8,8 @@ import com.alexianhentiu.vaultberryapp.domain.model.User
 
 interface UserRepository {
 
+    suspend fun verify2FA(loginCredentials: LoginCredentials): APIResult<KeyChain>
+
     suspend fun getRecoveryOTP(email: String): APIResult<MessageResponse>
 
     suspend fun recoveryLogin(loginCredentials: LoginCredentials): APIResult<KeyChain>

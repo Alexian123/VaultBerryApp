@@ -59,8 +59,8 @@ fun RecoveryScreen(
             Scaffold { contentPadding ->
                 Box(modifier = Modifier.fillMaxSize().padding(contentPadding)) {
                     RecoveryLoginForm(
-                        onContinueClicked = { otp, recoveryPassword ->
-                            viewModel.recoveryLogin(email, otp, recoveryPassword)
+                        onContinueClicked = { recoveryPassword, otp ->
+                            viewModel.recoveryLogin(email, recoveryPassword, otp)
                         },
                         onCancelClicked = {
                             viewModel.resetState()

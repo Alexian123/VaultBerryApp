@@ -79,7 +79,7 @@ fun RecoveryLoginForm(
             }
             Spacer(modifier = Modifier.weight(0.2f))
             Button(
-                onClick = { onContinueClicked(otp, recoveryPassword) },
+                onClick = { onContinueClicked(recoveryPassword, otp) },
                 modifier = Modifier.weight(0.4f),
                 enabled = isRecoveryPasswordValid && isOTPValid
             ) {

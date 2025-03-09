@@ -22,6 +22,12 @@ class InputValidator {
         return true
     }
 
+    fun validate2FACode(code: String): Boolean {
+        if (code.isBlank()) return false
+        // TODO: Implement better 2FA code validation
+        return true
+    }
+
     fun validateEntryTitle(title: String): Boolean {
         return title.isNotBlank()
     }

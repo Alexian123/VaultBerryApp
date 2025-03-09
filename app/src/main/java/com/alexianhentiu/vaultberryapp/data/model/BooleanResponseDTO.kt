@@ -4,6 +4,6 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class PasswordChangeDTO(
-    @Json(name = "password") val password: String
+data class BooleanResponseDTO(
+    @Json(name = "enabled") val enabled: Boolean
 )

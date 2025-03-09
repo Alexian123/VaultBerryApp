@@ -5,16 +5,25 @@ import com.alexianhentiu.vaultberryapp.data.model.EncryptedVaultEntryDTO
 import com.alexianhentiu.vaultberryapp.data.model.KeyChainDTO
 import com.alexianhentiu.vaultberryapp.data.model.LoginCredentialsDTO
 import com.alexianhentiu.vaultberryapp.data.model.MessageResponseDTO
-import com.alexianhentiu.vaultberryapp.data.model.PasswordChangeDTO
+import com.alexianhentiu.vaultberryapp.data.model.PasswordPairDTO
+import com.alexianhentiu.vaultberryapp.data.model.TotpResponseDTO
 import com.alexianhentiu.vaultberryapp.data.model.UserDTO
 import com.alexianhentiu.vaultberryapp.domain.model.Account
 import com.alexianhentiu.vaultberryapp.domain.model.EncryptedVaultEntry
 import com.alexianhentiu.vaultberryapp.domain.model.KeyChain
 import com.alexianhentiu.vaultberryapp.domain.model.LoginCredentials
 import com.alexianhentiu.vaultberryapp.domain.model.MessageResponse
+import com.alexianhentiu.vaultberryapp.domain.model.PasswordPair
+import com.alexianhentiu.vaultberryapp.domain.model.TotpResponse
 import com.alexianhentiu.vaultberryapp.domain.model.User
 
 class ModelConverter {
+
+    fun totpResponseFromDTO(totpResponseDTO: TotpResponseDTO): TotpResponse {
+        return TotpResponse(
+            provisioningUri = totpResponseDTO.provisioningUri
+        )
+    }
 
     fun messageResponseFromDTO(messageResponseDTO: MessageResponseDTO): MessageResponse {
         return MessageResponse(
@@ -26,7 +35,7 @@ class ModelConverter {
         return UserDTO(
             accountDTO = accountToDTO(user.account),
             keyChainDTO = keyChainToDTO(user.keyChain),
-            password = user.password
+            passwordPairDTO = passwordPairToDTO(user.passwordPair)
         )
     }
 
@@ -46,9 +55,10 @@ class ModelConverter {
         )
     }
 
-    fun passwordToDTO(password: String): PasswordChangeDTO {
-        return PasswordChangeDTO(
-            password = password
+    fun passwordPairToDTO(passwordPair: PasswordPair): PasswordPairDTO {
+        return PasswordPairDTO(
+            regularPassword = passwordPair.regularPassword,
+            recoveryPassword = passwordPair.recoveryPassword
         )
     }
 
@@ -71,7 +81,8 @@ class ModelConverter {
     fun loginCredentialsToDTO(loginCredentials: LoginCredentials): LoginCredentialsDTO {
         return LoginCredentialsDTO(
             email = loginCredentials.email,
-            password = loginCredentials.password
+            password = loginCredentials.password,
+            token = loginCredentials.token
         )
     }
 

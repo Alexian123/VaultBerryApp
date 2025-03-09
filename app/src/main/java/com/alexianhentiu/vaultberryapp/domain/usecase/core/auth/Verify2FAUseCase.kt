@@ -7,19 +7,19 @@ import com.alexianhentiu.vaultberryapp.domain.repository.UserRepository
 import com.alexianhentiu.vaultberryapp.domain.usecase.extra.security.DecryptKeyUseCase
 import com.alexianhentiu.vaultberryapp.domain.utils.ActionResult
 
-class RecoveryLoginUseCase(
+class Verify2FAUseCase(
     private val userRepository: UserRepository,
     private val decryptKeyUseCase: DecryptKeyUseCase
 ) {
     suspend operator fun invoke(loginCredentials: LoginCredentials): ActionResult<DecryptedKey> {
-        when (val response = userRepository.recoveryLogin(loginCredentials)) {
+        when (val result = userRepository.verify2FA(loginCredentials)) {
             is APIResult.Success -> {
-                val keyChain = response.data
+                val keyChain = result.data
 
                 val decryptKeyResult = decryptKeyUseCase(
                     password = loginCredentials.password,
                     salt = keyChain.salt,
-                    encryptedKey = keyChain.recoveryKey
+                    encryptedKey = keyChain.vaultKey
                 )
                 if (decryptKeyResult is ActionResult.Error) {
                     return decryptKeyResult
@@ -29,7 +29,7 @@ class RecoveryLoginUseCase(
                 return ActionResult.Success(decryptedVaultKey)
             }
             is APIResult.Error -> {
-                return ActionResult.Error(response.message)
+                return ActionResult.Error(result.message)
             }
         }
     }

@@ -2,6 +2,7 @@ package com.alexianhentiu.vaultberryapp.domain.usecase.core.account
 
 import com.alexianhentiu.vaultberryapp.data.api.APIResult
 import com.alexianhentiu.vaultberryapp.domain.model.DecryptedKey
+import com.alexianhentiu.vaultberryapp.domain.model.PasswordPair
 import com.alexianhentiu.vaultberryapp.domain.repository.AccountRepository
 import com.alexianhentiu.vaultberryapp.domain.usecase.extra.security.DecryptKeyUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.extra.security.GenerateKeyChainUseCase
@@ -42,7 +43,8 @@ class ChangePasswordUseCase(
         }
         val newDecryptedKey = (decryptKeyResult as ActionResult.Success).data
 
-        when (val changeResult = accountRepository.changePassword(newPassword)) {
+        val newPasswordPair = PasswordPair(newPassword, recoveryPassword)
+        when (val changeResult = accountRepository.changePassword(newPasswordPair)) {
             is APIResult.Success -> {
                 val reEncryptResult = reEncryptAllEntriesUseCase(
                     oldKey = decryptedKey,

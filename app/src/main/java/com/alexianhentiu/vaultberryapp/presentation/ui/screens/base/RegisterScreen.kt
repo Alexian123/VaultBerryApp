@@ -45,7 +45,7 @@ fun RegisterScreen(viewModel: RegisterViewModel, navController: NavController) {
             val clipboardManager = LocalClipboardManager.current
             val recoveryPassword = (registerState as RegisterState.Success).recoveryPassword
             InfoDialog(
-                title = "Password reset successfully",
+                title = "Account registration successful",
                 message = "Your new recovery password is: \"$recoveryPassword\". " +
                         "It will be copied into the clipboard upon confirmation. " +
                         "Make sure to write it down!",

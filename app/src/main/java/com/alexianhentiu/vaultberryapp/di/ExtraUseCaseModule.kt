@@ -4,6 +4,7 @@ import com.alexianhentiu.vaultberryapp.domain.repository.VaultEntryRepository
 import com.alexianhentiu.vaultberryapp.domain.usecase.extra.security.DecryptKeyUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.extra.security.DecryptVaultEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.extra.security.EncryptVaultEntryUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.extra.security.Extract2FASecret
 import com.alexianhentiu.vaultberryapp.domain.usecase.extra.security.GenerateKeyChainUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.extra.security.GeneratePasswordUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.extra.vault.ReEncryptAllEntriesUseCase
@@ -18,6 +19,9 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object ExtraUseCaseModule {
+
+    @Provides
+    fun provideExtract2FASecret(): Extract2FASecret = Extract2FASecret()
 
     @Provides
     fun provideReEncryptAllEntriesUseCase(

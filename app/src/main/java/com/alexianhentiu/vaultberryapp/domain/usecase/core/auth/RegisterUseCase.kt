@@ -2,6 +2,7 @@ package com.alexianhentiu.vaultberryapp.domain.usecase.core.auth
 
 import com.alexianhentiu.vaultberryapp.data.api.APIResult
 import com.alexianhentiu.vaultberryapp.domain.model.Account
+import com.alexianhentiu.vaultberryapp.domain.model.PasswordPair
 import com.alexianhentiu.vaultberryapp.domain.model.User
 import com.alexianhentiu.vaultberryapp.domain.repository.UserRepository
 import com.alexianhentiu.vaultberryapp.domain.usecase.extra.security.GenerateKeyChainUseCase
@@ -13,20 +14,22 @@ class RegisterUseCase(
     private val generatePasswordUseCase: GeneratePasswordUseCase,
     private val generateKeyChainUseCase: GenerateKeyChainUseCase
 ) {
-    suspend operator fun invoke(account: Account, password: String): ActionResult<String> {
+    suspend operator fun invoke(account: Account, regularPassword: String): ActionResult<String> {
         val generatePasswordResult = generatePasswordUseCase()
         if (generatePasswordResult is ActionResult.Error) {
             return generatePasswordResult
         }
         val recoveryPassword = (generatePasswordResult as ActionResult.Success).data
 
-        val generateKeyChainResult = generateKeyChainUseCase(password, recoveryPassword)
+        val generateKeyChainResult = generateKeyChainUseCase(regularPassword, recoveryPassword)
         if (generateKeyChainResult is ActionResult.Error) {
             return generateKeyChainResult
         }
         val keyChain = (generateKeyChainResult as ActionResult.Success).data
 
-        val user = User(account, keyChain, password)
+        val passwordPair = PasswordPair(regularPassword, recoveryPassword)
+
+        val user = User(account, keyChain, passwordPair)
         return when (val result = userRepository.register(user)) {
             is APIResult.Success -> {
                 ActionResult.Success(recoveryPassword)

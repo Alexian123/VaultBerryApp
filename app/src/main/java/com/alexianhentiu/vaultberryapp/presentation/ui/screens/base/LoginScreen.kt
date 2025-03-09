@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ErrorDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.LoginForm
+import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.Verify2FAForm
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.extra.LoadingScreen
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.LoginViewModel
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.state.LoginState
@@ -38,6 +39,23 @@ fun LoginScreen(
 
         is LoginState.Loading -> {
             LoadingScreen()
+        }
+
+        is LoginState.Verify2FA -> {
+            val currentLoginState = loginState as LoginState.Verify2FA
+            val email = currentLoginState.email
+            val password = currentLoginState.password
+            Scaffold { contentPadding ->
+                Box(modifier = Modifier.fillMaxSize().padding(contentPadding)) {
+                    Verify2FAForm(
+                        onContinueClicked = { code ->
+                            viewModel.verify2FA(email, password, code)
+                        },
+                        onCancelClicked = { viewModel.resetState() },
+                        inputValidator = viewModel.inputValidator
+                    )
+                }
+            }
         }
 
         is LoginState.LoggedIn -> {
