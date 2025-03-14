@@ -1,11 +1,12 @@
 package com.alexianhentiu.vaultberryapp.domain.usecase.core.auth
 
-import com.alexianhentiu.vaultberryapp.data.api.APIResult
+import com.alexianhentiu.vaultberryapp.data.utils.APIResult
 import com.alexianhentiu.vaultberryapp.domain.model.DecryptedKey
 import com.alexianhentiu.vaultberryapp.domain.model.LoginCredentials
 import com.alexianhentiu.vaultberryapp.domain.repository.UserRepository
 import com.alexianhentiu.vaultberryapp.domain.usecase.extra.security.DecryptKeyUseCase
-import com.alexianhentiu.vaultberryapp.domain.utils.ActionResult
+import com.alexianhentiu.vaultberryapp.domain.utils.types.ActionResult
+import com.alexianhentiu.vaultberryapp.domain.utils.types.ErrorType
 
 class RecoveryLoginUseCase(
     private val userRepository: UserRepository,
@@ -29,7 +30,11 @@ class RecoveryLoginUseCase(
                 return ActionResult.Success(decryptedVaultKey)
             }
             is APIResult.Error -> {
-                return ActionResult.Error(response.message)
+                return ActionResult.Error(
+                    ErrorType.EXTERNAL,
+                    response.source,
+                    response.message
+                )
             }
         }
     }

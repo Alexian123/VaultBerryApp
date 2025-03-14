@@ -1,5 +1,6 @@
 package com.alexianhentiu.vaultberryapp.presentation.ui.screens.base
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,20 +19,31 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.bars.TopBarWithBackButton
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.misc.SwitchSettingItem
+import com.alexianhentiu.vaultberryapp.presentation.utils.NavigationManager
+import com.alexianhentiu.vaultberryapp.presentation.utils.enums.NavRoute
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.SettingsViewModel
 
 @Composable
 fun SettingsScreen(
     viewModel: SettingsViewModel? = null,
-    navController: NavController
+    navManager: NavigationManager
 ) {
+    val key = navManager.retrieveVaultKey()
+
     var useSystemTheme by remember { mutableStateOf(viewModel?.useSystemTheme?.value ?: true) }
     var darkTheme by remember { mutableStateOf(viewModel?.darkTheme?.value ?: false) }
+
+    BackHandler(enabled = true) {
+        // send key to vault screen
+        navManager.navigateWithVaultKey(NavRoute.VAULT, key)
+    }
 
     Scaffold(
         topBar = {
             TopBarWithBackButton(
-                onBackClick = { navController.popBackStack() },
+                onBackClick = {
+                    navManager.navigateWithVaultKey(NavRoute.VAULT, key)
+                },
                 title = "Settings"
             )
         }
@@ -72,6 +84,6 @@ fun SettingsScreen(
 fun SettingsScreenPreview() {
     SettingsScreen(
         viewModel = null,
-        navController = NavController(LocalContext.current)
+        navManager = NavigationManager(NavController(LocalContext.current))
     )
 }

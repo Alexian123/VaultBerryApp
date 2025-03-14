@@ -1,10 +1,11 @@
 package com.alexianhentiu.vaultberryapp.domain.usecase.core.vault
 
-import com.alexianhentiu.vaultberryapp.data.api.APIResult
+import com.alexianhentiu.vaultberryapp.data.utils.APIResult
 import com.alexianhentiu.vaultberryapp.domain.model.DecryptedVaultEntry
 import com.alexianhentiu.vaultberryapp.domain.model.MessageResponse
 import com.alexianhentiu.vaultberryapp.domain.repository.VaultEntryRepository
-import com.alexianhentiu.vaultberryapp.domain.utils.ActionResult
+import com.alexianhentiu.vaultberryapp.domain.utils.types.ActionResult
+import com.alexianhentiu.vaultberryapp.domain.utils.types.ErrorType
 
 class DeleteEntryUseCase(private val vaultEntryRepository: VaultEntryRepository) {
 
@@ -15,7 +16,11 @@ class DeleteEntryUseCase(private val vaultEntryRepository: VaultEntryRepository)
             }
 
             is APIResult.Error -> {
-                ActionResult.Error(response.message)
+                ActionResult.Error(
+                    ErrorType.EXTERNAL,
+                    response.source,
+                    response.message
+                )
             }
         }
     }

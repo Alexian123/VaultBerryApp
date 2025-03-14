@@ -10,27 +10,28 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.AnnotatedString
-import androidx.navigation.NavController
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ErrorDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.InfoDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.ChangePasswordForm
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.OTPRequestForm
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.RecoveryLoginForm
-import com.alexianhentiu.vaultberryapp.presentation.ui.enums.TextFieldType
+import com.alexianhentiu.vaultberryapp.presentation.utils.enums.TextFieldType
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.extra.LoadingScreen
+import com.alexianhentiu.vaultberryapp.presentation.utils.NavigationManager
+import com.alexianhentiu.vaultberryapp.presentation.utils.enums.NavRoute
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.RecoveryViewModel
-import com.alexianhentiu.vaultberryapp.presentation.viewmodel.state.RecoveryState
+import com.alexianhentiu.vaultberryapp.presentation.utils.states.RecoveryState
 
 @Composable
 fun RecoveryScreen(
     viewModel: RecoveryViewModel,
-    navController: NavController,
+    navManager: NavigationManager,
 ) {
     val recoveryState by viewModel.recoveryState.collectAsState()
 
     when (recoveryState) {
         is RecoveryState.Error -> {
-            val errorMessage = (recoveryState as RecoveryState.Error).message
+            val errorMessage = (recoveryState as RecoveryState.Error).info.message
             ErrorDialog(
                 onConfirm = { viewModel.resetState() },
                 title = "Recovery Error",
@@ -47,7 +48,7 @@ fun RecoveryScreen(
                 Box(modifier = Modifier.fillMaxSize().padding(contentPadding)) {
                     OTPRequestForm(
                         onContinueClicked = { email -> viewModel.requestOTP(email) },
-                        onCancelClicked = { navController.navigate("login") },
+                        onCancelClicked = { navManager.navigate(NavRoute.LOGIN) },
                         inputValidator = viewModel.inputValidator
                     )
                 }
@@ -64,7 +65,7 @@ fun RecoveryScreen(
                         },
                         onCancelClicked = {
                             viewModel.resetState()
-                            navController.navigate("login")
+                            navManager.navigate(NavRoute.LOGIN)
                         },
                         inputValidator = viewModel.inputValidator
                     )
@@ -97,7 +98,7 @@ fun RecoveryScreen(
                 onDismissRequest = {
                     clipboardManager.setText(AnnotatedString(recoveryPassword))
                     viewModel.logout()
-                    navController.navigate("login")
+                    navManager.navigate(NavRoute.LOGIN)
                 }
             )
         }

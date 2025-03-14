@@ -1,6 +1,6 @@
 package com.alexianhentiu.vaultberryapp.domain.repository
 
-import com.alexianhentiu.vaultberryapp.data.api.APIResult
+import com.alexianhentiu.vaultberryapp.data.utils.APIResult
 import com.alexianhentiu.vaultberryapp.domain.model.KeyChain
 import com.alexianhentiu.vaultberryapp.domain.model.LoginCredentials
 import com.alexianhentiu.vaultberryapp.domain.model.MessageResponse

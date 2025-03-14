@@ -5,9 +5,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alexianhentiu.vaultberryapp.domain.model.Account
 import com.alexianhentiu.vaultberryapp.domain.usecase.core.auth.RegisterUseCase
-import com.alexianhentiu.vaultberryapp.domain.utils.ActionResult
+import com.alexianhentiu.vaultberryapp.domain.utils.types.ActionResult
 import com.alexianhentiu.vaultberryapp.domain.utils.InputValidator
-import com.alexianhentiu.vaultberryapp.presentation.viewmodel.state.RegisterState
+import com.alexianhentiu.vaultberryapp.presentation.utils.ErrorInfo
+import com.alexianhentiu.vaultberryapp.presentation.utils.states.RegisterState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -37,8 +38,14 @@ class RegisterViewModel @Inject constructor(
                 }
 
                 is ActionResult.Error -> {
-                    _registerState.value = RegisterState.Error(result.message)
-                    Log.e("RegisterViewModel", "Registration failed: ${result.message}")
+                    _registerState.value = RegisterState.Error(
+                        ErrorInfo(
+                            type = result.type,
+                            source = result.source,
+                            message = result.message
+                        )
+                    )
+                    Log.e(result.source, result.message)
                 }
             }
         }

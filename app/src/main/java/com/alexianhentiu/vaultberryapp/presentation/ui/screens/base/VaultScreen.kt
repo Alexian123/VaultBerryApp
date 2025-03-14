@@ -20,28 +20,27 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.alexianhentiu.vaultberryapp.R
 import com.alexianhentiu.vaultberryapp.domain.model.DecryptedVaultEntry
-import com.alexianhentiu.vaultberryapp.domain.model.DecryptedKey
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.AddEntryDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ConfirmActionDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.bars.VaultTopBar
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.misc.VaultEntryItem
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ErrorDialog
-import com.alexianhentiu.vaultberryapp.presentation.ui.enums.EntryModification
+import com.alexianhentiu.vaultberryapp.presentation.utils.enums.EntryModification
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.extra.LoadingScreen
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.extra.UnlockVaultScreen
+import com.alexianhentiu.vaultberryapp.presentation.utils.NavigationManager
+import com.alexianhentiu.vaultberryapp.presentation.utils.enums.NavRoute
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.VaultViewModel
-import com.alexianhentiu.vaultberryapp.presentation.viewmodel.state.VaultState
+import com.alexianhentiu.vaultberryapp.presentation.utils.states.VaultState
 
 @Composable
 fun VaultScreen(
     vaultViewModel: VaultViewModel,
-    navController: NavController
+    navManager: NavigationManager
 ) {
-    val vaultKey = navController
-        .previousBackStackEntry?.savedStateHandle?.get<DecryptedKey>("vaultKey")
+    val vaultKey = navManager.retrieveVaultKey()
 
     val vaultState by vaultViewModel.vaultState.collectAsState()
     val decryptedEntries by vaultViewModel.filteredEntries.collectAsState()
@@ -72,18 +71,15 @@ fun VaultScreen(
                         onSearch = { vaultViewModel.searchEntriesByTitle(it) },
                         onLogout = {
                             vaultViewModel.logout()
-                            navController.navigate("login")
+                            navManager.navigate(NavRoute.LOGIN)
                         },
                         onAccountClick = {
                             // send key to account screen
-                            navController.currentBackStackEntry?.savedStateHandle?.set(
-                                key = "vaultKey",
-                                value = vaultKey
-                            )
-                            navController.navigate("account")
+                            navManager.navigateWithVaultKey(NavRoute.ACCOUNT, vaultKey)
                         },
                         onSettingsClick = {
-                            navController.navigate("settings")
+                            // send key to settings screen
+                            navManager.navigateWithVaultKey(NavRoute.SETTINGS, vaultKey)
                         }
                     )
                 },
@@ -123,7 +119,7 @@ fun VaultScreen(
                             onSubmit = {
                                 if (it) {
                                     vaultViewModel.logout()
-                                    navController.navigate("login")
+                                    navManager.navigate(NavRoute.LOGIN)
                                 }
                             }
                         )
@@ -181,7 +177,7 @@ fun VaultScreen(
         }
 
         is VaultState.Error ->  {
-            val errorMessage = (vaultState as VaultState.Error).message
+            val errorMessage = (vaultState as VaultState.Error).info.message
             ErrorDialog(
                 onConfirm = { vaultViewModel.resetState() },
                 title = "Vault Error",

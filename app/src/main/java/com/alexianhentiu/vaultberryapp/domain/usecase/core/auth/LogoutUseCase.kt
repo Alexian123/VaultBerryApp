@@ -1,9 +1,10 @@
 package com.alexianhentiu.vaultberryapp.domain.usecase.core.auth
 
-import com.alexianhentiu.vaultberryapp.data.api.APIResult
+import com.alexianhentiu.vaultberryapp.data.utils.APIResult
 import com.alexianhentiu.vaultberryapp.domain.model.MessageResponse
 import com.alexianhentiu.vaultberryapp.domain.repository.UserRepository
-import com.alexianhentiu.vaultberryapp.domain.utils.ActionResult
+import com.alexianhentiu.vaultberryapp.domain.utils.types.ActionResult
+import com.alexianhentiu.vaultberryapp.domain.utils.types.ErrorType
 
 class LogoutUseCase(private val userRepository: UserRepository) {
 
@@ -14,7 +15,11 @@ class LogoutUseCase(private val userRepository: UserRepository) {
             }
 
             is APIResult.Error -> {
-                ActionResult.Error(response.message)
+                ActionResult.Error(
+                    ErrorType.EXTERNAL,
+                    response.source,
+                    response.message
+                )
             }
         }
     }

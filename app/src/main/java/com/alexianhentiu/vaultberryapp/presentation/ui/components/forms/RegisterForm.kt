@@ -28,10 +28,12 @@ import com.alexianhentiu.vaultberryapp.R
 import com.alexianhentiu.vaultberryapp.domain.utils.InputValidator
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.ValidatedTextField
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.PasswordField
+import com.alexianhentiu.vaultberryapp.presentation.utils.NavigationManager
+import com.alexianhentiu.vaultberryapp.presentation.utils.enums.NavRoute
 
 @Composable
 fun RegisterForm(
-    navController: NavController,
+    navManager: NavigationManager,
     onRegisterClicked: (String, String, String?, String?) -> Unit,
     inputValidator: InputValidator
 ) {
@@ -99,7 +101,7 @@ fun RegisterForm(
             Text("Register")
         }
         TextButton(
-            onClick = { navController.navigate("login") },
+            onClick = { navManager.navigate(NavRoute.LOGIN) },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("Already have an account?")
@@ -111,7 +113,7 @@ fun RegisterForm(
 @Composable
 fun RegisterFormPreview() {
     RegisterForm(
-        navController = NavController(LocalContext.current),
+        navManager = NavigationManager(NavController(LocalContext.current)),
         onRegisterClicked = { _, _, _, _ -> },
         inputValidator = InputValidator()
     )

@@ -1,9 +1,9 @@
 package com.alexianhentiu.vaultberryapp.di
 
-import com.alexianhentiu.vaultberryapp.data.api.APIResponseHandler
+import com.alexianhentiu.vaultberryapp.data.utils.APIResponseHandler
 import com.alexianhentiu.vaultberryapp.data.api.APIService
 import com.alexianhentiu.vaultberryapp.data.api.SessionCookieJar
-import com.alexianhentiu.vaultberryapp.data.repository.ModelConverter
+import com.alexianhentiu.vaultberryapp.data.utils.ModelConverter
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

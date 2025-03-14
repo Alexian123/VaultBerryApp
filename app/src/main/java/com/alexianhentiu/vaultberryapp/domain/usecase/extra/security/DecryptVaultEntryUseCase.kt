@@ -3,8 +3,9 @@ package com.alexianhentiu.vaultberryapp.domain.usecase.extra.security
 import com.alexianhentiu.vaultberryapp.domain.model.DecryptedVaultEntry
 import com.alexianhentiu.vaultberryapp.domain.model.DecryptedKey
 import com.alexianhentiu.vaultberryapp.domain.model.EncryptedVaultEntry
-import com.alexianhentiu.vaultberryapp.domain.utils.ActionResult
+import com.alexianhentiu.vaultberryapp.domain.utils.types.ActionResult
 import com.alexianhentiu.vaultberryapp.domain.utils.VaultGuardian
+import com.alexianhentiu.vaultberryapp.domain.utils.types.ErrorType
 
 class DecryptVaultEntryUseCase(private val vaultGuardian: VaultGuardian) {
 
@@ -27,7 +28,11 @@ class DecryptVaultEntryUseCase(private val vaultGuardian: VaultGuardian) {
             )
             return ActionResult.Success(decryptedVaultEntry)
         } catch (e: Exception) {
-            return ActionResult.Error("Entry decryption failed: ${e.message}")
+            return ActionResult.Error(
+                ErrorType.INTERNAL,
+                "Vault Guardian",
+                "Entry decryption failed: ${e.message}"
+            )
         }
     }
 }

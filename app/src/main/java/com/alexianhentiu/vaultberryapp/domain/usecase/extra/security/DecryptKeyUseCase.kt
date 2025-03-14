@@ -1,8 +1,9 @@
 package com.alexianhentiu.vaultberryapp.domain.usecase.extra.security
 
 import com.alexianhentiu.vaultberryapp.domain.model.DecryptedKey
-import com.alexianhentiu.vaultberryapp.domain.utils.ActionResult
+import com.alexianhentiu.vaultberryapp.domain.utils.types.ActionResult
 import com.alexianhentiu.vaultberryapp.domain.utils.VaultGuardian
+import com.alexianhentiu.vaultberryapp.domain.utils.types.ErrorType
 
 class DecryptKeyUseCase(private val vaultGuardian: VaultGuardian) {
     operator fun invoke(
@@ -15,7 +16,11 @@ class DecryptKeyUseCase(private val vaultGuardian: VaultGuardian) {
             val decryptedKey = DecryptedKey(keyBytes)
             return ActionResult.Success(decryptedKey)
         } catch (e: Exception) {
-            return ActionResult.Error("Key decryption failed: ${e.message}")
+            return ActionResult.Error(
+                ErrorType.INTERNAL,
+                "Vault Guardian",
+                "Key decryption failed: ${e.message}"
+            )
         }
     }
 }

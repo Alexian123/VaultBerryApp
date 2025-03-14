@@ -1,4 +1,4 @@
-package com.alexianhentiu.vaultberryapp.data.repository
+package com.alexianhentiu.vaultberryapp.data.utils
 
 import com.alexianhentiu.vaultberryapp.data.model.AccountDTO
 import com.alexianhentiu.vaultberryapp.data.model.EncryptedVaultEntryDTO

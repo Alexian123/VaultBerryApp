@@ -2,7 +2,8 @@ package com.alexianhentiu.vaultberryapp.domain.usecase.extra.security
 
 import android.net.Uri
 import com.alexianhentiu.vaultberryapp.domain.model.TotpResponse
-import com.alexianhentiu.vaultberryapp.domain.utils.ActionResult
+import com.alexianhentiu.vaultberryapp.domain.utils.types.ActionResult
+import com.alexianhentiu.vaultberryapp.domain.utils.types.ErrorType
 
 class Extract2FASecret {
 
@@ -12,7 +13,11 @@ class Extract2FASecret {
         return if (secret != null) {
             ActionResult.Success(secret)
         } else {
-            ActionResult.Error("Secret not found in provisioning URI")
+            ActionResult.Error(
+                ErrorType.INTERNAL,
+                "Provisioning URI",
+                "Secret not found in provisioning URI"
+            )
         }
     }
 }

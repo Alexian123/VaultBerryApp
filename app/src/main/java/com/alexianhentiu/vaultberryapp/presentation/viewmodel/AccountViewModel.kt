@@ -3,7 +3,6 @@ package com.alexianhentiu.vaultberryapp.presentation.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.alexianhentiu.vaultberryapp.domain.model.Account
 import com.alexianhentiu.vaultberryapp.domain.model.DecryptedKey
 import com.alexianhentiu.vaultberryapp.domain.usecase.core.account.ChangeEmailUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.core.account.ChangeNameUseCase
@@ -13,9 +12,11 @@ import com.alexianhentiu.vaultberryapp.domain.usecase.core.account.Disable2FAUse
 import com.alexianhentiu.vaultberryapp.domain.usecase.core.account.Get2FAStatusUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.core.account.GetAccountUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.core.account.Setup2FAUseCase
-import com.alexianhentiu.vaultberryapp.domain.utils.ActionResult
+import com.alexianhentiu.vaultberryapp.domain.usecase.core.auth.LogoutUseCase
+import com.alexianhentiu.vaultberryapp.domain.utils.types.ActionResult
 import com.alexianhentiu.vaultberryapp.domain.utils.InputValidator
-import com.alexianhentiu.vaultberryapp.presentation.viewmodel.state.AccountState
+import com.alexianhentiu.vaultberryapp.presentation.utils.ErrorInfo
+import com.alexianhentiu.vaultberryapp.presentation.utils.states.AccountState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -32,6 +33,7 @@ class AccountViewModel @Inject constructor(
     private val changePasswordUseCase: ChangePasswordUseCase,
     private val setup2FAUseCase: Setup2FAUseCase,
     private val disable2FAUseCase: Disable2FAUseCase,
+    private val logoutUseCase: LogoutUseCase,
     val inputValidator: InputValidator
 ) : ViewModel() {
 
@@ -53,13 +55,25 @@ class AccountViewModel @Inject constructor(
                         }
 
                         is ActionResult.Error -> {
-                            _accountState.value = AccountState.Error(result2FA.message)
+                            _accountState.value = AccountState.Error(
+                                ErrorInfo(
+                                    type = result2FA.type,
+                                    source = result2FA.source,
+                                    message = result2FA.message
+                                )
+                            )
                         }
                     }
                 }
 
                 is ActionResult.Error -> {
-                    _accountState.value = AccountState.Error(resultAccount.message)
+                    _accountState.value = AccountState.Error(
+                        ErrorInfo(
+                            type = resultAccount.type,
+                            source = resultAccount.source,
+                            message = resultAccount.message
+                        )
+                    )
                 }
             }
         }
@@ -70,13 +84,18 @@ class AccountViewModel @Inject constructor(
             _accountState.value = AccountState.Loading
             when (val result = deleteAccountUseCase()) {
                 is ActionResult.Success -> {
-                    _accountState.value = AccountState.Deleted
-                    Log.d("AccountViewModel", "API success: ${result.data}")
+                    _accountState.value = AccountState.LoggedOut
                 }
 
                 is ActionResult.Error -> {
-                    _accountState.value = AccountState.Error(result.message)
-                    Log.e("AccountViewModel", "Delete failed: ${result.message}")
+                    _accountState.value = AccountState.Error(
+                        ErrorInfo(
+                            type = result.type,
+                            source = result.source,
+                            message = result.message
+                        )
+                    )
+                    Log.e(result.source, result.message)
                 }
             }
         }
@@ -92,12 +111,17 @@ class AccountViewModel @Inject constructor(
                         savedState.account.copy(email = newEmail),
                         savedState.is2FAEnabled
                     )
-                    Log.d("AccountViewModel", "API success: ${result.data}")
                 }
 
                 is ActionResult.Error -> {
-                    _accountState.value = AccountState.Error(result.message)
-                    Log.e("AccountViewModel", "Change email failed: ${result.message}")
+                    _accountState.value = AccountState.Error(
+                        ErrorInfo(
+                            type = result.type,
+                            source = result.source,
+                            message = result.message
+                        )
+                    )
+                    Log.e(result.source, result.message)
                 }
             }
         }
@@ -116,12 +140,17 @@ class AccountViewModel @Inject constructor(
                         ),
                         savedState.is2FAEnabled
                     )
-                    Log.d("AccountViewModel", "API success: ${result.data}")
                 }
 
                 is ActionResult.Error -> {
-                    _accountState.value = AccountState.Error(result.message)
-                    Log.e("AccountViewModel", "Change name failed: ${result.message}")
+                    _accountState.value = AccountState.Error(
+                        ErrorInfo(
+                            type = result.type,
+                            source = result.source,
+                            message = result.message
+                        )
+                    )
+                    Log.e(result.source, result.message)
                 }
             }
         }
@@ -136,8 +165,14 @@ class AccountViewModel @Inject constructor(
                 }
 
                 is ActionResult.Error -> {
-                    _accountState.value = AccountState.Error(result.message)
-                    Log.e("AccountViewModel", "Change password failed: ${result.message}")
+                    _accountState.value = AccountState.Error(
+                        ErrorInfo(
+                            type = result.type,
+                            source = result.source,
+                            message = result.message
+                        )
+                    )
+                    Log.e(result.source, result.message)
                 }
             }
         }
@@ -152,8 +187,14 @@ class AccountViewModel @Inject constructor(
                 }
 
                 is ActionResult.Error -> {
-                    _accountState.value = AccountState.Error(result.message)
-                    Log.e("AccountViewModel", "Setup 2FA failed: ${result.message}")
+                    _accountState.value = AccountState.Error(
+                        ErrorInfo(
+                            type = result.type,
+                            source = result.source,
+                            message = result.message
+                        )
+                    )
+                    Log.e(result.source, result.message)
                 }
             }
         }
@@ -172,8 +213,36 @@ class AccountViewModel @Inject constructor(
                 }
 
                 is ActionResult.Error -> {
-                    _accountState.value = AccountState.Error(result.message)
-                    Log.e("AccountViewModel", "Disable 2FA failed: ${result.message}")
+                    _accountState.value = AccountState.Error(
+                        ErrorInfo(
+                            type = result.type,
+                            source = result.source,
+                            message = result.message
+                        )
+                    )
+                    Log.e(result.source, result.message)
+                }
+            }
+        }
+    }
+
+    fun logout() {
+        viewModelScope.launch {
+            _accountState.value = AccountState.Loading
+            when (val result = logoutUseCase()) {
+                is ActionResult.Success -> {
+                    _accountState.value = AccountState.LoggedOut
+                }
+
+                is ActionResult.Error -> {
+                    _accountState.value = AccountState.Error(
+                        ErrorInfo(
+                            type = result.type,
+                            source = result.source,
+                            message = result.message
+                        )
+                    )
+                    Log.e(result.source, result.message)
                 }
             }
         }

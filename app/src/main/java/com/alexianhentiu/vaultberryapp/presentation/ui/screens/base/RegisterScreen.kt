@@ -10,16 +10,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.AnnotatedString
-import androidx.navigation.NavController
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ErrorDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.InfoDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.RegisterForm
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.extra.LoadingScreen
+import com.alexianhentiu.vaultberryapp.presentation.utils.NavigationManager
+import com.alexianhentiu.vaultberryapp.presentation.utils.enums.NavRoute
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.RegisterViewModel
-import com.alexianhentiu.vaultberryapp.presentation.viewmodel.state.RegisterState
+import com.alexianhentiu.vaultberryapp.presentation.utils.states.RegisterState
 
 @Composable
-fun RegisterScreen(viewModel: RegisterViewModel, navController: NavController) {
+fun RegisterScreen(viewModel: RegisterViewModel, navManager: NavigationManager) {
     val registerState by viewModel.registerState.collectAsState()
 
     when (registerState) {
@@ -27,7 +28,7 @@ fun RegisterScreen(viewModel: RegisterViewModel, navController: NavController) {
             Scaffold { contentPadding ->
                 Box(modifier = Modifier.fillMaxSize().padding(contentPadding)) {
                     RegisterForm(
-                        navController = navController,
+                        navManager = navManager,
                         onRegisterClicked = { email, password, firstName, lastName ->
                             viewModel.register(email, password, firstName, lastName)
                         },
@@ -52,13 +53,13 @@ fun RegisterScreen(viewModel: RegisterViewModel, navController: NavController) {
                 onDismissRequest = {
                     clipboardManager.setText(AnnotatedString(recoveryPassword))
                     viewModel.resetState()
-                    navController.navigate("login")
+                    navManager.navigate(NavRoute.LOGIN)
                 }
             )
         }
 
         is RegisterState.Error -> {
-            val errorMessage = (registerState as RegisterState.Error).message
+            val errorMessage = (registerState as RegisterState.Error).info.message
             ErrorDialog(
                 onConfirm = { viewModel.resetState() },
                 title = "Registration Error",

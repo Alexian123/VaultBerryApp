@@ -1,4 +1,4 @@
-package com.alexianhentiu.vaultberryapp.presentation.ui.enums
+package com.alexianhentiu.vaultberryapp.presentation.utils.enums
 
 enum class EntryModification {
     DELETE,

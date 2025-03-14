@@ -1,7 +1,8 @@
 package com.alexianhentiu.vaultberryapp.domain.usecase.extra.security
 
-import com.alexianhentiu.vaultberryapp.domain.utils.ActionResult
+import com.alexianhentiu.vaultberryapp.domain.utils.types.ActionResult
 import com.alexianhentiu.vaultberryapp.domain.utils.PasswordGenerator
+import com.alexianhentiu.vaultberryapp.domain.utils.types.ErrorType
 
 class GeneratePasswordUseCase(private val passwordGenerator: PasswordGenerator) {
     operator fun invoke(
@@ -21,7 +22,11 @@ class GeneratePasswordUseCase(private val passwordGenerator: PasswordGenerator) 
             )
             return ActionResult.Success(password)
         } catch (e: Exception) {
-            return ActionResult.Error("Password generation failed: ${e.message}")
+            return ActionResult.Error(
+                ErrorType.INTERNAL,
+                "Password Generator",
+                "Password generation failed: ${e.message}"
+            )
         }
     }
 }

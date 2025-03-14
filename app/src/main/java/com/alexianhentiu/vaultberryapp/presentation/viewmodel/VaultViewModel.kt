@@ -10,9 +10,11 @@ import com.alexianhentiu.vaultberryapp.domain.usecase.core.vault.AddEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.core.vault.GetEntriesUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.core.vault.UpdateEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.core.vault.DeleteEntryUseCase
-import com.alexianhentiu.vaultberryapp.domain.utils.ActionResult
+import com.alexianhentiu.vaultberryapp.domain.utils.types.ActionResult
 import com.alexianhentiu.vaultberryapp.domain.utils.InputValidator
-import com.alexianhentiu.vaultberryapp.presentation.viewmodel.state.VaultState
+import com.alexianhentiu.vaultberryapp.domain.utils.types.ErrorType
+import com.alexianhentiu.vaultberryapp.presentation.utils.ErrorInfo
+import com.alexianhentiu.vaultberryapp.presentation.utils.states.VaultState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -39,8 +41,6 @@ class VaultViewModel @Inject constructor(
 
     private lateinit var vaultKey: DecryptedKey
 
-    // TODO: Implement statistics & suggestions for entry password security
-
     fun logout() {
         viewModelScope.launch {
             _vaultState.value = VaultState.Loading
@@ -50,12 +50,17 @@ class VaultViewModel @Inject constructor(
                     _filteredEntries.value = emptyList()
                     vaultKey = DecryptedKey(ByteArray(0))
                     _vaultState.value = VaultState.Locked
-                    Log.d("VaultViewModel", "API success: ${result.data}")
                 }
 
                 is ActionResult.Error -> {
-                    _vaultState.value = VaultState.Error(result.message)
-                    Log.e("VaultViewModel", "Logout failed: ${result.message}")
+                    _vaultState.value = VaultState.Error(
+                        ErrorInfo(
+                            type = result.type,
+                            source = result.source,
+                            message = result.message
+                        )
+                    )
+                    Log.e(result.source, result.message)
                 }
             }
         }
@@ -80,8 +85,14 @@ class VaultViewModel @Inject constructor(
         viewModelScope.launch {
             _vaultState.value = VaultState.Loading
             if (decryptedKey == null) {
-                Log.e("VaultViewModel", "decryptedVaultKey is null")
-                _vaultState.value = VaultState.Error("Invalid vault key")
+                Log.e("Unlock Vault", "Nonexistent vault key")
+                _vaultState.value = VaultState.Error(
+                    ErrorInfo(
+                        type = ErrorType.INTERNAL,
+                        source = "Unlock Vault",
+                        message = "Nonexistent vault key"
+                    )
+                )
                 return@launch
             }
             vaultKey = decryptedKey
@@ -93,8 +104,14 @@ class VaultViewModel @Inject constructor(
                 }
 
                 is ActionResult.Error -> {
-                    _vaultState.value = VaultState.Error(result.message)
-                    Log.e("VaultViewModel", "Failed to get entries: ${result.message}")
+                    _vaultState.value = VaultState.Error(
+                        ErrorInfo(
+                            type = result.type,
+                            source = result.source,
+                            message = result.message
+                        )
+                    )
+                    Log.e(result.source, result.message)
                 }
             }
         }
@@ -110,12 +127,17 @@ class VaultViewModel @Inject constructor(
                         currentList + decryptedVaultEntry
                     }
                     resetShownEntries()
-                    Log.d("VaultViewModel", "API success: ${result.data}")
                 }
 
                 is ActionResult.Error -> {
-                    _vaultState.value = VaultState.Error(result.message)
-                    Log.e("VaultViewModel", "Failed to add entry: ${result.message}")
+                    _vaultState.value = VaultState.Error(
+                        ErrorInfo(
+                            type = result.type,
+                            source = result.source,
+                            message = result.message
+                        )
+                    )
+                    Log.e(result.source, result.message)
                 }
             }
         }
@@ -131,12 +153,17 @@ class VaultViewModel @Inject constructor(
                         currentList.filter { it.timestamp != decryptedVaultEntry.timestamp }
                     }
                     resetShownEntries()
-                    Log.d("VaultViewModel", "API success: ${result.data}")
                 }
 
                 is ActionResult.Error -> {
-                    _vaultState.value = VaultState.Error(result.message)
-                    Log.e("VaultViewModel", "Failed to delete entry: ${result.message}")
+                    _vaultState.value = VaultState.Error(
+                        ErrorInfo(
+                            type = result.type,
+                            source = result.source,
+                            message = result.message
+                        )
+                    )
+                    Log.e(result.source, result.message)
                 }
             }
         }
@@ -156,12 +183,17 @@ class VaultViewModel @Inject constructor(
                         }
                     }
                     resetShownEntries()
-                    Log.d("VaultViewModel", "API success: ${result.data}")
                 }
 
                 is ActionResult.Error -> {
-                    _vaultState.value = VaultState.Error(result.message)
-                    Log.e("VaultViewModel", "Failed to update entry: ${result.message}")
+                    _vaultState.value = VaultState.Error(
+                        ErrorInfo(
+                            type = result.type,
+                            source = result.source,
+                            message = result.message
+                        )
+                    )
+                    Log.e(result.source, result.message)
                 }
             }
         }

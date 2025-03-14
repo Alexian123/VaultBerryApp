@@ -11,6 +11,8 @@ import com.alexianhentiu.vaultberryapp.presentation.ui.screens.base.RecoveryScre
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.base.RegisterScreen
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.base.SettingsScreen
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.base.VaultScreen
+import com.alexianhentiu.vaultberryapp.presentation.utils.NavigationManager
+import com.alexianhentiu.vaultberryapp.presentation.utils.enums.NavRoute
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.AccountViewModel
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.LoginViewModel
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.RecoveryViewModel
@@ -21,31 +23,33 @@ import com.alexianhentiu.vaultberryapp.presentation.viewmodel.VaultViewModel
 @Composable
 fun AppNavHost() {
     val navController = rememberNavController()
+    val navManager = NavigationManager(navController)
+
     val settingsViewModel: SettingsViewModel = hiltViewModel()
 
-    NavHost(navController = navController, startDestination = "login") {
-        composable("login") {
+    NavHost(navController = navController, startDestination = NavRoute.LOGIN.path) {
+        composable(NavRoute.LOGIN.path) {
             val loginViewModel: LoginViewModel = hiltViewModel()
-            LoginScreen(loginViewModel, navController)
+            LoginScreen(loginViewModel, navManager)
         }
-        composable("register") {
+        composable(NavRoute.REGISTER.path) {
             val registerViewModel: RegisterViewModel = hiltViewModel()
-            RegisterScreen(registerViewModel, navController)
+            RegisterScreen(registerViewModel, navManager)
         }
-        composable("recovery") {
+        composable(NavRoute.RECOVERY.path) {
             val recoveryViewModel: RecoveryViewModel = hiltViewModel()
-            RecoveryScreen(recoveryViewModel, navController)
+            RecoveryScreen(recoveryViewModel, navManager)
         }
-        composable("vault") {
+        composable(NavRoute.VAULT.path) {
             val vaultViewModel: VaultViewModel = hiltViewModel()
-            VaultScreen(vaultViewModel, navController)
+            VaultScreen(vaultViewModel, navManager)
         }
-        composable("account") {
+        composable(NavRoute.ACCOUNT.path) {
             val accountViewModel: AccountViewModel = hiltViewModel()
-            AccountScreen(accountViewModel, navController)
+            AccountScreen(accountViewModel, navManager)
         }
-        composable("settings") {
-            SettingsScreen(settingsViewModel, navController)
+        composable(NavRoute.SETTINGS.path) {
+            SettingsScreen(settingsViewModel, navManager)
         }
     }
 }

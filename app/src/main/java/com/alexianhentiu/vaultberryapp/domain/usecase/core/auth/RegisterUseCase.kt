@@ -1,13 +1,14 @@
 package com.alexianhentiu.vaultberryapp.domain.usecase.core.auth
 
-import com.alexianhentiu.vaultberryapp.data.api.APIResult
+import com.alexianhentiu.vaultberryapp.data.utils.APIResult
 import com.alexianhentiu.vaultberryapp.domain.model.Account
 import com.alexianhentiu.vaultberryapp.domain.model.PasswordPair
 import com.alexianhentiu.vaultberryapp.domain.model.User
 import com.alexianhentiu.vaultberryapp.domain.repository.UserRepository
 import com.alexianhentiu.vaultberryapp.domain.usecase.extra.security.GenerateKeyChainUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.extra.security.GeneratePasswordUseCase
-import com.alexianhentiu.vaultberryapp.domain.utils.ActionResult
+import com.alexianhentiu.vaultberryapp.domain.utils.types.ActionResult
+import com.alexianhentiu.vaultberryapp.domain.utils.types.ErrorType
 
 class RegisterUseCase(
     private val userRepository: UserRepository,
@@ -36,7 +37,11 @@ class RegisterUseCase(
             }
 
             is APIResult.Error -> {
-                ActionResult.Error(result.message)
+                ActionResult.Error(
+                    ErrorType.EXTERNAL,
+                    result.source,
+                    result.message
+                )
             }
         }
     }

@@ -1,9 +1,10 @@
 package com.alexianhentiu.vaultberryapp.domain.usecase.core.account
 
-import com.alexianhentiu.vaultberryapp.data.api.APIResult
+import com.alexianhentiu.vaultberryapp.data.utils.APIResult
 import com.alexianhentiu.vaultberryapp.domain.model.Account
 import com.alexianhentiu.vaultberryapp.domain.repository.AccountRepository
-import com.alexianhentiu.vaultberryapp.domain.utils.ActionResult
+import com.alexianhentiu.vaultberryapp.domain.utils.types.ActionResult
+import com.alexianhentiu.vaultberryapp.domain.utils.types.ErrorType
 
 class GetAccountUseCase(private val accountRepository: AccountRepository) {
 
@@ -14,7 +15,11 @@ class GetAccountUseCase(private val accountRepository: AccountRepository) {
             }
 
             is APIResult.Error -> {
-                ActionResult.Error(accountResult.message)
+                ActionResult.Error(
+                    ErrorType.EXTERNAL,
+                    accountResult.source,
+                    accountResult.message
+                )
             }
         }
     }

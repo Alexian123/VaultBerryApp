@@ -1,5 +1,6 @@
 package com.alexianhentiu.vaultberryapp.presentation.ui.screens.base
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -10,27 +11,31 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.AnnotatedString
-import androidx.navigation.NavController
-import com.alexianhentiu.vaultberryapp.domain.model.DecryptedKey
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.bars.TopBarWithBackButton
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ErrorDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.InfoDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.AccountForm
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.extra.LoadingScreen
+import com.alexianhentiu.vaultberryapp.presentation.utils.NavigationManager
+import com.alexianhentiu.vaultberryapp.presentation.utils.enums.NavRoute
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.AccountViewModel
-import com.alexianhentiu.vaultberryapp.presentation.viewmodel.state.AccountState
+import com.alexianhentiu.vaultberryapp.presentation.utils.states.AccountState
 
 @Composable
 fun AccountScreen(
     viewModel: AccountViewModel,
-    navController: NavController
+    navManager: NavigationManager
 ) {
-    val vaultKey = navController
-        .previousBackStackEntry?.savedStateHandle?.get<DecryptedKey>("vaultKey")
+    val vaultKey = navManager.retrieveVaultKey()
 
     val accountState by viewModel.accountState.collectAsState()
 
     val clipboardManager = LocalClipboardManager.current
+
+    BackHandler(enabled = true) {
+        // send key to vault screen
+        navManager.navigateWithVaultKey(NavRoute.VAULT, vaultKey)
+    }
 
     when (accountState) {
         is AccountState.Init -> {
@@ -49,7 +54,10 @@ fun AccountScreen(
             Scaffold(
                 topBar = {
                     TopBarWithBackButton(
-                        onBackClick = { navController.popBackStack() },
+                        onBackClick = {
+                            // send key to vault screen
+                            navManager.navigateWithVaultKey(NavRoute.VAULT, vaultKey)
+                        },
                         title = "Account"
                     )
                 }
@@ -83,9 +91,8 @@ fun AccountScreen(
             }
         }
 
-        is AccountState.Deleted -> {
-            viewModel.resetState()
-            navController.navigate("login")
+        is AccountState.LoggedOut -> {
+            navManager.navigate(NavRoute.LOGIN)
         }
 
         is AccountState.ChangedPassword -> {
@@ -96,7 +103,7 @@ fun AccountScreen(
                         "It will be copied into the clipboard upon confirmation.",
                 onDismissRequest = {
                     clipboardManager.setText(AnnotatedString(recoveryPassword))
-                    viewModel.resetState()
+                    viewModel.logout()
                 }
             )
         }
@@ -115,7 +122,7 @@ fun AccountScreen(
         }
 
         is AccountState.Error -> {
-            val errorMessage = (accountState as AccountState.Error).message
+            val errorMessage = (accountState as AccountState.Error).info.message
             ErrorDialog(
                 onConfirm = { viewModel.resetState() },
                 title = "Account Error",

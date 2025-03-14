@@ -8,9 +8,10 @@ import androidx.lifecycle.viewModelScope
 import com.alexianhentiu.vaultberryapp.domain.model.LoginCredentials
 import com.alexianhentiu.vaultberryapp.domain.usecase.core.auth.LoginUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.core.auth.Verify2FAUseCase
-import com.alexianhentiu.vaultberryapp.domain.utils.ActionResult
+import com.alexianhentiu.vaultberryapp.domain.utils.types.ActionResult
 import com.alexianhentiu.vaultberryapp.domain.utils.InputValidator
-import com.alexianhentiu.vaultberryapp.presentation.viewmodel.state.LoginState
+import com.alexianhentiu.vaultberryapp.presentation.utils.ErrorInfo
+import com.alexianhentiu.vaultberryapp.presentation.utils.states.LoginState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,8 +39,14 @@ class LoginViewModel @Inject constructor(
                 }
 
                 is ActionResult.Error -> {
-                    _loginState.value = LoginState.Error(result.message)
-                    Log.e("LoginViewModel", "2FA verification failed: ${result.message}")
+                    _loginState.value = LoginState.Error(
+                        ErrorInfo(
+                            type = result.type,
+                            source = result.source,
+                            message = result.message
+                        )
+                    )
+                    Log.e(result.source, result.message)
                 }
             }
         }
@@ -59,8 +66,14 @@ class LoginViewModel @Inject constructor(
                     if (result.message == "2FA required") {
                         _loginState.value = LoginState.Verify2FA(email, password)
                     } else {
-                        _loginState.value = LoginState.Error(result.message)
-                        Log.e("LoginViewModel", "Login failed: ${result.message}")
+                        _loginState.value = LoginState.Error(
+                            ErrorInfo(
+                                type = result.type,
+                                source = result.source,
+                                message = result.message
+                            )
+                        )
+                        Log.e(result.source, result.message)
                     }
                 }
             }

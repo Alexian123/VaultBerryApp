@@ -9,9 +9,10 @@ import com.alexianhentiu.vaultberryapp.domain.usecase.core.account.ChangePasswor
 import com.alexianhentiu.vaultberryapp.domain.usecase.core.auth.GetRecoveryOTPUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.core.auth.LogoutUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.core.auth.RecoveryLoginUseCase
-import com.alexianhentiu.vaultberryapp.domain.utils.ActionResult
+import com.alexianhentiu.vaultberryapp.domain.utils.types.ActionResult
 import com.alexianhentiu.vaultberryapp.domain.utils.InputValidator
-import com.alexianhentiu.vaultberryapp.presentation.viewmodel.state.RecoveryState
+import com.alexianhentiu.vaultberryapp.presentation.utils.ErrorInfo
+import com.alexianhentiu.vaultberryapp.presentation.utils.states.RecoveryState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -39,7 +40,13 @@ class RecoveryViewModel @Inject constructor(
                 }
 
                 is ActionResult.Error -> {
-                    _recoveryState.value = RecoveryState.Error(result.message)
+                    _recoveryState.value = RecoveryState.Error(
+                        ErrorInfo(
+                            type = result.type,
+                            source = result.source,
+                            message = result.message
+                        )
+                    )
                 }
             }
         }
@@ -59,8 +66,14 @@ class RecoveryViewModel @Inject constructor(
                 }
 
                 is ActionResult.Error -> {
-                    _recoveryState.value = RecoveryState.Error(result.message)
-                    Log.e("RecoveryViewModel", "Recovery login failed: ${result.message}")
+                    _recoveryState.value = RecoveryState.Error(
+                        ErrorInfo(
+                            type = result.type,
+                            source = result.source,
+                            message = result.message
+                        )
+                    )
+                    Log.e(result.source, result.message)
                 }
             }
         }
@@ -75,8 +88,14 @@ class RecoveryViewModel @Inject constructor(
                 }
 
                 is ActionResult.Error -> {
-                    _recoveryState.value = RecoveryState.Error(result.message)
-                    Log.e("AccountViewModel", "Change password failed: ${result.message}")
+                    _recoveryState.value = RecoveryState.Error(
+                        ErrorInfo(
+                            type = result.type,
+                            source = result.source,
+                            message = result.message
+                        )
+                    )
+                    Log.e(result.source, result.message)
                 }
             }
         }
@@ -88,12 +107,17 @@ class RecoveryViewModel @Inject constructor(
             when (val result = logoutUseCase()) {
                 is ActionResult.Success -> {
                     _recoveryState.value = RecoveryState.Idle
-                    Log.d("RecoveryViewModel", "API success: ${result.data}")
                 }
 
                 is ActionResult.Error -> {
-                    _recoveryState.value = RecoveryState.Error(result.message)
-                    Log.e("RecoveryViewModel", "Logout failed: ${result.message}")
+                    _recoveryState.value = RecoveryState.Error(
+                        ErrorInfo(
+                            type = result.type,
+                            source = result.source,
+                            message = result.message
+                        )
+                    )
+                    Log.e(result.source, result.message)
                 }
             }
         }

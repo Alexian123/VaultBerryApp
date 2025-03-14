@@ -1,9 +1,10 @@
 package com.alexianhentiu.vaultberryapp.domain.usecase.core.account
 
-import com.alexianhentiu.vaultberryapp.data.api.APIResult
+import com.alexianhentiu.vaultberryapp.data.utils.APIResult
 import com.alexianhentiu.vaultberryapp.domain.repository.AccountRepository
 import com.alexianhentiu.vaultberryapp.domain.usecase.extra.security.Extract2FASecret
-import com.alexianhentiu.vaultberryapp.domain.utils.ActionResult
+import com.alexianhentiu.vaultberryapp.domain.utils.types.ActionResult
+import com.alexianhentiu.vaultberryapp.domain.utils.types.ErrorType
 
 class Setup2FAUseCase(
     private val accountRepository: AccountRepository,
@@ -17,7 +18,11 @@ class Setup2FAUseCase(
             }
 
             is APIResult.Error -> {
-                ActionResult.Error(result.message)
+                ActionResult.Error(
+                    ErrorType.EXTERNAL,
+                    result.source,
+                    result.message
+                )
             }
         }
     }

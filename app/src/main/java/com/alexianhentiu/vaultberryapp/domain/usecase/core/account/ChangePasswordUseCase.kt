@@ -1,6 +1,6 @@
 package com.alexianhentiu.vaultberryapp.domain.usecase.core.account
 
-import com.alexianhentiu.vaultberryapp.data.api.APIResult
+import com.alexianhentiu.vaultberryapp.data.utils.APIResult
 import com.alexianhentiu.vaultberryapp.domain.model.DecryptedKey
 import com.alexianhentiu.vaultberryapp.domain.model.PasswordPair
 import com.alexianhentiu.vaultberryapp.domain.repository.AccountRepository
@@ -8,7 +8,8 @@ import com.alexianhentiu.vaultberryapp.domain.usecase.extra.security.DecryptKeyU
 import com.alexianhentiu.vaultberryapp.domain.usecase.extra.security.GenerateKeyChainUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.extra.security.GeneratePasswordUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.extra.vault.ReEncryptAllEntriesUseCase
-import com.alexianhentiu.vaultberryapp.domain.utils.ActionResult
+import com.alexianhentiu.vaultberryapp.domain.utils.types.ActionResult
+import com.alexianhentiu.vaultberryapp.domain.utils.types.ErrorType
 
 class ChangePasswordUseCase(
     private val accountRepository: AccountRepository,
@@ -63,13 +64,21 @@ class ChangePasswordUseCase(
                     }
 
                     is APIResult.Error -> {
-                        ActionResult.Error(updateKeyResult.message)
+                        ActionResult.Error(
+                            ErrorType.EXTERNAL,
+                            updateKeyResult.source,
+                            updateKeyResult.message
+                        )
                     }
                 }
             }
 
             is APIResult.Error -> {
-                return ActionResult.Error(changeResult.message)
+                return ActionResult.Error(
+                    ErrorType.EXTERNAL,
+                    changeResult.source,
+                    changeResult.message
+                )
             }
         }
     }

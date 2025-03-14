@@ -8,18 +8,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavController
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ErrorDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.LoginForm
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.Verify2FAForm
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.extra.LoadingScreen
+import com.alexianhentiu.vaultberryapp.presentation.utils.NavigationManager
+import com.alexianhentiu.vaultberryapp.presentation.utils.enums.NavRoute
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.LoginViewModel
-import com.alexianhentiu.vaultberryapp.presentation.viewmodel.state.LoginState
+import com.alexianhentiu.vaultberryapp.presentation.utils.states.LoginState
 
 @Composable
 fun LoginScreen(
     viewModel: LoginViewModel,
-    navController: NavController
+    navManager: NavigationManager
 ) {
     val loginState by viewModel.loginState.collectAsState()
 
@@ -28,9 +29,9 @@ fun LoginScreen(
             Scaffold { contentPadding ->
                 Box(modifier = Modifier.fillMaxSize().padding(contentPadding)) {
                     LoginForm(
-                        navController = navController,
+                        navManager = navManager,
                         onLoginClicked = { email, password -> viewModel.login(email, password) },
-                        onForgotPasswordClicked = { navController.navigate("recovery") },
+                        onForgotPasswordClicked = { navManager.navigate(NavRoute.RECOVERY) },
                         inputValidator = viewModel.inputValidator
                     )
                 }
@@ -61,16 +62,12 @@ fun LoginScreen(
         is LoginState.LoggedIn -> {
             val currentLoginState = loginState as LoginState.LoggedIn
             val vaultKey = currentLoginState.decryptedKey
-            // send key to vault screen
-            navController.currentBackStackEntry?.savedStateHandle?.set(
-                key = "vaultKey",
-                value = vaultKey
-            )
-            navController.navigate("vault")
+            // send decrypted key to vault screen
+            navManager.navigateWithVaultKey(NavRoute.VAULT, vaultKey)
         }
 
         is LoginState.Error -> {
-            val errorMessage = (loginState as LoginState.Error).message
+            val errorMessage = (loginState as LoginState.Error).info.message
             ErrorDialog(
                 onConfirm = { viewModel.resetState() },
                 title = "Login Error",

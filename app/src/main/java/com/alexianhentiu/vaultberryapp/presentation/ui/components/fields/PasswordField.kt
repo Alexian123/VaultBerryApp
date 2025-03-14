@@ -15,7 +15,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.buttons.CopyToClipboardButton
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.buttons.ToggleVisibilityButton
-import com.alexianhentiu.vaultberryapp.presentation.ui.enums.TextFieldType
+import com.alexianhentiu.vaultberryapp.presentation.utils.enums.TextFieldType
 
 @Composable
 fun PasswordField(
