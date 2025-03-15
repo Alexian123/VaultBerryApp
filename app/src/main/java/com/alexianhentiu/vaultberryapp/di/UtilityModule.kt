@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
+import com.alexianhentiu.vaultberryapp.data.utils.APIResponseHandler
+import com.alexianhentiu.vaultberryapp.data.utils.ModelConverter
 import com.alexianhentiu.vaultberryapp.domain.utils.InputValidator
 import com.alexianhentiu.vaultberryapp.domain.utils.PasswordGenerator
 import com.alexianhentiu.vaultberryapp.domain.utils.VaultGuardian
@@ -48,4 +50,12 @@ object UtilityModule {
     fun providesDataStore(
         @ApplicationContext context: Context,
     ): DataStore<Preferences> = context.userDataStore
+
+    @Provides
+    @Singleton
+    fun provideModelConverter(): ModelConverter = ModelConverter()
+
+    @Provides
+    @Singleton
+    fun provideAPIResponseHandler(): APIResponseHandler = APIResponseHandler()
 }

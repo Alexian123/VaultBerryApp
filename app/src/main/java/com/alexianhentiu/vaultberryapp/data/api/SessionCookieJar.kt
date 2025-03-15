@@ -9,12 +9,12 @@ class SessionCookieJar : CookieJar {
     private val cookieStore: MutableMap<String, List<Cookie>> = mutableMapOf()
 
     override fun saveFromResponse(url: HttpUrl, cookies: List<Cookie>) {
-        val host = url.host()
+        val host = url.host
         cookieStore[host] = cookies
     }
 
     override fun loadForRequest(url: HttpUrl): List<Cookie> {
-        val host = url.host()
+        val host = url.host
         return cookieStore[host] ?: emptyList()
     }
 }

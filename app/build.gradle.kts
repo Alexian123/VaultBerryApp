@@ -56,6 +56,8 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
 
     implementation(libs.retrofit)
+    implementation(libs.okhttp)
+    implementation(libs.logging.interceptor)
 
     implementation(libs.squareup.converter.moshi)
     implementation(libs.moshi.kotlin)
