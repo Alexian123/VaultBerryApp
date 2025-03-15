@@ -29,7 +29,7 @@ object UtilityModule {
 
     @Provides
     @Singleton
-    fun provideCryptoHandler(): CryptographyHandler = AESHandler("CBC/PKCS5Padding")
+    fun provideCryptoHandler(): CryptographyHandler = AESHandler()
 
     @Provides
     @Singleton

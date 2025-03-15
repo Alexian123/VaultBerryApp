@@ -6,9 +6,9 @@ interface CryptographyHandler {
 
     fun generateKey(): SecretKey
 
-    fun encrypt(bytes: ByteArray, keyBytes: ByteArray, iv: ByteArray?): ByteArray
+    fun encrypt(bytes: ByteArray, keyBytes: ByteArray, iv: ByteArray): ByteArray
 
-    fun decrypt(bytes: ByteArray, keyBytes: ByteArray, iv: ByteArray?): ByteArray
+    fun decrypt(bytes: ByteArray, keyBytes: ByteArray, iv: ByteArray): ByteArray
 
     fun deriveKeyFromPassword(password: String, salt: ByteArray): SecretKey
 }

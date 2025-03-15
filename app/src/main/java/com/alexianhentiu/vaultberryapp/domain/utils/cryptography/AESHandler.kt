@@ -3,15 +3,15 @@ package com.alexianhentiu.vaultberryapp.domain.utils.cryptography
 import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
+import javax.crypto.spec.GCMParameterSpec
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.PBEKeySpec
 import javax.crypto.spec.SecretKeySpec
 
-class AESHandler(
-    private val mode: String
-): CryptographyHandler {
+class AESHandler : CryptographyHandler {
 
     private val algorithm = "AES"
+    private val mode = "GCM/NoPadding"
     private val keySize = 256
 
     override fun generateKey(): SecretKey {
@@ -20,23 +20,23 @@ class AESHandler(
         return keyGenerator.generateKey()
     }
 
-    override fun encrypt(bytes: ByteArray, keyBytes: ByteArray, iv: ByteArray?): ByteArray {
+    override fun encrypt(bytes: ByteArray, keyBytes: ByteArray, iv: ByteArray): ByteArray {
         val cipher = Cipher.getInstance("$algorithm/$mode")
-        if (iv == null) {
-            cipher.init(Cipher.ENCRYPT_MODE, SecretKeySpec(keyBytes, algorithm))
-        } else {
-            cipher.init(Cipher.ENCRYPT_MODE, SecretKeySpec(keyBytes, algorithm), IvParameterSpec(iv))
-        }
+        cipher.init(
+            Cipher.ENCRYPT_MODE,
+            SecretKeySpec(keyBytes, algorithm),
+            GCMParameterSpec(128, iv)
+        )
         return cipher.doFinal(bytes)
     }
 
-    override fun decrypt(bytes: ByteArray, keyBytes: ByteArray, iv: ByteArray?): ByteArray {
+    override fun decrypt(bytes: ByteArray, keyBytes: ByteArray, iv: ByteArray): ByteArray {
         val cipher = Cipher.getInstance("$algorithm/$mode")
-        if (iv == null) {
-            cipher.init(Cipher.DECRYPT_MODE, SecretKeySpec(keyBytes, algorithm))
-        } else {
-            cipher.init(Cipher.DECRYPT_MODE, SecretKeySpec(keyBytes, algorithm), IvParameterSpec(iv))
-        }
+        cipher.init(
+            Cipher.DECRYPT_MODE,
+            SecretKeySpec(keyBytes, algorithm),
+            GCMParameterSpec(128, iv)
+        )
         return cipher.doFinal(bytes)
     }
 
