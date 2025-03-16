@@ -6,7 +6,7 @@ import com.alexianhentiu.vaultberryapp.data.model.LoginCredentialsDTO
 import com.alexianhentiu.vaultberryapp.data.model.EncryptedVaultEntryDTO
 import com.alexianhentiu.vaultberryapp.data.model.KeyChainDTO
 import com.alexianhentiu.vaultberryapp.data.model.MessageResponseDTO
-import com.alexianhentiu.vaultberryapp.data.model.PasswordPairDTO
+import com.alexianhentiu.vaultberryapp.data.model.PasswordChangeRequestDTO
 import com.alexianhentiu.vaultberryapp.data.model.TotpResponseDTO
 import com.alexianhentiu.vaultberryapp.data.model.UserDTO
 import retrofit2.Response
@@ -15,7 +15,6 @@ import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.PATCH
 import retrofit2.http.POST
-import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -61,10 +60,7 @@ interface APIService {
     suspend fun deleteAccount(): Response<MessageResponseDTO>
 
     @PATCH("account/password")
-    suspend fun changePassword(@Body passwordPairDTO: PasswordPairDTO): Response<MessageResponseDTO>
-
-    @PUT("account/keychain")
-    suspend fun updateKeyChain(@Body keychain: KeyChainDTO): Response<MessageResponseDTO>
+    suspend fun changePassword(@Body data: PasswordChangeRequestDTO): Response<MessageResponseDTO>
 
     @POST("account/2fa/setup")
     suspend fun setup2FA(): Response<TotpResponseDTO>

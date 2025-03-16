@@ -5,9 +5,8 @@ import com.alexianhentiu.vaultberryapp.data.utils.APIResult
 import com.alexianhentiu.vaultberryapp.data.api.APIService
 import com.alexianhentiu.vaultberryapp.data.utils.ModelConverter
 import com.alexianhentiu.vaultberryapp.domain.model.Account
-import com.alexianhentiu.vaultberryapp.domain.model.KeyChain
 import com.alexianhentiu.vaultberryapp.domain.model.MessageResponse
-import com.alexianhentiu.vaultberryapp.domain.model.PasswordPair
+import com.alexianhentiu.vaultberryapp.domain.model.PasswordChangeRequest
 import com.alexianhentiu.vaultberryapp.domain.model.TotpResponse
 import com.alexianhentiu.vaultberryapp.domain.repository.AccountRepository
 
@@ -39,18 +38,10 @@ class AccountRepositoryImpl(
         )
     }
 
-    override suspend fun changePassword(passwordPair: PasswordPair): APIResult<MessageResponse> {
-        val passwordPairDTO = modelConverter.passwordPairToDTO(passwordPair)
+    override suspend fun changePassword(data: PasswordChangeRequest): APIResult<MessageResponse> {
+        val dto = modelConverter.passwordChangeRequestToDTO(data)
         return apiResponseHandler.safeApiCall(
-            apiCall = { apiService.changePassword(passwordPairDTO) },
-            transform = { modelConverter.messageResponseFromDTO(it) }
-        )
-    }
-
-    override suspend fun updateKeyChain(keychain: KeyChain): APIResult<MessageResponse> {
-        val keychainDTO = modelConverter.keyChainToDTO(keychain)
-        return apiResponseHandler.safeApiCall(
-            apiCall = { apiService.updateKeyChain(keychainDTO) },
+            apiCall = { apiService.changePassword(dto) },
             transform = { modelConverter.messageResponseFromDTO(it) }
         )
     }

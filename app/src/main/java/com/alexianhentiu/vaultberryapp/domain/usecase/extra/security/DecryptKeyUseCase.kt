@@ -12,8 +12,7 @@ class DecryptKeyUseCase(private val vaultGuardian: VaultGuardian) {
         encryptedKey: String
     ): ActionResult<DecryptedKey> {
         try {
-            val keyBytes = vaultGuardian.decryptKey(password, salt, encryptedKey)
-            val decryptedKey = DecryptedKey(keyBytes)
+            val decryptedKey = vaultGuardian.decryptKey(password, salt, encryptedKey)
             return ActionResult.Success(decryptedKey)
         } catch (e: Exception) {
             return ActionResult.Error(

@@ -14,11 +14,10 @@ import com.alexianhentiu.vaultberryapp.presentation.viewmodel.SettingsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 /*
-    TODO:   Main Tasks
+    TODO:
         - Fix scroll issue in Account Screen
-        - Add the option to not re-encrypt all entries when changing the password
-        - Log out after changing the password
-        - Confirm dialogs for account updates
+        - Show the new account info immediately after updating it
+        - Add the option to re-encrypt the vault with a new key
         - Integrate VPN connection
         - Implement statistics & suggestions for entry password security
 */

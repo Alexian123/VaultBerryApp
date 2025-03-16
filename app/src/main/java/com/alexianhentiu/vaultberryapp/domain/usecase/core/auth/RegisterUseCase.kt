@@ -22,7 +22,11 @@ class RegisterUseCase(
         }
         val recoveryPassword = (generatePasswordResult as ActionResult.Success).data
 
-        val generateKeyChainResult = generateKeyChainUseCase(regularPassword, recoveryPassword)
+        val generateKeyChainResult = generateKeyChainUseCase(
+            regularPassword,
+            recoveryPassword,
+            null
+        )
         if (generateKeyChainResult is ActionResult.Error) {
             return generateKeyChainResult
         }
