@@ -66,10 +66,8 @@ fun AccountScreen(
                     AccountForm(
                         account = account,
                         is2FAEnabled = is2FAEnabled,
-                        onSaveInfo = { firstName, lastName, email ->
-                            email?.let { viewModel.changeEmail(it) }
-                            viewModel.changeName(firstName, lastName)
-                            viewModel.resetState()
+                        onSaveInfo = { email, firstName, lastName ->
+                            viewModel.changeInfo(email, firstName, lastName)
                         },
                         onChangePassword = { newPassword ->
                             if (vaultKey != null) {

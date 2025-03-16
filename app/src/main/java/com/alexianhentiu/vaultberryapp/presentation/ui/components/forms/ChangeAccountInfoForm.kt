@@ -60,11 +60,11 @@ fun ChangeAccountInfoForm(
         Button(
             onClick = {
                 onSaveInfo(
+                    if (email.isBlank() || email == account.email) null else email,
                     if (firstName?.isBlank() == true || firstName == account.firstName)
                         null else firstName,
                     if (lastName?.isBlank() == true || lastName == account.lastName)
-                        null else lastName,
-                    if (email.isBlank() || email == account.email) null else email
+                        null else lastName
                 )
             },
             modifier = Modifier.align(Alignment.CenterHorizontally)

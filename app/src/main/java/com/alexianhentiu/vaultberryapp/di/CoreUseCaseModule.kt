@@ -3,8 +3,7 @@ package com.alexianhentiu.vaultberryapp.di
 import com.alexianhentiu.vaultberryapp.domain.repository.AccountRepository
 import com.alexianhentiu.vaultberryapp.domain.repository.UserRepository
 import com.alexianhentiu.vaultberryapp.domain.repository.VaultEntryRepository
-import com.alexianhentiu.vaultberryapp.domain.usecase.core.account.ChangeEmailUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.core.account.ChangeNameUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.core.account.ChangeAccountInfoUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.core.account.ChangePasswordUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.core.account.DeleteAccountUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.core.account.Disable2FAUseCase
@@ -99,14 +98,9 @@ object CoreUseCaseModule {
     ): DeleteEntryUseCase = DeleteEntryUseCase(vaultEntryRepository)
 
     @Provides
-    fun provideChangeEmailUseCase(
+    fun provideChangeAccountInfoUseCase(
         accountRepository: AccountRepository
-    ): ChangeEmailUseCase = ChangeEmailUseCase(accountRepository)
-
-    @Provides
-    fun provideChangeNameUseCase(
-        accountRepository: AccountRepository
-    ): ChangeNameUseCase = ChangeNameUseCase(accountRepository)
+    ): ChangeAccountInfoUseCase = ChangeAccountInfoUseCase(accountRepository)
 
     @Provides
     fun provideChangePasswordUseCase(

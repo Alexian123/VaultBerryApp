@@ -54,7 +54,7 @@ fun AccountForm(
 
     Column {
         ExpandableSectionItem(
-            title = "Name and Email",
+            title = "Information",
             onExpand = { isInfoExpanded = !isInfoExpanded }
         )
         AnimatedVisibility(visible = isInfoExpanded) {

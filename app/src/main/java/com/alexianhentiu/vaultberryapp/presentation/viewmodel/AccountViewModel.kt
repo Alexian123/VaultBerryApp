@@ -3,9 +3,9 @@ package com.alexianhentiu.vaultberryapp.presentation.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.alexianhentiu.vaultberryapp.domain.model.Account
 import com.alexianhentiu.vaultberryapp.domain.model.DecryptedKey
-import com.alexianhentiu.vaultberryapp.domain.usecase.core.account.ChangeEmailUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.core.account.ChangeNameUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.core.account.ChangeAccountInfoUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.core.account.ChangePasswordUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.core.account.DeleteAccountUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.core.account.Disable2FAUseCase
@@ -28,8 +28,7 @@ class AccountViewModel @Inject constructor(
     private val getAccountUseCase: GetAccountUseCase,
     private val get2FAStatusUseCase: Get2FAStatusUseCase,
     private val deleteAccountUseCase: DeleteAccountUseCase,
-    private val changeEmailUseCase: ChangeEmailUseCase,
-    private val changeNameUseCase: ChangeNameUseCase,
+    private val changeAccountInfoUseCase: ChangeAccountInfoUseCase,
     private val changePasswordUseCase: ChangePasswordUseCase,
     private val setup2FAUseCase: Setup2FAUseCase,
     private val disable2FAUseCase: Disable2FAUseCase,
@@ -101,42 +100,22 @@ class AccountViewModel @Inject constructor(
         }
     }
 
-    fun changeEmail(newEmail: String) {
+    fun changeInfo(email: String?, firstName: String?, lastName: String?) {
         viewModelScope.launch {
             val savedState = (_accountState.value as AccountState.Idle)
             _accountState.value = AccountState.Loading
-            when (val result = changeEmailUseCase(newEmail)) {
+
+            val accountInfo = Account(
+                email = email ?: savedState.account.email,
+                firstName = firstName,
+                lastName = lastName
+            )
+            when (val result = changeAccountInfoUseCase(accountInfo)) {
                 is ActionResult.Success -> {
                     _accountState.value = AccountState.Idle(
-                        savedState.account.copy(email = newEmail),
-                        savedState.is2FAEnabled
-                    )
-                }
-
-                is ActionResult.Error -> {
-                    _accountState.value = AccountState.Error(
-                        ErrorInfo(
-                            type = result.type,
-                            source = result.source,
-                            message = result.message
-                        )
-                    )
-                    Log.e(result.source, result.message)
-                }
-            }
-        }
-    }
-
-    fun changeName(firstName: String?, lastName: String?) {
-        viewModelScope.launch {
-            val savedState = (_accountState.value as AccountState.Idle)
-            _accountState.value = AccountState.Loading
-            when (val result = changeNameUseCase(firstName, lastName)) {
-                is ActionResult.Success -> {
-                    _accountState.value = AccountState.Idle(
-                        savedState.account.copy(
-                            firstName = firstName ?: savedState.account.firstName,
-                            lastName = lastName ?: savedState.account.lastName
+                        accountInfo.copy(
+                            firstName = accountInfo.firstName ?: savedState.account.firstName,
+                            lastName = accountInfo.lastName ?: savedState.account.lastName
                         ),
                         savedState.is2FAEnabled
                     )
