@@ -4,6 +4,8 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -52,63 +54,71 @@ fun AccountForm(
         )
     }
 
-    Column {
-        ExpandableSectionItem(
-            title = "Information",
-            onExpand = { isInfoExpanded = !isInfoExpanded }
-        )
-        AnimatedVisibility(visible = isInfoExpanded) {
-            ChangeAccountInfoForm(
-                account = account,
-                onSaveInfo = onSaveInfo
+    val lazyListState = rememberLazyListState()
+    LazyColumn(state = lazyListState) {
+        item {
+            ExpandableSectionItem(
+                title = "Information",
+                onExpand = { isInfoExpanded = !isInfoExpanded }
             )
+            AnimatedVisibility(visible = isInfoExpanded) {
+                ChangeAccountInfoForm(
+                    account = account,
+                    onSaveInfo = onSaveInfo
+                )
+            }
         }
-        ExpandableSectionItem(
-            title = "Password",
-            onExpand = { isPasswordExpanded = !isPasswordExpanded }
-        )
-        AnimatedVisibility(visible = isPasswordExpanded) {
-            ChangePasswordForm(
-                onChangePassword = onChangePassword,
-                inputValidator = inputValidator
+        item {
+            ExpandableSectionItem(
+                title = "Password",
+                onExpand = { isPasswordExpanded = !isPasswordExpanded }
             )
+            AnimatedVisibility(visible = isPasswordExpanded) {
+                ChangePasswordForm(
+                    onChangePassword = onChangePassword,
+                    inputValidator = inputValidator
+                )
+            }
         }
-        ExpandableSectionItem(
-            title = "Two-Factor Authentication",
-            onExpand = { is2FAExpanded = !is2FAExpanded }
-        )
-        AnimatedVisibility(visible = is2FAExpanded) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxWidth()
-                    .padding(16.dp)
-            ) {
-                if (is2FAEnabled) {
-                    Text("2FA is enabled")
-                    Button(onClick = onDisable2FA) {
-                        Text("Disable 2FA")
-                    }
-                } else {
-                    Text("2FA is not enabled")
-                    Button(onClick = onEnable2FA) {
-                        Text("Enable 2FA")
+        item {
+            ExpandableSectionItem(
+                title = "Two-Factor Authentication",
+                onExpand = { is2FAExpanded = !is2FAExpanded }
+            )
+            AnimatedVisibility(visible = is2FAExpanded) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.fillMaxWidth()
+                        .padding(16.dp)
+                ) {
+                    if (is2FAEnabled) {
+                        Text("2FA is enabled")
+                        Button(onClick = onDisable2FA) {
+                            Text("Disable 2FA")
+                        }
+                    } else {
+                        Text("2FA is not enabled")
+                        Button(onClick = onEnable2FA) {
+                            Text("Enable 2FA")
+                        }
                     }
                 }
             }
         }
-        ExpandableSectionItem(
-            title = "Dangerous",
-            onExpand = { isDangerousExpanded = !isDangerousExpanded }
-        )
-        AnimatedVisibility(
-            visible = isDangerousExpanded,
-            modifier = Modifier.align(Alignment.CenterHorizontally)
-                .padding(16.dp)
-        ) {
-            Button(
-                onClick = { showConfirmDeleteDialog = true }
+        item {
+            ExpandableSectionItem(
+                title = "Dangerous",
+                onExpand = { isDangerousExpanded = !isDangerousExpanded }
+            )
+            AnimatedVisibility(
+                visible = isDangerousExpanded,
+                modifier = Modifier.padding(16.dp)
             ) {
-                Text("Delete Account")
+                Button(
+                    onClick = { showConfirmDeleteDialog = true }
+                ) {
+                    Text("Delete Account")
+                }
             }
         }
     }

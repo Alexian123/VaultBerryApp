@@ -15,8 +15,6 @@ import dagger.hilt.android.AndroidEntryPoint
 
 /*
     TODO:
-        - Fix scroll issue in Account Screen
-        - Show the new account info immediately after updating it
         - Add the option to re-encrypt the vault with a new key
         - Integrate VPN connection
         - Implement statistics & suggestions for entry password security
