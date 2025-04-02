@@ -1,6 +1,6 @@
 package com.alexianhentiu.vaultberryapp.presentation.utils.states
 
-import com.alexianhentiu.vaultberryapp.domain.model.DecryptedKey
+import com.alexianhentiu.vaultberryapp.domain.model.entity.DecryptedKey
 import com.alexianhentiu.vaultberryapp.presentation.utils.ErrorInfo
 
 sealed class LoginState {

@@ -1,16 +1,16 @@
 package com.alexianhentiu.vaultberryapp.domain.repository
 
 import com.alexianhentiu.vaultberryapp.data.utils.APIResult
-import com.alexianhentiu.vaultberryapp.domain.model.Account
-import com.alexianhentiu.vaultberryapp.domain.model.MessageResponse
-import com.alexianhentiu.vaultberryapp.domain.model.PasswordChangeRequest
-import com.alexianhentiu.vaultberryapp.domain.model.TotpResponse
+import com.alexianhentiu.vaultberryapp.domain.model.entity.AccountInfo
+import com.alexianhentiu.vaultberryapp.domain.model.response.MessageResponse
+import com.alexianhentiu.vaultberryapp.domain.model.request.PasswordChangeRequest
+import com.alexianhentiu.vaultberryapp.domain.model.response.TotpResponse
 
 interface AccountRepository {
 
-    suspend fun getAccount(): APIResult<Account>
+    suspend fun getAccountInfo(): APIResult<AccountInfo>
 
-    suspend fun updateAccount(account: Account): APIResult<MessageResponse>
+    suspend fun updateAccount(accountInfo: AccountInfo): APIResult<MessageResponse>
 
     suspend fun deleteAccount(): APIResult<MessageResponse>
 

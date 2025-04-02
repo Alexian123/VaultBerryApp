@@ -18,7 +18,11 @@ moshiKotlinCodegenVersion = "1.15.1"
 okhttp = "4.11.0"
 retrofit = "2.11.0"
 navigationCompose = "2.8.5"
+saslprep = "2.2"
+scramClient = "3.1"
+scramCommon = "3.1"
 squareupConverterMoshi = "2.9.0"
+stringprep = "2.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -47,7 +51,11 @@ moshi-kotlin-codegen = { module = "com.squareup.moshi:moshi-kotlin-codegen", ver
 okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
+saslprep = { module = "com.ongres.stringprep:saslprep", version.ref = "saslprep" }
+scram-client = { module = "com.ongres.scram:scram-client", version.ref = "scramClient" }
+scram-common = { module = "com.ongres.scram:scram-common", version.ref = "scramCommon" }
 squareup-converter-moshi = { module = "com.squareup.retrofit2:converter-moshi", version.ref = "squareupConverterMoshi" }
+stringprep = { module = "com.ongres.stringprep:stringprep", version.ref = "stringprep" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

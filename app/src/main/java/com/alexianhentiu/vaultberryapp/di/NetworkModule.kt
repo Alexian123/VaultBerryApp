@@ -28,8 +28,7 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    //fun provideBaseUrl(): String = "http://10.0.2.2:5000/"        /* emulator */
-    fun provideBaseUrl(): String = "https://192.168.1.131:8443/"   /* physical device */
+    fun provideBaseUrl(): String = "https://192.168.1.130:8443/"
 
     @Provides
     @Singleton
@@ -81,7 +80,7 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideLoggingInterceptor(): HttpLoggingInterceptor =
-        HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BASIC }
+        HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
 
     @Provides
     @Singleton

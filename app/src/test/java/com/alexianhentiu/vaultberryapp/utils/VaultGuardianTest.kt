@@ -1,14 +1,14 @@
 package com.alexianhentiu.vaultberryapp.utils
 
-import com.alexianhentiu.vaultberryapp.domain.utils.VaultGuardian
-import com.alexianhentiu.vaultberryapp.domain.utils.cryptography.AESHandler
+import com.alexianhentiu.vaultberryapp.domain.utils.security.VaultGuardian
+import com.alexianhentiu.vaultberryapp.domain.utils.security.cryptography.AESHandler
 import org.junit.Before
 import org.junit.Test
 
 class VaultGuardianTest {
 
     companion object {
-        private val handler = AESHandler("CBC/PKCS5Padding")
+        private val handler = AESHandler()
     }
 
     private lateinit var guardian: VaultGuardian
@@ -39,7 +39,7 @@ class VaultGuardianTest {
     fun givenNonEmptyPasswordAndEncryptedVaultKey_whenDecryptVaultKey_thenReturnDecryptedKeyWithNonEmptyKey() {
         val keyChain = guardian.generateKeyChain("password", "a")
         val decryptedVaultKey = guardian.decryptKey("password", keyChain.salt, keyChain.vaultKey)
-        assert(decryptedVaultKey.isNotEmpty())
+        assert(decryptedVaultKey.key.isNotEmpty())
     }
 
     @Test

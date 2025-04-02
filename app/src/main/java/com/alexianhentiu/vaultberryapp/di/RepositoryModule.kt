@@ -4,11 +4,11 @@ import com.alexianhentiu.vaultberryapp.data.utils.APIResponseHandler
 import com.alexianhentiu.vaultberryapp.data.api.APIService
 import com.alexianhentiu.vaultberryapp.data.repository.AccountRepositoryImpl
 import com.alexianhentiu.vaultberryapp.data.utils.ModelConverter
-import com.alexianhentiu.vaultberryapp.data.repository.UserRepositoryImpl
-import com.alexianhentiu.vaultberryapp.data.repository.VaultEntryRepositoryImpl
+import com.alexianhentiu.vaultberryapp.data.repository.AuthRepositoryImpl
+import com.alexianhentiu.vaultberryapp.data.repository.VaultRepositoryImpl
 import com.alexianhentiu.vaultberryapp.domain.repository.AccountRepository
-import com.alexianhentiu.vaultberryapp.domain.repository.UserRepository
-import com.alexianhentiu.vaultberryapp.domain.repository.VaultEntryRepository
+import com.alexianhentiu.vaultberryapp.domain.repository.AuthRepository
+import com.alexianhentiu.vaultberryapp.domain.repository.VaultRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,20 +21,20 @@ object RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideUserRepository(
+    fun provideAuthRepository(
         apiService: APIService,
         apiResponseHandler: APIResponseHandler,
         modelConverter: ModelConverter
-    ): UserRepository = UserRepositoryImpl(apiService, apiResponseHandler, modelConverter)
+    ): AuthRepository = AuthRepositoryImpl(apiService, apiResponseHandler, modelConverter)
 
     @Provides
     @Singleton
-    fun provideVaultEntryRepository(
+    fun provideVaultRepository(
         apiService: APIService,
         apiResponseHandler: APIResponseHandler,
         modelConverter: ModelConverter
-    ): VaultEntryRepository =
-        VaultEntryRepositoryImpl(apiService, apiResponseHandler, modelConverter)
+    ): VaultRepository =
+        VaultRepositoryImpl(apiService, apiResponseHandler, modelConverter)
 
     @Provides
     @Singleton

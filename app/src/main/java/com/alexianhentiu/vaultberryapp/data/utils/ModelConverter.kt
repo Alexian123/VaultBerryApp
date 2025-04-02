@@ -1,25 +1,42 @@
 package com.alexianhentiu.vaultberryapp.data.utils
 
-import com.alexianhentiu.vaultberryapp.data.model.AccountDTO
-import com.alexianhentiu.vaultberryapp.data.model.EncryptedVaultEntryDTO
-import com.alexianhentiu.vaultberryapp.data.model.KeyChainDTO
-import com.alexianhentiu.vaultberryapp.data.model.LoginCredentialsDTO
-import com.alexianhentiu.vaultberryapp.data.model.MessageResponseDTO
-import com.alexianhentiu.vaultberryapp.data.model.PasswordChangeRequestDTO
-import com.alexianhentiu.vaultberryapp.data.model.PasswordPairDTO
-import com.alexianhentiu.vaultberryapp.data.model.TotpResponseDTO
-import com.alexianhentiu.vaultberryapp.data.model.UserDTO
-import com.alexianhentiu.vaultberryapp.domain.model.Account
-import com.alexianhentiu.vaultberryapp.domain.model.EncryptedVaultEntry
-import com.alexianhentiu.vaultberryapp.domain.model.KeyChain
-import com.alexianhentiu.vaultberryapp.domain.model.LoginCredentials
-import com.alexianhentiu.vaultberryapp.domain.model.MessageResponse
-import com.alexianhentiu.vaultberryapp.domain.model.PasswordChangeRequest
-import com.alexianhentiu.vaultberryapp.domain.model.PasswordPair
-import com.alexianhentiu.vaultberryapp.domain.model.TotpResponse
-import com.alexianhentiu.vaultberryapp.domain.model.User
+import com.alexianhentiu.vaultberryapp.data.model.entity.AccountInfoDTO
+import com.alexianhentiu.vaultberryapp.data.model.entity.EncryptedVaultEntryDTO
+import com.alexianhentiu.vaultberryapp.data.model.entity.KeyChainDTO
+import com.alexianhentiu.vaultberryapp.data.model.response.MessageResponseDTO
+import com.alexianhentiu.vaultberryapp.data.model.request.PasswordChangeRequestDTO
+import com.alexianhentiu.vaultberryapp.data.model.entity.PasswordPairDTO
+import com.alexianhentiu.vaultberryapp.data.model.response.TotpResponseDTO
+import com.alexianhentiu.vaultberryapp.data.model.entity.UserDTO
+import com.alexianhentiu.vaultberryapp.data.model.request.LoginRequestDTO
+import com.alexianhentiu.vaultberryapp.data.model.response.LoginResponseDTO
+import com.alexianhentiu.vaultberryapp.domain.model.entity.AccountInfo
+import com.alexianhentiu.vaultberryapp.domain.model.entity.EncryptedVaultEntry
+import com.alexianhentiu.vaultberryapp.domain.model.entity.KeyChain
+import com.alexianhentiu.vaultberryapp.domain.model.response.MessageResponse
+import com.alexianhentiu.vaultberryapp.domain.model.request.PasswordChangeRequest
+import com.alexianhentiu.vaultberryapp.domain.model.entity.PasswordPair
+import com.alexianhentiu.vaultberryapp.domain.model.response.TotpResponse
+import com.alexianhentiu.vaultberryapp.domain.model.entity.User
+import com.alexianhentiu.vaultberryapp.domain.model.request.LoginRequest
+import com.alexianhentiu.vaultberryapp.domain.model.response.LoginResponse
 
 class ModelConverter {
+
+    fun loginRequestToDTO(loginRequest: LoginRequest): LoginRequestDTO {
+        return LoginRequestDTO(
+            email = loginRequest.email,
+            clientMessage = loginRequest.clientMessage,
+            totpCode = loginRequest.totpCode
+        )
+    }
+
+    fun loginResponseFromDTO(loginResponseDTO: LoginResponseDTO): LoginResponse {
+        return LoginResponse(
+            serverMessage = loginResponseDTO.serverMessage,
+            keyChain = keyChainFromDTO(loginResponseDTO.keyChain)
+        )
+    }
 
     fun totpResponseFromDTO(totpResponseDTO: TotpResponseDTO): TotpResponse {
         return TotpResponse(
@@ -35,25 +52,25 @@ class ModelConverter {
 
     fun userToDTO(user: User): UserDTO {
         return UserDTO(
-            accountDTO = accountToDTO(user.account),
+            accountInfoDTO = accountInfoToDTO(user.accountInfo),
             keyChainDTO = keyChainToDTO(user.keyChain),
             passwordPairDTO = passwordPairToDTO(user.passwordPair)
         )
     }
 
-    fun accountToDTO(account: Account): AccountDTO {
-        return AccountDTO(
-            email = account.email,
-            firstName = account.firstName,
-            lastName = account.lastName
+    fun accountInfoToDTO(accountInfo: AccountInfo): AccountInfoDTO {
+        return AccountInfoDTO(
+            email = accountInfo.email,
+            firstName = accountInfo.firstName,
+            lastName = accountInfo.lastName
         )
     }
 
-    fun accountFromDTO(accountDTO: AccountDTO): Account {
-        return Account(
-            email = accountDTO.email,
-            firstName = accountDTO.firstName,
-            lastName = accountDTO.lastName
+    fun accountInfoFromDTO(accountInfoDTO: AccountInfoDTO): AccountInfo {
+        return AccountInfo(
+            email = accountInfoDTO.email,
+            firstName = accountInfoDTO.firstName,
+            lastName = accountInfoDTO.lastName
         )
     }
 
@@ -72,7 +89,8 @@ class ModelConverter {
         )
     }
 
-    fun keyChainFromDTO(keyChainDTO: KeyChainDTO): KeyChain {
+    fun keyChainFromDTO(keyChainDTO: KeyChainDTO?): KeyChain? {
+        if (keyChainDTO == null) return null
         return KeyChain(
             salt = keyChainDTO.salt,
             vaultKey = keyChainDTO.vaultKey,
@@ -86,14 +104,6 @@ class ModelConverter {
         return PasswordChangeRequestDTO(
             passwordPair = passwordPairToDTO(passwordChangeRequest.passwordPair),
             keyChain = keyChainToDTO(passwordChangeRequest.keyChain)
-        )
-    }
-
-    fun loginCredentialsToDTO(loginCredentials: LoginCredentials): LoginCredentialsDTO {
-        return LoginCredentialsDTO(
-            email = loginCredentials.email,
-            password = loginCredentials.password,
-            token = loginCredentials.token
         )
     }
 

@@ -1,7 +1,7 @@
 package com.alexianhentiu.vaultberryapp.presentation.utils
 
 import androidx.navigation.NavController
-import com.alexianhentiu.vaultberryapp.domain.model.DecryptedKey
+import com.alexianhentiu.vaultberryapp.domain.model.entity.DecryptedKey
 import com.alexianhentiu.vaultberryapp.presentation.utils.enums.NavRoute
 
 class NavigationManager(

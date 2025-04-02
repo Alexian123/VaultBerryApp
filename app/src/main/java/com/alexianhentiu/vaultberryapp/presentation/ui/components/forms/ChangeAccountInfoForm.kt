@@ -19,16 +19,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.alexianhentiu.vaultberryapp.domain.model.Account
+import com.alexianhentiu.vaultberryapp.domain.model.entity.AccountInfo
 
 @Composable
 fun ChangeAccountInfoForm(
-    account: Account,
+    accountInfo: AccountInfo,
     onSaveInfo: (String?, String?, String?) -> Unit, // Pass null for unchanged values
 ) {
-    var firstName by remember { mutableStateOf(account.firstName) }
-    var lastName by remember { mutableStateOf(account.lastName) }
-    var email by remember { mutableStateOf(account.email) }
+    var firstName by remember { mutableStateOf(accountInfo.firstName) }
+    var lastName by remember { mutableStateOf(accountInfo.lastName) }
+    var email by remember { mutableStateOf(accountInfo.email) }
 
     Column(
         verticalArrangement = Arrangement.Top,
@@ -60,10 +60,10 @@ fun ChangeAccountInfoForm(
         Button(
             onClick = {
                 onSaveInfo(
-                    if (email.isBlank() || email == account.email) null else email,
-                    if (firstName?.isBlank() == true || firstName == account.firstName)
+                    if (email.isBlank() || email == accountInfo.email) null else email,
+                    if (firstName?.isBlank() == true || firstName == accountInfo.firstName)
                         null else firstName,
-                    if (lastName?.isBlank() == true || lastName == account.lastName)
+                    if (lastName?.isBlank() == true || lastName == accountInfo.lastName)
                         null else lastName
                 )
             },
@@ -79,7 +79,7 @@ fun ChangeAccountInfoForm(
 @Preview(showBackground = true)
 fun ChangeAccountInfoFormPreview() {
     ChangeAccountInfoForm(
-        account = Account(
+        accountInfo = AccountInfo(
             firstName = "John",
             lastName = "Doe",
             email = "john.c.breckinridge@altostrat.com"

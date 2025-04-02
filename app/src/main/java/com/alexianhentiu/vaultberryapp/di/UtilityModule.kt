@@ -6,11 +6,12 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import com.alexianhentiu.vaultberryapp.data.utils.APIResponseHandler
 import com.alexianhentiu.vaultberryapp.data.utils.ModelConverter
+import com.alexianhentiu.vaultberryapp.domain.utils.security.AuthGuardian
 import com.alexianhentiu.vaultberryapp.domain.utils.InputValidator
-import com.alexianhentiu.vaultberryapp.domain.utils.PasswordGenerator
-import com.alexianhentiu.vaultberryapp.domain.utils.VaultGuardian
-import com.alexianhentiu.vaultberryapp.domain.utils.cryptography.AESHandler
-import com.alexianhentiu.vaultberryapp.domain.utils.cryptography.CryptographyHandler
+import com.alexianhentiu.vaultberryapp.domain.utils.security.PasswordGenerator
+import com.alexianhentiu.vaultberryapp.domain.utils.security.VaultGuardian
+import com.alexianhentiu.vaultberryapp.domain.utils.security.cryptography.AESHandler
+import com.alexianhentiu.vaultberryapp.domain.utils.security.cryptography.CryptographyHandler
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -33,17 +34,21 @@ object UtilityModule {
 
     @Provides
     @Singleton
+    fun providePasswordGenerator(): PasswordGenerator = PasswordGenerator()
+
+    @Provides
+    @Singleton
+    fun provideInputValidator(): InputValidator = InputValidator()
+
+    @Provides
+    @Singleton
     fun provideVaultGuardian(
         cryptoHandler: CryptographyHandler
     ): VaultGuardian = VaultGuardian(cryptoHandler)
 
     @Provides
     @Singleton
-    fun providePasswordGenerator(): PasswordGenerator = PasswordGenerator()
-
-    @Provides
-    @Singleton
-    fun provideInputValidator(): InputValidator = InputValidator()
+    fun provideAuthGuardian(): AuthGuardian = AuthGuardian()
 
     @Singleton
     @Provides

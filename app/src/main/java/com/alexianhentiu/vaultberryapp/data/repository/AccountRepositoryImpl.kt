@@ -4,10 +4,10 @@ import com.alexianhentiu.vaultberryapp.data.utils.APIResponseHandler
 import com.alexianhentiu.vaultberryapp.data.utils.APIResult
 import com.alexianhentiu.vaultberryapp.data.api.APIService
 import com.alexianhentiu.vaultberryapp.data.utils.ModelConverter
-import com.alexianhentiu.vaultberryapp.domain.model.Account
-import com.alexianhentiu.vaultberryapp.domain.model.MessageResponse
-import com.alexianhentiu.vaultberryapp.domain.model.PasswordChangeRequest
-import com.alexianhentiu.vaultberryapp.domain.model.TotpResponse
+import com.alexianhentiu.vaultberryapp.domain.model.entity.AccountInfo
+import com.alexianhentiu.vaultberryapp.domain.model.response.MessageResponse
+import com.alexianhentiu.vaultberryapp.domain.model.request.PasswordChangeRequest
+import com.alexianhentiu.vaultberryapp.domain.model.response.TotpResponse
 import com.alexianhentiu.vaultberryapp.domain.repository.AccountRepository
 
 class AccountRepositoryImpl(
@@ -16,15 +16,15 @@ class AccountRepositoryImpl(
     private val modelConverter: ModelConverter
 ) : AccountRepository {
 
-    override suspend fun getAccount(): APIResult<Account> {
+    override suspend fun getAccountInfo(): APIResult<AccountInfo> {
         return apiResponseHandler.safeApiCall(
-            apiCall = { apiService.getAccount() },
-            transform = { modelConverter.accountFromDTO(it) }
+            apiCall = { apiService.getAccountInfo() },
+            transform = { modelConverter.accountInfoFromDTO(it) }
         )
     }
 
-    override suspend fun updateAccount(account: Account): APIResult<MessageResponse> {
-        val accountDTO = modelConverter.accountToDTO(account)
+    override suspend fun updateAccount(accountInfo: AccountInfo): APIResult<MessageResponse> {
+        val accountDTO = modelConverter.accountInfoToDTO(accountInfo)
         return apiResponseHandler.safeApiCall(
             apiCall = { apiService.updateAccount(accountDTO) },
             transform = { modelConverter.messageResponseFromDTO(it) }

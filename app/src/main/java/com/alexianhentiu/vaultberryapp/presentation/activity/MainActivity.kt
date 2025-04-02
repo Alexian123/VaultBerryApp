@@ -10,7 +10,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.alexianhentiu.vaultberryapp.presentation.utils.enums.AppTheme
 import com.alexianhentiu.vaultberryapp.presentation.ui.navigation.AppNavHost
 import com.alexianhentiu.vaultberryapp.presentation.ui.theme.VaultBerryAppTheme
-import com.alexianhentiu.vaultberryapp.presentation.viewmodel.SettingsViewModel
+import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.SettingsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 /*

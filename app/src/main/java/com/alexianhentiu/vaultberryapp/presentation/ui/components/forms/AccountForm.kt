@@ -17,14 +17,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.alexianhentiu.vaultberryapp.domain.model.Account
+import com.alexianhentiu.vaultberryapp.domain.model.entity.AccountInfo
 import com.alexianhentiu.vaultberryapp.domain.utils.InputValidator
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ConfirmActionDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.misc.ExpandableSectionItem
 
 @Composable
 fun AccountForm(
-    account: Account,
+    accountInfo: AccountInfo,
     is2FAEnabled: Boolean,
     onSaveInfo: (String?, String?, String?) -> Unit, // Pass null for unchanged values
     onChangePassword: (String) -> Unit,
@@ -63,7 +63,7 @@ fun AccountForm(
             )
             AnimatedVisibility(visible = isInfoExpanded) {
                 ChangeAccountInfoForm(
-                    account = account,
+                    accountInfo = accountInfo,
                     onSaveInfo = onSaveInfo
                 )
             }
@@ -128,7 +128,7 @@ fun AccountForm(
 @Preview(showBackground = true)
 fun AccountFormPreview() {
     AccountForm(
-        account = Account(
+        accountInfo = AccountInfo(
             firstName = "John",
             lastName = "Doe",
             email = "william.henry.harrison@example-pet-store.com"
