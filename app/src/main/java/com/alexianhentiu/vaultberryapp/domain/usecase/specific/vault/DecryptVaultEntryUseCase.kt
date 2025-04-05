@@ -14,17 +14,23 @@ class DecryptVaultEntryUseCase(private val vaultGuardian: VaultGuardian) {
         decryptedKey: DecryptedKey
     ): ActionResult<DecryptedVaultEntry> {
         try {
-            val decryptedUsername =
-                vaultGuardian.decryptField(encryptedVaultEntry.encryptedUsername, decryptedKey)
-            val decryptedPassword =
-                vaultGuardian.decryptField(encryptedVaultEntry.encryptedPassword, decryptedKey)
+            var decryptedUsername = ""
+            if (encryptedVaultEntry.encryptedUsername != null) {
+                decryptedUsername = vaultGuardian.decryptField(encryptedVaultEntry.encryptedUsername, decryptedKey)
+            }
+
+            var decryptedPassword = ""
+            if (encryptedVaultEntry.encryptedPassword != null) {
+                decryptedPassword = vaultGuardian.decryptField(encryptedVaultEntry.encryptedPassword, decryptedKey)
+            }
+
             val decryptedVaultEntry = DecryptedVaultEntry(
-                encryptedVaultEntry.timestamp,
-                encryptedVaultEntry.title,
-                encryptedVaultEntry.url,
-                decryptedUsername,
-                decryptedPassword,
-                encryptedVaultEntry.notes
+                timestamp = encryptedVaultEntry.timestamp,
+                title = encryptedVaultEntry.title,
+                url = encryptedVaultEntry.url ?: "",
+                username = decryptedUsername,
+                password = decryptedPassword,
+                encryptedVaultEntry.notes ?: ""
             )
             return ActionResult.Success(decryptedVaultEntry)
         } catch (e: Exception) {
