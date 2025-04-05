@@ -5,7 +5,7 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class UserDTO(
-    @Json(name = "account") val accountInfoDTO: AccountInfoDTO,
+    @Json(name = "account_info") val accountInfoDTO: AccountInfoDTO,
     @Json(name = "keychain") val keyChainDTO: KeyChainDTO,
     @Json(name = "passwords") val passwordPairDTO: PasswordPairDTO,
 )

@@ -3,11 +3,13 @@ package com.alexianhentiu.vaultberryapp.data.api
 import com.alexianhentiu.vaultberryapp.data.model.entity.AccountInfoDTO
 import com.alexianhentiu.vaultberryapp.data.model.response.BooleanResponseDTO
 import com.alexianhentiu.vaultberryapp.data.model.entity.EncryptedVaultEntryDTO
+import com.alexianhentiu.vaultberryapp.data.model.entity.KeyChainDTO
 import com.alexianhentiu.vaultberryapp.data.model.response.MessageResponseDTO
 import com.alexianhentiu.vaultberryapp.data.model.request.PasswordChangeRequestDTO
 import com.alexianhentiu.vaultberryapp.data.model.response.TotpResponseDTO
 import com.alexianhentiu.vaultberryapp.data.model.entity.UserDTO
 import com.alexianhentiu.vaultberryapp.data.model.request.LoginRequestDTO
+import com.alexianhentiu.vaultberryapp.data.model.request.RecoveryLoginRequestDTO
 import com.alexianhentiu.vaultberryapp.data.model.response.LoginResponseDTO
 import retrofit2.Response
 import retrofit2.http.Body
@@ -20,11 +22,11 @@ import retrofit2.http.Query
 
 interface APIService {
 
-    @POST("recovery")
-    suspend fun getRecoveryKey(@Query("email") email: String): Response<MessageResponseDTO>
+    @POST("recovery/send")
+    suspend fun recoverySend(@Query("email") email: String): Response<MessageResponseDTO>
 
-    @POST("recovery")
-    suspend fun recoveryLogin(@Body credentialsDTO: LoginRequestDTO): Response<LoginResponseDTO>
+    @POST("recovery/login")
+    suspend fun recoveryLogin(@Body credentialsDTO: RecoveryLoginRequestDTO): Response<KeyChainDTO>
 
     @POST("register")
     suspend fun register(@Body user: UserDTO): Response<MessageResponseDTO>

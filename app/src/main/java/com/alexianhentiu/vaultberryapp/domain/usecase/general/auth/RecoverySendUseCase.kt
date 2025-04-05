@@ -6,11 +6,11 @@ import com.alexianhentiu.vaultberryapp.domain.repository.AuthRepository
 import com.alexianhentiu.vaultberryapp.domain.utils.types.ActionResult
 import com.alexianhentiu.vaultberryapp.domain.utils.types.ErrorType
 
-class GetRecoveryOTPUseCase(
+class RecoverySendUseCase(
     private val authRepository: AuthRepository,
 ) {
     suspend operator fun invoke(email: String): ActionResult<MessageResponse> {
-        return when (val response = authRepository.getRecoveryOTP(email)) {
+        return when (val response = authRepository.recoverySend(email)) {
             is APIResult.Success -> {
                 ActionResult.Success(response.data)
             }

@@ -9,6 +9,7 @@ import com.alexianhentiu.vaultberryapp.data.model.entity.PasswordPairDTO
 import com.alexianhentiu.vaultberryapp.data.model.response.TotpResponseDTO
 import com.alexianhentiu.vaultberryapp.data.model.entity.UserDTO
 import com.alexianhentiu.vaultberryapp.data.model.request.LoginRequestDTO
+import com.alexianhentiu.vaultberryapp.data.model.request.RecoveryLoginRequestDTO
 import com.alexianhentiu.vaultberryapp.data.model.response.LoginResponseDTO
 import com.alexianhentiu.vaultberryapp.domain.model.entity.AccountInfo
 import com.alexianhentiu.vaultberryapp.domain.model.entity.EncryptedVaultEntry
@@ -19,9 +20,18 @@ import com.alexianhentiu.vaultberryapp.domain.model.entity.PasswordPair
 import com.alexianhentiu.vaultberryapp.domain.model.response.TotpResponse
 import com.alexianhentiu.vaultberryapp.domain.model.entity.User
 import com.alexianhentiu.vaultberryapp.domain.model.request.LoginRequest
+import com.alexianhentiu.vaultberryapp.domain.model.request.RecoveryLoginRequest
 import com.alexianhentiu.vaultberryapp.domain.model.response.LoginResponse
 
 class ModelConverter {
+
+    fun recoveryLoginRequestToDTO(request: RecoveryLoginRequest): RecoveryLoginRequestDTO {
+        return RecoveryLoginRequestDTO(
+            email = request.email,
+            recoveryPassword = request.recoveryPassword,
+            otp = request.otp
+        )
+    }
 
     fun loginRequestToDTO(loginRequest: LoginRequest): LoginRequestDTO {
         return LoginRequestDTO(
@@ -32,6 +42,12 @@ class ModelConverter {
     }
 
     fun loginResponseFromDTO(loginResponseDTO: LoginResponseDTO): LoginResponse {
+        if (loginResponseDTO.keyChain == null) {
+            return LoginResponse(
+                serverMessage = loginResponseDTO.serverMessage,
+                keyChain = null
+            )
+        }
         return LoginResponse(
             serverMessage = loginResponseDTO.serverMessage,
             keyChain = keyChainFromDTO(loginResponseDTO.keyChain)
@@ -89,8 +105,7 @@ class ModelConverter {
         )
     }
 
-    fun keyChainFromDTO(keyChainDTO: KeyChainDTO?): KeyChain? {
-        if (keyChainDTO == null) return null
+    fun keyChainFromDTO(keyChainDTO: KeyChainDTO): KeyChain {
         return KeyChain(
             salt = keyChainDTO.salt,
             vaultKey = keyChainDTO.vaultKey,

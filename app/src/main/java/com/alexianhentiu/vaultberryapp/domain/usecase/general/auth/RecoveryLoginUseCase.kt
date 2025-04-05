@@ -1,6 +1,8 @@
 package com.alexianhentiu.vaultberryapp.domain.usecase.general.auth
 
+import com.alexianhentiu.vaultberryapp.data.utils.APIResult
 import com.alexianhentiu.vaultberryapp.domain.model.entity.DecryptedKey
+import com.alexianhentiu.vaultberryapp.domain.model.request.RecoveryLoginRequest
 import com.alexianhentiu.vaultberryapp.domain.repository.AuthRepository
 import com.alexianhentiu.vaultberryapp.domain.usecase.specific.vault.DecryptKeyUseCase
 import com.alexianhentiu.vaultberryapp.domain.utils.types.ActionResult
@@ -15,36 +17,34 @@ class RecoveryLoginUseCase(
         recoveryPassword: String,
         otp: String
     ): ActionResult<DecryptedKey> {
-//        when (val response = authRepository.recoveryLogin(loginCredentials)) {
-//            is APIResult.Success -> {
-//                val keyChain = response.data.keychain
-//
-//                val decryptKeyResult = keyChain?.let {
-//                    decryptKeyUseCase(
-//                        password = "",
-//                        salt = it.salt,
-//                        encryptedKey = keyChain.recoveryKey
-//                    )
-//                }
-//                if (decryptKeyResult is ActionResult.Error) {
-//                    return decryptKeyResult
-//                }
-//                val decryptedVaultKey = (decryptKeyResult as ActionResult.Success).data
-//
-//                return ActionResult.Success(decryptedVaultKey)
-//            }
-//            is APIResult.Error -> {
-//                return ActionResult.Error(
-//                    ErrorType.EXTERNAL,
-//                    response.source,
-//                    response.message
-//                )
-//            }
-//        }
-        return ActionResult.Error(
-            ErrorType.INTERNAL,
-            "RecoveryLoginUseCase",
-            "Not implemented"
+        val credentials = RecoveryLoginRequest(
+            email = email,
+            recoveryPassword = recoveryPassword,
+            otp = otp
         )
+        when (val response = authRepository.recoveryLogin(credentials)) {
+            is APIResult.Success -> {
+                val keyChain = response.data
+
+                val decryptKeyResult = decryptKeyUseCase(
+                    password = recoveryPassword,
+                    salt = keyChain.salt,
+                    encryptedKey = keyChain.recoveryKey
+                )
+                if (decryptKeyResult is ActionResult.Error) {
+                    return decryptKeyResult
+                }
+                val decryptedVaultKey = (decryptKeyResult as ActionResult.Success).data
+
+                return ActionResult.Success(decryptedVaultKey)
+            }
+            is APIResult.Error -> {
+                return ActionResult.Error(
+                    ErrorType.EXTERNAL,
+                    response.source,
+                    response.message
+                )
+            }
+        }
     }
 }

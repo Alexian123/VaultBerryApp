@@ -10,7 +10,7 @@ import com.alexianhentiu.vaultberryapp.domain.usecase.general.account.Disable2FA
 import com.alexianhentiu.vaultberryapp.domain.usecase.general.account.Get2FAStatusUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.general.account.GetAccountInfoUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.general.account.Setup2FAUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.general.auth.GetRecoveryOTPUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.general.auth.RecoverySendUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.general.vault.AddEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.general.vault.GetEntriesUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.specific.vault.GenerateKeyChainUseCase
@@ -36,9 +36,9 @@ import dagger.hilt.android.components.ViewModelComponent
 object GeneralUseCaseModule {
 
     @Provides
-    fun provideGetRecoveryOTPUseCase(
+    fun provideRecoverySendUseCase(
         authRepository: AuthRepository
-    ): GetRecoveryOTPUseCase = GetRecoveryOTPUseCase(authRepository)
+    ): RecoverySendUseCase = RecoverySendUseCase(authRepository)
 
     @Provides
     fun provideRecoveryLoginUseCase(

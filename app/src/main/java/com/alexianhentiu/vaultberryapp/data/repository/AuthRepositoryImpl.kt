@@ -4,8 +4,10 @@ import com.alexianhentiu.vaultberryapp.data.utils.APIResponseHandler
 import com.alexianhentiu.vaultberryapp.data.utils.APIResult
 import com.alexianhentiu.vaultberryapp.data.api.APIService
 import com.alexianhentiu.vaultberryapp.data.utils.ModelConverter
+import com.alexianhentiu.vaultberryapp.domain.model.entity.KeyChain
 import com.alexianhentiu.vaultberryapp.domain.model.entity.User
 import com.alexianhentiu.vaultberryapp.domain.model.request.LoginRequest
+import com.alexianhentiu.vaultberryapp.domain.model.request.RecoveryLoginRequest
 import com.alexianhentiu.vaultberryapp.domain.model.response.LoginResponse
 import com.alexianhentiu.vaultberryapp.domain.model.response.MessageResponse
 import com.alexianhentiu.vaultberryapp.domain.repository.AuthRepository
@@ -16,18 +18,18 @@ class AuthRepositoryImpl(
     private val modelConverter: ModelConverter
 ) : AuthRepository {
 
-    override suspend fun getRecoveryOTP(email: String): APIResult<MessageResponse> {
+    override suspend fun recoverySend(email: String): APIResult<MessageResponse> {
         return apiResponseHandler.safeApiCall(
-            apiCall = { apiService.getRecoveryKey(email) },
+            apiCall = { apiService.recoverySend(email) },
             transform = { modelConverter.messageResponseFromDTO(it) }
         )
     }
 
-    override suspend fun recoveryLogin(loginCredentials: LoginRequest): APIResult<LoginResponse> {
-        val loginCredentialsDTO = modelConverter.loginRequestToDTO(loginCredentials)
+    override suspend fun recoveryLogin(credentials: RecoveryLoginRequest): APIResult<KeyChain> {
+        val credentialsDTO = modelConverter.recoveryLoginRequestToDTO(credentials)
         return apiResponseHandler.safeApiCall(
-            apiCall = { apiService.recoveryLogin(loginCredentialsDTO) },
-            transform = { modelConverter.loginResponseFromDTO(it) }
+            apiCall = { apiService.recoveryLogin(credentialsDTO) },
+            transform = { modelConverter.keyChainFromDTO(it) }
         )
     }
 

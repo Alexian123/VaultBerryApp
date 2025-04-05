@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alexianhentiu.vaultberryapp.domain.model.entity.DecryptedKey
 import com.alexianhentiu.vaultberryapp.domain.usecase.general.account.ChangePasswordUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.general.auth.GetRecoveryOTPUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.general.auth.RecoverySendUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.general.auth.LogoutUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.general.auth.RecoveryLoginUseCase
 import com.alexianhentiu.vaultberryapp.domain.utils.types.ActionResult
@@ -20,7 +20,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RecoveryViewModel @Inject constructor(
-    private val getRecoveryOTPUseCase: GetRecoveryOTPUseCase,
+    private val recoverySendUseCase: RecoverySendUseCase,
     private val recoveryLoginUseCase: RecoveryLoginUseCase,
     private val changePasswordUseCase: ChangePasswordUseCase,
     private val logoutUseCase: LogoutUseCase,
@@ -33,7 +33,7 @@ class RecoveryViewModel @Inject constructor(
     fun requestOTP(email: String) {
         viewModelScope.launch {
             _recoveryState.value = RecoveryState.Loading
-            when (val result = getRecoveryOTPUseCase(email)) {
+            when (val result = recoverySendUseCase(email)) {
                 is ActionResult.Success -> {
                     _recoveryState.value = RecoveryState.OTPRequested(email)
                 }
