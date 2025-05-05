@@ -85,8 +85,8 @@ fun RecoveryScreen(
             Scaffold { contentPadding ->
                 Box(modifier = Modifier.fillMaxSize().padding(contentPadding)) {
                     ChangePasswordForm(
-                        onChangePassword = { newPassword ->
-                            viewModel.resetPassword(decryptedKey, newPassword)
+                        onChangePassword = { newPassword, reEncrypt ->
+                            viewModel.resetPassword(decryptedKey, newPassword, reEncrypt)
                         },
                         inputValidator = viewModel.inputValidator,
                         textFieldType = TextFieldType.REGULAR

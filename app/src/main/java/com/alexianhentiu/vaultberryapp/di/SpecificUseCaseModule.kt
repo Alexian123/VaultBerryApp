@@ -7,7 +7,7 @@ import com.alexianhentiu.vaultberryapp.domain.usecase.specific.vault.EncryptVaul
 import com.alexianhentiu.vaultberryapp.domain.usecase.specific.auth.Extract2FASecret
 import com.alexianhentiu.vaultberryapp.domain.usecase.specific.auth.GeneratePasswordPairUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.specific.vault.GenerateKeyChainUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.specific.vault.ReEncryptAllEntriesUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.specific.vault.ReEncryptVaultUseCase
 import com.alexianhentiu.vaultberryapp.domain.utils.security.PasswordGenerator
 import com.alexianhentiu.vaultberryapp.domain.utils.security.VaultGuardian
 import dagger.Module
@@ -23,18 +23,6 @@ object SpecificUseCaseModule {
     @Provides
     @Singleton
     fun provideExtract2FASecret(): Extract2FASecret = Extract2FASecret()
-
-    @Provides
-    @Singleton
-    fun provideReEncryptAllEntriesUseCase(
-        vaultRepository: VaultRepository,
-        decryptVaultEntryUseCase: DecryptVaultEntryUseCase,
-        encryptVaultEntryUseCase: EncryptVaultEntryUseCase
-    ): ReEncryptAllEntriesUseCase = ReEncryptAllEntriesUseCase(
-        vaultRepository,
-        decryptVaultEntryUseCase,
-        encryptVaultEntryUseCase
-    )
 
     @Provides
     @Singleton
@@ -65,4 +53,16 @@ object SpecificUseCaseModule {
     fun provideGeneratePasswordPairUseCase(
         passwordGenerator: PasswordGenerator
     ): GeneratePasswordPairUseCase = GeneratePasswordPairUseCase(passwordGenerator)
+
+    @Provides
+    @Singleton
+    fun provideReEncryptVaultUseCase(
+        vaultRepository: VaultRepository,
+        decryptVaultEntryUseCase: DecryptVaultEntryUseCase,
+        encryptVaultEntryUseCase: EncryptVaultEntryUseCase
+    ): ReEncryptVaultUseCase = ReEncryptVaultUseCase(
+        vaultRepository,
+        decryptVaultEntryUseCase,
+        encryptVaultEntryUseCase
+    )
 }

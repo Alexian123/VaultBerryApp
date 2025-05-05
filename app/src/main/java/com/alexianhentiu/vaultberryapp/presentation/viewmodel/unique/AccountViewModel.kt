@@ -135,10 +135,10 @@ class AccountViewModel @Inject constructor(
         }
     }
 
-    fun changePassword(decryptedKey: DecryptedKey, newPassword: String) {
+    fun changePassword(decryptedKey: DecryptedKey, newPassword: String, reEncrypt: Boolean) {
         viewModelScope.launch {
             _accountState.value = AccountState.Loading
-            when (val result = changePasswordUseCase(decryptedKey, newPassword)) {
+            when (val result = changePasswordUseCase(decryptedKey, newPassword, reEncrypt)) {
                 is ActionResult.Success -> {
                     _accountState.value = AccountState.ChangedPassword(result.data)
                 }

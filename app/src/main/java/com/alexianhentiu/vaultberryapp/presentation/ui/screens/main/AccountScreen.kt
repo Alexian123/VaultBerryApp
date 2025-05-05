@@ -69,9 +69,9 @@ fun AccountScreen(
                         onSaveInfo = { email, firstName, lastName ->
                             viewModel.changeAccountInfo(email, firstName, lastName)
                         },
-                        onChangePassword = { newPassword ->
+                        onChangePassword = { newPassword, reEncrypt ->
                             if (vaultKey != null) {
-                                viewModel.changePassword(vaultKey, newPassword)
+                                viewModel.changePassword(vaultKey, newPassword, reEncrypt)
                             }
                         },
                         onEnable2FA = {

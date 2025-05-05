@@ -73,10 +73,10 @@ class RecoveryViewModel @Inject constructor(
         }
     }
 
-    fun resetPassword(decryptedKey: DecryptedKey, newPassword: String) {
+    fun resetPassword(decryptedKey: DecryptedKey, newPassword: String, reEncrypt: Boolean) {
         viewModelScope.launch {
             _recoveryState.value = RecoveryState.Loading
-            when (val result = changePasswordUseCase(decryptedKey, newPassword)) {
+            when (val result = changePasswordUseCase(decryptedKey, newPassword, reEncrypt)) {
                 is ActionResult.Success -> {
                     _recoveryState.value = RecoveryState.PasswordReset(result.data)
                 }

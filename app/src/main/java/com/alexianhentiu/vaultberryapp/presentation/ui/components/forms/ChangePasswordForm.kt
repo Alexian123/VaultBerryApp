@@ -1,8 +1,10 @@
 package com.alexianhentiu.vaultberryapp.presentation.ui.components.forms
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -20,7 +22,7 @@ import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.Passwor
 
 @Composable
 fun ChangePasswordForm(
-    onChangePassword: (String) -> Unit,
+    onChangePassword: (String, Boolean) -> Unit,
     inputValidator: InputValidator,
     textFieldType: TextFieldType = TextFieldType.OUTLINED
 ) {
@@ -28,6 +30,7 @@ fun ChangePasswordForm(
     var isPasswordValid by remember { mutableStateOf(false) }
     var confirmPassword by remember { mutableStateOf("") }
     var isConfirmPasswordValid by remember { mutableStateOf(false) }
+    var shouldReEncrypt by remember { mutableStateOf(false) }
 
     Column(modifier = Modifier.padding(8.dp)) {
         PasswordField(
@@ -48,10 +51,18 @@ fun ChangePasswordForm(
             label = "Confirm New Password",
             textFieldType = textFieldType
         )
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Checkbox(
+                checked = shouldReEncrypt,
+                onCheckedChange = { shouldReEncrypt = it }
+            )
+            Text("Re-encrypt all vault entries")
+        }
         Button(
             enabled = isPasswordValid && isConfirmPasswordValid && password == confirmPassword,
-            onClick = { onChangePassword(password) },
-            modifier = Modifier.align(Alignment.CenterHorizontally)
+            onClick = { onChangePassword(password, shouldReEncrypt) },
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
                 .padding(top = 4.dp)
         ) {
             Text("Change Password")
@@ -63,7 +74,7 @@ fun ChangePasswordForm(
 @Preview(showBackground = true)
 fun ChangePasswordFormPreview() {
     ChangePasswordForm(
-        onChangePassword = {},
+        onChangePassword = { _, _ -> },
         inputValidator = DebugValidator()
     )
 }

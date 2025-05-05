@@ -25,6 +25,7 @@ import com.alexianhentiu.vaultberryapp.domain.usecase.specific.vault.DecryptVaul
 import com.alexianhentiu.vaultberryapp.domain.usecase.general.vault.DeleteEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.specific.auth.Extract2FASecret
 import com.alexianhentiu.vaultberryapp.domain.usecase.specific.auth.GeneratePasswordPairUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.specific.vault.ReEncryptVaultUseCase
 import com.alexianhentiu.vaultberryapp.domain.utils.security.AuthGuardian
 import dagger.Module
 import dagger.Provides
@@ -105,11 +106,15 @@ object GeneralUseCaseModule {
     fun provideChangePasswordUseCase(
         accountRepository: AccountRepository,
         generatePasswordPairUseCase: GeneratePasswordPairUseCase,
-        generateKeyChainUseCase: GenerateKeyChainUseCase
+        generateKeyChainUseCase: GenerateKeyChainUseCase,
+        decryptKeyUseCase: DecryptKeyUseCase,
+        reEncryptVaultUseCase: ReEncryptVaultUseCase
     ): ChangePasswordUseCase = ChangePasswordUseCase(
         accountRepository,
         generatePasswordPairUseCase,
-        generateKeyChainUseCase
+        generateKeyChainUseCase,
+        decryptKeyUseCase,
+        reEncryptVaultUseCase
     )
 
     @Provides

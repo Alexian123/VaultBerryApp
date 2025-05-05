@@ -3,13 +3,13 @@ package com.alexianhentiu.vaultberryapp.domain.usecase.specific.vault
 import android.util.Log
 import com.alexianhentiu.vaultberryapp.data.utils.APIResult
 import com.alexianhentiu.vaultberryapp.domain.model.entity.DecryptedKey
-import com.alexianhentiu.vaultberryapp.domain.model.response.MessageResponse
 import com.alexianhentiu.vaultberryapp.domain.model.entity.EncryptedVaultEntry
+import com.alexianhentiu.vaultberryapp.domain.model.response.MessageResponse
 import com.alexianhentiu.vaultberryapp.domain.repository.VaultRepository
 import com.alexianhentiu.vaultberryapp.domain.utils.types.ActionResult
 import com.alexianhentiu.vaultberryapp.domain.utils.types.ErrorType
 
-class ReEncryptAllEntriesUseCase(
+class ReEncryptVaultUseCase(
     private val vaultRepository: VaultRepository,
     private val decryptVaultEntryUseCase: DecryptVaultEntryUseCase,
     private val encryptVaultEntryUseCase: EncryptVaultEntryUseCase
@@ -60,7 +60,7 @@ class ReEncryptAllEntriesUseCase(
                 )
             }
             val updateMessageResponse = (updateResult as APIResult.Success).data
-            Log.d("ReEncryptAllEntriesUseCase", updateMessageResponse.message)
+            Log.d("ReEncryptVaultUseCase", updateMessageResponse.message)
         }
         return ActionResult.Success(MessageResponse("All entries re-encrypted successfully"))
     }
