@@ -42,14 +42,6 @@ fun RecoveryLoginForm(
             .padding(16.dp)
             .fillMaxSize()
     ) {
-        Text(
-            text = "Recovery Login",
-            style = MaterialTheme.typography.headlineMedium,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 16.dp),
-            textAlign = TextAlign.Center
-        )
         PasswordField(
             onPasswordChange = { newPassword, valid ->
                 recoveryPassword = newPassword

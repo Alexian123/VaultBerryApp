@@ -15,9 +15,12 @@ import dagger.hilt.android.AndroidEntryPoint
 
 /*
     TODO:
+        - Access the setting menu without login
         - Add the option to re-encrypt the vault with a new key
-        - Integrate VPN connection
         - Implement statistics & suggestions for entry password security
+        - Implement autofill
+        - Integrate VPN connection
+        - Improve error handling
 */
 
 @AndroidEntryPoint

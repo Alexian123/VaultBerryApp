@@ -10,6 +10,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.AnnotatedString
+import com.alexianhentiu.vaultberryapp.presentation.ui.components.bars.AuthTopBar
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ErrorDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.InfoDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.ChangePasswordForm
@@ -44,7 +45,13 @@ fun RecoveryScreen(
         }
 
         is RecoveryState.Idle -> {
-            Scaffold { contentPadding ->
+            Scaffold(
+                topBar = {
+                    AuthTopBar(
+                        onSettingsClick = { navManager.navigate(NavRoute.SETTINGS) }
+                    )
+                }
+            ) { contentPadding ->
                 Box(modifier = Modifier.fillMaxSize().padding(contentPadding)) {
                     OTPRequestForm(
                         onContinueClicked = { email -> viewModel.requestOTP(email) },

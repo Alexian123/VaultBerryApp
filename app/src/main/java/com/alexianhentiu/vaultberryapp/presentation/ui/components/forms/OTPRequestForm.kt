@@ -40,17 +40,8 @@ fun OTPRequestForm(
             .fillMaxSize()
     ) {
         Text(
-            text = "Password Recovery",
-            style = MaterialTheme.typography.headlineMedium,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 16.dp),
-            textAlign = TextAlign.Center
-        )
-        Spacer(modifier = Modifier.height(32.dp))
-        Text(
             text = "A one-time password will be sent to your email.",
-            style = MaterialTheme.typography.bodyMedium,
+            style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 16.dp),

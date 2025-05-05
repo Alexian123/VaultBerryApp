@@ -26,23 +26,33 @@ import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.SettingsVie
 @Composable
 fun SettingsScreen(
     viewModel: SettingsViewModel? = null,
-    navManager: NavigationManager
+    navManager: NavigationManager,
+
 ) {
     val key = navManager.retrieveVaultKey()
 
-    var useSystemTheme by remember { mutableStateOf(viewModel?.useSystemTheme?.value ?: true) }
-    var darkTheme by remember { mutableStateOf(viewModel?.darkTheme?.value ?: false) }
+    var useSystemTheme by remember { mutableStateOf(viewModel?.useSystemTheme?.value != false) }
+    var darkTheme by remember { mutableStateOf(viewModel?.darkTheme?.value == true) }
 
     BackHandler(enabled = true) {
-        // send key to vault screen
-        navManager.navigateWithVaultKey(NavRoute.VAULT, key)
+        if (key != null) {
+            // Settings was accessed from vault
+            navManager.navigateWithVaultKey(NavRoute.VAULT, key)
+        } else {
+            // Settings was accessed from elsewhere
+            navManager.goBack()
+        }
     }
 
     Scaffold(
         topBar = {
             TopBarWithBackButton(
                 onBackClick = {
-                    navManager.navigateWithVaultKey(NavRoute.VAULT, key)
+                    if (key != null) {
+                        navManager.navigateWithVaultKey(NavRoute.VAULT, key)
+                    } else {
+                        navManager.goBack()
+                    }
                 },
                 title = "Settings"
             )

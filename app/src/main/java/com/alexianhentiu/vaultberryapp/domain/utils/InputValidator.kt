@@ -4,28 +4,37 @@ class InputValidator {
 
     fun validateEmail(email: String): Boolean {
         if (email.isBlank()) return false
-        /* TODO: Uncomment after testing
+        /* TODO: uncomment after testing
         val emailRegex = Regex("^\\w+([.-]?\\w+)*@\\w+([.-]?\\w+)*(\\.\\w{2,})+\$")
-        return email.matches(emailRegex)*/
+        return email.matches(emailRegex)
+         */
         return true
     }
 
     fun validatePassword(password: String): Boolean {
         if (password.isBlank()) return false
-        // TODO: Implement better password validation
+
+        /* TODO: uncomment after testing
+        val minLength = 8
+        val hasUppercase = password.any { it.isUpperCase() }
+        val hasDigit = password.any { it.isDigit() }
+        val hasSpecialChar = password.any { !it.isLetterOrDigit() } // Simplified check for any non-letter/digit
+
+        return password.length >= minLength && hasUppercase && hasDigit && hasSpecialChar
+         */
         return true
     }
 
     fun validateOTP(otp: String): Boolean {
         if (otp.isBlank()) return false
-        // TODO: Implement better OTP validation
-        return true
+        val otpRegex = Regex("^\\d{9}\$")
+        return otp.matches(otpRegex)
     }
 
     fun validate2FACode(code: String): Boolean {
         if (code.isBlank()) return false
-        // TODO: Implement better 2FA code validation
-        return true
+        val codeRegex = Regex("^\\d{6}\$")
+        return code.matches(codeRegex)
     }
 
     fun validateEntryTitle(title: String): Boolean {

@@ -51,14 +51,6 @@ fun RegisterForm(
             .padding(16.dp)
             .fillMaxSize()
     ) {
-        Text(
-            text = stringResource(R.string.app_name),
-            style = MaterialTheme.typography.headlineMedium,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 16.dp),
-            textAlign = TextAlign.Center
-        )
         ValidatedTextField(
             label = "Email",
             onInputChange = { newEmail, valid ->

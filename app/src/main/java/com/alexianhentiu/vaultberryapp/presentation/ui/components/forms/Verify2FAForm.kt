@@ -38,14 +38,6 @@ fun Verify2FAForm(
             .padding(16.dp)
             .fillMaxSize()
     ) {
-        Text(
-            text = "Two-factor authentication",
-            style = MaterialTheme.typography.headlineMedium,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 16.dp),
-            textAlign = TextAlign.Center
-        )
         ValidatedTextField(
             label = "Code",
             onInputChange = { newCode, valid ->

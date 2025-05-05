@@ -30,14 +30,14 @@ class SettingsViewModel@Inject constructor(
     init {
         viewModelScope.launch {
             dataStore.data.map { preferences ->
-                preferences[useSystemThemeKey] ?: true
+                preferences[useSystemThemeKey] != false
             }.collect { useSystemTheme ->
                 _useSystemTheme.value = useSystemTheme
             }
         }
         viewModelScope.launch {
             dataStore.data.map { preferences ->
-                preferences[darkThemeKey] ?: false
+                preferences[darkThemeKey] == true
             }.collect { darkTheme ->
                 _darkTheme.value = darkTheme
             }

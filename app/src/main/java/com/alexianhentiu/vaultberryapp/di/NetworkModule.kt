@@ -28,7 +28,7 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideBaseUrl(): String = "https://192.168.1.130:8443/"
+    fun provideBaseUrl(): String = "https://192.168.1.129:8443/"
 
     @Provides
     @Singleton

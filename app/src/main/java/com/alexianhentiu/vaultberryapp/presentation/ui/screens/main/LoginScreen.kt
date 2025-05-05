@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import com.alexianhentiu.vaultberryapp.presentation.ui.components.bars.AuthTopBar
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ErrorDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.LoginForm
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.Verify2FAForm
@@ -26,7 +27,13 @@ fun LoginScreen(
 
     when (loginState) {
         is LoginState.LoggedOut -> {
-            Scaffold { contentPadding ->
+            Scaffold(
+                topBar = {
+                    AuthTopBar(
+                        onSettingsClick = { navManager.navigate(NavRoute.SETTINGS) }
+                    )
+                }
+            ) { contentPadding ->
                 Box(modifier = Modifier.fillMaxSize().padding(contentPadding)) {
                     LoginForm(
                         navManager = navManager,
@@ -46,7 +53,13 @@ fun LoginScreen(
             val currentLoginState = loginState as LoginState.Verify2FA
             val email = currentLoginState.email
             val password = currentLoginState.password
-            Scaffold { contentPadding ->
+            Scaffold(
+                topBar = {
+                    AuthTopBar(
+                        onSettingsClick = { navManager.navigate(NavRoute.SETTINGS) }
+                    )
+                }
+            ) { contentPadding ->
                 Box(modifier = Modifier.fillMaxSize().padding(contentPadding)) {
                     Verify2FAForm(
                         onContinueClicked = { code ->
