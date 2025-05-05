@@ -19,15 +19,4 @@ class PasswordGenerator {
             .map { charPool.random() }
             .joinToString("")
     }
-
-    // TODO: Improve password strength evaluation
-    fun evaluatePasswordStrength(password: String): Int {
-        var score = 0
-        if (password.length >= 8) score++
-        if (password.any { it.isUpperCase() }) score++
-        if (password.any { it.isDigit() }) score++
-        if (password.any {!it.isLetterOrDigit() }) score++
-        if (password.any { it.isWhitespace() }) score++
-        return score
-    }
 }

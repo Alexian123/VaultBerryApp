@@ -10,6 +10,7 @@ import com.alexianhentiu.vaultberryapp.domain.usecase.general.vault.AddEntryUseC
 import com.alexianhentiu.vaultberryapp.domain.usecase.general.vault.GetEntriesUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.general.vault.UpdateEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.general.vault.DeleteEntryUseCase
+import com.alexianhentiu.vaultberryapp.domain.utils.security.PasswordEvaluator
 import com.alexianhentiu.vaultberryapp.domain.utils.types.ActionResult
 import com.alexianhentiu.vaultberryapp.domain.utils.validation.InputValidator
 import com.alexianhentiu.vaultberryapp.domain.utils.types.ErrorType
@@ -29,7 +30,8 @@ class VaultViewModel @Inject constructor(
     private val addEntryUseCase: AddEntryUseCase,
     private val deleteEntryUseCase: DeleteEntryUseCase,
     private val updateEntryUseCase: UpdateEntryUseCase,
-    val inputValidator: InputValidator
+    val inputValidator: InputValidator,
+    val passwordEvaluator: PasswordEvaluator
 ): ViewModel() {
 
     private val _vaultState = MutableStateFlow<VaultState>(VaultState.Locked)

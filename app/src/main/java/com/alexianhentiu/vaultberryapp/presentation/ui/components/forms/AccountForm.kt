@@ -21,6 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.alexianhentiu.vaultberryapp.domain.model.entity.AccountInfo
+import com.alexianhentiu.vaultberryapp.domain.utils.security.PasswordEvaluator
 import com.alexianhentiu.vaultberryapp.domain.utils.validation.DebugValidator
 import com.alexianhentiu.vaultberryapp.domain.utils.validation.InputValidator
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ConfirmActionDialog
@@ -35,7 +36,8 @@ fun AccountForm(
     onEnable2FA: () -> Unit,
     onDisable2FA: () -> Unit,
     onDeleteAccount: () -> Unit,
-    inputValidator: InputValidator
+    inputValidator: InputValidator,
+    passwordEvaluator: PasswordEvaluator
 ) {
     var isInfoExpanded by remember { mutableStateOf(false) }
     var isSecurityExpanded by remember { mutableStateOf(false) }
@@ -111,7 +113,8 @@ fun AccountForm(
                             shouldReEncrypt = reEncrypt
                             showConfirmPasswordChangeDialog = true
                         },
-                        inputValidator = inputValidator
+                        inputValidator = inputValidator,
+                        passwordEvaluator = passwordEvaluator
                     )
                     HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
                     Text(
@@ -170,6 +173,7 @@ fun AccountFormPreview() {
         onEnable2FA = {},
         onDisable2FA = {},
         onDeleteAccount = {},
-        inputValidator = DebugValidator()
+        inputValidator = DebugValidator(),
+        passwordEvaluator = PasswordEvaluator()
     )
 }

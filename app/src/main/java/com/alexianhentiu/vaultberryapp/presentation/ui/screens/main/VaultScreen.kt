@@ -24,7 +24,7 @@ import com.alexianhentiu.vaultberryapp.R
 import com.alexianhentiu.vaultberryapp.domain.model.entity.DecryptedVaultEntry
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.AddEntryDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ConfirmActionDialog
-import com.alexianhentiu.vaultberryapp.presentation.ui.components.bars.VaultTopBar
+import com.alexianhentiu.vaultberryapp.presentation.ui.components.topBars.VaultTopBar
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.misc.VaultEntryItem
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ErrorDialog
 import com.alexianhentiu.vaultberryapp.presentation.utils.enums.EntryModification
@@ -106,7 +106,8 @@ fun VaultScreen(
                                     entryModification = event
                                     modifiedEntry = entry
                                 },
-                                inputValidator = vaultViewModel.inputValidator
+                                inputValidator = vaultViewModel.inputValidator,
+                                passwordEvaluator = vaultViewModel.passwordEvaluator
                             )
                         }
                     }
@@ -133,7 +134,8 @@ fun VaultScreen(
                                 vaultViewModel.addEntry(it)
                                 showAddEntryDialog = false
                             },
-                            inputValidator = vaultViewModel.inputValidator
+                            inputValidator = vaultViewModel.inputValidator,
+                            passwordEvaluator = vaultViewModel.passwordEvaluator
                         )
                     }
 

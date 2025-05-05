@@ -13,6 +13,7 @@ import com.alexianhentiu.vaultberryapp.domain.usecase.general.account.Get2FAStat
 import com.alexianhentiu.vaultberryapp.domain.usecase.general.account.GetAccountInfoUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.general.account.Setup2FAUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.general.auth.LogoutUseCase
+import com.alexianhentiu.vaultberryapp.domain.utils.security.PasswordEvaluator
 import com.alexianhentiu.vaultberryapp.domain.utils.types.ActionResult
 import com.alexianhentiu.vaultberryapp.domain.utils.validation.InputValidator
 import com.alexianhentiu.vaultberryapp.presentation.utils.ErrorInfo
@@ -33,7 +34,8 @@ class AccountViewModel @Inject constructor(
     private val setup2FAUseCase: Setup2FAUseCase,
     private val disable2FAUseCase: Disable2FAUseCase,
     private val logoutUseCase: LogoutUseCase,
-    val inputValidator: InputValidator
+    val inputValidator: InputValidator,
+    val passwordEvaluator: PasswordEvaluator
 ) : ViewModel() {
 
     private val _accountState = MutableStateFlow<AccountState>(AccountState.Init)

@@ -36,6 +36,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.alexianhentiu.vaultberryapp.R
 import com.alexianhentiu.vaultberryapp.domain.model.entity.DecryptedVaultEntry
+import com.alexianhentiu.vaultberryapp.domain.utils.security.PasswordEvaluator
 import com.alexianhentiu.vaultberryapp.domain.utils.validation.DebugValidator
 import com.alexianhentiu.vaultberryapp.domain.utils.validation.InputValidator
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ConfirmActionDialog
@@ -47,7 +48,8 @@ import com.alexianhentiu.vaultberryapp.presentation.utils.enums.EntryModificatio
 fun VaultEntryItem(
     decryptedEntry: DecryptedVaultEntry,
     onEntryModification: (EntryModification, DecryptedVaultEntry) -> Unit,
-    inputValidator: InputValidator
+    inputValidator: InputValidator,
+    passwordEvaluator: PasswordEvaluator
 ) {
     var title by remember { mutableStateOf(decryptedEntry.title) }
     var url by remember { mutableStateOf(decryptedEntry.url) }
@@ -96,7 +98,9 @@ fun VaultEntryItem(
         Row(verticalAlignment = Alignment.CenterVertically) {
             Column(
                 verticalArrangement = Arrangement.Center,
-                modifier = Modifier.weight(0.8f)
+                modifier = Modifier
+                    .weight(0.8f)
+                    .padding(vertical = if (!isExpanded) 0.dp else 8.dp)
             ) {
                 AnimatedVisibility(
                     visible = !isExpanded,
@@ -190,7 +194,9 @@ fun VaultEntryItem(
                             },
                             modifier = Modifier.fillMaxWidth(),
                             initialText = password,
-                            showCopyToClipboardButton = true
+                            showCopyToClipboardButton = true,
+                            passwordEvaluator = passwordEvaluator,
+                            showStrengthIndicator = true
                         )
                         ValidatedTextField(
                             readOnly = !editMode,
@@ -255,7 +261,6 @@ fun VaultEntryItem(
                                         .padding(8.dp)
                                         .weight(0.1f),
                                     onClick = {
-
                                         editMode = false
                                         if (unsavedChanges) {
                                             unsavedChanges = false
@@ -297,6 +302,7 @@ fun VaultEntryPreview() {
             "Lorem ipsum dolor"
         ),
         onEntryModification = { _, _ -> },
-        inputValidator = DebugValidator()
+        inputValidator = DebugValidator(),
+        passwordEvaluator = PasswordEvaluator()
     )
 }

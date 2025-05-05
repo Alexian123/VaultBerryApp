@@ -10,7 +10,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.AnnotatedString
-import com.alexianhentiu.vaultberryapp.presentation.ui.components.bars.AuthTopBar
+import com.alexianhentiu.vaultberryapp.presentation.ui.components.topBars.AuthTopBar
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ErrorDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.InfoDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.ChangePasswordForm
@@ -74,7 +74,8 @@ fun RecoveryScreen(
                             viewModel.resetState()
                             navManager.navigate(NavRoute.LOGIN)
                         },
-                        inputValidator = viewModel.inputValidator
+                        inputValidator = viewModel.inputValidator,
+                        passwordEvaluator = viewModel.passwordEvaluator
                     )
                 }
             }
@@ -89,6 +90,7 @@ fun RecoveryScreen(
                             viewModel.resetPassword(decryptedKey, newPassword, reEncrypt)
                         },
                         inputValidator = viewModel.inputValidator,
+                        passwordEvaluator = viewModel.passwordEvaluator,
                         textFieldType = TextFieldType.REGULAR
                     )
                 }

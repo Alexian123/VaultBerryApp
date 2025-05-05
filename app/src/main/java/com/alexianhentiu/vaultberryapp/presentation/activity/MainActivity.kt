@@ -15,7 +15,6 @@ import dagger.hilt.android.AndroidEntryPoint
 
 /*
     TODO:
-        - Implement statistics & suggestions for entry password security
         - Implement autofill
         - Integrate VPN connection
         - Improve error handling

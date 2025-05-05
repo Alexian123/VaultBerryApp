@@ -8,6 +8,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import com.alexianhentiu.vaultberryapp.data.utils.APIResponseHandler
 import com.alexianhentiu.vaultberryapp.data.utils.ModelConverter
 import com.alexianhentiu.vaultberryapp.domain.utils.security.AuthGuardian
+import com.alexianhentiu.vaultberryapp.domain.utils.security.PasswordEvaluator
 import com.alexianhentiu.vaultberryapp.domain.utils.validation.InputValidator
 import com.alexianhentiu.vaultberryapp.domain.utils.security.PasswordGenerator
 import com.alexianhentiu.vaultberryapp.domain.utils.security.VaultGuardian
@@ -40,6 +41,10 @@ object UtilityModule {
     @Provides
     @Singleton
     fun providePasswordGenerator(): PasswordGenerator = PasswordGenerator()
+
+    @Provides
+    @Singleton
+    fun providePasswordEvaluator(): PasswordEvaluator = PasswordEvaluator()
 
     @Provides
     @Singleton

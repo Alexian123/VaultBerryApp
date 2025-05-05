@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -19,12 +18,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.alexianhentiu.vaultberryapp.R
+import com.alexianhentiu.vaultberryapp.domain.utils.security.PasswordEvaluator
 import com.alexianhentiu.vaultberryapp.domain.utils.validation.DebugValidator
 import com.alexianhentiu.vaultberryapp.domain.utils.validation.InputValidator
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.ValidatedTextField
@@ -36,7 +33,8 @@ import com.alexianhentiu.vaultberryapp.presentation.utils.enums.NavRoute
 fun RegisterForm(
     navManager: NavigationManager,
     onRegisterClicked: (String, String, String?, String?) -> Unit,
-    inputValidator: InputValidator
+    inputValidator: InputValidator,
+    passwordEvaluator: PasswordEvaluator
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -68,6 +66,7 @@ fun RegisterForm(
                 isPasswordValid = valid
             },
             isValid = inputValidator::validatePassword,
+            passwordEvaluator = passwordEvaluator,
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(8.dp))
@@ -108,6 +107,7 @@ fun RegisterFormPreview() {
     RegisterForm(
         navManager = NavigationManager(NavController(LocalContext.current)),
         onRegisterClicked = { _, _, _, _ -> },
-        inputValidator = DebugValidator()
+        inputValidator = DebugValidator(),
+        passwordEvaluator = PasswordEvaluator()
     )
 }

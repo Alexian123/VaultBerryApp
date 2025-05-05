@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.alexianhentiu.vaultberryapp.domain.utils.security.PasswordEvaluator
 import com.alexianhentiu.vaultberryapp.domain.utils.validation.DebugValidator
 import com.alexianhentiu.vaultberryapp.domain.utils.validation.InputValidator
 import com.alexianhentiu.vaultberryapp.presentation.utils.enums.TextFieldType
@@ -24,6 +25,7 @@ import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.Passwor
 fun ChangePasswordForm(
     onChangePassword: (String, Boolean) -> Unit,
     inputValidator: InputValidator,
+    passwordEvaluator: PasswordEvaluator,
     textFieldType: TextFieldType = TextFieldType.OUTLINED
 ) {
     var password by remember { mutableStateOf("") }
@@ -40,7 +42,8 @@ fun ChangePasswordForm(
             },
             isValid = inputValidator::validatePassword,
             label = "New Password",
-            textFieldType = textFieldType
+            textFieldType = textFieldType,
+            passwordEvaluator = passwordEvaluator
         )
         PasswordField(
             onPasswordChange = { newPassword, valid ->
@@ -49,7 +52,8 @@ fun ChangePasswordForm(
             },
             isValid = password::equals,
             label = "Confirm New Password",
-            textFieldType = textFieldType
+            textFieldType = textFieldType,
+            passwordEvaluator = passwordEvaluator
         )
         Row(verticalAlignment = Alignment.CenterVertically) {
             Checkbox(
@@ -75,6 +79,7 @@ fun ChangePasswordForm(
 fun ChangePasswordFormPreview() {
     ChangePasswordForm(
         onChangePassword = { _, _ -> },
-        inputValidator = DebugValidator()
+        inputValidator = DebugValidator(),
+        passwordEvaluator = PasswordEvaluator()
     )
 }

@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import com.alexianhentiu.vaultberryapp.presentation.ui.components.bars.AuthTopBar
+import com.alexianhentiu.vaultberryapp.presentation.ui.components.topBars.AuthTopBar
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ErrorDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.LoginForm
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.Verify2FAForm
@@ -39,7 +39,8 @@ fun LoginScreen(
                         navManager = navManager,
                         onLoginClicked = { email, password -> viewModel.login(email, password) },
                         onForgotPasswordClicked = { navManager.navigate(NavRoute.RECOVERY) },
-                        inputValidator = viewModel.inputValidator
+                        inputValidator = viewModel.inputValidator,
+                        passwordEvaluator = viewModel.passwordEvaluator
                     )
                 }
             }

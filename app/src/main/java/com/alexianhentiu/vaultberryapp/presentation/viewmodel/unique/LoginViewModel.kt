@@ -6,6 +6,7 @@ import javax.inject.Inject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alexianhentiu.vaultberryapp.domain.usecase.general.auth.LoginUseCase
+import com.alexianhentiu.vaultberryapp.domain.utils.security.PasswordEvaluator
 import com.alexianhentiu.vaultberryapp.domain.utils.types.ActionResult
 import com.alexianhentiu.vaultberryapp.domain.utils.validation.InputValidator
 import com.alexianhentiu.vaultberryapp.presentation.utils.ErrorInfo
@@ -19,7 +20,8 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
-    val inputValidator: InputValidator
+    val inputValidator: InputValidator,
+    val passwordEvaluator: PasswordEvaluator
 ) : ViewModel() {
 
     private val _loginState = MutableStateFlow<LoginState>(LoginState.LoggedOut)

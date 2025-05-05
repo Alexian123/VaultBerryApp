@@ -1,8 +1,10 @@
 package com.alexianhentiu.vaultberryapp.presentation.ui.components.fields
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -13,8 +15,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import com.alexianhentiu.vaultberryapp.domain.utils.security.PasswordEvaluator
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.buttons.CopyToClipboardButton
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.buttons.ToggleVisibilityButton
+import com.alexianhentiu.vaultberryapp.presentation.ui.components.misc.PasswordStrengthIndicator
 import com.alexianhentiu.vaultberryapp.presentation.utils.enums.TextFieldType
 
 @Composable
@@ -27,16 +32,22 @@ fun PasswordField(
     enabled: Boolean = true,
     readOnly: Boolean = false,
     label: String = "Password",
-    textFieldType: TextFieldType = TextFieldType.REGULAR
+    textFieldType: TextFieldType = TextFieldType.REGULAR,
+    passwordEvaluator: PasswordEvaluator,
+    showStrengthIndicator: Boolean = false,
 ) {
     var password by remember { mutableStateOf("") }
     var isVisible by remember { mutableStateOf(false) }
+    var passwordStrength by remember {
+        mutableStateOf(passwordEvaluator.evaluateStrength(initialText))
+    }
 
     Box(modifier = modifier) {
         ValidatedTextField(
             modifier = Modifier.fillMaxWidth(),
             onInputChange = { newPassword, valid ->
                 password = newPassword
+                passwordStrength = passwordEvaluator.evaluateStrength(newPassword)
                 onPasswordChange(newPassword, valid)
             },
             label = label,
@@ -55,7 +66,15 @@ fun PasswordField(
                 CopyToClipboardButton(textToCopy = password)
             }
         }
-
+        Column (
+            modifier = Modifier
+                .align(Alignment.BottomStart)
+                .padding(bottom = 4.dp)
+        ) {
+            if (showStrengthIndicator) {
+                PasswordStrengthIndicator(strength = passwordStrength)
+            }
+        }
     }
 }
 
@@ -64,5 +83,8 @@ fun PasswordField(
 fun PasswordFieldPreview() {
     PasswordField(
         onPasswordChange = { _, _ -> },
+        passwordEvaluator = PasswordEvaluator(),
+        showStrengthIndicator = true,
+        textFieldType = TextFieldType.OUTLINED
     )
 }

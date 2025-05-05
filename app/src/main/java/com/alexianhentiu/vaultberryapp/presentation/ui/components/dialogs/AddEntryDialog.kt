@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.alexianhentiu.vaultberryapp.domain.model.entity.DecryptedVaultEntry
+import com.alexianhentiu.vaultberryapp.domain.utils.security.PasswordEvaluator
 import com.alexianhentiu.vaultberryapp.domain.utils.validation.DebugValidator
 import com.alexianhentiu.vaultberryapp.domain.utils.validation.InputValidator
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.PasswordField
@@ -36,7 +37,8 @@ fun AddEntryDialog(
     formTitle: String,
     onDismissRequest: () -> Unit,
     onSubmit: (DecryptedVaultEntry) -> Unit,
-    inputValidator: InputValidator
+    inputValidator: InputValidator,
+    passwordEvaluator: PasswordEvaluator
 ) {
     var title by remember { mutableStateOf( "") }
     var url by remember { mutableStateOf( "") }
@@ -105,6 +107,8 @@ fun AddEntryDialog(
                             onPasswordChange = { newPassword, _ ->
                                 password = newPassword
                             },
+                            passwordEvaluator = passwordEvaluator,
+                            showStrengthIndicator = true,
                             modifier = Modifier.fillMaxWidth()
                         )
                         ValidatedTextField(
@@ -159,6 +163,7 @@ fun AddEntryDialogPreview() {
         formTitle = "Add new entry",
         onDismissRequest = {},
         onSubmit = {},
-        inputValidator = DebugValidator()
+        inputValidator = DebugValidator(),
+        passwordEvaluator = PasswordEvaluator()
     )
 }

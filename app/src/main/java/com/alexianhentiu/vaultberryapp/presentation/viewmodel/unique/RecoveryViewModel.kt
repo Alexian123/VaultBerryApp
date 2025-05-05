@@ -8,6 +8,7 @@ import com.alexianhentiu.vaultberryapp.domain.usecase.general.account.ChangePass
 import com.alexianhentiu.vaultberryapp.domain.usecase.general.auth.RecoverySendUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.general.auth.LogoutUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.general.auth.RecoveryLoginUseCase
+import com.alexianhentiu.vaultberryapp.domain.utils.security.PasswordEvaluator
 import com.alexianhentiu.vaultberryapp.domain.utils.types.ActionResult
 import com.alexianhentiu.vaultberryapp.domain.utils.validation.InputValidator
 import com.alexianhentiu.vaultberryapp.presentation.utils.ErrorInfo
@@ -24,7 +25,8 @@ class RecoveryViewModel @Inject constructor(
     private val recoveryLoginUseCase: RecoveryLoginUseCase,
     private val changePasswordUseCase: ChangePasswordUseCase,
     private val logoutUseCase: LogoutUseCase,
-    val inputValidator: InputValidator
+    val inputValidator: InputValidator,
+    val passwordEvaluator: PasswordEvaluator
 ) : ViewModel() {
 
     private val _recoveryState = MutableStateFlow<RecoveryState>(RecoveryState.Idle)

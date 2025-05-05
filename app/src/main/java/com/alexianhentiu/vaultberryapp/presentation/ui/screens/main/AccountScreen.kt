@@ -11,7 +11,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.AnnotatedString
-import com.alexianhentiu.vaultberryapp.presentation.ui.components.bars.TopBarWithBackButton
+import com.alexianhentiu.vaultberryapp.presentation.ui.components.topBars.TopBarWithBackButton
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ErrorDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.InfoDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.AccountForm
@@ -83,7 +83,8 @@ fun AccountScreen(
                         onDeleteAccount = {
                             viewModel.deleteAccount()
                         },
-                        inputValidator = viewModel.inputValidator
+                        inputValidator = viewModel.inputValidator,
+                        passwordEvaluator = viewModel.passwordEvaluator
                     )
                 }
             }

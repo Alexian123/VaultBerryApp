@@ -10,7 +10,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.AnnotatedString
-import com.alexianhentiu.vaultberryapp.presentation.ui.components.bars.AuthTopBar
+import com.alexianhentiu.vaultberryapp.presentation.ui.components.topBars.AuthTopBar
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ErrorDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.InfoDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.RegisterForm
@@ -39,7 +39,8 @@ fun RegisterScreen(viewModel: RegisterViewModel, navManager: NavigationManager) 
                         onRegisterClicked = { email, password, firstName, lastName ->
                             viewModel.register(email, password, firstName, lastName)
                         },
-                        inputValidator = viewModel.inputValidator
+                        inputValidator = viewModel.inputValidator,
+                        passwordEvaluator = viewModel.passwordEvaluator
                     )
                 }
             }
