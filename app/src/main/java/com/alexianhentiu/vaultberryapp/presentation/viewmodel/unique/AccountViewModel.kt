@@ -14,7 +14,7 @@ import com.alexianhentiu.vaultberryapp.domain.usecase.general.account.GetAccount
 import com.alexianhentiu.vaultberryapp.domain.usecase.general.account.Setup2FAUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.general.auth.LogoutUseCase
 import com.alexianhentiu.vaultberryapp.domain.utils.types.ActionResult
-import com.alexianhentiu.vaultberryapp.domain.utils.InputValidator
+import com.alexianhentiu.vaultberryapp.domain.utils.validation.InputValidator
 import com.alexianhentiu.vaultberryapp.presentation.utils.ErrorInfo
 import com.alexianhentiu.vaultberryapp.presentation.utils.states.AccountState
 import dagger.hilt.android.lifecycle.HiltViewModel

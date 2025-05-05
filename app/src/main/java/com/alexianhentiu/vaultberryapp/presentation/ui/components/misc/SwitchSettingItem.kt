@@ -17,10 +17,10 @@ import androidx.compose.ui.unit.sp
 fun SwitchSettingItem(
     text: String,
     checked: Boolean,
-    enabled: Boolean = true,
-    fontSize: Int = 18,
-    onCheckedChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    fontSize: Int = 16,
+    onCheckedChange: (Boolean) -> Unit,
 ) {
     Row(
         modifier = modifier

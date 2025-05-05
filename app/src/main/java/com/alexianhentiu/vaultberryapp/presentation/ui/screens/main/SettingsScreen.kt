@@ -6,7 +6,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -14,6 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -27,12 +31,12 @@ import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.SettingsVie
 fun SettingsScreen(
     viewModel: SettingsViewModel? = null,
     navManager: NavigationManager,
-
 ) {
     val key = navManager.retrieveVaultKey()
 
     var useSystemTheme by remember { mutableStateOf(viewModel?.useSystemTheme?.value != false) }
     var darkTheme by remember { mutableStateOf(viewModel?.darkTheme?.value == true) }
+    var debugMode by remember { mutableStateOf(viewModel?.debugMode?.value == true) }
 
     BackHandler(enabled = true) {
         if (key != null) {
@@ -59,14 +63,21 @@ fun SettingsScreen(
         }
     ) { contentPadding ->
         Box(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
                 .padding(contentPadding)
         ) {
             Column(
                 verticalArrangement = Arrangement.Top,
-                modifier = Modifier.fillMaxSize()
-                    .padding(16.dp)
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
             ) {
+                Text(
+                    text = "Theme",
+                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
                 SwitchSettingItem(
                     text = "Use system theme",
                     checked = useSystemTheme,
@@ -82,6 +93,21 @@ fun SettingsScreen(
                     onCheckedChange = {
                         darkTheme = it
                         viewModel?.setDarkTheme(darkTheme)
+                    }
+                )
+                HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+
+                Text(
+                    text = "Advanced (restart required)",
+                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                    modifier = Modifier.padding(top = 8.dp, bottom = 8.dp)
+                )
+                SwitchSettingItem(
+                    text = "Debug mode",
+                    checked = debugMode,
+                    onCheckedChange = {
+                        debugMode = it
+                        viewModel?.setDebugMode(debugMode)
                     }
                 )
             }

@@ -11,7 +11,7 @@ import com.alexianhentiu.vaultberryapp.domain.usecase.general.vault.GetEntriesUs
 import com.alexianhentiu.vaultberryapp.domain.usecase.general.vault.UpdateEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.general.vault.DeleteEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.utils.types.ActionResult
-import com.alexianhentiu.vaultberryapp.domain.utils.InputValidator
+import com.alexianhentiu.vaultberryapp.domain.utils.validation.InputValidator
 import com.alexianhentiu.vaultberryapp.domain.utils.types.ErrorType
 import com.alexianhentiu.vaultberryapp.presentation.utils.ErrorInfo
 import com.alexianhentiu.vaultberryapp.presentation.utils.states.VaultState

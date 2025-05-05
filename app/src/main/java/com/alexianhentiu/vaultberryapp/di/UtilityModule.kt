@@ -3,20 +3,25 @@ package com.alexianhentiu.vaultberryapp.di
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.alexianhentiu.vaultberryapp.data.utils.APIResponseHandler
 import com.alexianhentiu.vaultberryapp.data.utils.ModelConverter
 import com.alexianhentiu.vaultberryapp.domain.utils.security.AuthGuardian
-import com.alexianhentiu.vaultberryapp.domain.utils.InputValidator
+import com.alexianhentiu.vaultberryapp.domain.utils.validation.InputValidator
 import com.alexianhentiu.vaultberryapp.domain.utils.security.PasswordGenerator
 import com.alexianhentiu.vaultberryapp.domain.utils.security.VaultGuardian
 import com.alexianhentiu.vaultberryapp.domain.utils.security.cryptography.AESHandler
 import com.alexianhentiu.vaultberryapp.domain.utils.security.cryptography.CryptographyHandler
+import com.alexianhentiu.vaultberryapp.domain.utils.validation.DebugValidator
+import com.alexianhentiu.vaultberryapp.domain.utils.validation.RegularValidator
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 import javax.inject.Singleton
 
 @Module
@@ -38,7 +43,18 @@ object UtilityModule {
 
     @Provides
     @Singleton
-    fun provideInputValidator(): InputValidator = InputValidator()
+    fun provideInputValidator(
+        dataStore: DataStore<Preferences>
+    ): InputValidator {
+        val isDebugModeEnabled = runBlocking {
+            dataStore.data.first()[booleanPreferencesKey("debug_mode")] == true
+        }
+        return if (isDebugModeEnabled) {
+            DebugValidator()
+        } else {
+            RegularValidator()
+        }
+    }
 
     @Provides
     @Singleton

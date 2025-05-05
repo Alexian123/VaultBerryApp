@@ -24,7 +24,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.alexianhentiu.vaultberryapp.R
-import com.alexianhentiu.vaultberryapp.domain.utils.InputValidator
+import com.alexianhentiu.vaultberryapp.domain.utils.validation.DebugValidator
+import com.alexianhentiu.vaultberryapp.domain.utils.validation.InputValidator
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.ValidatedTextField
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.PasswordField
 import com.alexianhentiu.vaultberryapp.presentation.utils.NavigationManager
@@ -97,6 +98,6 @@ fun LoginFormPreview() {
         navManager = NavigationManager(NavController(LocalContext.current)),
         onLoginClicked = { _, _ -> },
         onForgotPasswordClicked = {},
-        inputValidator = InputValidator()
+        inputValidator = DebugValidator()
     )
 }

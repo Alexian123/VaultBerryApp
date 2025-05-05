@@ -20,12 +20,16 @@ class SettingsViewModel@Inject constructor(
 ) : ViewModel() {
     private val useSystemThemeKey = booleanPreferencesKey("use_system_theme")
     private val darkThemeKey = booleanPreferencesKey("dark_theme")
+    private val debugModeKey = booleanPreferencesKey("debug_mode")
 
     private val _useSystemTheme = MutableStateFlow(false)
     val useSystemTheme: StateFlow<Boolean> = _useSystemTheme
 
     private val _darkTheme = MutableStateFlow(false)
     val darkTheme: StateFlow<Boolean> = _darkTheme
+
+    private val _debugMode = MutableStateFlow(false)
+    val debugMode: StateFlow<Boolean> = _debugMode
 
     init {
         viewModelScope.launch {
@@ -40,6 +44,13 @@ class SettingsViewModel@Inject constructor(
                 preferences[darkThemeKey] == true
             }.collect { darkTheme ->
                 _darkTheme.value = darkTheme
+            }
+        }
+        viewModelScope.launch {
+            dataStore.data.map { preferences ->
+                preferences[debugModeKey] == true
+            }.collect { debugMode ->
+                _debugMode.value = debugMode
             }
         }
     }
@@ -59,6 +70,15 @@ class SettingsViewModel@Inject constructor(
                 preferences[darkThemeKey] = darkTheme
             }
             Log.d("SettingsViewModel", "setDarkTheme: $darkTheme")
+        }
+    }
+
+    fun setDebugMode(debugMode: Boolean) {
+        viewModelScope.launch {
+            dataStore.edit { preferences ->
+                preferences[debugModeKey] = debugMode
+            }
+            Log.d("SettingsViewModel", "setDebugMode: $debugMode")
         }
     }
 }

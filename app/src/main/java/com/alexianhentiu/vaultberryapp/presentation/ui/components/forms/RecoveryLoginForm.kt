@@ -21,7 +21,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.alexianhentiu.vaultberryapp.domain.utils.InputValidator
+import com.alexianhentiu.vaultberryapp.domain.utils.validation.DebugValidator
+import com.alexianhentiu.vaultberryapp.domain.utils.validation.InputValidator
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.PasswordField
 
 @Composable
@@ -87,6 +88,6 @@ fun RecoveryLoginFormPreview() {
     RecoveryLoginForm(
         onContinueClicked = { _, _ -> },
         onCancelClicked = {},
-        inputValidator = InputValidator()
+        inputValidator = DebugValidator()
     )
 }
