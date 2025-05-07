@@ -4,6 +4,7 @@ import android.util.Log
 import com.alexianhentiu.vaultberryapp.data.utils.APIResult
 import com.alexianhentiu.vaultberryapp.domain.model.entity.DecryptedKey
 import com.alexianhentiu.vaultberryapp.domain.model.entity.EncryptedVaultEntry
+import com.alexianhentiu.vaultberryapp.domain.model.entity.VaultEntryPreview
 import com.alexianhentiu.vaultberryapp.domain.model.response.MessageResponse
 import com.alexianhentiu.vaultberryapp.domain.repository.VaultRepository
 import com.alexianhentiu.vaultberryapp.domain.utils.types.ActionResult
@@ -18,27 +19,40 @@ class ReEncryptVaultUseCase(
         oldKey: DecryptedKey,
         newKey: DecryptedKey
     ): ActionResult<MessageResponse> {
-        return when (val result = vaultRepository.getEntries()) {
+        when (val previewsResult = vaultRepository.getAllVaultEntryPreviews()) {
             is APIResult.Success -> {
-                reEncryptEntries(result.data, oldKey, newKey)
+                return when (val detailsResult = vaultRepository.getAllVaultEntryDetails()) {
+                    is APIResult.Success -> {
+                        reEncryptEntries(previewsResult.data, detailsResult.data, oldKey, newKey)
+                    }
+
+                    is APIResult.Error -> {
+                        return ActionResult.Error(
+                            ErrorType.EXTERNAL,
+                            detailsResult.source,
+                            detailsResult.message
+                        )
+                    }
+                }
             }
 
             is APIResult.Error -> {
-                ActionResult.Error(
+                return ActionResult.Error(
                     ErrorType.EXTERNAL,
-                    result.source,
-                    result.message
+                    previewsResult.source,
+                    previewsResult.message
                 )
             }
         }
     }
 
     private suspend fun reEncryptEntries(
-        entries: List<EncryptedVaultEntry>,
+        previews: List<VaultEntryPreview>,
+        details: List<EncryptedVaultEntry>,
         oldKey: DecryptedKey,
         newKey: DecryptedKey
     ): ActionResult<MessageResponse> {
-        for (entry in entries) {
+        for (entry in details) {
             val decryptedEntryResult = decryptVaultEntryUseCase(entry, oldKey)
             if (decryptedEntryResult is ActionResult.Error) {
                 return decryptedEntryResult
@@ -51,7 +65,8 @@ class ReEncryptVaultUseCase(
             }
             val newEncryptedEntry = (encryptedEntryResult as ActionResult.Success).data
 
-            val updateResult = vaultRepository.updateEntry(newEncryptedEntry)
+            val id = previews.find { it.title == entry.title }?.id ?: continue
+            val updateResult = vaultRepository.updateEntry(id, newEncryptedEntry)
             if (updateResult is APIResult.Error) {
                 return ActionResult.Error(
                     ErrorType.EXTERNAL,

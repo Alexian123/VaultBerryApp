@@ -15,8 +15,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.DeleteOutline
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Key
@@ -36,54 +34,36 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.alexianhentiu.vaultberryapp.R
 import com.alexianhentiu.vaultberryapp.domain.model.entity.DecryptedVaultEntry
+import com.alexianhentiu.vaultberryapp.domain.model.entity.VaultEntryPreview
 import com.alexianhentiu.vaultberryapp.domain.utils.security.PasswordEvaluator
-import com.alexianhentiu.vaultberryapp.domain.utils.validation.DebugValidator
-import com.alexianhentiu.vaultberryapp.domain.utils.validation.InputValidator
-import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ConfirmActionDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.PasswordField
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.ValidatedTextField
-import com.alexianhentiu.vaultberryapp.presentation.utils.enums.EntryModification
 
 @Composable
 fun VaultEntryItem(
-    decryptedEntry: DecryptedVaultEntry,
-    onEntryModification: (EntryModification, DecryptedVaultEntry) -> Unit,
-    inputValidator: InputValidator,
+    preview: VaultEntryPreview,
+    decryptedEntry: DecryptedVaultEntry? = null,    // null if not expanded
+    onItemClick: (Long) -> Unit,
+    onDelete: (Long) -> Unit,
+    onEdit: (Long) -> Unit,
     passwordEvaluator: PasswordEvaluator
 ) {
-    var title by remember { mutableStateOf(decryptedEntry.title) }
-    var url by remember { mutableStateOf(decryptedEntry.url) }
-    var username by remember { mutableStateOf(decryptedEntry.username) }
-    var password by remember { mutableStateOf(decryptedEntry.password) }
-    var notes by remember { mutableStateOf(decryptedEntry.notes) }
+    var title by remember(preview) { mutableStateOf(preview.title) }
+    var url by remember(decryptedEntry) { mutableStateOf(decryptedEntry?.url ?: "") }
+    var username by remember(decryptedEntry) { mutableStateOf(decryptedEntry?.username ?: "") }
+    var password by remember(decryptedEntry) { mutableStateOf(decryptedEntry?.password ?: "") }
+    var notes by remember(decryptedEntry) { mutableStateOf(decryptedEntry?.notes ?: "") }
 
-    var isExpanded by remember { mutableStateOf(false) }
-    var editMode by remember { mutableStateOf(false) }
-    var isTitleValid by remember { mutableStateOf(inputValidator.validateEntryTitle(title)) }
     var passwordVisible by remember { mutableStateOf(false) }
-    var showCancelDialog by remember { mutableStateOf(false) }
-    var unsavedChanges by remember { mutableStateOf(false) }
 
-    if (showCancelDialog) {
-        ConfirmActionDialog(
-            title = stringResource(R.string.cancel_entry_dialog_title),
-            message = stringResource(R.string.cancel_entry_dialog_message),
-            confirmButtonText = stringResource(R.string.cancel_entry_action_content_description),
-            onDismissRequest = { showCancelDialog = false },
-            onSubmit = {
-                if (it) { // restore initial values
-                    title = decryptedEntry.title
-                    url = decryptedEntry.url
-                    username = decryptedEntry.username
-                    password = decryptedEntry.password
-                    notes = decryptedEntry.notes
-                    isExpanded = false
-                    editMode = false
-                    unsavedChanges = false
-                    showCancelDialog = false
-                }
-            }
-        )
+    if (decryptedEntry == null) {
+        // Reset values
+        passwordVisible = false
+        title = preview.title
+        url = ""
+        username = ""
+        password = ""
+        notes = ""
     }
 
     Card(
@@ -91,8 +71,8 @@ fun VaultEntryItem(
             .fillMaxWidth()
             .padding(4.dp)
             .clickable {
-                isExpanded = !isExpanded
                 passwordVisible = false
+                onItemClick(preview.id)
             }
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -100,98 +80,85 @@ fun VaultEntryItem(
                 verticalArrangement = Arrangement.Center,
                 modifier = Modifier
                     .weight(0.8f)
-                    .padding(vertical = if (!isExpanded) 0.dp else 8.dp)
+                    .padding(vertical = if (decryptedEntry == null) 0.dp else 8.dp)
             ) {
                 AnimatedVisibility(
-                    visible = !isExpanded,
+                    visible = decryptedEntry == null,
                 ) {
                     Box(modifier = Modifier.fillMaxWidth()) {
                         Row(
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier
+                                .fillMaxWidth()
                                 .align(Alignment.CenterStart)
-
                         ) {
                             Icon(
                                 imageVector = Icons.Filled.Key,
-                                contentDescription = stringResource(R.string
-                                    .entry_content_description),
+                                contentDescription = stringResource(
+                                    R.string.entry_content_description
+                                ),
                                 modifier = Modifier.padding(10.dp)
                             )
                             Text(
-                                text = decryptedEntry.title,
-                                modifier = Modifier
-                                    .align(Alignment.CenterVertically)
+                                text = preview.title,
+                                modifier = Modifier.align(Alignment.CenterVertically)
                             )
                         }
 
                         IconButton(
-                            onClick = { isExpanded = true },
+                            onClick = { onItemClick(preview.id) },
                             modifier = Modifier.align(Alignment.CenterEnd)
                         ) {
                             Icon(
                                 Icons.Filled.ArrowDropDown,
-                                stringResource(R.string.toggle_entry_expansion_action_content_description)
+                                stringResource(
+                                    R.string.toggle_entry_expansion_action_content_description
+                                )
                             )
                         }
                     }
                 }
                 AnimatedVisibility(
-                    visible = isExpanded,
+                    visible = decryptedEntry != null,
                     enter = expandVertically(animationSpec = tween(durationMillis = 300)),
                     exit = shrinkVertically(animationSpec = tween(durationMillis = 300))
                 ) {
                     Column {
                         Box(modifier = Modifier.fillMaxWidth()) {
                             ValidatedTextField(
-                                readOnly = !editMode,
+                                readOnly = true,
                                 modifier = Modifier.fillMaxWidth(),
                                 label = "Title",
                                 initialText = title,
-                                onInputChange = { newTitle, valid ->
-                                    title = newTitle
-                                    isTitleValid = valid
-                                    unsavedChanges = true
-                                },
-                                isValid = inputValidator::validateEntryTitle
                             )
                             IconButton(
-                                onClick = { isExpanded = false },
+                                onClick = { onItemClick(preview.id) },
                                 modifier = Modifier.align(Alignment.CenterEnd)
                             ) {
                                 Icon(
                                     Icons.Filled.ArrowDropUp,
-                                    stringResource(R.string.toggle_entry_expansion_action_content_description)
+                                    stringResource(
+                                        R.string.toggle_entry_expansion_action_content_description
+                                    )
                                 )
                             }
                         }
                         ValidatedTextField(
-                            readOnly = !editMode,
+                            readOnly = true,
                             modifier = Modifier.fillMaxWidth(),
                             label = "URL",
                             initialText = url,
-                            onInputChange = { newUrl, _ ->
-                                url = newUrl
-                                unsavedChanges = true
-                            },
                             showCopyToClipboardButton = true
                         )
                         ValidatedTextField(
-                            readOnly = !editMode,
+                            readOnly = true,
                             modifier = Modifier.fillMaxWidth(),
                             label = "Username",
                             initialText = username,
-                            onInputChange = { newUsername, _ ->
-                                username = newUsername
-                                unsavedChanges = true
-                            },
                             showCopyToClipboardButton = true
                         )
                         PasswordField(
-                            readOnly = !editMode,
-                            onPasswordChange = { newPassword, _ ->
-                                password = newPassword
-                                unsavedChanges = true
-                            },
+                            readOnly = true,
+                            onPasswordChange = { _, _ -> },
                             modifier = Modifier.fillMaxWidth(),
                             initialText = password,
                             showCopyToClipboardButton = true,
@@ -199,87 +166,34 @@ fun VaultEntryItem(
                             showStrengthIndicator = true
                         )
                         ValidatedTextField(
-                            readOnly = !editMode,
+                            readOnly = true,
                             modifier = Modifier.fillMaxWidth(),
                             label = "Notes",
                             initialText = notes,
-                            onInputChange = { newNotes, _ ->
-                                notes = newNotes
-                                unsavedChanges = true
-                            },
                             showCopyToClipboardButton = true
                         )
-                        if (!editMode) {
-                            Box(modifier = Modifier.fillMaxWidth()) {
-                                IconButton(
-                                    onClick = { editMode = true },
-                                    modifier = Modifier.align(Alignment.CenterEnd)
-                                ) {
-                                    Icon(
-                                        Icons.Filled.Edit,
-                                        stringResource(R.string.entry_edit_mode_action_content_description)
-                                    )
-                                }
-                            }
-                        } else {
-                            Row(
-                                modifier = Modifier.fillMaxWidth()
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            IconButton(
+                                modifier = Modifier.weight(0.1f),
+                                onClick = { onDelete(preview.id) }
                             ) {
-                                IconButton(
-                                    modifier = Modifier
-                                        .padding(8.dp)
-                                        .weight(0.1f),
-                                    onClick = {
-                                        onEntryModification(EntryModification.DELETE, decryptedEntry)
-                                    }
-                                ) {
-                                    Icon(
-                                        Icons.Filled.DeleteOutline,
-                                        stringResource(R.string.delete_entry_action_content_description)
-                                    )
-                                }
-                                Spacer(Modifier.weight(0.66f))
-                                IconButton(
-                                    modifier = Modifier
-                                        .padding(8.dp)
-                                        .weight(0.1f),
-                                    onClick = {
-                                        if (!unsavedChanges) {
-                                            editMode = false
-                                        }
-                                        showCancelDialog = unsavedChanges
-                                    }
-                                ) {
-                                    Icon(
-                                        Icons.Filled.Clear,
-                                        stringResource(R.string.cancel_entry_action_content_description)
-                                    )
-                                }
-                                IconButton(
-                                    enabled = isTitleValid,
-                                    modifier = Modifier
-                                        .padding(8.dp)
-                                        .weight(0.1f),
-                                    onClick = {
-                                        editMode = false
-                                        if (unsavedChanges) {
-                                            unsavedChanges = false
-                                            val updatedEntry = decryptedEntry.copy(
-                                                title = title,
-                                                url = url,
-                                                username = username,
-                                                password = password,
-                                                notes = notes
-                                            )
-                                            onEntryModification(EntryModification.UPDATE, updatedEntry)
-                                        }
-                                    }
-                                ) {
-                                    Icon(
-                                        Icons.Filled.Check,
-                                        stringResource(R.string.update_entry_action_content_description)
-                                    )
-                                }
+                                Icon(
+                                    Icons.Filled.DeleteOutline,
+                                    stringResource(R.string.delete_entry_action_content_description)
+                                )
+                            }
+                            Spacer(Modifier.weight(0.8f))
+                            IconButton(
+                                onClick = { onEdit(preview.id) },
+                                modifier = Modifier.weight(0.1f),
+                            ) {
+                                Icon(
+                                    Icons.Filled.Edit,
+                                    stringResource(R.string.entry_edit_mode_action_content_description)
+                                )
                             }
                         }
                     }
@@ -293,16 +207,31 @@ fun VaultEntryItem(
 @Composable
 fun VaultEntryPreview() {
     VaultEntryItem(
-        DecryptedVaultEntry(
-            0,
-            "Account 1",
-            "https://example.com",
-            "john",
-            "password123",
-            "Lorem ipsum dolor"
+        preview = VaultEntryPreview(1, "Entry"),
+        decryptedEntry = null,
+        onItemClick = {},
+        onDelete = {},
+        onEdit = {},
+        passwordEvaluator = PasswordEvaluator()
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ExpandedVaultEntryPreview() {
+    VaultEntryItem(
+        preview = VaultEntryPreview(1, "Entry"),
+        decryptedEntry = DecryptedVaultEntry(
+            lastModified = 0,
+            title = "Entry",
+            url = "https://example.com",
+            username = "user",
+            password = "password",
+            notes = "notes"
         ),
-        onEntryModification = { _, _ -> },
-        inputValidator = DebugValidator(),
+        onItemClick = {},
+        onDelete = {},
+        onEdit = {},
         passwordEvaluator = PasswordEvaluator()
     )
 }

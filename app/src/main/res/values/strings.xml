@@ -18,8 +18,7 @@
     <string name="cancel_entry_dialog_message">All changes will be lost.</string>
     <string name="delete_entry_dialog_title">Delete entry?</string>
     <string name="delete_entry_dialog_message">This cannot be undone.</string>
-    <string name="update_entry_dialog_title">Update entry?</string>
-    <string name="update_entry_dialog_message">The data will be overwritten.</string>
+    <string name="edit_entry_dialog_title">Edit entry</string>
     <string name="entry_content_description">Entry</string>
     <string name="logout_menu_item_text">Logout</string>
     <string name="account_menu_item_text">Account</string>

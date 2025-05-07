@@ -14,6 +14,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -21,13 +22,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.alexianhentiu.vaultberryapp.R
-import com.alexianhentiu.vaultberryapp.domain.model.entity.DecryptedVaultEntry
-import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.AddEntryDialog
+import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.VaultEntryDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ConfirmActionDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.topBars.VaultTopBar
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.misc.VaultEntryItem
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ErrorDialog
-import com.alexianhentiu.vaultberryapp.presentation.utils.enums.EntryModification
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc.LoadingScreen
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc.UnlockVaultScreen
 import com.alexianhentiu.vaultberryapp.presentation.utils.NavigationManager
@@ -43,13 +42,15 @@ fun VaultScreen(
     val vaultKey = navManager.retrieveVaultKey()
 
     val vaultState by vaultViewModel.vaultState.collectAsState()
-    val decryptedEntries by vaultViewModel.filteredEntries.collectAsState()
+    val previews by vaultViewModel.filteredPreviews.collectAsState()
+    val expandedEntriesMap by vaultViewModel.expandedEntriesMap.collectAsState()
+
+    var entryToModifyId by remember { mutableLongStateOf(-1L) }
 
     var showAddEntryDialog by remember { mutableStateOf(false) }
-    var entryModification by remember { mutableStateOf(EntryModification.NONE) }
-    var modifiedEntry by remember { mutableStateOf(null as DecryptedVaultEntry?) }
-
     var showLogoutDialog by remember { mutableStateOf(false) }
+    var showDeleteEntryDialog by remember { mutableStateOf(false) }
+    var showEditEntryDialog by remember { mutableStateOf(false) }
 
     BackHandler(enabled = true) {
         showLogoutDialog = true
@@ -61,24 +62,22 @@ fun VaultScreen(
         }
 
         is VaultState.Locked -> {
-            UnlockVaultScreen(onUnlock = { vaultViewModel.getEntries(vaultKey) })
+            UnlockVaultScreen(onUnlock = { vaultViewModel.fetchPreviews(vaultKey) })
         }
 
         is VaultState.Unlocked -> {
             Scaffold(
                 topBar = {
                     VaultTopBar(
-                        onSearch = { vaultViewModel.searchEntriesByTitle(it) },
+                        onSearch = { vaultViewModel.searchPreviewsByTitle(it) },
                         onLogout = {
                             vaultViewModel.logout()
                             navManager.navigate(NavRoute.LOGIN)
                         },
                         onAccountClick = {
-                            // send key to account screen
                             navManager.navigateWithVaultKey(NavRoute.ACCOUNT, vaultKey)
                         },
                         onSettingsClick = {
-                            // send key to settings screen
                             navManager.navigateWithVaultKey(NavRoute.SETTINGS, vaultKey)
                         }
                     )
@@ -99,80 +98,95 @@ fun VaultScreen(
                     .fillMaxSize()
                     .padding(contentPadding)) {
                     LazyColumn {
-                        items(decryptedEntries) { decryptedEntry ->
+                        items(previews, key = { it.id }) { entryPreview ->
                             VaultEntryItem(
-                                decryptedEntry = decryptedEntry,
-                                onEntryModification = { event, entry ->
-                                    entryModification = event
-                                    modifiedEntry = entry
+                                preview = entryPreview,
+                                decryptedEntry = expandedEntriesMap[entryPreview.id],
+                                onItemClick = { id ->
+                                    if (expandedEntriesMap[id] != null) {
+                                        vaultViewModel.clearEntryDetails(id)
+                                    } else {
+                                        vaultViewModel.fetchEntryDetails(id)
+                                    }
                                 },
-                                inputValidator = vaultViewModel.inputValidator,
+                                onDelete = { id ->
+                                    entryToModifyId = id
+                                    showDeleteEntryDialog = true
+                                },
+                                onEdit = { id ->
+                                    entryToModifyId = id
+                                    showEditEntryDialog = true
+                                },
                                 passwordEvaluator = vaultViewModel.passwordEvaluator
                             )
                         }
                     }
 
-                    if (showLogoutDialog) {
-                        ConfirmActionDialog(
-                            title = "Log Out",
-                            message = "Are you sure you want to log out?",
-                            onDismissRequest = { showLogoutDialog = false },
-                            onSubmit = {
-                                if (it) {
-                                    vaultViewModel.logout()
-                                    navManager.navigate(NavRoute.LOGIN)
-                                }
-                            }
-                        )
-                    }
-
-                    if (showAddEntryDialog) {
-                        AddEntryDialog(
-                            formTitle = stringResource(R.string.add_entry_form_title),
-                            onDismissRequest = { showAddEntryDialog = false },
-                            onSubmit = {
-                                vaultViewModel.addEntry(it)
-                                showAddEntryDialog = false
-                            },
-                            inputValidator = vaultViewModel.inputValidator,
-                            passwordEvaluator = vaultViewModel.passwordEvaluator
-                        )
-                    }
-
-                    when (entryModification) {
-                        EntryModification.DELETE -> {
+                    when {
+                        showDeleteEntryDialog -> {
                             ConfirmActionDialog(
                                 title = stringResource(R.string.delete_entry_dialog_title),
                                 message = stringResource(R.string.delete_entry_dialog_message),
-                                confirmButtonText = stringResource(R.string.delete_entry_action_content_description),
-                                onDismissRequest = { entryModification = EntryModification.NONE },
+                                confirmButtonText = stringResource(
+                                    R.string.delete_entry_action_content_description
+                                ),
+                                onDismissRequest = {
+                                    entryToModifyId = -1L
+                                    showDeleteEntryDialog = false
+                                },
                                 onSubmit = {
-                                    if (it && modifiedEntry != null) { // delete entry
-                                        vaultViewModel.deleteEntry(modifiedEntry!!)
-                                        entryModification = EntryModification.NONE
-                                        modifiedEntry = null
+                                    if (it && entryToModifyId != -1L) {
+                                        vaultViewModel.deleteEntry(entryToModifyId)
+                                        entryToModifyId = -1L
+                                        showDeleteEntryDialog = false
                                     }
                                 }
                             )
                         }
-
-                        EntryModification.UPDATE -> {
+                        showEditEntryDialog -> {
+                            VaultEntryDialog(
+                                formTitle = stringResource(R.string.edit_entry_dialog_title),
+                                initialEntry = expandedEntriesMap[entryToModifyId],
+                                onDismissRequest = {
+                                    entryToModifyId = -1L
+                                    showEditEntryDialog = false
+                                },
+                                onSubmit = {
+                                    if (entryToModifyId != -1L) {
+                                        vaultViewModel.updateEntry(entryToModifyId, it)
+                                        entryToModifyId = -1L
+                                        showEditEntryDialog = false
+                                    }
+                                },
+                                inputValidator = vaultViewModel.inputValidator,
+                                passwordEvaluator = vaultViewModel.passwordEvaluator
+                            )
+                        }
+                        showLogoutDialog -> {
                             ConfirmActionDialog(
-                                title = stringResource(R.string.update_entry_dialog_title),
-                                message = stringResource(R.string.update_entry_dialog_message),
-                                confirmButtonText = stringResource(R.string.update_entry_action_content_description),
-                                onDismissRequest = { entryModification = EntryModification.NONE },
+                                title = "Log Out",
+                                message = "Are you sure you want to log out?",
+                                onDismissRequest = { showLogoutDialog = false },
                                 onSubmit = {
-                                    if (it && modifiedEntry != null) { // update entry
-                                        vaultViewModel.updateEntry(modifiedEntry!!)
-                                        entryModification = EntryModification.NONE
-                                        modifiedEntry = null
+                                    if (it) {
+                                        vaultViewModel.logout()
+                                        navManager.navigate(NavRoute.LOGIN)
                                     }
                                 }
                             )
                         }
-
-                        EntryModification.NONE -> {}
+                        showAddEntryDialog -> {
+                            VaultEntryDialog(
+                                formTitle = stringResource(R.string.add_entry_form_title),
+                                onDismissRequest = { showAddEntryDialog = false },
+                                onSubmit = {
+                                    vaultViewModel.addEntry(it)
+                                    showAddEntryDialog = false
+                                },
+                                inputValidator = vaultViewModel.inputValidator,
+                                passwordEvaluator = vaultViewModel.passwordEvaluator
+                            )
+                        }
                     }
                 }
             }

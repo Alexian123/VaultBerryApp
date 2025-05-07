@@ -20,7 +20,7 @@ import com.alexianhentiu.vaultberryapp.presentation.utils.enums.TextFieldType
 @Composable
 fun ValidatedTextField(
     modifier: Modifier = Modifier,
-    onInputChange: (String, Boolean) -> Unit,
+    onInputChange: (String, Boolean) -> Unit = { _, _ -> },
     label: String = "",
     initialText: String = "",
     isValid: (String) -> Boolean = { true },

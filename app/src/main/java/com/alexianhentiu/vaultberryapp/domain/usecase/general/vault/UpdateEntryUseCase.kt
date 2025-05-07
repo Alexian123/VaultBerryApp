@@ -14,6 +14,7 @@ class UpdateEntryUseCase(
     private val encryptVaultEntryUseCase: EncryptVaultEntryUseCase
 ) {
     suspend operator fun invoke(
+        id: Long,
         entry: DecryptedVaultEntry,
         key: DecryptedKey
     ): ActionResult<MessageResponse> {
@@ -23,7 +24,7 @@ class UpdateEntryUseCase(
         }
         val newEncryptedVaultEntry = (encryptEntryResult as ActionResult.Success).data
 
-        return when (val response = vaultRepository.updateEntry(newEncryptedVaultEntry)) {
+        return when (val response = vaultRepository.updateEntry(id, newEncryptedVaultEntry)) {
             is APIResult.Success -> {
                 ActionResult.Success(response.data)
             }

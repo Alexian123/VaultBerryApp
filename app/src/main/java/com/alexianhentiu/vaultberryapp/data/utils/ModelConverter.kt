@@ -8,6 +8,7 @@ import com.alexianhentiu.vaultberryapp.data.model.request.PasswordChangeRequestD
 import com.alexianhentiu.vaultberryapp.data.model.entity.PasswordPairDTO
 import com.alexianhentiu.vaultberryapp.data.model.response.TotpResponseDTO
 import com.alexianhentiu.vaultberryapp.data.model.entity.UserDTO
+import com.alexianhentiu.vaultberryapp.data.model.entity.VaultEntryPreviewDTO
 import com.alexianhentiu.vaultberryapp.data.model.request.LoginRequestDTO
 import com.alexianhentiu.vaultberryapp.data.model.request.RecoveryLoginRequestDTO
 import com.alexianhentiu.vaultberryapp.data.model.response.LoginResponseDTO
@@ -19,6 +20,7 @@ import com.alexianhentiu.vaultberryapp.domain.model.request.PasswordChangeReques
 import com.alexianhentiu.vaultberryapp.domain.model.entity.PasswordPair
 import com.alexianhentiu.vaultberryapp.domain.model.response.TotpResponse
 import com.alexianhentiu.vaultberryapp.domain.model.entity.User
+import com.alexianhentiu.vaultberryapp.domain.model.entity.VaultEntryPreview
 import com.alexianhentiu.vaultberryapp.domain.model.request.LoginRequest
 import com.alexianhentiu.vaultberryapp.domain.model.request.RecoveryLoginRequest
 import com.alexianhentiu.vaultberryapp.domain.model.response.LoginResponse
@@ -124,7 +126,7 @@ class ModelConverter {
 
     fun encryptedVaultEntryToDTO(encryptedVaultEntry: EncryptedVaultEntry): EncryptedVaultEntryDTO {
         return EncryptedVaultEntryDTO(
-            timestamp = encryptedVaultEntry.timestamp,
+            lastModified = encryptedVaultEntry.lastModified,
             title = encryptedVaultEntry.title,
             url = encryptedVaultEntry.url,
             encryptedUsername = encryptedVaultEntry.encryptedUsername,
@@ -137,12 +139,21 @@ class ModelConverter {
         encryptedVaultEntryDTO: EncryptedVaultEntryDTO
     ): EncryptedVaultEntry {
         return EncryptedVaultEntry(
-            timestamp = encryptedVaultEntryDTO.timestamp,
+            lastModified = encryptedVaultEntryDTO.lastModified,
             title = encryptedVaultEntryDTO.title,
             url = encryptedVaultEntryDTO.url,
             encryptedUsername = encryptedVaultEntryDTO.encryptedUsername,
             encryptedPassword = encryptedVaultEntryDTO.encryptedPassword,
             notes = encryptedVaultEntryDTO.notes
+        )
+    }
+
+    fun vaultEntryPreviewFromDTO(
+        vaultEntryPreviewDTO: VaultEntryPreviewDTO
+    ): VaultEntryPreview {
+        return VaultEntryPreview(
+            id = vaultEntryPreviewDTO.id,
+            title = vaultEntryPreviewDTO.title
         )
     }
 }

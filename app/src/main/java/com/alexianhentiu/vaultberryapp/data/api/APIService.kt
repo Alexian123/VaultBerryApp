@@ -8,6 +8,7 @@ import com.alexianhentiu.vaultberryapp.data.model.response.MessageResponseDTO
 import com.alexianhentiu.vaultberryapp.data.model.request.PasswordChangeRequestDTO
 import com.alexianhentiu.vaultberryapp.data.model.response.TotpResponseDTO
 import com.alexianhentiu.vaultberryapp.data.model.entity.UserDTO
+import com.alexianhentiu.vaultberryapp.data.model.entity.VaultEntryPreviewDTO
 import com.alexianhentiu.vaultberryapp.data.model.request.LoginRequestDTO
 import com.alexianhentiu.vaultberryapp.data.model.request.RecoveryLoginRequestDTO
 import com.alexianhentiu.vaultberryapp.data.model.response.LoginResponseDTO
@@ -21,6 +22,11 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface APIService {
+
+    companion object {
+        const val VAULT_PREFIX = "vault"
+        const val ACCOUNT_PREFIX = "account"
+    }
 
     @POST("recovery/send")
     suspend fun recoverySend(@Query("email") email: String): Response<MessageResponseDTO>
@@ -40,36 +46,45 @@ interface APIService {
     @POST("logout")
     suspend fun logout(): Response<MessageResponseDTO>
 
-    @GET("entries")
-    suspend fun getEntries(): Response<List<EncryptedVaultEntryDTO>?>
+    @GET("$VAULT_PREFIX/previews")
+    suspend fun getAllVaultEntryPreviews(): Response<List<VaultEntryPreviewDTO>?>
 
-    @POST("entries")
-    suspend fun addEntry(@Body vaultEntry: EncryptedVaultEntryDTO): Response<MessageResponseDTO>
+    @GET("$VAULT_PREFIX/details")
+    suspend fun getAllVaultEntryDetails(): Response<List<EncryptedVaultEntryDTO>?>
 
-    @PATCH("entries")
-    suspend fun updateEntry(@Body vaultEntry: EncryptedVaultEntryDTO): Response<MessageResponseDTO>
+    @GET("$VAULT_PREFIX/details/{id}")
+    suspend fun getVaultEntryDetails(@Path("id") id: Long): Response<EncryptedVaultEntryDTO>
 
-    @DELETE("entries/{timestamp}")
-    suspend fun deleteEntry(@Path("timestamp") timestamp: Long): Response<MessageResponseDTO>
+    @POST("$VAULT_PREFIX/add")
+    suspend fun addEntry(@Body vaultEntry: EncryptedVaultEntryDTO): Response<VaultEntryPreviewDTO>
 
-    @GET("account")
+    @PATCH("$VAULT_PREFIX/update/{id}")
+    suspend fun updateEntry(
+        @Path("id") id: Long,
+        @Body vaultEntry: EncryptedVaultEntryDTO
+    ): Response<MessageResponseDTO>
+
+    @DELETE("$VAULT_PREFIX/delete/{id}")
+    suspend fun deleteEntry(@Path("id") id: Long): Response<MessageResponseDTO>
+
+    @GET(ACCOUNT_PREFIX)
     suspend fun getAccountInfo(): Response<AccountInfoDTO>
 
-    @PATCH("account")
+    @PATCH(ACCOUNT_PREFIX)
     suspend fun updateAccount(@Body account: AccountInfoDTO): Response<MessageResponseDTO>
 
-    @DELETE("account")
+    @DELETE(ACCOUNT_PREFIX)
     suspend fun deleteAccount(): Response<MessageResponseDTO>
 
-    @PATCH("account/password")
+    @PATCH("$ACCOUNT_PREFIX/password")
     suspend fun changePassword(@Body data: PasswordChangeRequestDTO): Response<MessageResponseDTO>
 
-    @POST("account/2fa/setup")
+    @POST("$ACCOUNT_PREFIX/2fa/setup")
     suspend fun setup2FA(): Response<TotpResponseDTO>
 
-    @GET("account/2fa/status")
+    @GET("$ACCOUNT_PREFIX/2fa/status")
     suspend fun get2FAStatus(): Response<BooleanResponseDTO>
 
-    @POST("account/2fa/disable")
+    @POST("$ACCOUNT_PREFIX/2fa/disable")
     suspend fun disable2FA(): Response<MessageResponseDTO>
 }

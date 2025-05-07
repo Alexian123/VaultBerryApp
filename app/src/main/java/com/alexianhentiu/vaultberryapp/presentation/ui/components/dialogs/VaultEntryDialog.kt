@@ -33,20 +33,21 @@ import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.Passwor
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.ValidatedTextField
 
 @Composable
-fun AddEntryDialog(
+fun VaultEntryDialog(
     formTitle: String,
+    initialEntry: DecryptedVaultEntry? = null,
     onDismissRequest: () -> Unit,
     onSubmit: (DecryptedVaultEntry) -> Unit,
     inputValidator: InputValidator,
     passwordEvaluator: PasswordEvaluator
 ) {
-    var title by remember { mutableStateOf( "") }
-    var url by remember { mutableStateOf( "") }
-    var username by remember { mutableStateOf( "") }
-    var password by remember { mutableStateOf( "") }
-    var notes by remember { mutableStateOf( "") }
+    var title by remember { mutableStateOf(initialEntry?.title ?: "") }
+    var url by remember { mutableStateOf(initialEntry?.url ?: "") }
+    var username by remember { mutableStateOf(initialEntry?.username ?: "") }
+    var password by remember { mutableStateOf(initialEntry?.password ?: "") }
+    var notes by remember { mutableStateOf(initialEntry?.notes ?: "") }
 
-    var isTitleValid by remember { mutableStateOf(false) }
+    var isTitleValid by remember { mutableStateOf(inputValidator.validateEntryTitle(title)) }
 
     Dialog(
         onDismissRequest = onDismissRequest,
@@ -83,6 +84,7 @@ fun AddEntryDialog(
                         ValidatedTextField(
                             modifier = Modifier.fillMaxWidth(),
                             label = "Title",
+                            initialText = title,
                             onInputChange = { newTitle, valid ->
                                 title = newTitle
                                 isTitleValid = valid
@@ -92,6 +94,7 @@ fun AddEntryDialog(
                         ValidatedTextField(
                             modifier = Modifier.fillMaxWidth(),
                             label = "URL",
+                            initialText = url,
                             onInputChange = { newUrl, _ ->
                                 url = newUrl
                             }
@@ -99,6 +102,7 @@ fun AddEntryDialog(
                         ValidatedTextField(
                             modifier = Modifier.fillMaxWidth(),
                             label = "Username",
+                            initialText = username,
                             onInputChange = { newUsername, _ ->
                                 username = newUsername
                             }
@@ -107,6 +111,7 @@ fun AddEntryDialog(
                             onPasswordChange = { newPassword, _ ->
                                 password = newPassword
                             },
+                            initialText = password,
                             passwordEvaluator = passwordEvaluator,
                             showStrengthIndicator = true,
                             modifier = Modifier.fillMaxWidth()
@@ -136,7 +141,7 @@ fun AddEntryDialog(
                                     .padding(16.dp),
                                 onClick = {
                                     val entry = DecryptedVaultEntry(
-                                        timestamp = System.currentTimeMillis(),
+                                        lastModified = System.currentTimeMillis(),
                                         title = title,
                                         url = url,
                                         username = username,
@@ -159,7 +164,7 @@ fun AddEntryDialog(
 @Preview(showBackground = true)
 @Composable
 fun AddEntryDialogPreview() {
-    AddEntryDialog(
+    VaultEntryDialog(
         formTitle = "Add new entry",
         onDismissRequest = {},
         onSubmit = {},

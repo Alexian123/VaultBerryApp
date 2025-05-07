@@ -5,7 +5,7 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class EncryptedVaultEntryDTO(
-    @Json(name = "timestamp") val timestamp: Long,
+    @Json(name = "last_modified") val lastModified: Long,
     @Json(name = "title") val title: String,
     @Json(name = "url") val url: String?,
     @Json(name = "encrypted_username") val encryptedUsername: String?,

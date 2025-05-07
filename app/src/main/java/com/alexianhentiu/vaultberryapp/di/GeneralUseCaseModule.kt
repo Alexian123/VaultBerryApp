@@ -12,7 +12,7 @@ import com.alexianhentiu.vaultberryapp.domain.usecase.general.account.GetAccount
 import com.alexianhentiu.vaultberryapp.domain.usecase.general.account.Setup2FAUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.general.auth.RecoverySendUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.general.vault.AddEntryUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.general.vault.GetEntriesUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.general.vault.GetAllVaultEntryPreviewsUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.specific.vault.GenerateKeyChainUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.specific.vault.DecryptKeyUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.general.auth.LoginUseCase
@@ -23,6 +23,7 @@ import com.alexianhentiu.vaultberryapp.domain.usecase.general.auth.RegisterUseCa
 import com.alexianhentiu.vaultberryapp.domain.usecase.specific.vault.EncryptVaultEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.specific.vault.DecryptVaultEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.general.vault.DeleteEntryUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.general.vault.GetDecryptedVaultEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.specific.auth.Extract2FASecret
 import com.alexianhentiu.vaultberryapp.domain.usecase.specific.auth.GeneratePasswordPairUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.specific.vault.ReEncryptVaultUseCase
@@ -75,10 +76,18 @@ object GeneralUseCaseModule {
     ): LogoutUseCase = LogoutUseCase(authRepository)
 
     @Provides
-    fun provideGetEntriesUseCase(
+    fun provideGetAllVaultEntryPreviewsUseCase(
+        vaultRepository: VaultRepository,
+    ): GetAllVaultEntryPreviewsUseCase = GetAllVaultEntryPreviewsUseCase(vaultRepository)
+
+    @Provides
+    fun provideGetDecryptedVaultEntryUseCase(
         vaultRepository: VaultRepository,
         decryptVaultEntryUseCase: DecryptVaultEntryUseCase
-    ): GetEntriesUseCase = GetEntriesUseCase(vaultRepository, decryptVaultEntryUseCase)
+    ): GetDecryptedVaultEntryUseCase = GetDecryptedVaultEntryUseCase(
+        vaultRepository,
+        decryptVaultEntryUseCase
+    )
 
     @Provides
     fun provideAddEntryUseCase(

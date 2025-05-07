@@ -16,16 +16,22 @@ class DecryptVaultEntryUseCase(private val vaultGuardian: VaultGuardian) {
         try {
             var decryptedUsername = ""
             if (encryptedVaultEntry.encryptedUsername != null) {
-                decryptedUsername = vaultGuardian.decryptField(encryptedVaultEntry.encryptedUsername, decryptedKey)
+                decryptedUsername = vaultGuardian.decryptField(
+                    encryptedVaultEntry.encryptedUsername,
+                    decryptedKey
+                )
             }
 
             var decryptedPassword = ""
             if (encryptedVaultEntry.encryptedPassword != null) {
-                decryptedPassword = vaultGuardian.decryptField(encryptedVaultEntry.encryptedPassword, decryptedKey)
+                decryptedPassword = vaultGuardian.decryptField(
+                    encryptedVaultEntry.encryptedPassword,
+                    decryptedKey
+                )
             }
 
             val decryptedVaultEntry = DecryptedVaultEntry(
-                timestamp = encryptedVaultEntry.timestamp,
+                lastModified = encryptedVaultEntry.lastModified,
                 title = encryptedVaultEntry.title,
                 url = encryptedVaultEntry.url ?: "",
                 username = decryptedUsername,

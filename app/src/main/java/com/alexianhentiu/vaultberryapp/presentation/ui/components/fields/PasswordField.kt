@@ -36,7 +36,7 @@ fun PasswordField(
     passwordEvaluator: PasswordEvaluator,
     showStrengthIndicator: Boolean = false,
 ) {
-    var password by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf(initialText) }
     var isVisible by remember { mutableStateOf(false) }
     var passwordStrength by remember {
         mutableStateOf(passwordEvaluator.evaluateStrength(initialText))

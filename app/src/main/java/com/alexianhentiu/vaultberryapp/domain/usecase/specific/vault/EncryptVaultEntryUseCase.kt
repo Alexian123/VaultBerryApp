@@ -15,7 +15,7 @@ class EncryptVaultEntryUseCase(private val vaultGuardian: VaultGuardian) {
     ): ActionResult<EncryptedVaultEntry> {
         try {
             val encryptedVaultEntry = EncryptedVaultEntry(
-                timestamp = decryptedVaultEntry.timestamp,
+                lastModified = decryptedVaultEntry.lastModified,
                 title = decryptedVaultEntry.title,
                 url = if (decryptedVaultEntry.url.isEmpty()) null else decryptedVaultEntry.url,
                 encryptedUsername =
