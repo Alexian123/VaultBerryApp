@@ -1,7 +1,6 @@
 package com.alexianhentiu.vaultberryapp.domain.model.entity
 
 data class EncryptedVaultEntry(
-    val lastModified: Long,
     val title: String,
     val url: String?,
     val encryptedUsername: String?,

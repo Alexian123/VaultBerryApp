@@ -31,7 +31,6 @@ class DecryptVaultEntryUseCase(private val vaultGuardian: VaultGuardian) {
             }
 
             val decryptedVaultEntry = DecryptedVaultEntry(
-                lastModified = encryptedVaultEntry.lastModified,
                 title = encryptedVaultEntry.title,
                 url = encryptedVaultEntry.url ?: "",
                 username = decryptedUsername,

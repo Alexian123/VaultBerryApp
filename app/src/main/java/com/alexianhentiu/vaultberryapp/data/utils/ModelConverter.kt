@@ -126,7 +126,6 @@ class ModelConverter {
 
     fun encryptedVaultEntryToDTO(encryptedVaultEntry: EncryptedVaultEntry): EncryptedVaultEntryDTO {
         return EncryptedVaultEntryDTO(
-            lastModified = encryptedVaultEntry.lastModified,
             title = encryptedVaultEntry.title,
             url = encryptedVaultEntry.url,
             encryptedUsername = encryptedVaultEntry.encryptedUsername,
@@ -139,7 +138,6 @@ class ModelConverter {
         encryptedVaultEntryDTO: EncryptedVaultEntryDTO
     ): EncryptedVaultEntry {
         return EncryptedVaultEntry(
-            lastModified = encryptedVaultEntryDTO.lastModified,
             title = encryptedVaultEntryDTO.title,
             url = encryptedVaultEntryDTO.url,
             encryptedUsername = encryptedVaultEntryDTO.encryptedUsername,

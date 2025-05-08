@@ -222,7 +222,6 @@ fun ExpandedVaultEntryPreview() {
     VaultEntryItem(
         preview = VaultEntryPreview(1, "Entry"),
         decryptedEntry = DecryptedVaultEntry(
-            lastModified = 0,
             title = "Entry",
             url = "https://example.com",
             username = "user",

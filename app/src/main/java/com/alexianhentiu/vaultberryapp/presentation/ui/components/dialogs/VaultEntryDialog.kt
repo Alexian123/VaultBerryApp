@@ -141,7 +141,6 @@ fun VaultEntryDialog(
                                     .padding(16.dp),
                                 onClick = {
                                     val entry = DecryptedVaultEntry(
-                                        lastModified = System.currentTimeMillis(),
                                         title = title,
                                         url = url,
                                         username = username,
