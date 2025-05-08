@@ -1,23 +1,23 @@
 [versions]
-agp = "8.9.1"
+agp = "8.9.2"
 hilt = "2.52"
 hiltAndroid = "2.52"
 hiltNavigationCompose = "1.2.0"
 kotlin = "2.0.21"
 ksp = "2.0.21-1.0.28"
-coreKtx = "1.15.0"
+coreKtx = "1.16.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
-lifecycleRuntimeKtx = "2.8.7"
-activityCompose = "1.9.3"
-composeBom = "2024.12.01"
+lifecycleRuntimeKtx = "2.9.0"
+activityCompose = "1.10.1"
+composeBom = "2025.05.00"
 loggingInterceptor = "4.11.0"
 moshiKotlin = "1.15.1"
 moshiKotlinCodegenVersion = "1.15.1"
 okhttp = "4.11.0"
 retrofit = "2.11.0"
-navigationCompose = "2.8.5"
+navigationCompose = "2.9.0"
 saslprep = "2.2"
 scramClient = "3.1"
 scramCommon = "3.1"
@@ -26,7 +26,7 @@ stringprep = "2.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
-androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version = "1.1.2" }
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version = "1.1.6" }
 androidx-material = { module = "androidx.compose.material:material" }
 androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
 dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "hiltAndroid" }
