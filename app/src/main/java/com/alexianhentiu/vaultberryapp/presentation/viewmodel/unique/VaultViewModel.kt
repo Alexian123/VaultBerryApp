@@ -40,14 +40,44 @@ class VaultViewModel @Inject constructor(
     private val _vaultState = MutableStateFlow<VaultState>(VaultState.Locked)
     val vaultState: StateFlow<VaultState> = _vaultState
 
-    private val allPreviews = MutableStateFlow<List<VaultEntryPreview>>(emptyList())
+    private val _allPreviews = MutableStateFlow<List<VaultEntryPreview>>(emptyList())
     private val _filteredPreviews = MutableStateFlow<List<VaultEntryPreview>>(emptyList())
     val filteredPreviews: StateFlow<List<VaultEntryPreview>> = _filteredPreviews
 
     private val _expandedEntriesMap = MutableStateFlow<Map<Long, DecryptedVaultEntry?>>(emptyMap())
     val expandedEntriesMap: StateFlow<Map<Long, DecryptedVaultEntry?>> = _expandedEntriesMap
 
+    private val _isRefreshing = MutableStateFlow(false)
+    val isRefreshing: StateFlow<Boolean> = _isRefreshing
+
     private lateinit var vaultKey: DecryptedKey
+
+    fun refreshVaultEntries() {
+        if (_isRefreshing.value) {
+            return
+        }
+        viewModelScope.launch {
+            _isRefreshing.value = true
+            when (val result = getAllVaultEntryPreviewsUseCase()) {
+                is ActionResult.Success -> {
+                    _allPreviews.value = result.data
+                    resetShownEntries()
+                }
+
+                is ActionResult.Error -> {
+                    _vaultState.value = VaultState.Error(
+                        ErrorInfo(
+                            type = result.type,
+                            source = result.source,
+                            message = result.message
+                        )
+                    )
+                    Log.e(result.source, result.message)
+                }
+            }
+            _isRefreshing.value = false
+        }
+    }
 
     fun logout() {
         viewModelScope.launch {
@@ -77,7 +107,7 @@ class VaultViewModel @Inject constructor(
                 resetShownEntries()
             }
             else {
-                _filteredPreviews.value = allPreviews.value.filter {
+                _filteredPreviews.value = _allPreviews.value.filter {
                     it.title.contains(query, ignoreCase = true)
                 }
             }
@@ -102,8 +132,7 @@ class VaultViewModel @Inject constructor(
             when (val result = getAllVaultEntryPreviewsUseCase()) {
                 is ActionResult.Success -> {
                     _vaultState.value = VaultState.Unlocked
-                    allPreviews.value = result.data
-                    _expandedEntriesMap.value = result.data.associate { it.id to null }
+                    _allPreviews.value = result.data
                     resetShownEntries()
                 }
 
@@ -155,7 +184,7 @@ class VaultViewModel @Inject constructor(
             when (val result = addEntryUseCase(decryptedVaultEntry, vaultKey)) {
                 is ActionResult.Success -> {
                     _vaultState.value = VaultState.Unlocked
-                    allPreviews.update { currentList ->
+                    _allPreviews.update { currentList ->
                         currentList + result.data
                     }
                     resetShownEntries()
@@ -181,7 +210,7 @@ class VaultViewModel @Inject constructor(
             when (val result = deleteEntryUseCase(id)) {
                 is ActionResult.Success -> {
                     _vaultState.value = VaultState.Unlocked
-                    allPreviews.update { currentList ->
+                    _allPreviews.update { currentList ->
                         currentList.filter { it.id != id }
                     }
                     resetShownEntries()
@@ -207,7 +236,7 @@ class VaultViewModel @Inject constructor(
             when (val result = updateEntryUseCase(id, decryptedVaultEntry, vaultKey)) {
                 is ActionResult.Success -> {
                     _vaultState.value = VaultState.Unlocked
-                    allPreviews.update { currentList ->
+                    _allPreviews.update { currentList ->
                         currentList.map {
                             if (it.id == id)
                                 it.copy(title = decryptedVaultEntry.title)
@@ -232,7 +261,7 @@ class VaultViewModel @Inject constructor(
     }
 
     fun resetState() {
-        allPreviews.value = emptyList()
+        _allPreviews.value = emptyList()
         _filteredPreviews.value = emptyList()
         _expandedEntriesMap.value = emptyMap()
         vaultKey = DecryptedKey(ByteArray(0))
@@ -240,6 +269,7 @@ class VaultViewModel @Inject constructor(
     }
 
     private fun resetShownEntries() {
-        _filteredPreviews.value = allPreviews.value
+        _filteredPreviews.value = _allPreviews.value
+        _expandedEntriesMap.value = _allPreviews.value.associate { it.id to null }
     }
 }
