@@ -10,8 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalClipboardManager
-import androidx.compose.ui.text.AnnotatedString
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.alexianhentiu.vaultberryapp.presentation.activity.MainActivity
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.topBars.TopBarWithBackButton
@@ -37,8 +35,6 @@ fun AccountScreen(
     val vaultKey = navManager.retrieveVaultKey()
 
     val accountState by accountViewModel.accountState.collectAsState()
-
-    val clipboardManager = LocalClipboardManager.current
 
     BackHandler(enabled = true) {
         // send key to vault screen
@@ -109,7 +105,7 @@ fun AccountScreen(
                 message = "Your new recovery password is: \"$recoveryPassword\". " +
                         "It will be copied into the clipboard upon confirmation.",
                 onDismissRequest = {
-                    clipboardManager.setText(AnnotatedString(recoveryPassword))
+                    utilityViewModel.copyToClipboard(recoveryPassword)
                     accountViewModel.logout()
                 }
             )
@@ -122,7 +118,7 @@ fun AccountScreen(
                 message = "Your secret key is: \"$secretKey\". " +
                         "It will be copied into the clipboard upon confirmation.",
                 onDismissRequest = {
-                    clipboardManager.setText(AnnotatedString(secretKey))
+                    utilityViewModel.copyToClipboard(secretKey)
                     accountViewModel.resetState()
                 }
             )

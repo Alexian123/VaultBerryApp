@@ -9,8 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalClipboardManager
-import androidx.compose.ui.text.AnnotatedString
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.alexianhentiu.vaultberryapp.presentation.activity.MainActivity
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.topBars.AuthTopBar
@@ -105,14 +103,13 @@ fun RecoveryScreen(
         }
 
         is RecoveryState.PasswordReset -> {
-            val clipboardManager = LocalClipboardManager.current
             val recoveryPassword = (recoveryState as RecoveryState.PasswordReset).newRecoveryPassword
             InfoDialog(
                 title = "Password reset successfully",
                 message = "Your new recovery password is: \"$recoveryPassword\". " +
                         "It will be copied into the clipboard upon confirmation.",
                 onDismissRequest = {
-                    clipboardManager.setText(AnnotatedString(recoveryPassword))
+                    utilityViewModel.copyToClipboard(recoveryPassword)
                     recoveryViewModel.logout()
                     navManager.navigate(NavRoute.LOGIN)
                 }

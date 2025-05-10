@@ -9,8 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalClipboardManager
-import androidx.compose.ui.text.AnnotatedString
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.alexianhentiu.vaultberryapp.presentation.activity.MainActivity
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.topBars.AuthTopBar
@@ -61,7 +59,6 @@ fun RegisterScreen(
         }
 
         is RegisterState.Success -> {
-            val clipboardManager = LocalClipboardManager.current
             val recoveryPassword = (registerState as RegisterState.Success).recoveryPassword
             InfoDialog(
                 title = "Account registration successful",
@@ -69,7 +66,7 @@ fun RegisterScreen(
                         "It will be copied into the clipboard upon confirmation. " +
                         "Make sure to write it down!",
                 onDismissRequest = {
-                    clipboardManager.setText(AnnotatedString(recoveryPassword))
+                    utilityViewModel.copyToClipboard(recoveryPassword)
                     registerViewModel.resetState()
                     navManager.navigate(NavRoute.LOGIN)
                 }

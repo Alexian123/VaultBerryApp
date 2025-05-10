@@ -15,7 +15,6 @@ import dagger.hilt.android.AndroidEntryPoint
 
 /*
     TODO:
-        - Fix deprecated clipboard manager
         - Add utilities to UtilityViewModel
         - SettingsViewModel use cases
         - Remove the UnlockVaultScreen
