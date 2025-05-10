@@ -1,6 +1,7 @@
 package com.alexianhentiu.vaultberryapp.presentation.ui.screens.main
 
 import androidx.activity.compose.BackHandler
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -11,6 +12,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.AnnotatedString
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.alexianhentiu.vaultberryapp.presentation.activity.MainActivity
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.topBars.TopBarWithBackButton
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ErrorDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.InfoDialog
@@ -19,16 +22,21 @@ import com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc.LoadingScree
 import com.alexianhentiu.vaultberryapp.presentation.utils.NavigationManager
 import com.alexianhentiu.vaultberryapp.presentation.utils.enums.NavRoute
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.unique.AccountViewModel
-import com.alexianhentiu.vaultberryapp.presentation.utils.states.AccountState
+import com.alexianhentiu.vaultberryapp.presentation.utils.state.AccountState
+import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.UtilityViewModel
 
 @Composable
 fun AccountScreen(
-    viewModel: AccountViewModel,
     navManager: NavigationManager
 ) {
+    val activity = LocalActivity.current as MainActivity
+    val utilityViewModel: UtilityViewModel = hiltViewModel(activity)
+
+    val accountViewModel: AccountViewModel = hiltViewModel()
+
     val vaultKey = navManager.retrieveVaultKey()
 
-    val accountState by viewModel.accountState.collectAsState()
+    val accountState by accountViewModel.accountState.collectAsState()
 
     val clipboardManager = LocalClipboardManager.current
 
@@ -39,7 +47,7 @@ fun AccountScreen(
 
     when (accountState) {
         is AccountState.Init -> {
-            viewModel.getAccountInfo()
+            accountViewModel.getAccountInfo()
         }
 
         is AccountState.Loading -> {
@@ -67,24 +75,24 @@ fun AccountScreen(
                         accountInfo = account,
                         is2FAEnabled = is2FAEnabled,
                         onSaveInfo = { email, firstName, lastName ->
-                            viewModel.changeAccountInfo(email, firstName, lastName)
+                            accountViewModel.changeAccountInfo(email, firstName, lastName)
                         },
                         onChangePassword = { newPassword, reEncrypt ->
                             if (vaultKey != null) {
-                                viewModel.changePassword(vaultKey, newPassword, reEncrypt)
+                                accountViewModel.changePassword(vaultKey, newPassword, reEncrypt)
                             }
                         },
                         onEnable2FA = {
-                            viewModel.setup2FA()
+                            accountViewModel.setup2FA()
                         },
                         onDisable2FA = {
-                            viewModel.disable2FA()
+                            accountViewModel.disable2FA()
                         },
                         onDeleteAccount = {
-                            viewModel.deleteAccount()
+                            accountViewModel.deleteAccount()
                         },
-                        inputValidator = viewModel.inputValidator,
-                        passwordEvaluator = viewModel.passwordEvaluator
+                        inputValidator = accountViewModel.inputValidator,
+                        passwordEvaluator = accountViewModel.passwordEvaluator
                     )
                 }
             }
@@ -102,7 +110,7 @@ fun AccountScreen(
                         "It will be copied into the clipboard upon confirmation.",
                 onDismissRequest = {
                     clipboardManager.setText(AnnotatedString(recoveryPassword))
-                    viewModel.logout()
+                    accountViewModel.logout()
                 }
             )
         }
@@ -115,7 +123,7 @@ fun AccountScreen(
                         "It will be copied into the clipboard upon confirmation.",
                 onDismissRequest = {
                     clipboardManager.setText(AnnotatedString(secretKey))
-                    viewModel.resetState()
+                    accountViewModel.resetState()
                 }
             )
         }
@@ -123,7 +131,7 @@ fun AccountScreen(
         is AccountState.Error -> {
             val errorMessage = (accountState as AccountState.Error).info.message
             ErrorDialog(
-                onConfirm = { viewModel.resetState() },
+                onConfirm = { accountViewModel.resetState() },
                 title = "Account Error",
                 message = errorMessage
             )

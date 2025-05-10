@@ -4,12 +4,12 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alexianhentiu.vaultberryapp.domain.model.entity.AccountInfo
-import com.alexianhentiu.vaultberryapp.domain.usecase.general.auth.RegisterUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.auth.RegisterUseCase
 import com.alexianhentiu.vaultberryapp.domain.utils.security.PasswordEvaluator
 import com.alexianhentiu.vaultberryapp.domain.utils.types.ActionResult
 import com.alexianhentiu.vaultberryapp.domain.utils.validation.InputValidator
 import com.alexianhentiu.vaultberryapp.presentation.utils.ErrorInfo
-import com.alexianhentiu.vaultberryapp.presentation.utils.states.RegisterState
+import com.alexianhentiu.vaultberryapp.presentation.utils.state.RegisterState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

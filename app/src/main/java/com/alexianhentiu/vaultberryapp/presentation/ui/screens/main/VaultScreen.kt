@@ -1,6 +1,7 @@
 package com.alexianhentiu.vaultberryapp.presentation.ui.screens.main
 
 import androidx.activity.compose.BackHandler
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -21,7 +22,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.alexianhentiu.vaultberryapp.R
+import com.alexianhentiu.vaultberryapp.presentation.activity.MainActivity
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.VaultEntryDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ConfirmActionDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.topBars.VaultTopBar
@@ -32,13 +35,18 @@ import com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc.UnlockVaultS
 import com.alexianhentiu.vaultberryapp.presentation.utils.NavigationManager
 import com.alexianhentiu.vaultberryapp.presentation.utils.enums.NavRoute
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.unique.VaultViewModel
-import com.alexianhentiu.vaultberryapp.presentation.utils.states.VaultState
+import com.alexianhentiu.vaultberryapp.presentation.utils.state.VaultState
+import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.UtilityViewModel
 
 @Composable
 fun VaultScreen(
-    vaultViewModel: VaultViewModel,
     navManager: NavigationManager
 ) {
+    val activity = LocalActivity.current as MainActivity
+    val utilityViewModel: UtilityViewModel = hiltViewModel(activity)
+
+    val vaultViewModel: VaultViewModel = hiltViewModel()
+
     val vaultKey = navManager.retrieveVaultKey()
 
     val vaultState by vaultViewModel.vaultState.collectAsState()

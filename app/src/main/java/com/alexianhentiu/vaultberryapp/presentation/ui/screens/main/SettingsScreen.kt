@@ -1,6 +1,7 @@
 package com.alexianhentiu.vaultberryapp.presentation.ui.screens.main
 
 import androidx.activity.compose.BackHandler
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,7 +21,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.alexianhentiu.vaultberryapp.presentation.activity.MainActivity
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.topBars.TopBarWithBackButton
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.misc.SwitchSettingItem
 import com.alexianhentiu.vaultberryapp.presentation.utils.NavigationManager
@@ -29,14 +32,16 @@ import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.SettingsVie
 
 @Composable
 fun SettingsScreen(
-    viewModel: SettingsViewModel? = null,
     navManager: NavigationManager,
 ) {
+    val activity = LocalActivity.current as MainActivity
+    val settingsViewModel: SettingsViewModel = hiltViewModel(activity)
+
     val key = navManager.retrieveVaultKey()
 
-    var useSystemTheme by remember { mutableStateOf(viewModel?.useSystemTheme?.value != false) }
-    var darkTheme by remember { mutableStateOf(viewModel?.darkTheme?.value == true) }
-    var debugMode by remember { mutableStateOf(viewModel?.debugMode?.value == true) }
+    var useSystemTheme by remember { mutableStateOf(settingsViewModel.useSystemTheme.value != false) }
+    var darkTheme by remember { mutableStateOf(settingsViewModel.darkTheme.value == true) }
+    var debugMode by remember { mutableStateOf(settingsViewModel.debugMode.value == true) }
 
     BackHandler(enabled = true) {
         if (key != null) {
@@ -83,7 +88,7 @@ fun SettingsScreen(
                     checked = useSystemTheme,
                     onCheckedChange = {
                         useSystemTheme = it
-                        viewModel?.setUseSystemTheme(useSystemTheme)
+                        settingsViewModel.setUseSystemTheme(useSystemTheme)
                     }
                 )
                 SwitchSettingItem(
@@ -92,7 +97,7 @@ fun SettingsScreen(
                     checked = darkTheme,
                     onCheckedChange = {
                         darkTheme = it
-                        viewModel?.setDarkTheme(darkTheme)
+                        settingsViewModel.setDarkTheme(darkTheme)
                     }
                 )
                 HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
@@ -107,7 +112,7 @@ fun SettingsScreen(
                     checked = debugMode,
                     onCheckedChange = {
                         debugMode = it
-                        viewModel?.setDebugMode(debugMode)
+                        settingsViewModel.setDebugMode(debugMode)
                     }
                 )
             }
@@ -119,7 +124,6 @@ fun SettingsScreen(
 @Preview(showBackground = true)
 fun SettingsScreenPreview() {
     SettingsScreen(
-        viewModel = null,
         navManager = NavigationManager(NavController(LocalContext.current))
     )
 }

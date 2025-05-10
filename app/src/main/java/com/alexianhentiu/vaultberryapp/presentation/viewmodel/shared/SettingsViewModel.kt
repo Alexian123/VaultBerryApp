@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SettingsViewModel@Inject constructor(
+class SettingsViewModel @Inject constructor(
     private val dataStore: DataStore<Preferences>
 ) : ViewModel() {
     private val useSystemThemeKey = booleanPreferencesKey("use_system_theme")

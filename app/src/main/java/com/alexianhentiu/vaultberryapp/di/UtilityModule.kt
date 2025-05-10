@@ -1,5 +1,6 @@
 package com.alexianhentiu.vaultberryapp.di
 
+import android.content.ClipboardManager
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -33,6 +34,12 @@ object UtilityModule {
     private val Context.userDataStore: DataStore<Preferences> by preferencesDataStore(
         name = "com.alexianhentiu.vaultberryapp.user_settings"
     )
+
+    @Provides
+    @Singleton
+    fun provideClipboard(
+        @ApplicationContext context: Context,
+    ): ClipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
 
     @Provides
     @Singleton

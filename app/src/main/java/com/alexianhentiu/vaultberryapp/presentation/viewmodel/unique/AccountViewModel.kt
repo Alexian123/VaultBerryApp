@@ -5,19 +5,19 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alexianhentiu.vaultberryapp.domain.model.entity.AccountInfo
 import com.alexianhentiu.vaultberryapp.domain.model.entity.DecryptedKey
-import com.alexianhentiu.vaultberryapp.domain.usecase.general.account.ChangeAccountInfoUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.general.account.ChangePasswordUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.general.account.DeleteAccountUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.general.account.Disable2FAUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.general.account.Get2FAStatusUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.general.account.GetAccountInfoUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.general.account.Setup2FAUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.general.auth.LogoutUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.account.ChangeAccountInfoUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.account.ChangePasswordUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.account.DeleteAccountUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.account.Disable2FAUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.account.Get2FAStatusUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.account.GetAccountInfoUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.account.Setup2FAUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.auth.LogoutUseCase
 import com.alexianhentiu.vaultberryapp.domain.utils.security.PasswordEvaluator
 import com.alexianhentiu.vaultberryapp.domain.utils.types.ActionResult
 import com.alexianhentiu.vaultberryapp.domain.utils.validation.InputValidator
 import com.alexianhentiu.vaultberryapp.presentation.utils.ErrorInfo
-import com.alexianhentiu.vaultberryapp.presentation.utils.states.AccountState
+import com.alexianhentiu.vaultberryapp.presentation.utils.state.AccountState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -63,6 +63,7 @@ class AccountViewModel @Inject constructor(
                                     message = result2FA.message
                                 )
                             )
+                            Log.e(result2FA.source, result2FA.message)
                         }
                     }
                 }
@@ -75,6 +76,7 @@ class AccountViewModel @Inject constructor(
                             message = resultAccount.message
                         )
                     )
+                    Log.e(resultAccount.source, resultAccount.message)
                 }
             }
         }

@@ -3,10 +3,10 @@ package com.alexianhentiu.vaultberryapp.presentation.activity
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.alexianhentiu.vaultberryapp.presentation.utils.enums.AppTheme
 import com.alexianhentiu.vaultberryapp.presentation.ui.navigation.AppNavHost
 import com.alexianhentiu.vaultberryapp.presentation.ui.theme.VaultBerryAppTheme
@@ -16,6 +16,8 @@ import dagger.hilt.android.AndroidEntryPoint
 /*
     TODO:
         - Fix deprecated clipboard manager
+        - Add utilities to UtilityViewModel
+        - SettingsViewModel use cases
         - Remove the UnlockVaultScreen
         - Figure out how to more safely handle the master key within memory
         - Implement autofill
@@ -25,10 +27,12 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    private val settingsViewModel: SettingsViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val settingsViewModel: SettingsViewModel = hiltViewModel()
             val useSystemTheme = settingsViewModel.useSystemTheme.collectAsState()
             val darkTheme = settingsViewModel.darkTheme.collectAsState()
 

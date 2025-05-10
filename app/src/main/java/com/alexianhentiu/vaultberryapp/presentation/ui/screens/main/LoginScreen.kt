@@ -1,5 +1,6 @@
 package com.alexianhentiu.vaultberryapp.presentation.ui.screens.main
 
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -8,6 +9,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.alexianhentiu.vaultberryapp.presentation.activity.MainActivity
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.topBars.AuthTopBar
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ErrorDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.LoginForm
@@ -16,14 +19,18 @@ import com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc.LoadingScree
 import com.alexianhentiu.vaultberryapp.presentation.utils.NavigationManager
 import com.alexianhentiu.vaultberryapp.presentation.utils.enums.NavRoute
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.unique.LoginViewModel
-import com.alexianhentiu.vaultberryapp.presentation.utils.states.LoginState
+import com.alexianhentiu.vaultberryapp.presentation.utils.state.LoginState
+import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.UtilityViewModel
 
 @Composable
 fun LoginScreen(
-    viewModel: LoginViewModel,
     navManager: NavigationManager
 ) {
-    val loginState by viewModel.loginState.collectAsState()
+    val activity = LocalActivity.current as MainActivity
+    val utilityViewModel: UtilityViewModel = hiltViewModel(activity)
+
+    val loginViewModel: LoginViewModel = hiltViewModel()
+    val loginState by loginViewModel.loginState.collectAsState()
 
     when (loginState) {
         is LoginState.LoggedOut -> {
@@ -37,10 +44,10 @@ fun LoginScreen(
                 Box(modifier = Modifier.fillMaxSize().padding(contentPadding)) {
                     LoginForm(
                         navManager = navManager,
-                        onLoginClicked = { email, password -> viewModel.login(email, password) },
+                        onLoginClicked = { email, password -> loginViewModel.login(email, password) },
                         onForgotPasswordClicked = { navManager.navigate(NavRoute.RECOVERY) },
-                        inputValidator = viewModel.inputValidator,
-                        passwordEvaluator = viewModel.passwordEvaluator
+                        inputValidator = loginViewModel.inputValidator,
+                        passwordEvaluator = loginViewModel.passwordEvaluator
                     )
                 }
             }
@@ -64,10 +71,10 @@ fun LoginScreen(
                 Box(modifier = Modifier.fillMaxSize().padding(contentPadding)) {
                     Verify2FAForm(
                         onContinueClicked = { code ->
-                            viewModel.verify2FA(email, password, code)
+                            loginViewModel.verify2FA(email, password, code)
                         },
-                        onCancelClicked = { viewModel.resetState() },
-                        inputValidator = viewModel.inputValidator
+                        onCancelClicked = { loginViewModel.resetState() },
+                        inputValidator = loginViewModel.inputValidator
                     )
                 }
             }
@@ -83,7 +90,7 @@ fun LoginScreen(
         is LoginState.Error -> {
             val errorMessage = (loginState as LoginState.Error).info.message
             ErrorDialog(
-                onConfirm = { viewModel.resetState() },
+                onConfirm = { loginViewModel.resetState() },
                 title = "Login Error",
                 message = errorMessage
             )

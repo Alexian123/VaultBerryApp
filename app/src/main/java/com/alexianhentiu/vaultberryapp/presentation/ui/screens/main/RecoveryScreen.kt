@@ -1,5 +1,6 @@
 package com.alexianhentiu.vaultberryapp.presentation.ui.screens.main
 
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -10,6 +11,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.AnnotatedString
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.alexianhentiu.vaultberryapp.presentation.activity.MainActivity
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.topBars.AuthTopBar
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ErrorDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.InfoDialog
@@ -21,20 +24,24 @@ import com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc.LoadingScree
 import com.alexianhentiu.vaultberryapp.presentation.utils.NavigationManager
 import com.alexianhentiu.vaultberryapp.presentation.utils.enums.NavRoute
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.unique.RecoveryViewModel
-import com.alexianhentiu.vaultberryapp.presentation.utils.states.RecoveryState
+import com.alexianhentiu.vaultberryapp.presentation.utils.state.RecoveryState
+import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.UtilityViewModel
 
 @Composable
 fun RecoveryScreen(
-    viewModel: RecoveryViewModel,
     navManager: NavigationManager,
 ) {
-    val recoveryState by viewModel.recoveryState.collectAsState()
+    val activity = LocalActivity.current as MainActivity
+    val utilityViewModel: UtilityViewModel = hiltViewModel(activity)
+
+    val recoveryViewModel: RecoveryViewModel = hiltViewModel()
+    val recoveryState by recoveryViewModel.recoveryState.collectAsState()
 
     when (recoveryState) {
         is RecoveryState.Error -> {
             val errorMessage = (recoveryState as RecoveryState.Error).info.message
             ErrorDialog(
-                onConfirm = { viewModel.resetState() },
+                onConfirm = { recoveryViewModel.resetState() },
                 title = "Recovery Error",
                 message = errorMessage
             )
@@ -54,9 +61,9 @@ fun RecoveryScreen(
             ) { contentPadding ->
                 Box(modifier = Modifier.fillMaxSize().padding(contentPadding)) {
                     OTPRequestForm(
-                        onContinueClicked = { email -> viewModel.requestOTP(email) },
+                        onContinueClicked = { email -> recoveryViewModel.requestOTP(email) },
                         onCancelClicked = { navManager.navigate(NavRoute.LOGIN) },
-                        inputValidator = viewModel.inputValidator
+                        inputValidator = recoveryViewModel.inputValidator
                     )
                 }
             }
@@ -68,14 +75,14 @@ fun RecoveryScreen(
                 Box(modifier = Modifier.fillMaxSize().padding(contentPadding)) {
                     RecoveryLoginForm(
                         onContinueClicked = { recoveryPassword, otp ->
-                            viewModel.recoveryLogin(email, recoveryPassword, otp)
+                            recoveryViewModel.recoveryLogin(email, recoveryPassword, otp)
                         },
                         onCancelClicked = {
-                            viewModel.resetState()
+                            recoveryViewModel.resetState()
                             navManager.navigate(NavRoute.LOGIN)
                         },
-                        inputValidator = viewModel.inputValidator,
-                        passwordEvaluator = viewModel.passwordEvaluator
+                        inputValidator = recoveryViewModel.inputValidator,
+                        passwordEvaluator = recoveryViewModel.passwordEvaluator
                     )
                 }
             }
@@ -87,10 +94,10 @@ fun RecoveryScreen(
                 Box(modifier = Modifier.fillMaxSize().padding(contentPadding)) {
                     ChangePasswordForm(
                         onChangePassword = { newPassword, reEncrypt ->
-                            viewModel.resetPassword(decryptedKey, newPassword, reEncrypt)
+                            recoveryViewModel.resetPassword(decryptedKey, newPassword, reEncrypt)
                         },
-                        inputValidator = viewModel.inputValidator,
-                        passwordEvaluator = viewModel.passwordEvaluator,
+                        inputValidator = recoveryViewModel.inputValidator,
+                        passwordEvaluator = recoveryViewModel.passwordEvaluator,
                         textFieldType = TextFieldType.REGULAR
                     )
                 }
@@ -106,7 +113,7 @@ fun RecoveryScreen(
                         "It will be copied into the clipboard upon confirmation.",
                 onDismissRequest = {
                     clipboardManager.setText(AnnotatedString(recoveryPassword))
-                    viewModel.logout()
+                    recoveryViewModel.logout()
                     navManager.navigate(NavRoute.LOGIN)
                 }
             )

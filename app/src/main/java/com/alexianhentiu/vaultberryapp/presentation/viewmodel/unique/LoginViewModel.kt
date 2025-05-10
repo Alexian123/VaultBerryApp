@@ -5,12 +5,12 @@ import javax.inject.Inject
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.alexianhentiu.vaultberryapp.domain.usecase.general.auth.LoginUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.auth.LoginUseCase
 import com.alexianhentiu.vaultberryapp.domain.utils.security.PasswordEvaluator
 import com.alexianhentiu.vaultberryapp.domain.utils.types.ActionResult
 import com.alexianhentiu.vaultberryapp.domain.utils.validation.InputValidator
 import com.alexianhentiu.vaultberryapp.presentation.utils.ErrorInfo
-import com.alexianhentiu.vaultberryapp.presentation.utils.states.LoginState
+import com.alexianhentiu.vaultberryapp.presentation.utils.state.LoginState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
