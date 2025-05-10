@@ -21,9 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.alexianhentiu.vaultberryapp.domain.model.entity.AccountInfo
-import com.alexianhentiu.vaultberryapp.domain.utils.security.PasswordEvaluator
-import com.alexianhentiu.vaultberryapp.domain.utils.validation.DebugValidator
-import com.alexianhentiu.vaultberryapp.domain.utils.validation.InputValidator
+import com.alexianhentiu.vaultberryapp.domain.utils.types.ValidatedFieldType
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ConfirmActionDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.misc.ExpandableSectionItem
 
@@ -36,8 +34,7 @@ fun AccountForm(
     onEnable2FA: () -> Unit,
     onDisable2FA: () -> Unit,
     onDeleteAccount: () -> Unit,
-    inputValidator: InputValidator,
-    passwordEvaluator: PasswordEvaluator
+    validator: (ValidatedFieldType) -> (String) -> Boolean = { { true } }
 ) {
     var isInfoExpanded by remember { mutableStateOf(false) }
     var isSecurityExpanded by remember { mutableStateOf(false) }
@@ -113,8 +110,7 @@ fun AccountForm(
                             shouldReEncrypt = reEncrypt
                             showConfirmPasswordChangeDialog = true
                         },
-                        inputValidator = inputValidator,
-                        passwordEvaluator = passwordEvaluator
+                        validator = validator
                     )
                     HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
                     Text(
@@ -172,8 +168,6 @@ fun AccountFormPreview() {
         onChangePassword = { _, _ -> },
         onEnable2FA = {},
         onDisable2FA = {},
-        onDeleteAccount = {},
-        inputValidator = DebugValidator(),
-        passwordEvaluator = PasswordEvaluator()
+        onDeleteAccount = {}
     )
 }

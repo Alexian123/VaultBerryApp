@@ -4,9 +4,9 @@ import com.alexianhentiu.vaultberryapp.data.utils.APIResult
 import com.alexianhentiu.vaultberryapp.domain.model.entity.DecryptedKey
 import com.alexianhentiu.vaultberryapp.domain.model.request.LoginRequest
 import com.alexianhentiu.vaultberryapp.domain.repository.AuthRepository
-import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.vault.DecryptKeyUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.DecryptKeyUseCase
 import com.alexianhentiu.vaultberryapp.domain.utils.security.AuthGuardian
-import com.alexianhentiu.vaultberryapp.domain.utils.types.ActionResult
+import com.alexianhentiu.vaultberryapp.domain.utils.types.UseCaseResult
 import com.alexianhentiu.vaultberryapp.domain.utils.types.ErrorType
 
 class LoginUseCase(
@@ -18,7 +18,7 @@ class LoginUseCase(
         email: String,
         password: String,
         totpCode: String? = null
-    ): ActionResult<DecryptedKey> {
+    ): UseCaseResult<DecryptedKey> {
         // Initialize guardian
         authGuardian.init(email, password)
 
@@ -29,7 +29,7 @@ class LoginUseCase(
         val credentials1 = LoginRequest(email, firstMessage, totpCode)
         val response1 = authRepository.loginFirstStep(credentials1)
         if (response1 is APIResult.Error) {
-            return ActionResult.Error(
+            return UseCaseResult.Error(
                 ErrorType.EXTERNAL,
                 response1.source,
                 response1.message
@@ -44,7 +44,7 @@ class LoginUseCase(
         val credentials2 = LoginRequest(email, clientFinalMessage, totpCode)
         val response2 = authRepository.loginSecondStep(credentials2)
         if (response2 is APIResult.Error) {
-            return ActionResult.Error(
+            return UseCaseResult.Error(
                 ErrorType.EXTERNAL,
                 response2.source,
                 response2.message
@@ -56,7 +56,7 @@ class LoginUseCase(
         try {
             authGuardian.checkServerFinalMessage(response2Data.serverMessage)
         } catch (e: Exception) {
-            return ActionResult.Error(
+            return UseCaseResult.Error(
                 ErrorType.INTERNAL,
                 "Auth Guardian",
                 "Server final message verification failed: ${e.message}"
@@ -65,7 +65,7 @@ class LoginUseCase(
 
         // Check if keychain is null
         if (response2Data.keyChain == null) {
-            return ActionResult.Error(
+            return UseCaseResult.Error(
                 ErrorType.INTERNAL,
                 "Auth Guardian",
                 "Keychain is null"
@@ -78,13 +78,13 @@ class LoginUseCase(
             response2Data.keyChain.salt,
             response2Data.keyChain.vaultKey
         )
-        if (decryptedKeyResult is ActionResult.Error) {
+        if (decryptedKeyResult is UseCaseResult.Error) {
             return decryptedKeyResult
         }
-        val decryptedKey = (decryptedKeyResult as ActionResult.Success).data
+        val decryptedKey = (decryptedKeyResult as UseCaseResult.Success).data
 
         // Return decrypted key
-        return ActionResult.Success(decryptedKey)
+        return UseCaseResult.Success(decryptedKey)
     }
 
 }

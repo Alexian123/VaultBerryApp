@@ -7,8 +7,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -19,6 +23,7 @@ import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -34,10 +39,11 @@ import com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc.LoadingScree
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc.UnlockVaultScreen
 import com.alexianhentiu.vaultberryapp.presentation.utils.NavigationManager
 import com.alexianhentiu.vaultberryapp.presentation.utils.enums.NavRoute
-import com.alexianhentiu.vaultberryapp.presentation.viewmodel.unique.VaultViewModel
 import com.alexianhentiu.vaultberryapp.presentation.utils.state.VaultState
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.UtilityViewModel
+import com.alexianhentiu.vaultberryapp.presentation.viewmodel.unique.VaultViewModel
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun VaultScreen(
     navManager: NavigationManager
@@ -60,6 +66,8 @@ fun VaultScreen(
     var showDeleteEntryDialog by remember { mutableStateOf(false) }
     var showEditEntryDialog by remember { mutableStateOf(false) }
 
+    val isRefreshing by vaultViewModel.isRefreshing.collectAsState()
+
     BackHandler(enabled = true) {
         showLogoutDialog = true
     }
@@ -74,6 +82,11 @@ fun VaultScreen(
         }
 
         is VaultState.Unlocked -> {
+            val pullRefreshState = rememberPullRefreshState(
+                refreshing = isRefreshing,
+                onRefresh = { vaultViewModel.refreshVaultEntries() }
+            )
+
             Scaffold(
                 topBar = {
                     VaultTopBar(
@@ -104,7 +117,9 @@ fun VaultScreen(
             ) { contentPadding ->
                 Box(modifier = Modifier
                     .fillMaxSize()
-                    .padding(contentPadding)) {
+                    .padding(contentPadding)
+                    .pullRefresh(pullRefreshState)
+                ) {
                     LazyColumn {
                         items(previews, key = { it.id }) { entryPreview ->
                             VaultEntryItem(
@@ -125,10 +140,16 @@ fun VaultScreen(
                                     entryToModifyId = id
                                     showEditEntryDialog = true
                                 },
-                                passwordEvaluator = vaultViewModel.passwordEvaluator
+                                evaluatePasswordStrength = utilityViewModel::evalPasswordStrength
                             )
                         }
                     }
+
+                    PullRefreshIndicator(
+                        refreshing = isRefreshing,
+                        state = pullRefreshState,
+                        modifier = Modifier.align(Alignment.TopCenter)
+                    )
 
                     when {
                         showDeleteEntryDialog -> {
@@ -166,8 +187,8 @@ fun VaultScreen(
                                         showEditEntryDialog = false
                                     }
                                 },
-                                inputValidator = vaultViewModel.inputValidator,
-                                passwordEvaluator = vaultViewModel.passwordEvaluator
+                                validator = utilityViewModel::getFieldValidator,
+                                evaluatePasswordStrength = utilityViewModel::evalPasswordStrength
                             )
                         }
                         showLogoutDialog -> {
@@ -191,8 +212,8 @@ fun VaultScreen(
                                     vaultViewModel.addEntry(it)
                                     showAddEntryDialog = false
                                 },
-                                inputValidator = vaultViewModel.inputValidator,
-                                passwordEvaluator = vaultViewModel.passwordEvaluator
+                                validator = utilityViewModel::getFieldValidator,
+                                evaluatePasswordStrength = utilityViewModel::evalPasswordStrength
                             )
                         }
                     }

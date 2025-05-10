@@ -21,9 +21,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.alexianhentiu.vaultberryapp.domain.utils.security.PasswordEvaluator
-import com.alexianhentiu.vaultberryapp.domain.utils.validation.DebugValidator
-import com.alexianhentiu.vaultberryapp.domain.utils.validation.InputValidator
+import com.alexianhentiu.vaultberryapp.domain.utils.types.ValidatedFieldType
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.ValidatedTextField
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.PasswordField
 import com.alexianhentiu.vaultberryapp.presentation.utils.NavigationManager
@@ -33,8 +31,7 @@ import com.alexianhentiu.vaultberryapp.presentation.utils.enums.NavRoute
 fun RegisterForm(
     navManager: NavigationManager,
     onRegisterClicked: (String, String, String?, String?) -> Unit,
-    inputValidator: InputValidator,
-    passwordEvaluator: PasswordEvaluator
+    validator: (ValidatedFieldType) -> (String) -> Boolean = { { true } }
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -56,7 +53,7 @@ fun RegisterForm(
                 email = newEmail
                 isEmailValid = valid
             },
-            isValid = inputValidator::validateEmail,
+            isValid = validator(ValidatedFieldType.EMAIL),
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(8.dp))
@@ -65,8 +62,7 @@ fun RegisterForm(
                 password = newPassword
                 isPasswordValid = valid
             },
-            isValid = inputValidator::validatePassword,
-            passwordEvaluator = passwordEvaluator,
+            isValid = validator(ValidatedFieldType.PASSWORD),
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(8.dp))
@@ -106,8 +102,6 @@ fun RegisterForm(
 fun RegisterFormPreview() {
     RegisterForm(
         navManager = NavigationManager(NavController(LocalContext.current)),
-        onRegisterClicked = { _, _, _, _ -> },
-        inputValidator = DebugValidator(),
-        passwordEvaluator = PasswordEvaluator()
+        onRegisterClicked = { _, _, _, _ -> }
     )
 }

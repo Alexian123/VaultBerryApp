@@ -20,9 +20,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.alexianhentiu.vaultberryapp.domain.utils.security.PasswordEvaluator
-import com.alexianhentiu.vaultberryapp.domain.utils.validation.DebugValidator
-import com.alexianhentiu.vaultberryapp.domain.utils.validation.InputValidator
+import com.alexianhentiu.vaultberryapp.domain.utils.types.ValidatedFieldType
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.ValidatedTextField
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.PasswordField
 import com.alexianhentiu.vaultberryapp.presentation.utils.NavigationManager
@@ -33,8 +31,7 @@ fun LoginForm(
     navManager: NavigationManager,
     onLoginClicked: (String, String) -> Unit,
     onForgotPasswordClicked: () -> Unit,
-    inputValidator: InputValidator,
-    passwordEvaluator: PasswordEvaluator
+    validator: (ValidatedFieldType) -> (String) -> Boolean = { { true } }
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -54,7 +51,7 @@ fun LoginForm(
                 email = newEmail
                 isEmailValid = valid
             },
-            isValid = inputValidator::validateEmail,
+            isValid = validator(ValidatedFieldType.EMAIL),
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(8.dp))
@@ -63,8 +60,7 @@ fun LoginForm(
                 password = newPassword
                 isPasswordValid = valid
             },
-            isValid = inputValidator::validatePassword,
-            passwordEvaluator = passwordEvaluator,
+            isValid = validator(ValidatedFieldType.PASSWORD),
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(16.dp))
@@ -96,8 +92,6 @@ fun LoginFormPreview() {
     LoginForm(
         navManager = NavigationManager(NavController(LocalContext.current)),
         onLoginClicked = { _, _ -> },
-        onForgotPasswordClicked = {},
-        inputValidator = DebugValidator(),
-        passwordEvaluator = PasswordEvaluator()
+        onForgotPasswordClicked = {}
     )
 }

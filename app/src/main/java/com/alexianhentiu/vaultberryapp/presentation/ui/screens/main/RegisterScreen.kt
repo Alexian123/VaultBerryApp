@@ -47,8 +47,7 @@ fun RegisterScreen(
                         onRegisterClicked = { email, password, firstName, lastName ->
                             registerViewModel.register(email, password, firstName, lastName)
                         },
-                        inputValidator = registerViewModel.inputValidator,
-                        passwordEvaluator = registerViewModel.passwordEvaluator
+                        validator = utilityViewModel::getFieldValidator
                     )
                 }
             }

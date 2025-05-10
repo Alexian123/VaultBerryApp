@@ -14,22 +14,26 @@ import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.account.Setup2FA
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.auth.RecoverySendUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.vault.AddEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.vault.GetAllVaultEntryPreviewsUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.vault.GenerateKeyChainUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.vault.DecryptKeyUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.GenerateKeyChainUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.DecryptKeyUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.auth.LoginUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.auth.LogoutUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.auth.RecoveryLoginUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.vault.UpdateEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.auth.RegisterUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.vault.EncryptVaultEntryUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.vault.DecryptVaultEntryUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.EncryptVaultEntryUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.DecryptVaultEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.vault.DeleteEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.vault.GetDecryptedVaultEntryUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.auth.Extract2FASecret
-import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.auth.GeneratePasswordPairUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.vault.ReEncryptVaultUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.misc.CopyToClipboardUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.Extract2FASecret
+import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.GeneratePasswordPairUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.ReEncryptVaultUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.utility.CopyToClipboardUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.utility.EvalPasswordStrengthUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.utility.GetValidatorUseCase
 import com.alexianhentiu.vaultberryapp.domain.utils.security.AuthGuardian
+import com.alexianhentiu.vaultberryapp.domain.utils.security.PasswordEvaluator
+import com.alexianhentiu.vaultberryapp.domain.utils.validation.InputValidator
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -38,6 +42,16 @@ import dagger.hilt.android.components.ViewModelComponent
 @Module
 @InstallIn(ViewModelComponent::class)
 object ViewModelUseCaseModule {
+
+    @Provides
+    fun provideEvalPasswordUseCase(
+        passwordEvaluator: PasswordEvaluator
+    ): EvalPasswordStrengthUseCase = EvalPasswordStrengthUseCase(passwordEvaluator)
+
+    @Provides
+    fun provideGetValidatorUseCase(
+        inputValidator: InputValidator
+    ): GetValidatorUseCase = GetValidatorUseCase(inputValidator)
 
     @Provides
     fun provideCopyToClipboardUseCase(

@@ -19,17 +19,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.alexianhentiu.vaultberryapp.domain.utils.security.PasswordEvaluator
-import com.alexianhentiu.vaultberryapp.domain.utils.validation.DebugValidator
-import com.alexianhentiu.vaultberryapp.domain.utils.validation.InputValidator
+import com.alexianhentiu.vaultberryapp.domain.utils.types.ValidatedFieldType
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.PasswordField
 
 @Composable
 fun RecoveryLoginForm(
     onContinueClicked: (String, String) -> Unit,
     onCancelClicked: () -> Unit,
-    inputValidator: InputValidator,
-    passwordEvaluator: PasswordEvaluator
+    validator: (ValidatedFieldType) -> (String) -> Boolean = { { true } }
 ) {
     var recoveryPassword by remember { mutableStateOf("") }
     var otp by remember { mutableStateOf("") }
@@ -49,8 +46,7 @@ fun RecoveryLoginForm(
                 isRecoveryPasswordValid = valid
             },
             label = "Recovery Password",
-            isValid = inputValidator::validatePassword,
-            passwordEvaluator = passwordEvaluator,
+            isValid = validator(ValidatedFieldType.PASSWORD),
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(8.dp))
@@ -60,8 +56,7 @@ fun RecoveryLoginForm(
                 isOTPValid = valid
             },
             label = "One Time Password",
-            isValid = inputValidator::validateOTP,
-            passwordEvaluator = passwordEvaluator,
+            isValid = validator(ValidatedFieldType.OTP),
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(16.dp))
@@ -89,8 +84,6 @@ fun RecoveryLoginForm(
 fun RecoveryLoginFormPreview() {
     RecoveryLoginForm(
         onContinueClicked = { _, _ -> },
-        onCancelClicked = {},
-        inputValidator = DebugValidator(),
-        passwordEvaluator = PasswordEvaluator()
+        onCancelClicked = {}
     )
 }

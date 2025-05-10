@@ -87,8 +87,7 @@ fun AccountScreen(
                         onDeleteAccount = {
                             accountViewModel.deleteAccount()
                         },
-                        inputValidator = accountViewModel.inputValidator,
-                        passwordEvaluator = accountViewModel.passwordEvaluator
+                        validator = utilityViewModel::getFieldValidator
                     )
                 }
             }

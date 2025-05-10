@@ -4,8 +4,8 @@ import com.alexianhentiu.vaultberryapp.data.utils.APIResult
 import com.alexianhentiu.vaultberryapp.domain.model.entity.DecryptedKey
 import com.alexianhentiu.vaultberryapp.domain.model.request.RecoveryLoginRequest
 import com.alexianhentiu.vaultberryapp.domain.repository.AuthRepository
-import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.vault.DecryptKeyUseCase
-import com.alexianhentiu.vaultberryapp.domain.utils.types.ActionResult
+import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.DecryptKeyUseCase
+import com.alexianhentiu.vaultberryapp.domain.utils.types.UseCaseResult
 import com.alexianhentiu.vaultberryapp.domain.utils.types.ErrorType
 
 class RecoveryLoginUseCase(
@@ -16,7 +16,7 @@ class RecoveryLoginUseCase(
         email: String,
         recoveryPassword: String,
         otp: String
-    ): ActionResult<DecryptedKey> {
+    ): UseCaseResult<DecryptedKey> {
         val credentials = RecoveryLoginRequest(
             email = email,
             recoveryPassword = recoveryPassword,
@@ -31,15 +31,15 @@ class RecoveryLoginUseCase(
                     salt = keyChain.salt,
                     encryptedKey = keyChain.recoveryKey
                 )
-                if (decryptKeyResult is ActionResult.Error) {
+                if (decryptKeyResult is UseCaseResult.Error) {
                     return decryptKeyResult
                 }
-                val decryptedVaultKey = (decryptKeyResult as ActionResult.Success).data
+                val decryptedVaultKey = (decryptKeyResult as UseCaseResult.Success).data
 
-                return ActionResult.Success(decryptedVaultKey)
+                return UseCaseResult.Success(decryptedVaultKey)
             }
             is APIResult.Error -> {
-                return ActionResult.Error(
+                return UseCaseResult.Error(
                     ErrorType.EXTERNAL,
                     response.source,
                     response.message

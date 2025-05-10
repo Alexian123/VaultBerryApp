@@ -1,10 +1,10 @@
-package com.alexianhentiu.vaultberryapp.domain.usecase.singleton.vault
+package com.alexianhentiu.vaultberryapp.domain.usecase.singleton
 
-import com.alexianhentiu.vaultberryapp.domain.model.entity.DecryptedVaultEntry
 import com.alexianhentiu.vaultberryapp.domain.model.entity.DecryptedKey
+import com.alexianhentiu.vaultberryapp.domain.model.entity.DecryptedVaultEntry
 import com.alexianhentiu.vaultberryapp.domain.model.entity.EncryptedVaultEntry
-import com.alexianhentiu.vaultberryapp.domain.utils.types.ActionResult
 import com.alexianhentiu.vaultberryapp.domain.utils.security.VaultGuardian
+import com.alexianhentiu.vaultberryapp.domain.utils.types.UseCaseResult
 import com.alexianhentiu.vaultberryapp.domain.utils.types.ErrorType
 
 class EncryptVaultEntryUseCase(private val vaultGuardian: VaultGuardian) {
@@ -12,7 +12,7 @@ class EncryptVaultEntryUseCase(private val vaultGuardian: VaultGuardian) {
     operator fun invoke(
         decryptedVaultEntry: DecryptedVaultEntry,
         decryptedKey: DecryptedKey
-    ): ActionResult<EncryptedVaultEntry> {
+    ): UseCaseResult<EncryptedVaultEntry> {
         try {
             val encryptedVaultEntry = EncryptedVaultEntry(
                 title = decryptedVaultEntry.title,
@@ -25,9 +25,9 @@ class EncryptVaultEntryUseCase(private val vaultGuardian: VaultGuardian) {
                     else vaultGuardian.encryptField(decryptedVaultEntry.password, decryptedKey),
                 notes = if (decryptedVaultEntry.notes.isEmpty()) null else decryptedVaultEntry.notes
             )
-            return ActionResult.Success(encryptedVaultEntry)
+            return UseCaseResult.Success(encryptedVaultEntry)
         } catch (e: Exception) {
-            return ActionResult.Error(
+            return UseCaseResult.Error(
                 ErrorType.INTERNAL,
                 "Vault Guardian",
                 "Entry encryption failed: ${e.message}"

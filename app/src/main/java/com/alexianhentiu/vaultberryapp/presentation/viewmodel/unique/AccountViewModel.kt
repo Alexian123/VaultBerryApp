@@ -13,9 +13,7 @@ import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.account.Get2FASt
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.account.GetAccountInfoUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.account.Setup2FAUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.auth.LogoutUseCase
-import com.alexianhentiu.vaultberryapp.domain.utils.security.PasswordEvaluator
-import com.alexianhentiu.vaultberryapp.domain.utils.types.ActionResult
-import com.alexianhentiu.vaultberryapp.domain.utils.validation.InputValidator
+import com.alexianhentiu.vaultberryapp.domain.utils.types.UseCaseResult
 import com.alexianhentiu.vaultberryapp.presentation.utils.ErrorInfo
 import com.alexianhentiu.vaultberryapp.presentation.utils.state.AccountState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -33,9 +31,7 @@ class AccountViewModel @Inject constructor(
     private val changePasswordUseCase: ChangePasswordUseCase,
     private val setup2FAUseCase: Setup2FAUseCase,
     private val disable2FAUseCase: Disable2FAUseCase,
-    private val logoutUseCase: LogoutUseCase,
-    val inputValidator: InputValidator,
-    val passwordEvaluator: PasswordEvaluator
+    private val logoutUseCase: LogoutUseCase
 ) : ViewModel() {
 
     private val _accountState = MutableStateFlow<AccountState>(AccountState.Init)
@@ -45,17 +41,17 @@ class AccountViewModel @Inject constructor(
         viewModelScope.launch {
             _accountState.value = AccountState.Loading
             when (val resultAccount = getAccountInfoUseCase()) {
-                is ActionResult.Success -> {
+                is UseCaseResult.Success -> {
 
                     when (val result2FA = get2FAStatusUseCase()) {
-                        is ActionResult.Success -> {
+                        is UseCaseResult.Success -> {
                             _accountState.value = AccountState.Idle(
                                 resultAccount.data,
                                 result2FA.data
                             )
                         }
 
-                        is ActionResult.Error -> {
+                        is UseCaseResult.Error -> {
                             _accountState.value = AccountState.Error(
                                 ErrorInfo(
                                     type = result2FA.type,
@@ -68,7 +64,7 @@ class AccountViewModel @Inject constructor(
                     }
                 }
 
-                is ActionResult.Error -> {
+                is UseCaseResult.Error -> {
                     _accountState.value = AccountState.Error(
                         ErrorInfo(
                             type = resultAccount.type,
@@ -86,11 +82,11 @@ class AccountViewModel @Inject constructor(
         viewModelScope.launch {
             _accountState.value = AccountState.Loading
             when (val result = deleteAccountUseCase()) {
-                is ActionResult.Success -> {
+                is UseCaseResult.Success -> {
                     _accountState.value = AccountState.LoggedOut
                 }
 
-                is ActionResult.Error -> {
+                is UseCaseResult.Error -> {
                     _accountState.value = AccountState.Error(
                         ErrorInfo(
                             type = result.type,
@@ -115,7 +111,7 @@ class AccountViewModel @Inject constructor(
                 lastName = lastName
             )
             when (val result = changeAccountInfoUseCase(accountInfo)) {
-                is ActionResult.Success -> {
+                is UseCaseResult.Success -> {
                     _accountState.value = AccountState.Idle(
                         accountInfo.copy(
                             firstName = accountInfo.firstName ?: savedState.accountInfo.firstName,
@@ -125,7 +121,7 @@ class AccountViewModel @Inject constructor(
                     )
                 }
 
-                is ActionResult.Error -> {
+                is UseCaseResult.Error -> {
                     _accountState.value = AccountState.Error(
                         ErrorInfo(
                             type = result.type,
@@ -143,11 +139,11 @@ class AccountViewModel @Inject constructor(
         viewModelScope.launch {
             _accountState.value = AccountState.Loading
             when (val result = changePasswordUseCase(decryptedKey, newPassword, reEncrypt)) {
-                is ActionResult.Success -> {
+                is UseCaseResult.Success -> {
                     _accountState.value = AccountState.ChangedPassword(result.data)
                 }
 
-                is ActionResult.Error -> {
+                is UseCaseResult.Error -> {
                     _accountState.value = AccountState.Error(
                         ErrorInfo(
                             type = result.type,
@@ -165,11 +161,11 @@ class AccountViewModel @Inject constructor(
         viewModelScope.launch {
             _accountState.value = AccountState.Loading
             when (val result = setup2FAUseCase()) {
-                is ActionResult.Success -> {
+                is UseCaseResult.Success -> {
                     _accountState.value = AccountState.Setup2FA(result.data)
                 }
 
-                is ActionResult.Error -> {
+                is UseCaseResult.Error -> {
                     _accountState.value = AccountState.Error(
                         ErrorInfo(
                             type = result.type,
@@ -188,14 +184,14 @@ class AccountViewModel @Inject constructor(
             val savedState = (_accountState.value as AccountState.Idle)
             _accountState.value = AccountState.Loading
             when (val result = disable2FAUseCase()) {
-                is ActionResult.Success -> {
+                is UseCaseResult.Success -> {
                     _accountState.value = AccountState.Idle(
                         savedState.accountInfo,
                         false
                     )
                 }
 
-                is ActionResult.Error -> {
+                is UseCaseResult.Error -> {
                     _accountState.value = AccountState.Error(
                         ErrorInfo(
                             type = result.type,
@@ -213,11 +209,11 @@ class AccountViewModel @Inject constructor(
         viewModelScope.launch {
             _accountState.value = AccountState.Loading
             when (val result = logoutUseCase()) {
-                is ActionResult.Success -> {
+                is UseCaseResult.Success -> {
                     _accountState.value = AccountState.LoggedOut
                 }
 
-                is ActionResult.Error -> {
+                is UseCaseResult.Error -> {
                     _accountState.value = AccountState.Error(
                         ErrorInfo(
                             type = result.type,

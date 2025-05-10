@@ -12,9 +12,7 @@ import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.vault.GetAllVaul
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.vault.UpdateEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.vault.DeleteEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.vault.GetDecryptedVaultEntryUseCase
-import com.alexianhentiu.vaultberryapp.domain.utils.security.PasswordEvaluator
-import com.alexianhentiu.vaultberryapp.domain.utils.types.ActionResult
-import com.alexianhentiu.vaultberryapp.domain.utils.validation.InputValidator
+import com.alexianhentiu.vaultberryapp.domain.utils.types.UseCaseResult
 import com.alexianhentiu.vaultberryapp.domain.utils.types.ErrorType
 import com.alexianhentiu.vaultberryapp.presentation.utils.ErrorInfo
 import com.alexianhentiu.vaultberryapp.presentation.utils.state.VaultState
@@ -32,9 +30,7 @@ class VaultViewModel @Inject constructor(
     private val getDecryptedVaultEntryUseCase: GetDecryptedVaultEntryUseCase,
     private val addEntryUseCase: AddEntryUseCase,
     private val deleteEntryUseCase: DeleteEntryUseCase,
-    private val updateEntryUseCase: UpdateEntryUseCase,
-    val inputValidator: InputValidator,
-    val passwordEvaluator: PasswordEvaluator
+    private val updateEntryUseCase: UpdateEntryUseCase
 ): ViewModel() {
 
     private val _vaultState = MutableStateFlow<VaultState>(VaultState.Locked)
@@ -59,12 +55,12 @@ class VaultViewModel @Inject constructor(
         viewModelScope.launch {
             _isRefreshing.value = true
             when (val result = getAllVaultEntryPreviewsUseCase()) {
-                is ActionResult.Success -> {
+                is UseCaseResult.Success -> {
                     _allPreviews.value = result.data
                     resetShownEntries()
                 }
 
-                is ActionResult.Error -> {
+                is UseCaseResult.Error -> {
                     _vaultState.value = VaultState.Error(
                         ErrorInfo(
                             type = result.type,
@@ -83,11 +79,11 @@ class VaultViewModel @Inject constructor(
         viewModelScope.launch {
             _vaultState.value = VaultState.Loading
             when (val result = logoutUseCase()) {
-                is ActionResult.Success -> {
+                is UseCaseResult.Success -> {
                     resetState()
                 }
 
-                is ActionResult.Error -> {
+                is UseCaseResult.Error -> {
                     _vaultState.value = VaultState.Error(
                         ErrorInfo(
                             type = result.type,
@@ -130,13 +126,13 @@ class VaultViewModel @Inject constructor(
             }
             vaultKey = decryptedKey
             when (val result = getAllVaultEntryPreviewsUseCase()) {
-                is ActionResult.Success -> {
+                is UseCaseResult.Success -> {
                     _vaultState.value = VaultState.Unlocked
                     _allPreviews.value = result.data
                     resetShownEntries()
                 }
 
-                is ActionResult.Error -> {
+                is UseCaseResult.Error -> {
                     _vaultState.value = VaultState.Error(
                         ErrorInfo(
                             type = result.type,
@@ -153,10 +149,10 @@ class VaultViewModel @Inject constructor(
     fun fetchEntryDetails(id: Long) {
         viewModelScope.launch {
             when (val result = getDecryptedVaultEntryUseCase(id, vaultKey)) {
-                is ActionResult.Success -> {
+                is UseCaseResult.Success -> {
                     _expandedEntriesMap.update { it + (id to result.data) }
                 }
-                is ActionResult.Error -> {
+                is UseCaseResult.Error -> {
                     _vaultState.value = VaultState.Error(
                         ErrorInfo(
                             type = result.type,
@@ -182,7 +178,7 @@ class VaultViewModel @Inject constructor(
         viewModelScope.launch {
             _vaultState.value = VaultState.Loading
             when (val result = addEntryUseCase(decryptedVaultEntry, vaultKey)) {
-                is ActionResult.Success -> {
+                is UseCaseResult.Success -> {
                     _vaultState.value = VaultState.Unlocked
                     _allPreviews.update { currentList ->
                         currentList + result.data
@@ -190,7 +186,7 @@ class VaultViewModel @Inject constructor(
                     resetShownEntries()
                 }
 
-                is ActionResult.Error -> {
+                is UseCaseResult.Error -> {
                     _vaultState.value = VaultState.Error(
                         ErrorInfo(
                             type = result.type,
@@ -208,7 +204,7 @@ class VaultViewModel @Inject constructor(
         viewModelScope.launch {
             _vaultState.value = VaultState.Loading
             when (val result = deleteEntryUseCase(id)) {
-                is ActionResult.Success -> {
+                is UseCaseResult.Success -> {
                     _vaultState.value = VaultState.Unlocked
                     _allPreviews.update { currentList ->
                         currentList.filter { it.id != id }
@@ -216,7 +212,7 @@ class VaultViewModel @Inject constructor(
                     resetShownEntries()
                 }
 
-                is ActionResult.Error -> {
+                is UseCaseResult.Error -> {
                     _vaultState.value = VaultState.Error(
                         ErrorInfo(
                             type = result.type,
@@ -234,7 +230,7 @@ class VaultViewModel @Inject constructor(
         viewModelScope.launch {
             _vaultState.value = VaultState.Loading
             when (val result = updateEntryUseCase(id, decryptedVaultEntry, vaultKey)) {
-                is ActionResult.Success -> {
+                is UseCaseResult.Success -> {
                     _vaultState.value = VaultState.Unlocked
                     _allPreviews.update { currentList ->
                         currentList.map {
@@ -246,7 +242,7 @@ class VaultViewModel @Inject constructor(
                     resetShownEntries()
                 }
 
-                is ActionResult.Error -> {
+                is UseCaseResult.Error -> {
                     _vaultState.value = VaultState.Error(
                         ErrorInfo(
                             type = result.type,

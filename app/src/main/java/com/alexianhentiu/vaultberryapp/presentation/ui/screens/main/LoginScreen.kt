@@ -46,8 +46,7 @@ fun LoginScreen(
                         navManager = navManager,
                         onLoginClicked = { email, password -> loginViewModel.login(email, password) },
                         onForgotPasswordClicked = { navManager.navigate(NavRoute.RECOVERY) },
-                        inputValidator = loginViewModel.inputValidator,
-                        passwordEvaluator = loginViewModel.passwordEvaluator
+                        validator = utilityViewModel::getFieldValidator
                     )
                 }
             }
@@ -74,7 +73,7 @@ fun LoginScreen(
                             loginViewModel.verify2FA(email, password, code)
                         },
                         onCancelClicked = { loginViewModel.resetState() },
-                        inputValidator = loginViewModel.inputValidator
+                        validator = utilityViewModel::getFieldValidator
                     )
                 }
             }

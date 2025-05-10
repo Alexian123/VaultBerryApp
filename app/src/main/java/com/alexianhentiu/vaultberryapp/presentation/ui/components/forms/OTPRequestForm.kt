@@ -21,15 +21,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.alexianhentiu.vaultberryapp.domain.utils.validation.DebugValidator
-import com.alexianhentiu.vaultberryapp.domain.utils.validation.InputValidator
+import com.alexianhentiu.vaultberryapp.domain.utils.types.ValidatedFieldType
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.ValidatedTextField
 
 @Composable
 fun OTPRequestForm(
     onContinueClicked: (String) -> Unit,
     onCancelClicked: () -> Unit,
-    inputValidator: InputValidator
+    validator: (ValidatedFieldType) -> (String) -> Boolean = { { true } },
 ) {
     var email by remember { mutableStateOf("") }
     var isEmailValid by remember { mutableStateOf(false) }
@@ -54,7 +53,7 @@ fun OTPRequestForm(
                 email = newEmail
                 isEmailValid = valid
                 },
-            isValid = inputValidator::validateEmail,
+            isValid = validator(ValidatedFieldType.EMAIL),
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(16.dp))
@@ -82,7 +81,6 @@ fun OTPRequestForm(
 fun OTPRequestFormPreview() {
     OTPRequestForm(
         onContinueClicked = {},
-        onCancelClicked = {},
-        inputValidator = DebugValidator()
+        onCancelClicked = {}
     )
 }

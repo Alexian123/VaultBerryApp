@@ -61,7 +61,7 @@ fun RecoveryScreen(
                     OTPRequestForm(
                         onContinueClicked = { email -> recoveryViewModel.requestOTP(email) },
                         onCancelClicked = { navManager.navigate(NavRoute.LOGIN) },
-                        inputValidator = recoveryViewModel.inputValidator
+                        validator = utilityViewModel::getFieldValidator
                     )
                 }
             }
@@ -79,8 +79,7 @@ fun RecoveryScreen(
                             recoveryViewModel.resetState()
                             navManager.navigate(NavRoute.LOGIN)
                         },
-                        inputValidator = recoveryViewModel.inputValidator,
-                        passwordEvaluator = recoveryViewModel.passwordEvaluator
+                        validator = utilityViewModel::getFieldValidator
                     )
                 }
             }
@@ -94,8 +93,7 @@ fun RecoveryScreen(
                         onChangePassword = { newPassword, reEncrypt ->
                             recoveryViewModel.resetPassword(decryptedKey, newPassword, reEncrypt)
                         },
-                        inputValidator = recoveryViewModel.inputValidator,
-                        passwordEvaluator = recoveryViewModel.passwordEvaluator,
+                        validator = utilityViewModel::getFieldValidator,
                         textFieldType = TextFieldType.REGULAR
                     )
                 }

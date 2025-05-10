@@ -5,8 +5,8 @@ import com.alexianhentiu.vaultberryapp.domain.model.entity.DecryptedKey
 import com.alexianhentiu.vaultberryapp.domain.model.entity.DecryptedVaultEntry
 import com.alexianhentiu.vaultberryapp.domain.model.response.MessageResponse
 import com.alexianhentiu.vaultberryapp.domain.repository.VaultRepository
-import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.vault.EncryptVaultEntryUseCase
-import com.alexianhentiu.vaultberryapp.domain.utils.types.ActionResult
+import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.EncryptVaultEntryUseCase
+import com.alexianhentiu.vaultberryapp.domain.utils.types.UseCaseResult
 import com.alexianhentiu.vaultberryapp.domain.utils.types.ErrorType
 
 class UpdateEntryUseCase(
@@ -17,20 +17,20 @@ class UpdateEntryUseCase(
         id: Long,
         entry: DecryptedVaultEntry,
         key: DecryptedKey
-    ): ActionResult<MessageResponse> {
+    ): UseCaseResult<MessageResponse> {
         val encryptEntryResult = encryptVaultEntryUseCase(entry, key)
-        if (encryptEntryResult is ActionResult.Error) {
+        if (encryptEntryResult is UseCaseResult.Error) {
             return encryptEntryResult
         }
-        val newEncryptedVaultEntry = (encryptEntryResult as ActionResult.Success).data
+        val newEncryptedVaultEntry = (encryptEntryResult as UseCaseResult.Success).data
 
         return when (val response = vaultRepository.updateEntry(id, newEncryptedVaultEntry)) {
             is APIResult.Success -> {
-                ActionResult.Success(response.data)
+                UseCaseResult.Success(response.data)
             }
 
             is APIResult.Error -> {
-                ActionResult.Error(
+                UseCaseResult.Error(
                     ErrorType.EXTERNAL,
                     response.source,
                     response.message

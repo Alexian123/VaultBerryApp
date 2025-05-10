@@ -15,17 +15,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.alexianhentiu.vaultberryapp.domain.utils.security.PasswordEvaluator
-import com.alexianhentiu.vaultberryapp.domain.utils.validation.DebugValidator
-import com.alexianhentiu.vaultberryapp.domain.utils.validation.InputValidator
+import com.alexianhentiu.vaultberryapp.domain.utils.types.ValidatedFieldType
 import com.alexianhentiu.vaultberryapp.presentation.utils.enums.TextFieldType
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.PasswordField
 
 @Composable
 fun ChangePasswordForm(
     onChangePassword: (String, Boolean) -> Unit,
-    inputValidator: InputValidator,
-    passwordEvaluator: PasswordEvaluator,
+    validator: (ValidatedFieldType) -> (String) -> Boolean = { { true } },
     textFieldType: TextFieldType = TextFieldType.OUTLINED
 ) {
     var password by remember { mutableStateOf("") }
@@ -40,10 +37,9 @@ fun ChangePasswordForm(
                 password = newPassword
                 isPasswordValid = valid
             },
-            isValid = inputValidator::validatePassword,
+            isValid = validator(ValidatedFieldType.PASSWORD),
             label = "New Password",
-            textFieldType = textFieldType,
-            passwordEvaluator = passwordEvaluator
+            textFieldType = textFieldType
         )
         PasswordField(
             onPasswordChange = { newPassword, valid ->
@@ -52,8 +48,7 @@ fun ChangePasswordForm(
             },
             isValid = password::equals,
             label = "Confirm New Password",
-            textFieldType = textFieldType,
-            passwordEvaluator = passwordEvaluator
+            textFieldType = textFieldType
         )
         Row(verticalAlignment = Alignment.CenterVertically) {
             Checkbox(
@@ -78,8 +73,6 @@ fun ChangePasswordForm(
 @Preview(showBackground = true)
 fun ChangePasswordFormPreview() {
     ChangePasswordForm(
-        onChangePassword = { _, _ -> },
-        inputValidator = DebugValidator(),
-        passwordEvaluator = PasswordEvaluator()
+        onChangePassword = { _, _ -> }
     )
 }

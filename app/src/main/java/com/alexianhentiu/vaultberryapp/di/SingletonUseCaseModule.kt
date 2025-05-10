@@ -1,13 +1,13 @@
 package com.alexianhentiu.vaultberryapp.di
 
 import com.alexianhentiu.vaultberryapp.domain.repository.VaultRepository
-import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.vault.DecryptKeyUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.vault.DecryptVaultEntryUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.vault.EncryptVaultEntryUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.auth.Extract2FASecret
-import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.auth.GeneratePasswordPairUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.vault.GenerateKeyChainUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.vault.ReEncryptVaultUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.DecryptKeyUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.DecryptVaultEntryUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.EncryptVaultEntryUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.Extract2FASecret
+import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.GeneratePasswordPairUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.GenerateKeyChainUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.ReEncryptVaultUseCase
 import com.alexianhentiu.vaultberryapp.domain.utils.security.PasswordGenerator
 import com.alexianhentiu.vaultberryapp.domain.utils.security.VaultGuardian
 import dagger.Module

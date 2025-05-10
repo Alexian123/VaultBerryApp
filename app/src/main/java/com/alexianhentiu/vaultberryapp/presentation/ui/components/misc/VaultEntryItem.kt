@@ -35,7 +35,7 @@ import androidx.compose.ui.unit.dp
 import com.alexianhentiu.vaultberryapp.R
 import com.alexianhentiu.vaultberryapp.domain.model.entity.DecryptedVaultEntry
 import com.alexianhentiu.vaultberryapp.domain.model.entity.VaultEntryPreview
-import com.alexianhentiu.vaultberryapp.domain.utils.security.PasswordEvaluator
+import com.alexianhentiu.vaultberryapp.domain.utils.types.PasswordStrength
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.PasswordField
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.ValidatedTextField
 
@@ -46,7 +46,7 @@ fun VaultEntryItem(
     onItemClick: (Long) -> Unit,
     onDelete: (Long) -> Unit,
     onEdit: (Long) -> Unit,
-    passwordEvaluator: PasswordEvaluator
+    evaluatePasswordStrength: (String) -> PasswordStrength = { PasswordStrength.NONE },
 ) {
     var title by remember(preview) { mutableStateOf(preview.title) }
     var url by remember(decryptedEntry) { mutableStateOf(decryptedEntry?.url ?: "") }
@@ -162,7 +162,7 @@ fun VaultEntryItem(
                             modifier = Modifier.fillMaxWidth(),
                             initialText = password,
                             showCopyToClipboardButton = true,
-                            passwordEvaluator = passwordEvaluator,
+                            evaluateStrength = evaluatePasswordStrength,
                             showStrengthIndicator = true
                         )
                         ValidatedTextField(
@@ -211,8 +211,7 @@ fun VaultEntryPreview() {
         decryptedEntry = null,
         onItemClick = {},
         onDelete = {},
-        onEdit = {},
-        passwordEvaluator = PasswordEvaluator()
+        onEdit = {}
     )
 }
 
@@ -230,7 +229,6 @@ fun ExpandedVaultEntryPreview() {
         ),
         onItemClick = {},
         onDelete = {},
-        onEdit = {},
-        passwordEvaluator = PasswordEvaluator()
+        onEdit = {}
     )
 }

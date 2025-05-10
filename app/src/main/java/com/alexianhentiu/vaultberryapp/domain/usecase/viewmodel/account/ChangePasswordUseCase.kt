@@ -5,11 +5,11 @@ import com.alexianhentiu.vaultberryapp.data.utils.APIResult
 import com.alexianhentiu.vaultberryapp.domain.model.entity.DecryptedKey
 import com.alexianhentiu.vaultberryapp.domain.model.request.PasswordChangeRequest
 import com.alexianhentiu.vaultberryapp.domain.repository.AccountRepository
-import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.auth.GeneratePasswordPairUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.vault.DecryptKeyUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.vault.GenerateKeyChainUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.vault.ReEncryptVaultUseCase
-import com.alexianhentiu.vaultberryapp.domain.utils.types.ActionResult
+import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.GeneratePasswordPairUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.DecryptKeyUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.GenerateKeyChainUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.ReEncryptVaultUseCase
+import com.alexianhentiu.vaultberryapp.domain.utils.types.UseCaseResult
 import com.alexianhentiu.vaultberryapp.domain.utils.types.ErrorType
 
 class ChangePasswordUseCase(
@@ -23,23 +23,23 @@ class ChangePasswordUseCase(
         decryptedKey: DecryptedKey,
         newPassword: String,
         reEncrypt: Boolean = false
-    ): ActionResult<String> {
+    ): UseCaseResult<String> {
 
         val newPasswordPairResult = generatePasswordPairUseCase(newPassword)
-        if (newPasswordPairResult is ActionResult.Error) {
+        if (newPasswordPairResult is UseCaseResult.Error) {
             return newPasswordPairResult
         }
-        val newPasswordPair = (newPasswordPairResult as ActionResult.Success).data
+        val newPasswordPair = (newPasswordPairResult as UseCaseResult.Success).data
 
         val generateKeyChainResult = generateKeyChainUseCase(
             newPasswordPair.regularPassword,
             newPasswordPair.recoveryPassword,
             decryptedKey
         )
-        if (generateKeyChainResult is ActionResult.Error) {
+        if (generateKeyChainResult is UseCaseResult.Error) {
             return generateKeyChainResult
         }
-        val newKeyChain = (generateKeyChainResult as ActionResult.Success).data
+        val newKeyChain = (generateKeyChainResult as UseCaseResult.Success).data
 
         // Re-encrypt vault if requested
         if (reEncrypt) {
@@ -48,16 +48,16 @@ class ChangePasswordUseCase(
                 newKeyChain.salt,
                 newKeyChain.vaultKey
             )
-            if (decryptKeyResult is ActionResult.Error) {
+            if (decryptKeyResult is UseCaseResult.Error) {
                 return decryptKeyResult
             }
-            val newDecryptedKey = (decryptKeyResult as ActionResult.Success).data
+            val newDecryptedKey = (decryptKeyResult as UseCaseResult.Success).data
 
             val reEncryptResult = reEncryptVaultUseCase(decryptedKey, newDecryptedKey)
-            if (reEncryptResult is ActionResult.Error) {
+            if (reEncryptResult is UseCaseResult.Error) {
                 return reEncryptResult
             }
-            val msg = (reEncryptResult as ActionResult.Success).data
+            val msg = (reEncryptResult as UseCaseResult.Success).data
             Log.d("ChangePasswordUseCase", msg.message)
         }
 
@@ -67,11 +67,11 @@ class ChangePasswordUseCase(
         )
         return when (val changeResult = accountRepository.changePassword(passwordChangeRequest)) {
             is APIResult.Success -> {
-                ActionResult.Success(newPasswordPair.recoveryPassword)
+                UseCaseResult.Success(newPasswordPair.recoveryPassword)
             }
 
             is APIResult.Error -> {
-                ActionResult.Error(
+                UseCaseResult.Error(
                     ErrorType.EXTERNAL,
                     changeResult.source,
                     changeResult.message

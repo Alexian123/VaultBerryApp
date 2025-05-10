@@ -5,9 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alexianhentiu.vaultberryapp.domain.model.entity.AccountInfo
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.auth.RegisterUseCase
-import com.alexianhentiu.vaultberryapp.domain.utils.security.PasswordEvaluator
-import com.alexianhentiu.vaultberryapp.domain.utils.types.ActionResult
-import com.alexianhentiu.vaultberryapp.domain.utils.validation.InputValidator
+import com.alexianhentiu.vaultberryapp.domain.utils.types.UseCaseResult
 import com.alexianhentiu.vaultberryapp.presentation.utils.ErrorInfo
 import com.alexianhentiu.vaultberryapp.presentation.utils.state.RegisterState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,9 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
-    private val registerUseCase: RegisterUseCase,
-    val inputValidator: InputValidator,
-    val passwordEvaluator: PasswordEvaluator
+    private val registerUseCase: RegisterUseCase
 ) : ViewModel() {
 
     private val _registerState = MutableStateFlow<RegisterState>(RegisterState.Idle)
@@ -35,11 +31,11 @@ class RegisterViewModel @Inject constructor(
         viewModelScope.launch {
             _registerState.value = RegisterState.Loading
             when (val result = registerUseCase(accountInfo, password)) {
-                is ActionResult.Success -> {
+                is UseCaseResult.Success -> {
                     _registerState.value = RegisterState.Success(result.data)
                 }
 
-                is ActionResult.Error -> {
+                is UseCaseResult.Error -> {
                     _registerState.value = RegisterState.Error(
                         ErrorInfo(
                             type = result.type,

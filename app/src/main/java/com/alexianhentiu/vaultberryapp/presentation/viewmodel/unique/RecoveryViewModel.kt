@@ -8,9 +8,7 @@ import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.account.ChangePa
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.auth.RecoverySendUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.auth.LogoutUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.auth.RecoveryLoginUseCase
-import com.alexianhentiu.vaultberryapp.domain.utils.security.PasswordEvaluator
-import com.alexianhentiu.vaultberryapp.domain.utils.types.ActionResult
-import com.alexianhentiu.vaultberryapp.domain.utils.validation.InputValidator
+import com.alexianhentiu.vaultberryapp.domain.utils.types.UseCaseResult
 import com.alexianhentiu.vaultberryapp.presentation.utils.ErrorInfo
 import com.alexianhentiu.vaultberryapp.presentation.utils.state.RecoveryState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,9 +22,7 @@ class RecoveryViewModel @Inject constructor(
     private val recoverySendUseCase: RecoverySendUseCase,
     private val recoveryLoginUseCase: RecoveryLoginUseCase,
     private val changePasswordUseCase: ChangePasswordUseCase,
-    private val logoutUseCase: LogoutUseCase,
-    val inputValidator: InputValidator,
-    val passwordEvaluator: PasswordEvaluator
+    private val logoutUseCase: LogoutUseCase
 ) : ViewModel() {
 
     private val _recoveryState = MutableStateFlow<RecoveryState>(RecoveryState.Idle)
@@ -36,11 +32,11 @@ class RecoveryViewModel @Inject constructor(
         viewModelScope.launch {
             _recoveryState.value = RecoveryState.Loading
             when (val result = recoverySendUseCase(email)) {
-                is ActionResult.Success -> {
+                is UseCaseResult.Success -> {
                     _recoveryState.value = RecoveryState.OTPRequested(email)
                 }
 
-                is ActionResult.Error -> {
+                is UseCaseResult.Error -> {
                     _recoveryState.value = RecoveryState.Error(
                         ErrorInfo(
                             type = result.type,
@@ -57,11 +53,11 @@ class RecoveryViewModel @Inject constructor(
         viewModelScope.launch {
             _recoveryState.value = RecoveryState.Loading
             when (val result = recoveryLoginUseCase(email, recoveryPassword, otp)) {
-                is ActionResult.Success -> {
+                is UseCaseResult.Success -> {
                     _recoveryState.value = RecoveryState.LoggedIn(result.data)
                 }
 
-                is ActionResult.Error -> {
+                is UseCaseResult.Error -> {
                     _recoveryState.value = RecoveryState.Error(
                         ErrorInfo(
                             type = result.type,
@@ -79,11 +75,11 @@ class RecoveryViewModel @Inject constructor(
         viewModelScope.launch {
             _recoveryState.value = RecoveryState.Loading
             when (val result = changePasswordUseCase(decryptedKey, newPassword, reEncrypt)) {
-                is ActionResult.Success -> {
+                is UseCaseResult.Success -> {
                     _recoveryState.value = RecoveryState.PasswordReset(result.data)
                 }
 
-                is ActionResult.Error -> {
+                is UseCaseResult.Error -> {
                     _recoveryState.value = RecoveryState.Error(
                         ErrorInfo(
                             type = result.type,
@@ -101,11 +97,11 @@ class RecoveryViewModel @Inject constructor(
         viewModelScope.launch {
             _recoveryState.value = RecoveryState.Loading
             when (val result = logoutUseCase()) {
-                is ActionResult.Success -> {
+                is UseCaseResult.Success -> {
                     _recoveryState.value = RecoveryState.Idle
                 }
 
-                is ActionResult.Error -> {
+                is UseCaseResult.Error -> {
                     _recoveryState.value = RecoveryState.Error(
                         ErrorInfo(
                             type = result.type,

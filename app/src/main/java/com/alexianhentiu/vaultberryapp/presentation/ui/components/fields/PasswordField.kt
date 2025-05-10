@@ -16,7 +16,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.alexianhentiu.vaultberryapp.domain.utils.security.PasswordEvaluator
+import com.alexianhentiu.vaultberryapp.domain.utils.types.PasswordStrength
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.buttons.CopyToClipboardButton
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.buttons.ToggleVisibilityButton
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.misc.PasswordStrengthIndicator
@@ -33,13 +33,13 @@ fun PasswordField(
     readOnly: Boolean = false,
     label: String = "Password",
     textFieldType: TextFieldType = TextFieldType.REGULAR,
-    passwordEvaluator: PasswordEvaluator,
     showStrengthIndicator: Boolean = false,
+    evaluateStrength: (String) -> PasswordStrength = { PasswordStrength.NONE }
 ) {
     var password by remember { mutableStateOf(initialText) }
     var isVisible by remember { mutableStateOf(false) }
     var passwordStrength by remember {
-        mutableStateOf(passwordEvaluator.evaluateStrength(initialText))
+        mutableStateOf(evaluateStrength(initialText))
     }
 
     Box(modifier = modifier) {
@@ -47,7 +47,7 @@ fun PasswordField(
             modifier = Modifier.fillMaxWidth(),
             onInputChange = { newPassword, valid ->
                 password = newPassword
-                passwordStrength = passwordEvaluator.evaluateStrength(newPassword)
+                passwordStrength = evaluateStrength(newPassword)
                 onPasswordChange(newPassword, valid)
             },
             label = label,
@@ -83,7 +83,6 @@ fun PasswordField(
 fun PasswordFieldPreview() {
     PasswordField(
         onPasswordChange = { _, _ -> },
-        passwordEvaluator = PasswordEvaluator(),
         showStrengthIndicator = true,
         textFieldType = TextFieldType.OUTLINED
     )

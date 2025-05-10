@@ -26,9 +26,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.alexianhentiu.vaultberryapp.domain.model.entity.DecryptedVaultEntry
-import com.alexianhentiu.vaultberryapp.domain.utils.security.PasswordEvaluator
-import com.alexianhentiu.vaultberryapp.domain.utils.validation.DebugValidator
-import com.alexianhentiu.vaultberryapp.domain.utils.validation.InputValidator
+import com.alexianhentiu.vaultberryapp.domain.utils.types.PasswordStrength
+import com.alexianhentiu.vaultberryapp.domain.utils.types.ValidatedFieldType
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.PasswordField
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.ValidatedTextField
 
@@ -38,8 +37,8 @@ fun VaultEntryDialog(
     initialEntry: DecryptedVaultEntry? = null,
     onDismissRequest: () -> Unit,
     onSubmit: (DecryptedVaultEntry) -> Unit,
-    inputValidator: InputValidator,
-    passwordEvaluator: PasswordEvaluator
+    validator: (ValidatedFieldType) -> (String) -> Boolean = { { true } },
+    evaluatePasswordStrength: (String) -> PasswordStrength = { PasswordStrength.NONE }
 ) {
     var title by remember { mutableStateOf(initialEntry?.title ?: "") }
     var url by remember { mutableStateOf(initialEntry?.url ?: "") }
@@ -47,7 +46,7 @@ fun VaultEntryDialog(
     var password by remember { mutableStateOf(initialEntry?.password ?: "") }
     var notes by remember { mutableStateOf(initialEntry?.notes ?: "") }
 
-    var isTitleValid by remember { mutableStateOf(inputValidator.validateEntryTitle(title)) }
+    var isTitleValid by remember { mutableStateOf(validator(ValidatedFieldType.ENTRY_TITLE)(title)) }
 
     Dialog(
         onDismissRequest = onDismissRequest,
@@ -89,7 +88,7 @@ fun VaultEntryDialog(
                                 title = newTitle
                                 isTitleValid = valid
                             },
-                            isValid = inputValidator::validateEntryTitle
+                            isValid = validator(ValidatedFieldType.ENTRY_TITLE)
                         )
                         ValidatedTextField(
                             modifier = Modifier.fillMaxWidth(),
@@ -112,7 +111,7 @@ fun VaultEntryDialog(
                                 password = newPassword
                             },
                             initialText = password,
-                            passwordEvaluator = passwordEvaluator,
+                            evaluateStrength = evaluatePasswordStrength,
                             showStrengthIndicator = true,
                             modifier = Modifier.fillMaxWidth()
                         )
@@ -166,8 +165,6 @@ fun AddEntryDialogPreview() {
     VaultEntryDialog(
         formTitle = "Add new entry",
         onDismissRequest = {},
-        onSubmit = {},
-        inputValidator = DebugValidator(),
-        passwordEvaluator = PasswordEvaluator()
+        onSubmit = {}
     )
 }
