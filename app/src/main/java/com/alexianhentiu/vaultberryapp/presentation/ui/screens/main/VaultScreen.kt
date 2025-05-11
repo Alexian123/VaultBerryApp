@@ -36,7 +36,6 @@ import com.alexianhentiu.vaultberryapp.presentation.ui.components.topBars.VaultT
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.misc.VaultEntryItem
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ErrorDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc.LoadingScreen
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc.UnlockVaultScreen
 import com.alexianhentiu.vaultberryapp.presentation.utils.NavigationManager
 import com.alexianhentiu.vaultberryapp.presentation.utils.enums.NavRoute
 import com.alexianhentiu.vaultberryapp.presentation.utils.state.VaultState
@@ -78,7 +77,7 @@ fun VaultScreen(
         }
 
         is VaultState.Locked -> {
-            UnlockVaultScreen(onUnlock = { vaultViewModel.fetchPreviews(vaultKey) })
+            vaultViewModel.fetchPreviews(vaultKey)
         }
 
         is VaultState.Unlocked -> {
