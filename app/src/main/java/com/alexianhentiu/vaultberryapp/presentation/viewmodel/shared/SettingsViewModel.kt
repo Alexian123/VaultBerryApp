@@ -1,84 +1,106 @@
 package com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared
 
 import android.util.Log
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.utility.ObserveSettingUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.utility.SaveSettingUseCase
+import com.alexianhentiu.vaultberryapp.domain.utils.types.UseCaseResult
+import com.alexianhentiu.vaultberryapp.domain.utils.types.setting.BooleanSetting
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-    private val dataStore: DataStore<Preferences>
+    private val saveSettingUseCase: SaveSettingUseCase,
+    observeSettingUseCase: ObserveSettingUseCase
 ) : ViewModel() {
-    private val useSystemThemeKey = booleanPreferencesKey("use_system_theme")
-    private val darkThemeKey = booleanPreferencesKey("dark_theme")
-    private val debugModeKey = booleanPreferencesKey("debug_mode")
 
-    private val _useSystemTheme = MutableStateFlow(false)
-    val useSystemTheme: StateFlow<Boolean> = _useSystemTheme
+    private val useSystemThemeDef = BooleanSetting("use_system_theme", true)
+    private val darkThemeDef = BooleanSetting("dark_theme", false)
+    private val debugModeDef = BooleanSetting("debug_mode", false)
 
-    private val _darkTheme = MutableStateFlow(false)
-    val darkTheme: StateFlow<Boolean> = _darkTheme
-
-    private val _debugMode = MutableStateFlow(false)
-    val debugMode: StateFlow<Boolean> = _debugMode
-
-    init {
-        viewModelScope.launch {
-            dataStore.data.map { preferences ->
-                preferences[useSystemThemeKey] != false
-            }.collect { useSystemTheme ->
-                _useSystemTheme.value = useSystemTheme
+    val useSystemTheme: StateFlow<Boolean> =
+        when (val result = observeSettingUseCase(useSystemThemeDef)) {
+            is UseCaseResult.Success -> result.data
+            is UseCaseResult.Error -> {
+                Log.e(result.source, result.message)
+                flowOf(useSystemThemeDef.defaultValue)
             }
-        }
-        viewModelScope.launch {
-            dataStore.data.map { preferences ->
-                preferences[darkThemeKey] == true
-            }.collect { darkTheme ->
-                _darkTheme.value = darkTheme
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = useSystemThemeDef.defaultValue
+        )
+
+    val darkTheme: StateFlow<Boolean> =
+        when (val result = observeSettingUseCase(darkThemeDef)) {
+            is UseCaseResult.Success -> result.data
+            is UseCaseResult.Error -> {
+                Log.e(result.source, result.message)
+                flowOf(darkThemeDef.defaultValue)
             }
-        }
-        viewModelScope.launch {
-            dataStore.data.map { preferences ->
-                preferences[debugModeKey] == true
-            }.collect { debugMode ->
-                _debugMode.value = debugMode
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = darkThemeDef.defaultValue
+        )
+
+    val debugMode: StateFlow<Boolean> =
+        when (val result = observeSettingUseCase(debugModeDef)) {
+            is UseCaseResult.Success -> result.data
+            is UseCaseResult.Error -> {
+                Log.e(result.source, result.message)
+                flowOf(debugModeDef.defaultValue)
             }
-        }
-    }
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = debugModeDef.defaultValue
+        )
 
     fun setUseSystemTheme(useSystemTheme: Boolean) {
         viewModelScope.launch {
-            dataStore.edit { preferences ->
-                preferences[useSystemThemeKey] = useSystemTheme
+            when (val result = saveSettingUseCase(useSystemThemeDef, useSystemTheme)) {
+                is UseCaseResult.Success -> {
+                    Log.d("SettingsViewModel", "setUseSystemTheme: $useSystemTheme")
+                }
+
+                is UseCaseResult.Error -> {
+                    Log.e(result.source, result.message)
+                }
             }
-            Log.d("SettingsViewModel", "setUseSystemTheme: $useSystemTheme")
         }
     }
 
-    fun setDarkTheme(darkTheme: Boolean) {
+    fun setDarkTheme(useDarkTheme: Boolean) {
         viewModelScope.launch {
-            dataStore.edit { preferences ->
-                preferences[darkThemeKey] = darkTheme
+            when (val result = saveSettingUseCase(darkThemeDef, useDarkTheme)) {
+                is UseCaseResult.Success -> {
+                    Log.d("SettingsViewModel", "setUseDarkTheme: $useDarkTheme")
+                }
+                is UseCaseResult.Error -> {
+                    Log.e(result.source, result.message)
+                }
             }
-            Log.d("SettingsViewModel", "setDarkTheme: $darkTheme")
         }
     }
 
     fun setDebugMode(debugMode: Boolean) {
         viewModelScope.launch {
-            dataStore.edit { preferences ->
-                preferences[debugModeKey] = debugMode
+            when (val result = saveSettingUseCase(debugModeDef, debugMode)) {
+                is UseCaseResult.Success -> {
+                    Log.d("SettingsViewModel", "setDebugMode: $debugMode")
+                }
+                is UseCaseResult.Error -> {
+                    Log.e(result.source, result.message)
+                }
             }
-            Log.d("SettingsViewModel", "setDebugMode: $debugMode")
         }
     }
 }

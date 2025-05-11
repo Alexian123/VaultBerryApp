@@ -15,7 +15,6 @@ import dagger.hilt.android.AndroidEntryPoint
 
 /*
     TODO:
-        - SettingsViewModel use cases
         - Handle InputValidator implementation based on settings
         - Remove the UnlockVaultScreen
         - Figure out how to more safely handle the master key within memory

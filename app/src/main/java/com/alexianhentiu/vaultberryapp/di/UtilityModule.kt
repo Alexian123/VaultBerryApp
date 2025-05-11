@@ -8,6 +8,7 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.alexianhentiu.vaultberryapp.data.utils.APIResponseHandler
 import com.alexianhentiu.vaultberryapp.data.utils.ModelConverter
+import com.alexianhentiu.vaultberryapp.domain.utils.SettingsManager
 import com.alexianhentiu.vaultberryapp.domain.utils.security.AuthGuardian
 import com.alexianhentiu.vaultberryapp.domain.utils.security.PasswordEvaluator
 import com.alexianhentiu.vaultberryapp.domain.utils.validation.InputValidator
@@ -83,6 +84,12 @@ object UtilityModule {
     fun providesDataStore(
         @ApplicationContext context: Context,
     ): DataStore<Preferences> = context.userDataStore
+
+    @Singleton
+    @Provides
+    fun provideSettingsManager(
+        dataStore: DataStore<Preferences>
+    ): SettingsManager = SettingsManager(dataStore)
 
     @Provides
     @Singleton

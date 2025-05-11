@@ -12,10 +12,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -39,9 +37,9 @@ fun SettingsScreen(
 
     val key = navManager.retrieveVaultKey()
 
-    var useSystemTheme by remember { mutableStateOf(settingsViewModel.useSystemTheme.value != false) }
-    var darkTheme by remember { mutableStateOf(settingsViewModel.darkTheme.value == true) }
-    var debugMode by remember { mutableStateOf(settingsViewModel.debugMode.value == true) }
+    val useSystemTheme by settingsViewModel.useSystemTheme.collectAsState()
+    val darkTheme by settingsViewModel.darkTheme.collectAsState()
+    val debugMode by settingsViewModel.debugMode.collectAsState()
 
     BackHandler(enabled = true) {
         if (key != null) {
@@ -87,8 +85,7 @@ fun SettingsScreen(
                     text = "Use system theme",
                     checked = useSystemTheme,
                     onCheckedChange = {
-                        useSystemTheme = it
-                        settingsViewModel.setUseSystemTheme(useSystemTheme)
+                        settingsViewModel.setUseSystemTheme(it)
                     }
                 )
                 SwitchSettingItem(
@@ -96,8 +93,7 @@ fun SettingsScreen(
                     text = "Dark theme",
                     checked = darkTheme,
                     onCheckedChange = {
-                        darkTheme = it
-                        settingsViewModel.setDarkTheme(darkTheme)
+                        settingsViewModel.setDarkTheme(it)
                     }
                 )
                 HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
@@ -111,8 +107,7 @@ fun SettingsScreen(
                     text = "Debug mode",
                     checked = debugMode,
                     onCheckedChange = {
-                        debugMode = it
-                        settingsViewModel.setDebugMode(debugMode)
+                        settingsViewModel.setDebugMode(it)
                     }
                 )
             }

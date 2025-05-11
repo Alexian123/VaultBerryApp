@@ -31,6 +31,10 @@ import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.ReEncryptVaultUs
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.utility.CopyToClipboardUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.utility.EvalPasswordStrengthUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.utility.GetValidatorUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.utility.LoadSettingUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.utility.ObserveSettingUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.utility.SaveSettingUseCase
+import com.alexianhentiu.vaultberryapp.domain.utils.SettingsManager
 import com.alexianhentiu.vaultberryapp.domain.utils.security.AuthGuardian
 import com.alexianhentiu.vaultberryapp.domain.utils.security.PasswordEvaluator
 import com.alexianhentiu.vaultberryapp.domain.utils.validation.InputValidator
@@ -42,6 +46,21 @@ import dagger.hilt.android.components.ViewModelComponent
 @Module
 @InstallIn(ViewModelComponent::class)
 object ViewModelUseCaseModule {
+
+    @Provides
+    fun provideSaveSettingUseCase(
+        settingsManager: SettingsManager
+    ): SaveSettingUseCase = SaveSettingUseCase(settingsManager)
+
+    @Provides
+    fun provideLoadSettingUseCase(
+        settingsManager: SettingsManager
+    ): LoadSettingUseCase = LoadSettingUseCase(settingsManager)
+
+    @Provides
+    fun provideObserveSettingUseCase(
+        settingsManager: SettingsManager
+    ): ObserveSettingUseCase = ObserveSettingUseCase(settingsManager)
 
     @Provides
     fun provideEvalPasswordUseCase(
