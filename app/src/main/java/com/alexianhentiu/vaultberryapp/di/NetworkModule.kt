@@ -3,7 +3,7 @@ package com.alexianhentiu.vaultberryapp.di
 import android.content.Context
 import com.alexianhentiu.vaultberryapp.R
 import com.alexianhentiu.vaultberryapp.data.api.APIService
-import com.alexianhentiu.vaultberryapp.data.api.SessionCookieJar
+import com.alexianhentiu.vaultberryapp.data.utils.SessionCookieJar
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

@@ -4,10 +4,11 @@ import android.content.ClipboardManager
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.datastore.preferences.preferencesDataStore
+import com.alexianhentiu.vaultberryapp.data.local.userDataStore
 import com.alexianhentiu.vaultberryapp.data.utils.APIResponseHandler
 import com.alexianhentiu.vaultberryapp.data.utils.ModelConverter
+import com.alexianhentiu.vaultberryapp.di.qualifiers.DebugValidatorQualifier
+import com.alexianhentiu.vaultberryapp.di.qualifiers.RegularValidatorQualifier
 import com.alexianhentiu.vaultberryapp.domain.utils.SettingsManager
 import com.alexianhentiu.vaultberryapp.domain.utils.security.AuthGuardian
 import com.alexianhentiu.vaultberryapp.domain.utils.security.PasswordEvaluator
@@ -23,22 +24,15 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object UtilityModule {
 
-    // Set up DataStore
-    private val Context.userDataStore: DataStore<Preferences> by preferencesDataStore(
-        name = "com.alexianhentiu.vaultberryapp.user_settings"
-    )
-
     @Provides
     @Singleton
-    fun provideClipboard(
+    fun provideClipboardManager(
         @ApplicationContext context: Context,
     ): ClipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
 
@@ -56,17 +50,16 @@ object UtilityModule {
 
     @Provides
     @Singleton
-    fun provideInputValidator(
-        dataStore: DataStore<Preferences>
-    ): InputValidator {
-        val isDebugModeEnabled = runBlocking {
-            dataStore.data.first()[booleanPreferencesKey("debug_mode")] == true
-        }
-        return if (isDebugModeEnabled) {
-            DebugValidator()
-        } else {
-            RegularValidator()
-        }
+    @DebugValidatorQualifier
+    fun provideDebugInputValidator(): InputValidator {
+        return DebugValidator()
+    }
+
+    @Provides
+    @Singleton
+    @RegularValidatorQualifier
+    fun provideRegularInputValidator(): InputValidator {
+        return RegularValidator()
     }
 
     @Provides

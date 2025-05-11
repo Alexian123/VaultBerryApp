@@ -99,12 +99,12 @@ fun SettingsScreen(
                 HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
 
                 Text(
-                    text = "Advanced (restart required)",
+                    text = "Advanced",
                     style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                     modifier = Modifier.padding(top = 8.dp, bottom = 8.dp)
                 )
                 SwitchSettingItem(
-                    text = "Debug mode",
+                    text = "Debug mode (restart required)",
                     checked = debugMode,
                     onCheckedChange = {
                         settingsViewModel.setDebugMode(it)

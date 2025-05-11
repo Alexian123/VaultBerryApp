@@ -1,6 +1,8 @@
 package com.alexianhentiu.vaultberryapp.di
 
 import android.content.ClipboardManager
+import com.alexianhentiu.vaultberryapp.di.qualifiers.DebugValidatorQualifier
+import com.alexianhentiu.vaultberryapp.di.qualifiers.RegularValidatorQualifier
 import com.alexianhentiu.vaultberryapp.domain.repository.AccountRepository
 import com.alexianhentiu.vaultberryapp.domain.repository.AuthRepository
 import com.alexianhentiu.vaultberryapp.domain.repository.VaultRepository
@@ -69,8 +71,14 @@ object ViewModelUseCaseModule {
 
     @Provides
     fun provideGetValidatorUseCase(
-        inputValidator: InputValidator
-    ): GetValidatorUseCase = GetValidatorUseCase(inputValidator)
+        @DebugValidatorQualifier debugValidator: InputValidator,
+        @RegularValidatorQualifier regularValidator: InputValidator,
+        loadSettingUseCase: LoadSettingUseCase
+    ): GetValidatorUseCase = GetValidatorUseCase(
+        debugValidator,
+        regularValidator,
+        loadSettingUseCase
+    )
 
     @Provides
     fun provideCopyToClipboardUseCase(

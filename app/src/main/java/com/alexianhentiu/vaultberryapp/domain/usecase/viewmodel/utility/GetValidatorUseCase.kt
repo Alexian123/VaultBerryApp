@@ -1,36 +1,25 @@
 package com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.utility
 
+import com.alexianhentiu.vaultberryapp.di.qualifiers.DebugValidatorQualifier
+import com.alexianhentiu.vaultberryapp.di.qualifiers.RegularValidatorQualifier
 import com.alexianhentiu.vaultberryapp.domain.utils.types.UseCaseResult
 import com.alexianhentiu.vaultberryapp.domain.utils.types.ErrorType
-import com.alexianhentiu.vaultberryapp.domain.utils.types.ValidatedFieldType
+import com.alexianhentiu.vaultberryapp.domain.utils.types.setting.BooleanSetting
 import com.alexianhentiu.vaultberryapp.domain.utils.validation.InputValidator
 
-class GetValidatorUseCase(private val inputValidator: InputValidator) {
+class GetValidatorUseCase(
+    @DebugValidatorQualifier private val debugValidator: InputValidator,
+    @RegularValidatorQualifier private val regularValidator: InputValidator,
+    private val loadSettingUseCase: LoadSettingUseCase
+) {
 
-    operator fun invoke(
-        type: ValidatedFieldType
-    ): UseCaseResult<(String) -> Boolean> {
+    suspend operator fun invoke(): UseCaseResult<InputValidator> {
         try {
-            return when (type) {
-                ValidatedFieldType.EMAIL -> {
-                    UseCaseResult.Success(inputValidator::validateEmail)
-                }
-                ValidatedFieldType.PASSWORD -> {
-                    UseCaseResult.Success(inputValidator::validatePassword)
-                }
-                ValidatedFieldType.OTP -> {
-                    UseCaseResult.Success(inputValidator::validateOTP)
-                }
-                ValidatedFieldType.MFA_CODE -> {
-                    UseCaseResult.Success(inputValidator::validate2FACode)
-                }
-                ValidatedFieldType.ENTRY_TITLE -> {
-                    UseCaseResult.Success(inputValidator::validateEntryTitle)
-                }
-                ValidatedFieldType.NONE -> {
-                    UseCaseResult.Success({ true })
-                }
-            }
+            val result = loadSettingUseCase(BooleanSetting("debug_mode", false))
+            if (result is UseCaseResult.Error) return result
+            val debugMode = (result as UseCaseResult.Success).data
+            val inputValidator = if (debugMode) debugValidator else regularValidator
+            return UseCaseResult.Success(inputValidator)
         } catch (e: Exception) {
             return UseCaseResult.Error(
                 type = ErrorType.INTERNAL,
