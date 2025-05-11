@@ -1,6 +1,6 @@
 package com.alexianhentiu.vaultberryapp.presentation.utils
 
-import com.alexianhentiu.vaultberryapp.domain.utils.types.ErrorType
+import com.alexianhentiu.vaultberryapp.domain.utils.enums.ErrorType
 
 data class ErrorInfo(
     val type: ErrorType = ErrorType.UNKNOWN,

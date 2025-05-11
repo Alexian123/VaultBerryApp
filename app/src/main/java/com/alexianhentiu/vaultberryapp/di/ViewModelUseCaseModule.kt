@@ -36,7 +36,7 @@ import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.utility.GetValid
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.utility.LoadSettingUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.utility.ObserveSettingUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.utility.SaveSettingUseCase
-import com.alexianhentiu.vaultberryapp.domain.utils.SettingsManager
+import com.alexianhentiu.vaultberryapp.domain.utils.settings.SettingsManager
 import com.alexianhentiu.vaultberryapp.domain.utils.security.AuthGuardian
 import com.alexianhentiu.vaultberryapp.domain.utils.security.PasswordEvaluator
 import com.alexianhentiu.vaultberryapp.domain.utils.validation.InputValidator

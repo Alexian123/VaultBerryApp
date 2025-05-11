@@ -1,13 +1,13 @@
 package com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.utility
 
-import com.alexianhentiu.vaultberryapp.domain.utils.SettingsManager
-import com.alexianhentiu.vaultberryapp.domain.utils.types.ErrorType
-import com.alexianhentiu.vaultberryapp.domain.utils.types.UseCaseResult
-import com.alexianhentiu.vaultberryapp.domain.utils.types.setting.AppSetting
+import com.alexianhentiu.vaultberryapp.domain.utils.settings.SettingsManager
+import com.alexianhentiu.vaultberryapp.domain.utils.enums.ErrorType
+import com.alexianhentiu.vaultberryapp.domain.utils.UseCaseResult
+import com.alexianhentiu.vaultberryapp.domain.utils.settings.SettingDefinition
 import kotlinx.coroutines.flow.Flow
 
 class ObserveSettingUseCase(private val settingsManager: SettingsManager) {
-    operator fun <T> invoke(definition: AppSetting<T>): UseCaseResult<Flow<T>> {
+    operator fun <T> invoke(definition: SettingDefinition<T>): UseCaseResult<Flow<T>> {
         try {
             val flow = settingsManager.observe(definition)
             return UseCaseResult.Success(flow)

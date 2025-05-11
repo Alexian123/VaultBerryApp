@@ -5,8 +5,8 @@ import com.alexianhentiu.vaultberryapp.domain.model.entity.DecryptedKey
 import com.alexianhentiu.vaultberryapp.domain.model.request.RecoveryLoginRequest
 import com.alexianhentiu.vaultberryapp.domain.repository.AuthRepository
 import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.DecryptKeyUseCase
-import com.alexianhentiu.vaultberryapp.domain.utils.types.UseCaseResult
-import com.alexianhentiu.vaultberryapp.domain.utils.types.ErrorType
+import com.alexianhentiu.vaultberryapp.domain.utils.UseCaseResult
+import com.alexianhentiu.vaultberryapp.domain.utils.enums.ErrorType
 
 class RecoveryLoginUseCase(
     private val authRepository: AuthRepository,

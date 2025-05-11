@@ -12,8 +12,8 @@ import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.vault.GetAllVaul
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.vault.UpdateEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.vault.DeleteEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.vault.GetDecryptedVaultEntryUseCase
-import com.alexianhentiu.vaultberryapp.domain.utils.types.UseCaseResult
-import com.alexianhentiu.vaultberryapp.domain.utils.types.ErrorType
+import com.alexianhentiu.vaultberryapp.domain.utils.UseCaseResult
+import com.alexianhentiu.vaultberryapp.domain.utils.enums.ErrorType
 import com.alexianhentiu.vaultberryapp.presentation.utils.ErrorInfo
 import com.alexianhentiu.vaultberryapp.presentation.utils.state.VaultState
 import dagger.hilt.android.lifecycle.HiltViewModel

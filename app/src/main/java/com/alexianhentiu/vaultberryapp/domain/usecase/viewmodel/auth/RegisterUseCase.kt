@@ -6,8 +6,8 @@ import com.alexianhentiu.vaultberryapp.domain.model.entity.User
 import com.alexianhentiu.vaultberryapp.domain.repository.AuthRepository
 import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.GeneratePasswordPairUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.GenerateKeyChainUseCase
-import com.alexianhentiu.vaultberryapp.domain.utils.types.UseCaseResult
-import com.alexianhentiu.vaultberryapp.domain.utils.types.ErrorType
+import com.alexianhentiu.vaultberryapp.domain.utils.UseCaseResult
+import com.alexianhentiu.vaultberryapp.domain.utils.enums.ErrorType
 
 class RegisterUseCase(
     private val authRepository: AuthRepository,

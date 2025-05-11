@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.utility.ObserveSettingUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.utility.SaveSettingUseCase
-import com.alexianhentiu.vaultberryapp.domain.utils.types.UseCaseResult
-import com.alexianhentiu.vaultberryapp.domain.utils.types.setting.BooleanSetting
+import com.alexianhentiu.vaultberryapp.domain.utils.UseCaseResult
+import com.alexianhentiu.vaultberryapp.domain.utils.settings.AppSettings
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -21,52 +21,48 @@ class SettingsViewModel @Inject constructor(
     observeSettingUseCase: ObserveSettingUseCase
 ) : ViewModel() {
 
-    private val useSystemThemeDef = BooleanSetting("use_system_theme", true)
-    private val darkThemeDef = BooleanSetting("dark_theme", false)
-    private val debugModeDef = BooleanSetting("debug_mode", false)
-
     val useSystemTheme: StateFlow<Boolean> =
-        when (val result = observeSettingUseCase(useSystemThemeDef)) {
+        when (val result = observeSettingUseCase(AppSettings.USE_SYSTEM_THEME)) {
             is UseCaseResult.Success -> result.data
             is UseCaseResult.Error -> {
                 Log.e(result.source, result.message)
-                flowOf(useSystemThemeDef.defaultValue)
+                flowOf(AppSettings.USE_SYSTEM_THEME.defaultValue)
             }
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
-            initialValue = useSystemThemeDef.defaultValue
+            initialValue = AppSettings.USE_SYSTEM_THEME.defaultValue
         )
 
     val darkTheme: StateFlow<Boolean> =
-        when (val result = observeSettingUseCase(darkThemeDef)) {
+        when (val result = observeSettingUseCase(AppSettings.DARK_THEME)) {
             is UseCaseResult.Success -> result.data
             is UseCaseResult.Error -> {
                 Log.e(result.source, result.message)
-                flowOf(darkThemeDef.defaultValue)
+                flowOf(AppSettings.DARK_THEME.defaultValue)
             }
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
-            initialValue = darkThemeDef.defaultValue
+            initialValue = AppSettings.DARK_THEME.defaultValue
         )
 
     val debugMode: StateFlow<Boolean> =
-        when (val result = observeSettingUseCase(debugModeDef)) {
+        when (val result = observeSettingUseCase(AppSettings.DEBUG_MODE)) {
             is UseCaseResult.Success -> result.data
             is UseCaseResult.Error -> {
                 Log.e(result.source, result.message)
-                flowOf(debugModeDef.defaultValue)
+                flowOf(AppSettings.DEBUG_MODE.defaultValue)
             }
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
-            initialValue = debugModeDef.defaultValue
+            initialValue = AppSettings.DEBUG_MODE.defaultValue
         )
 
     fun setUseSystemTheme(useSystemTheme: Boolean) {
         viewModelScope.launch {
-            when (val result = saveSettingUseCase(useSystemThemeDef, useSystemTheme)) {
+            when (val result = saveSettingUseCase(AppSettings.USE_SYSTEM_THEME, useSystemTheme)) {
                 is UseCaseResult.Success -> {
                     Log.d("SettingsViewModel", "setUseSystemTheme: $useSystemTheme")
                 }
@@ -80,7 +76,7 @@ class SettingsViewModel @Inject constructor(
 
     fun setDarkTheme(useDarkTheme: Boolean) {
         viewModelScope.launch {
-            when (val result = saveSettingUseCase(darkThemeDef, useDarkTheme)) {
+            when (val result = saveSettingUseCase(AppSettings.DARK_THEME, useDarkTheme)) {
                 is UseCaseResult.Success -> {
                     Log.d("SettingsViewModel", "setUseDarkTheme: $useDarkTheme")
                 }
@@ -93,7 +89,7 @@ class SettingsViewModel @Inject constructor(
 
     fun setDebugMode(debugMode: Boolean) {
         viewModelScope.launch {
-            when (val result = saveSettingUseCase(debugModeDef, debugMode)) {
+            when (val result = saveSettingUseCase(AppSettings.DEBUG_MODE, debugMode)) {
                 is UseCaseResult.Success -> {
                     Log.d("SettingsViewModel", "setDebugMode: $debugMode")
                 }

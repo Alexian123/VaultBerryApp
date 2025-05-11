@@ -2,8 +2,8 @@ package com.alexianhentiu.vaultberryapp.domain.usecase.singleton
 
 import com.alexianhentiu.vaultberryapp.domain.model.entity.PasswordPair
 import com.alexianhentiu.vaultberryapp.domain.utils.security.PasswordGenerator
-import com.alexianhentiu.vaultberryapp.domain.utils.types.UseCaseResult
-import com.alexianhentiu.vaultberryapp.domain.utils.types.ErrorType
+import com.alexianhentiu.vaultberryapp.domain.utils.UseCaseResult
+import com.alexianhentiu.vaultberryapp.domain.utils.enums.ErrorType
 
 class GeneratePasswordPairUseCase(
     private val passwordGenerator: PasswordGenerator

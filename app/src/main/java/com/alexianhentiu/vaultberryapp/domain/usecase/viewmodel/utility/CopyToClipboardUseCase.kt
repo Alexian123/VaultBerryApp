@@ -2,8 +2,8 @@ package com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.utility
 
 import android.content.ClipData
 import android.content.ClipboardManager
-import com.alexianhentiu.vaultberryapp.domain.utils.types.UseCaseResult
-import com.alexianhentiu.vaultberryapp.domain.utils.types.ErrorType
+import com.alexianhentiu.vaultberryapp.domain.utils.UseCaseResult
+import com.alexianhentiu.vaultberryapp.domain.utils.enums.ErrorType
 
 class CopyToClipboardUseCase(
     private val clipboardManager: ClipboardManager

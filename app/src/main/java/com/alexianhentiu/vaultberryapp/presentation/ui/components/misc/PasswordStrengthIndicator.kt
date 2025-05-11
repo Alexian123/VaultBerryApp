@@ -13,7 +13,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.alexianhentiu.vaultberryapp.domain.utils.types.PasswordStrength
+import com.alexianhentiu.vaultberryapp.domain.utils.enums.PasswordStrength
 
 @Composable
 fun PasswordStrengthIndicator(strength: PasswordStrength) {

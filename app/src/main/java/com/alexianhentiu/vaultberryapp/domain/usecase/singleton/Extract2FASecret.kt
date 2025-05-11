@@ -2,8 +2,8 @@ package com.alexianhentiu.vaultberryapp.domain.usecase.singleton
 
 import androidx.core.net.toUri
 import com.alexianhentiu.vaultberryapp.domain.model.response.TotpResponse
-import com.alexianhentiu.vaultberryapp.domain.utils.types.UseCaseResult
-import com.alexianhentiu.vaultberryapp.domain.utils.types.ErrorType
+import com.alexianhentiu.vaultberryapp.domain.utils.UseCaseResult
+import com.alexianhentiu.vaultberryapp.domain.utils.enums.ErrorType
 
 class Extract2FASecret {
 

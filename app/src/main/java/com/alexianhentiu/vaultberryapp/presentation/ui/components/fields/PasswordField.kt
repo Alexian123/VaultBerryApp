@@ -16,7 +16,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.alexianhentiu.vaultberryapp.domain.utils.types.PasswordStrength
+import com.alexianhentiu.vaultberryapp.domain.utils.enums.PasswordStrength
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.buttons.CopyToClipboardButton
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.buttons.ToggleVisibilityButton
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.misc.PasswordStrengthIndicator

@@ -1,4 +1,6 @@
-package com.alexianhentiu.vaultberryapp.domain.utils.types
+package com.alexianhentiu.vaultberryapp.domain.utils
+
+import com.alexianhentiu.vaultberryapp.domain.utils.enums.ErrorType
 
 sealed class UseCaseResult<out T> {
     data class Success<out T>(val data: T) : UseCaseResult<T>()

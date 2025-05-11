@@ -21,7 +21,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.alexianhentiu.vaultberryapp.domain.utils.types.ValidatedFieldType
+import com.alexianhentiu.vaultberryapp.domain.utils.enums.ValidatedFieldType
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.ValidatedTextField
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.PasswordField
 import com.alexianhentiu.vaultberryapp.presentation.utils.NavigationManager

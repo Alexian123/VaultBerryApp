@@ -13,7 +13,7 @@ import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.account.Get2FASt
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.account.GetAccountInfoUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.account.Setup2FAUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.auth.LogoutUseCase
-import com.alexianhentiu.vaultberryapp.domain.utils.types.UseCaseResult
+import com.alexianhentiu.vaultberryapp.domain.utils.UseCaseResult
 import com.alexianhentiu.vaultberryapp.presentation.utils.ErrorInfo
 import com.alexianhentiu.vaultberryapp.presentation.utils.state.AccountState
 import dagger.hilt.android.lifecycle.HiltViewModel

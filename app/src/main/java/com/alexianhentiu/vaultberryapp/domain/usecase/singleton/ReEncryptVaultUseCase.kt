@@ -7,8 +7,8 @@ import com.alexianhentiu.vaultberryapp.domain.model.entity.EncryptedVaultEntry
 import com.alexianhentiu.vaultberryapp.domain.model.entity.VaultEntryPreview
 import com.alexianhentiu.vaultberryapp.domain.model.response.MessageResponse
 import com.alexianhentiu.vaultberryapp.domain.repository.VaultRepository
-import com.alexianhentiu.vaultberryapp.domain.utils.types.UseCaseResult
-import com.alexianhentiu.vaultberryapp.domain.utils.types.ErrorType
+import com.alexianhentiu.vaultberryapp.domain.utils.UseCaseResult
+import com.alexianhentiu.vaultberryapp.domain.utils.enums.ErrorType
 
 class ReEncryptVaultUseCase(
     private val vaultRepository: VaultRepository,

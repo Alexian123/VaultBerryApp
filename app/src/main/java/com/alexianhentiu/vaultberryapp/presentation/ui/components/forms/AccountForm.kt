@@ -21,7 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.alexianhentiu.vaultberryapp.domain.model.entity.AccountInfo
-import com.alexianhentiu.vaultberryapp.domain.utils.types.ValidatedFieldType
+import com.alexianhentiu.vaultberryapp.domain.utils.enums.ValidatedFieldType
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ConfirmActionDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.misc.ExpandableSectionItem
 

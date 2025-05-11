@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alexianhentiu.vaultberryapp.domain.model.entity.AccountInfo
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.auth.RegisterUseCase
-import com.alexianhentiu.vaultberryapp.domain.utils.types.UseCaseResult
+import com.alexianhentiu.vaultberryapp.domain.utils.UseCaseResult
 import com.alexianhentiu.vaultberryapp.presentation.utils.ErrorInfo
 import com.alexianhentiu.vaultberryapp.presentation.utils.state.RegisterState
 import dagger.hilt.android.lifecycle.HiltViewModel

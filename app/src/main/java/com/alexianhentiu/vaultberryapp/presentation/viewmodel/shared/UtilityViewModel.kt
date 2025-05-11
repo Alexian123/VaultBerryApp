@@ -6,9 +6,9 @@ import androidx.lifecycle.viewModelScope
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.utility.CopyToClipboardUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.utility.EvalPasswordStrengthUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.utility.GetValidatorUseCase
-import com.alexianhentiu.vaultberryapp.domain.utils.types.PasswordStrength
-import com.alexianhentiu.vaultberryapp.domain.utils.types.UseCaseResult
-import com.alexianhentiu.vaultberryapp.domain.utils.types.ValidatedFieldType
+import com.alexianhentiu.vaultberryapp.domain.utils.enums.PasswordStrength
+import com.alexianhentiu.vaultberryapp.domain.utils.UseCaseResult
+import com.alexianhentiu.vaultberryapp.domain.utils.enums.ValidatedFieldType
 import com.alexianhentiu.vaultberryapp.domain.utils.validation.InputValidator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

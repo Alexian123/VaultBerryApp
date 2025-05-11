@@ -1,12 +1,12 @@
-package com.alexianhentiu.vaultberryapp.domain.utils.types.setting
+package com.alexianhentiu.vaultberryapp.domain.utils.settings
 
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 
-class BooleanSetting(
+class BooleanSettingDefinition(
     val name: String,
     override val defaultValue: Boolean = false,
-) : AppSetting<Boolean>{
+) : SettingDefinition<Boolean> {
 
     override val key: Preferences.Key<Boolean> = booleanPreferencesKey(name)
 

@@ -5,8 +5,8 @@ import com.alexianhentiu.vaultberryapp.domain.model.entity.DecryptedKey
 import com.alexianhentiu.vaultberryapp.domain.model.entity.DecryptedVaultEntry
 import com.alexianhentiu.vaultberryapp.domain.repository.VaultRepository
 import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.DecryptVaultEntryUseCase
-import com.alexianhentiu.vaultberryapp.domain.utils.types.UseCaseResult
-import com.alexianhentiu.vaultberryapp.domain.utils.types.ErrorType
+import com.alexianhentiu.vaultberryapp.domain.utils.UseCaseResult
+import com.alexianhentiu.vaultberryapp.domain.utils.enums.ErrorType
 
 class GetDecryptedVaultEntryUseCase(
     private val vaultRepository: VaultRepository,

@@ -8,7 +8,7 @@ import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.account.ChangePa
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.auth.RecoverySendUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.auth.LogoutUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.auth.RecoveryLoginUseCase
-import com.alexianhentiu.vaultberryapp.domain.utils.types.UseCaseResult
+import com.alexianhentiu.vaultberryapp.domain.utils.UseCaseResult
 import com.alexianhentiu.vaultberryapp.presentation.utils.ErrorInfo
 import com.alexianhentiu.vaultberryapp.presentation.utils.state.RecoveryState
 import dagger.hilt.android.lifecycle.HiltViewModel

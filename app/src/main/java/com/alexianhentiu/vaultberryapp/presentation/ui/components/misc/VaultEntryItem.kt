@@ -35,7 +35,7 @@ import androidx.compose.ui.unit.dp
 import com.alexianhentiu.vaultberryapp.R
 import com.alexianhentiu.vaultberryapp.domain.model.entity.DecryptedVaultEntry
 import com.alexianhentiu.vaultberryapp.domain.model.entity.VaultEntryPreview
-import com.alexianhentiu.vaultberryapp.domain.utils.types.PasswordStrength
+import com.alexianhentiu.vaultberryapp.domain.utils.enums.PasswordStrength
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.PasswordField
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.ValidatedTextField
 

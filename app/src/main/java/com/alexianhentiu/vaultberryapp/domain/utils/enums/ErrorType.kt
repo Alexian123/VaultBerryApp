@@ -1,4 +1,4 @@
-package com.alexianhentiu.vaultberryapp.domain.utils.types
+package com.alexianhentiu.vaultberryapp.domain.utils.enums
 
 enum class ErrorType {
     EXTERNAL,

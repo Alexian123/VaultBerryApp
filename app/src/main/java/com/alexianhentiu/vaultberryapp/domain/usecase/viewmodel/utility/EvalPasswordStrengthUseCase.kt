@@ -1,9 +1,9 @@
 package com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.utility
 
 import com.alexianhentiu.vaultberryapp.domain.utils.security.PasswordEvaluator
-import com.alexianhentiu.vaultberryapp.domain.utils.types.ErrorType
-import com.alexianhentiu.vaultberryapp.domain.utils.types.UseCaseResult
-import com.alexianhentiu.vaultberryapp.domain.utils.types.PasswordStrength
+import com.alexianhentiu.vaultberryapp.domain.utils.enums.ErrorType
+import com.alexianhentiu.vaultberryapp.domain.utils.UseCaseResult
+import com.alexianhentiu.vaultberryapp.domain.utils.enums.PasswordStrength
 
 class EvalPasswordStrengthUseCase(
     private val passwordEvaluator: PasswordEvaluator

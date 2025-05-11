@@ -3,8 +3,8 @@ package com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.account
 import com.alexianhentiu.vaultberryapp.data.utils.APIResult
 import com.alexianhentiu.vaultberryapp.domain.model.entity.AccountInfo
 import com.alexianhentiu.vaultberryapp.domain.repository.AccountRepository
-import com.alexianhentiu.vaultberryapp.domain.utils.types.UseCaseResult
-import com.alexianhentiu.vaultberryapp.domain.utils.types.ErrorType
+import com.alexianhentiu.vaultberryapp.domain.utils.UseCaseResult
+import com.alexianhentiu.vaultberryapp.domain.utils.enums.ErrorType
 
 class GetAccountInfoUseCase(private val accountRepository: AccountRepository) {
 

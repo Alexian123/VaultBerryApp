@@ -3,8 +3,8 @@ package com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.vault
 import com.alexianhentiu.vaultberryapp.data.utils.APIResult
 import com.alexianhentiu.vaultberryapp.domain.model.entity.VaultEntryPreview
 import com.alexianhentiu.vaultberryapp.domain.repository.VaultRepository
-import com.alexianhentiu.vaultberryapp.domain.utils.types.UseCaseResult
-import com.alexianhentiu.vaultberryapp.domain.utils.types.ErrorType
+import com.alexianhentiu.vaultberryapp.domain.utils.UseCaseResult
+import com.alexianhentiu.vaultberryapp.domain.utils.enums.ErrorType
 
 class GetAllVaultEntryPreviewsUseCase(
     private val vaultRepository: VaultRepository,

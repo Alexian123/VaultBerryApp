@@ -1,8 +1,8 @@
-package com.alexianhentiu.vaultberryapp.domain.utils.types.setting
+package com.alexianhentiu.vaultberryapp.domain.utils.settings
 
 import androidx.datastore.preferences.core.Preferences
 
-interface AppSetting<T> {
+interface SettingDefinition<T> {
     val key: Preferences.Key<T>
     val defaultValue: T
 }

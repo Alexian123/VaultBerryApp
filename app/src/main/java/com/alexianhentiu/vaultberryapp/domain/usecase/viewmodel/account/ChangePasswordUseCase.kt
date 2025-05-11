@@ -9,8 +9,8 @@ import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.GeneratePassword
 import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.DecryptKeyUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.GenerateKeyChainUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.ReEncryptVaultUseCase
-import com.alexianhentiu.vaultberryapp.domain.utils.types.UseCaseResult
-import com.alexianhentiu.vaultberryapp.domain.utils.types.ErrorType
+import com.alexianhentiu.vaultberryapp.domain.utils.UseCaseResult
+import com.alexianhentiu.vaultberryapp.domain.utils.enums.ErrorType
 
 class ChangePasswordUseCase(
     private val accountRepository: AccountRepository,

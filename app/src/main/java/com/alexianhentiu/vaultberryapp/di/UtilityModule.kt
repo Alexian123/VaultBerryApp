@@ -9,7 +9,7 @@ import com.alexianhentiu.vaultberryapp.data.utils.APIResponseHandler
 import com.alexianhentiu.vaultberryapp.data.utils.ModelConverter
 import com.alexianhentiu.vaultberryapp.di.qualifiers.DebugValidatorQualifier
 import com.alexianhentiu.vaultberryapp.di.qualifiers.RegularValidatorQualifier
-import com.alexianhentiu.vaultberryapp.domain.utils.SettingsManager
+import com.alexianhentiu.vaultberryapp.domain.utils.settings.SettingsManager
 import com.alexianhentiu.vaultberryapp.domain.utils.security.AuthGuardian
 import com.alexianhentiu.vaultberryapp.domain.utils.security.PasswordEvaluator
 import com.alexianhentiu.vaultberryapp.domain.utils.validation.InputValidator

@@ -1,6 +1,6 @@
 package com.alexianhentiu.vaultberryapp.domain.utils.security
 
-import com.alexianhentiu.vaultberryapp.domain.utils.types.PasswordStrength
+import com.alexianhentiu.vaultberryapp.domain.utils.enums.PasswordStrength
 
 class PasswordEvaluator {
 

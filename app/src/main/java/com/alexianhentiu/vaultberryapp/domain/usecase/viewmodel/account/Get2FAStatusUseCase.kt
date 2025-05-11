@@ -2,8 +2,8 @@ package com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.account
 
 import com.alexianhentiu.vaultberryapp.data.utils.APIResult
 import com.alexianhentiu.vaultberryapp.domain.repository.AccountRepository
-import com.alexianhentiu.vaultberryapp.domain.utils.types.UseCaseResult
-import com.alexianhentiu.vaultberryapp.domain.utils.types.ErrorType
+import com.alexianhentiu.vaultberryapp.domain.utils.UseCaseResult
+import com.alexianhentiu.vaultberryapp.domain.utils.enums.ErrorType
 
 class Get2FAStatusUseCase(private val accountRepository: AccountRepository) {
 
