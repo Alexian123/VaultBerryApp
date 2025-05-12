@@ -1,6 +1,5 @@
 package com.alexianhentiu.vaultberryapp.domain.usecase.singleton
 
-import com.alexianhentiu.vaultberryapp.domain.model.entity.DecryptedKey
 import com.alexianhentiu.vaultberryapp.domain.utils.security.VaultGuardian
 import com.alexianhentiu.vaultberryapp.domain.utils.UseCaseResult
 import com.alexianhentiu.vaultberryapp.domain.utils.enums.ErrorType
@@ -10,7 +9,7 @@ class DecryptKeyUseCase(private val vaultGuardian: VaultGuardian) {
         password: String,
         salt: String,
         encryptedKey: String
-    ): UseCaseResult<DecryptedKey> {
+    ): UseCaseResult<ByteArray> {
         try {
             val decryptedKey = vaultGuardian.decryptKey(password, salt, encryptedKey)
             return UseCaseResult.Success(decryptedKey)

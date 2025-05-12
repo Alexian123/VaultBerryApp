@@ -1,7 +1,6 @@
 package com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.vault
 
 import com.alexianhentiu.vaultberryapp.data.utils.APIResult
-import com.alexianhentiu.vaultberryapp.domain.model.entity.DecryptedKey
 import com.alexianhentiu.vaultberryapp.domain.model.entity.DecryptedVaultEntry
 import com.alexianhentiu.vaultberryapp.domain.model.entity.VaultEntryPreview
 import com.alexianhentiu.vaultberryapp.domain.repository.VaultRepository
@@ -15,7 +14,7 @@ class AddEntryUseCase(
 ) {
     suspend operator fun invoke(
         entry: DecryptedVaultEntry,
-        key: DecryptedKey
+        key: ByteArray
     ): UseCaseResult<VaultEntryPreview> {
         val encryptEntryResult = encryptVaultEntryUseCase(entry, key)
         if (encryptEntryResult is UseCaseResult.Error) {

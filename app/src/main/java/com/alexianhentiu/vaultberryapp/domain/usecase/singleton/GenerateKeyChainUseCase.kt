@@ -1,6 +1,5 @@
 package com.alexianhentiu.vaultberryapp.domain.usecase.singleton
 
-import com.alexianhentiu.vaultberryapp.domain.model.entity.DecryptedKey
 import com.alexianhentiu.vaultberryapp.domain.model.entity.KeyChain
 import com.alexianhentiu.vaultberryapp.domain.utils.security.VaultGuardian
 import com.alexianhentiu.vaultberryapp.domain.utils.UseCaseResult
@@ -11,7 +10,7 @@ class GenerateKeyChainUseCase(private val vaultGuardian: VaultGuardian) {
     operator fun invoke(
         password: String,
         recoveryPassword: String,
-        decryptedKey: DecryptedKey?
+        decryptedKey: ByteArray?
     ): UseCaseResult<KeyChain> {
         try {
             val keyChain = vaultGuardian.generateKeyChain(password, recoveryPassword, decryptedKey)

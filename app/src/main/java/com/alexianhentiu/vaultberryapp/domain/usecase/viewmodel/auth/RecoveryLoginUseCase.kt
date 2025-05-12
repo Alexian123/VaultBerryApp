@@ -1,7 +1,6 @@
 package com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.auth
 
 import com.alexianhentiu.vaultberryapp.data.utils.APIResult
-import com.alexianhentiu.vaultberryapp.domain.model.entity.DecryptedKey
 import com.alexianhentiu.vaultberryapp.domain.model.request.RecoveryLoginRequest
 import com.alexianhentiu.vaultberryapp.domain.repository.AuthRepository
 import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.DecryptKeyUseCase
@@ -16,7 +15,7 @@ class RecoveryLoginUseCase(
         email: String,
         recoveryPassword: String,
         otp: String
-    ): UseCaseResult<DecryptedKey> {
+    ): UseCaseResult<ByteArray> {
         val credentials = RecoveryLoginRequest(
             email = email,
             recoveryPassword = recoveryPassword,

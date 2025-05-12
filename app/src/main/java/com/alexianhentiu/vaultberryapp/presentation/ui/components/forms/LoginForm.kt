@@ -19,16 +19,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.alexianhentiu.vaultberryapp.domain.utils.enums.ValidatedFieldType
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.ValidatedTextField
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.PasswordField
-import com.alexianhentiu.vaultberryapp.presentation.utils.NavigationManager
 import com.alexianhentiu.vaultberryapp.presentation.utils.enums.NavRoute
 
 @Composable
 fun LoginForm(
-    navManager: NavigationManager,
+    navController: NavHostController,
     onLoginClicked: (String, String) -> Unit,
     onForgotPasswordClicked: () -> Unit,
     validator: (ValidatedFieldType) -> (String) -> Boolean = { { true } }
@@ -72,7 +71,7 @@ fun LoginForm(
             Text("Login")
         }
         TextButton(
-            onClick = { navManager.navigate(NavRoute.REGISTER) },
+            onClick = { navController.navigate(NavRoute.REGISTER.path) },
             modifier = Modifier.fillMaxWidth(),
         ) {
             Text("Register")
@@ -90,7 +89,7 @@ fun LoginForm(
 @Composable
 fun LoginFormPreview() {
     LoginForm(
-        navManager = NavigationManager(NavController(LocalContext.current)),
+        navController = NavHostController(LocalContext.current),
         onLoginClicked = { _, _ -> },
         onForgotPasswordClicked = {}
     )

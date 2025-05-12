@@ -1,5 +1,7 @@
 package com.alexianhentiu.vaultberryapp.presentation.ui.screens.main
 
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,42 +12,45 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.alexianhentiu.vaultberryapp.presentation.activity.MainActivity
+import androidx.navigation.NavHostController
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.topBars.AuthTopBar
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ErrorDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.LoginForm
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.Verify2FAForm
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc.LoadingScreen
-import com.alexianhentiu.vaultberryapp.presentation.utils.NavigationManager
 import com.alexianhentiu.vaultberryapp.presentation.utils.enums.NavRoute
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.unique.LoginViewModel
 import com.alexianhentiu.vaultberryapp.presentation.utils.state.LoginState
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.UtilityViewModel
+import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.VaultKeyViewModel
 
 @Composable
 fun LoginScreen(
-    navManager: NavigationManager
+    navController: NavHostController
 ) {
-    val activity = LocalActivity.current as MainActivity
+    val activity = LocalActivity.current as ComponentActivity
+    val vaultKeyViewModel: VaultKeyViewModel = hiltViewModel(activity)
     val utilityViewModel: UtilityViewModel = hiltViewModel(activity)
 
     val loginViewModel: LoginViewModel = hiltViewModel()
     val loginState by loginViewModel.loginState.collectAsState()
+
+    BackHandler(enabled = true) {}
 
     when (loginState) {
         is LoginState.LoggedOut -> {
             Scaffold(
                 topBar = {
                     AuthTopBar(
-                        onSettingsClick = { navManager.navigate(NavRoute.SETTINGS) }
+                        onSettingsClick = { navController.navigate(NavRoute.SETTINGS.path) }
                     )
                 }
             ) { contentPadding ->
                 Box(modifier = Modifier.fillMaxSize().padding(contentPadding)) {
                     LoginForm(
-                        navManager = navManager,
+                        navController = navController,
                         onLoginClicked = { email, password -> loginViewModel.login(email, password) },
-                        onForgotPasswordClicked = { navManager.navigate(NavRoute.RECOVERY) },
+                        onForgotPasswordClicked = { navController.navigate(NavRoute.RECOVERY.path) },
                         validator = utilityViewModel::getFieldValidator
                     )
                 }
@@ -63,7 +68,7 @@ fun LoginScreen(
             Scaffold(
                 topBar = {
                     AuthTopBar(
-                        onSettingsClick = { navManager.navigate(NavRoute.SETTINGS) }
+                        onSettingsClick = { navController.navigate(NavRoute.SETTINGS.path) }
                     )
                 }
             ) { contentPadding ->
@@ -81,9 +86,8 @@ fun LoginScreen(
 
         is LoginState.LoggedIn -> {
             val currentLoginState = loginState as LoginState.LoggedIn
-            val vaultKey = currentLoginState.decryptedKey
-            // send decrypted key to vault screen
-            navManager.navigateWithVaultKey(NavRoute.VAULT, vaultKey)
+            vaultKeyViewModel.setDecryptedKey(currentLoginState.decryptedKey)
+            navController.navigate(NavRoute.VAULT.path)
         }
 
         is LoginState.Error -> {

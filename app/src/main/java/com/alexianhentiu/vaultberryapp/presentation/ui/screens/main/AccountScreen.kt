@@ -1,6 +1,6 @@
 package com.alexianhentiu.vaultberryapp.presentation.ui.screens.main
 
-import androidx.activity.compose.BackHandler
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,35 +11,31 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.alexianhentiu.vaultberryapp.presentation.activity.MainActivity
+import androidx.navigation.NavHostController
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.topBars.TopBarWithBackButton
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ErrorDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.InfoDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.AccountForm
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc.LoadingScreen
-import com.alexianhentiu.vaultberryapp.presentation.utils.NavigationManager
 import com.alexianhentiu.vaultberryapp.presentation.utils.enums.NavRoute
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.unique.AccountViewModel
 import com.alexianhentiu.vaultberryapp.presentation.utils.state.AccountState
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.UtilityViewModel
+import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.VaultKeyViewModel
 
 @Composable
 fun AccountScreen(
-    navManager: NavigationManager
+    navController: NavHostController
 ) {
-    val activity = LocalActivity.current as MainActivity
+    val activity = LocalActivity.current as ComponentActivity
+    val vaultKeyViewModel: VaultKeyViewModel = hiltViewModel(activity)
     val utilityViewModel: UtilityViewModel = hiltViewModel(activity)
 
     val accountViewModel: AccountViewModel = hiltViewModel()
 
-    val vaultKey = navManager.retrieveVaultKey()
+    val vaultKey = vaultKeyViewModel.decryptedKey
 
     val accountState by accountViewModel.accountState.collectAsState()
-
-    BackHandler(enabled = true) {
-        // send key to vault screen
-        navManager.navigateWithVaultKey(NavRoute.VAULT, vaultKey)
-    }
 
     when (accountState) {
         is AccountState.Init -> {
@@ -58,10 +54,7 @@ fun AccountScreen(
             Scaffold(
                 topBar = {
                     TopBarWithBackButton(
-                        onBackClick = {
-                            // send key to vault screen
-                            navManager.navigateWithVaultKey(NavRoute.VAULT, vaultKey)
-                        },
+                        navController = navController,
                         title = "Account"
                     )
                 }
@@ -94,7 +87,8 @@ fun AccountScreen(
         }
 
         is AccountState.LoggedOut -> {
-            navManager.navigate(NavRoute.LOGIN)
+            vaultKeyViewModel.clearDecryptedKey()
+            navController.navigate(NavRoute.LOGIN.path)
         }
 
         is AccountState.ChangedPassword -> {

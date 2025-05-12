@@ -1,6 +1,5 @@
 package com.alexianhentiu.vaultberryapp.domain.usecase.singleton
 
-import com.alexianhentiu.vaultberryapp.domain.model.entity.DecryptedKey
 import com.alexianhentiu.vaultberryapp.domain.model.entity.DecryptedVaultEntry
 import com.alexianhentiu.vaultberryapp.domain.model.entity.EncryptedVaultEntry
 import com.alexianhentiu.vaultberryapp.domain.utils.security.VaultGuardian
@@ -11,7 +10,7 @@ class DecryptVaultEntryUseCase(private val vaultGuardian: VaultGuardian) {
 
     operator fun invoke(
         encryptedVaultEntry: EncryptedVaultEntry,
-        decryptedKey: DecryptedKey
+        decryptedKey: ByteArray
     ): UseCaseResult<DecryptedVaultEntry> {
         try {
             var decryptedUsername = ""

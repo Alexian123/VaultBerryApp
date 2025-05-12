@@ -10,32 +10,30 @@ import com.alexianhentiu.vaultberryapp.presentation.ui.screens.main.RecoveryScre
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.main.RegisterScreen
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.main.SettingsScreen
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.main.VaultScreen
-import com.alexianhentiu.vaultberryapp.presentation.utils.NavigationManager
 import com.alexianhentiu.vaultberryapp.presentation.utils.enums.NavRoute
 
 @Composable
 fun AppNavHost() {
     val navController = rememberNavController()
-    val navManager = NavigationManager(navController)
 
     NavHost(navController = navController, startDestination = NavRoute.LOGIN.path) {
         composable(NavRoute.LOGIN.path) {
-            LoginScreen(navManager)
+            LoginScreen(navController)
         }
         composable(NavRoute.REGISTER.path) {
-            RegisterScreen(navManager)
+            RegisterScreen(navController)
         }
         composable(NavRoute.RECOVERY.path) {
-            RecoveryScreen(navManager)
+            RecoveryScreen(navController)
         }
         composable(NavRoute.VAULT.path) {
-            VaultScreen(navManager)
+            VaultScreen(navController)
         }
         composable(NavRoute.ACCOUNT.path) {
-            AccountScreen(navManager)
+            AccountScreen(navController)
         }
         composable(NavRoute.SETTINGS.path) {
-            SettingsScreen(navManager)
+            SettingsScreen(navController)
         }
     }
 }

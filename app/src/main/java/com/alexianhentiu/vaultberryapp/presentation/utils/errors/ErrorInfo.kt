@@ -1,4 +1,4 @@
-package com.alexianhentiu.vaultberryapp.presentation.utils
+package com.alexianhentiu.vaultberryapp.presentation.utils.errors
 
 import com.alexianhentiu.vaultberryapp.domain.utils.enums.ErrorType
 

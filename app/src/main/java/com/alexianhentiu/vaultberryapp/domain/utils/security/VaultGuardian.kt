@@ -1,6 +1,5 @@
 package com.alexianhentiu.vaultberryapp.domain.utils.security
 
-import com.alexianhentiu.vaultberryapp.domain.model.entity.DecryptedKey
 import com.alexianhentiu.vaultberryapp.domain.model.entity.KeyChain
 import com.alexianhentiu.vaultberryapp.domain.utils.security.cryptography.CryptographyHandler
 import java.security.SecureRandom
@@ -23,10 +22,10 @@ class VaultGuardian(
     fun generateKeyChain(
         password: String,
         recoveryPassword: String,
-        decryptedKey: DecryptedKey? = null
+        decryptedKey: ByteArray? = null
     ): KeyChain {
         val vaultKey =
-            decryptedKey?.key ?: ByteArray(32).apply { secureRandom.nextBytes(this) }
+            decryptedKey ?: ByteArray(32).apply { secureRandom.nextBytes(this) }
         val salt = secureRandom.generateSeed(saltLength)
 
         // encrypt vault key
@@ -54,13 +53,13 @@ class VaultGuardian(
      * @param encodedKey The Base64 encoded encrypted vault key
      * @return The decrypted vault key as a ByteArray
      */
-    fun decryptKey(password: String, encodedSalt: String, encodedKey: String): DecryptedKey {
+    fun decryptKey(password: String, encodedSalt: String, encodedKey: String): ByteArray {
         val encryptedBytes = encodedKey.fromBase64()
         val iv = encryptedBytes.sliceArray(0 until ivLength)
         val encryptedVaultKey = encryptedBytes.sliceArray(ivLength until encryptedBytes.size)
         val salt = encodedSalt.fromBase64()
         val derivedKey = cryptoHandler.deriveKeyFromPassword(password, salt)
-        return DecryptedKey(cryptoHandler.decrypt(encryptedVaultKey, derivedKey.encoded, iv))
+        return cryptoHandler.decrypt(encryptedVaultKey, derivedKey.encoded, iv)
     }
 
     /**
@@ -69,10 +68,10 @@ class VaultGuardian(
      * @param decryptedKey The decrypted vault key
      * @return The encrypted field concatenated to the IV as a Base64 string
      */
-    fun encryptField(plainText: String, decryptedKey: DecryptedKey): String {
+    fun encryptField(plainText: String, decryptedKey: ByteArray): String {
         val iv = ByteArray(ivLength).apply { SecureRandom().nextBytes(this) }
         val encryptedFieldData =
-            cryptoHandler.encrypt(plainText.toByteArray(), decryptedKey.key, iv)
+            cryptoHandler.encrypt(plainText.toByteArray(), decryptedKey, iv)
         return (iv + encryptedFieldData).toBase64()
     }
 
@@ -82,11 +81,11 @@ class VaultGuardian(
      * @param decryptedKey The decrypted vault key
      * @return The decrypted field as a String
      */
-    fun decryptField(encryptedField: String, decryptedKey: DecryptedKey): String {
+    fun decryptField(encryptedField: String, decryptedKey: ByteArray): String {
         val encryptedBytes = Base64.getDecoder().decode(encryptedField)
         val iv = encryptedBytes.sliceArray(0 until ivLength)
         val encryptedFieldData = encryptedBytes.sliceArray(ivLength until encryptedBytes.size)
-        val decryptedFieldData = cryptoHandler.decrypt(encryptedFieldData, decryptedKey.key, iv)
+        val decryptedFieldData = cryptoHandler.decrypt(encryptedFieldData, decryptedKey, iv)
         return String(decryptedFieldData)
     }
 

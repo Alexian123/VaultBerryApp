@@ -20,16 +20,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.alexianhentiu.vaultberryapp.domain.utils.enums.ValidatedFieldType
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.ValidatedTextField
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.PasswordField
-import com.alexianhentiu.vaultberryapp.presentation.utils.NavigationManager
 import com.alexianhentiu.vaultberryapp.presentation.utils.enums.NavRoute
 
 @Composable
 fun RegisterForm(
-    navManager: NavigationManager,
+    navController: NavHostController,
     onRegisterClicked: (String, String, String?, String?) -> Unit,
     validator: (ValidatedFieldType) -> (String) -> Boolean = { { true } }
 ) {
@@ -89,7 +88,7 @@ fun RegisterForm(
             Text("Register")
         }
         TextButton(
-            onClick = { navManager.navigate(NavRoute.LOGIN) },
+            onClick = { navController.navigate(NavRoute.LOGIN.path) },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("Already have an account?")
@@ -101,7 +100,7 @@ fun RegisterForm(
 @Composable
 fun RegisterFormPreview() {
     RegisterForm(
-        navManager = NavigationManager(NavController(LocalContext.current)),
+        navController = NavHostController(LocalContext.current),
         onRegisterClicked = { _, _, _, _ -> }
     )
 }

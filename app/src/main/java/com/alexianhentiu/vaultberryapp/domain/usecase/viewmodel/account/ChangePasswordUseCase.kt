@@ -2,7 +2,6 @@ package com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.account
 
 import android.util.Log
 import com.alexianhentiu.vaultberryapp.data.utils.APIResult
-import com.alexianhentiu.vaultberryapp.domain.model.entity.DecryptedKey
 import com.alexianhentiu.vaultberryapp.domain.model.request.PasswordChangeRequest
 import com.alexianhentiu.vaultberryapp.domain.repository.AccountRepository
 import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.GeneratePasswordPairUseCase
@@ -20,7 +19,7 @@ class ChangePasswordUseCase(
     private val reEncryptVaultUseCase: ReEncryptVaultUseCase
 ) {
     suspend operator fun invoke(
-        decryptedKey: DecryptedKey,
+        decryptedKey: ByteArray,
         newPassword: String,
         reEncrypt: Boolean = false
     ): UseCaseResult<String> {

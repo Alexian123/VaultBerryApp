@@ -2,7 +2,6 @@ package com.alexianhentiu.vaultberryapp.domain.usecase.singleton
 
 import android.util.Log
 import com.alexianhentiu.vaultberryapp.data.utils.APIResult
-import com.alexianhentiu.vaultberryapp.domain.model.entity.DecryptedKey
 import com.alexianhentiu.vaultberryapp.domain.model.entity.EncryptedVaultEntry
 import com.alexianhentiu.vaultberryapp.domain.model.entity.VaultEntryPreview
 import com.alexianhentiu.vaultberryapp.domain.model.response.MessageResponse
@@ -16,8 +15,8 @@ class ReEncryptVaultUseCase(
     private val encryptVaultEntryUseCase: EncryptVaultEntryUseCase
 ) {
     suspend operator fun invoke(
-        oldKey: DecryptedKey,
-        newKey: DecryptedKey
+        oldKey: ByteArray,
+        newKey: ByteArray
     ): UseCaseResult<MessageResponse> {
         when (val previewsResult = vaultRepository.getAllVaultEntryPreviews()) {
             is APIResult.Success -> {
@@ -49,8 +48,8 @@ class ReEncryptVaultUseCase(
     private suspend fun reEncryptEntries(
         previews: List<VaultEntryPreview>,
         details: List<EncryptedVaultEntry>,
-        oldKey: DecryptedKey,
-        newKey: DecryptedKey
+        oldKey: ByteArray,
+        newKey: ByteArray
     ): UseCaseResult<MessageResponse> {
         for (entry in details) {
             val decryptedEntryResult = decryptVaultEntryUseCase(entry, oldKey)

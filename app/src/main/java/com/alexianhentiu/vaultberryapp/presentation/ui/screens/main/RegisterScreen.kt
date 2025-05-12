@@ -1,5 +1,6 @@
 package com.alexianhentiu.vaultberryapp.presentation.ui.screens.main
 
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,13 +11,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.alexianhentiu.vaultberryapp.presentation.activity.MainActivity
+import androidx.navigation.NavHostController
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.topBars.AuthTopBar
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ErrorDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.InfoDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.RegisterForm
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc.LoadingScreen
-import com.alexianhentiu.vaultberryapp.presentation.utils.NavigationManager
 import com.alexianhentiu.vaultberryapp.presentation.utils.enums.NavRoute
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.unique.RegisterViewModel
 import com.alexianhentiu.vaultberryapp.presentation.utils.state.RegisterState
@@ -24,9 +24,9 @@ import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.UtilityView
 
 @Composable
 fun RegisterScreen(
-    navManager: NavigationManager
+    navController: NavHostController
 ) {
-    val activity = LocalActivity.current as MainActivity
+    val activity = LocalActivity.current as ComponentActivity
     val utilityViewModel: UtilityViewModel = hiltViewModel(activity)
 
     val registerViewModel: RegisterViewModel = hiltViewModel()
@@ -37,13 +37,13 @@ fun RegisterScreen(
             Scaffold(
                 topBar = {
                     AuthTopBar(
-                        onSettingsClick = { navManager.navigate(NavRoute.SETTINGS) }
+                        onSettingsClick = { navController.navigate(NavRoute.SETTINGS.path) }
                     )
                 }
             ) { contentPadding ->
                 Box(modifier = Modifier.fillMaxSize().padding(contentPadding)) {
                     RegisterForm(
-                        navManager = navManager,
+                        navController = navController,
                         onRegisterClicked = { email, password, firstName, lastName ->
                             registerViewModel.register(email, password, firstName, lastName)
                         },
@@ -67,7 +67,7 @@ fun RegisterScreen(
                 onDismissRequest = {
                     utilityViewModel.copyToClipboard(recoveryPassword)
                     registerViewModel.resetState()
-                    navManager.navigate(NavRoute.LOGIN)
+                    navController.navigate(NavRoute.LOGIN.path)
                 }
             )
         }

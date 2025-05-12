@@ -1,5 +1,6 @@
 package com.alexianhentiu.vaultberryapp.presentation.ui.components.buttons
 
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
 import androidx.compose.material.icons.Icons
@@ -12,7 +13,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.alexianhentiu.vaultberryapp.R
-import com.alexianhentiu.vaultberryapp.presentation.activity.MainActivity
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.UtilityViewModel
 
 @Composable
@@ -20,7 +20,7 @@ fun CopyToClipboardButton(
     textToCopy: String,
     modifier: Modifier = Modifier
 ) {
-    val activity = LocalActivity.current as MainActivity
+    val activity = LocalActivity.current as ComponentActivity
     val utilityViewModel: UtilityViewModel = hiltViewModel(activity)
 
     IconButton(

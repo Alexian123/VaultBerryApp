@@ -3,13 +3,12 @@ package com.alexianhentiu.vaultberryapp.presentation.viewmodel.unique
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.alexianhentiu.vaultberryapp.domain.model.entity.DecryptedKey
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.account.ChangePasswordUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.auth.RecoverySendUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.auth.LogoutUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.auth.RecoveryLoginUseCase
 import com.alexianhentiu.vaultberryapp.domain.utils.UseCaseResult
-import com.alexianhentiu.vaultberryapp.presentation.utils.ErrorInfo
+import com.alexianhentiu.vaultberryapp.presentation.utils.errors.ErrorInfo
 import com.alexianhentiu.vaultberryapp.presentation.utils.state.RecoveryState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -71,7 +70,7 @@ class RecoveryViewModel @Inject constructor(
         }
     }
 
-    fun resetPassword(decryptedKey: DecryptedKey, newPassword: String, reEncrypt: Boolean) {
+    fun resetPassword(decryptedKey: ByteArray, newPassword: String, reEncrypt: Boolean) {
         viewModelScope.launch {
             _recoveryState.value = RecoveryState.Loading
             when (val result = changePasswordUseCase(decryptedKey, newPassword, reEncrypt)) {

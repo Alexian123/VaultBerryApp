@@ -1,5 +1,6 @@
 package com.alexianhentiu.vaultberryapp.presentation.ui.screens.main
 
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,7 +11,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.alexianhentiu.vaultberryapp.presentation.activity.MainActivity
+import androidx.navigation.NavHostController
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.topBars.AuthTopBar
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ErrorDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.InfoDialog
@@ -19,7 +20,6 @@ import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.OTPReque
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.RecoveryLoginForm
 import com.alexianhentiu.vaultberryapp.presentation.utils.enums.TextFieldType
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc.LoadingScreen
-import com.alexianhentiu.vaultberryapp.presentation.utils.NavigationManager
 import com.alexianhentiu.vaultberryapp.presentation.utils.enums.NavRoute
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.unique.RecoveryViewModel
 import com.alexianhentiu.vaultberryapp.presentation.utils.state.RecoveryState
@@ -27,9 +27,9 @@ import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.UtilityView
 
 @Composable
 fun RecoveryScreen(
-    navManager: NavigationManager,
+    navController: NavHostController
 ) {
-    val activity = LocalActivity.current as MainActivity
+    val activity = LocalActivity.current as ComponentActivity
     val utilityViewModel: UtilityViewModel = hiltViewModel(activity)
 
     val recoveryViewModel: RecoveryViewModel = hiltViewModel()
@@ -53,14 +53,14 @@ fun RecoveryScreen(
             Scaffold(
                 topBar = {
                     AuthTopBar(
-                        onSettingsClick = { navManager.navigate(NavRoute.SETTINGS) }
+                        onSettingsClick = { navController.navigate(NavRoute.SETTINGS.path) }
                     )
                 }
             ) { contentPadding ->
                 Box(modifier = Modifier.fillMaxSize().padding(contentPadding)) {
                     OTPRequestForm(
                         onContinueClicked = { email -> recoveryViewModel.requestOTP(email) },
-                        onCancelClicked = { navManager.navigate(NavRoute.LOGIN) },
+                        onCancelClicked = { navController.navigate(NavRoute.LOGIN.path) },
                         validator = utilityViewModel::getFieldValidator
                     )
                 }
@@ -77,7 +77,7 @@ fun RecoveryScreen(
                         },
                         onCancelClicked = {
                             recoveryViewModel.resetState()
-                            navManager.navigate(NavRoute.LOGIN)
+                            navController.navigate(NavRoute.LOGIN.path)
                         },
                         validator = utilityViewModel::getFieldValidator
                     )
@@ -109,7 +109,7 @@ fun RecoveryScreen(
                 onDismissRequest = {
                     utilityViewModel.copyToClipboard(recoveryPassword)
                     recoveryViewModel.logout()
-                    navManager.navigate(NavRoute.LOGIN)
+                    navController.navigate(NavRoute.LOGIN.path)
                 }
             )
         }

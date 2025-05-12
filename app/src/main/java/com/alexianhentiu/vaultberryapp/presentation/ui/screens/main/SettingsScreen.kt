@@ -1,6 +1,6 @@
 package com.alexianhentiu.vaultberryapp.presentation.ui.screens.main
 
-import androidx.activity.compose.BackHandler
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,47 +20,26 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
-import com.alexianhentiu.vaultberryapp.presentation.activity.MainActivity
+import androidx.navigation.NavHostController
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.topBars.TopBarWithBackButton
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.misc.SwitchSettingItem
-import com.alexianhentiu.vaultberryapp.presentation.utils.NavigationManager
-import com.alexianhentiu.vaultberryapp.presentation.utils.enums.NavRoute
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.SettingsViewModel
 
 @Composable
 fun SettingsScreen(
-    navManager: NavigationManager,
+    navController: NavHostController,
 ) {
-    val activity = LocalActivity.current as MainActivity
+    val activity = LocalActivity.current as ComponentActivity
     val settingsViewModel: SettingsViewModel = hiltViewModel(activity)
-
-    val key = navManager.retrieveVaultKey()
 
     val useSystemTheme by settingsViewModel.useSystemTheme.collectAsState()
     val darkTheme by settingsViewModel.darkTheme.collectAsState()
     val debugMode by settingsViewModel.debugMode.collectAsState()
 
-    BackHandler(enabled = true) {
-        if (key != null) {
-            // Settings was accessed from vault
-            navManager.navigateWithVaultKey(NavRoute.VAULT, key)
-        } else {
-            // Settings was accessed from elsewhere
-            navManager.goBack()
-        }
-    }
-
     Scaffold(
         topBar = {
             TopBarWithBackButton(
-                onBackClick = {
-                    if (key != null) {
-                        navManager.navigateWithVaultKey(NavRoute.VAULT, key)
-                    } else {
-                        navManager.goBack()
-                    }
-                },
+                navController = navController,
                 title = "Settings"
             )
         }
@@ -119,6 +98,6 @@ fun SettingsScreen(
 @Preview(showBackground = true)
 fun SettingsScreenPreview() {
     SettingsScreen(
-        navManager = NavigationManager(NavController(LocalContext.current))
+        navController = NavHostController(LocalContext.current)
     )
 }

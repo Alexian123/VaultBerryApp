@@ -1,5 +1,6 @@
 package com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -15,6 +16,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun LoadingScreen() {
+    BackHandler(enabled = true) {}
     Scaffold { contentPadding ->
         Box(
             modifier = Modifier.fillMaxSize()

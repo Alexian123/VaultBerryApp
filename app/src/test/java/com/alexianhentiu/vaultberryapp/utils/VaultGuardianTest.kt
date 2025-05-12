@@ -39,7 +39,7 @@ class VaultGuardianTest {
     fun givenNonEmptyPasswordAndEncryptedVaultKey_whenDecryptVaultKey_thenReturnDecryptedKeyWithNonEmptyKey() {
         val keyChain = guardian.generateKeyChain("password", "a")
         val decryptedVaultKey = guardian.decryptKey("password", keyChain.salt, keyChain.vaultKey)
-        assert(decryptedVaultKey.key.isNotEmpty())
+        assert(decryptedVaultKey.isNotEmpty())
     }
 
     @Test

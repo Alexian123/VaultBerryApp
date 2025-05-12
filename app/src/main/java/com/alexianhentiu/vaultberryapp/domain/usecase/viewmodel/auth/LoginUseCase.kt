@@ -1,7 +1,6 @@
 package com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.auth
 
 import com.alexianhentiu.vaultberryapp.data.utils.APIResult
-import com.alexianhentiu.vaultberryapp.domain.model.entity.DecryptedKey
 import com.alexianhentiu.vaultberryapp.domain.model.request.LoginRequest
 import com.alexianhentiu.vaultberryapp.domain.repository.AuthRepository
 import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.DecryptKeyUseCase
@@ -18,7 +17,7 @@ class LoginUseCase(
         email: String,
         password: String,
         totpCode: String? = null
-    ): UseCaseResult<DecryptedKey> {
+    ): UseCaseResult<ByteArray> {
         // Initialize guardian
         authGuardian.init(email, password)
 

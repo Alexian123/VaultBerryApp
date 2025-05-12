@@ -1,5 +1,6 @@
 package com.alexianhentiu.vaultberryapp.presentation.ui.screens.main
 
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Box
@@ -28,31 +29,32 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.alexianhentiu.vaultberryapp.R
-import com.alexianhentiu.vaultberryapp.presentation.activity.MainActivity
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.VaultEntryDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ConfirmActionDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.topBars.VaultTopBar
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.misc.VaultEntryItem
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ErrorDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc.LoadingScreen
-import com.alexianhentiu.vaultberryapp.presentation.utils.NavigationManager
 import com.alexianhentiu.vaultberryapp.presentation.utils.enums.NavRoute
 import com.alexianhentiu.vaultberryapp.presentation.utils.state.VaultState
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.UtilityViewModel
+import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.VaultKeyViewModel
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.unique.VaultViewModel
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun VaultScreen(
-    navManager: NavigationManager
+    navController: NavHostController
 ) {
-    val activity = LocalActivity.current as MainActivity
+    val activity = LocalActivity.current as ComponentActivity
+    val vaultKeyViewModel: VaultKeyViewModel = hiltViewModel(activity)
     val utilityViewModel: UtilityViewModel = hiltViewModel(activity)
 
     val vaultViewModel: VaultViewModel = hiltViewModel()
 
-    val vaultKey = navManager.retrieveVaultKey()
+    val decryptedKey = vaultKeyViewModel.decryptedKey
 
     val vaultState by vaultViewModel.vaultState.collectAsState()
     val previews by vaultViewModel.filteredPreviews.collectAsState()
@@ -77,7 +79,7 @@ fun VaultScreen(
         }
 
         is VaultState.Locked -> {
-            vaultViewModel.fetchPreviews(vaultKey)
+            vaultViewModel.fetchPreviews(decryptedKey)
         }
 
         is VaultState.Unlocked -> {
@@ -90,16 +92,9 @@ fun VaultScreen(
                 topBar = {
                     VaultTopBar(
                         onSearch = { vaultViewModel.searchPreviewsByTitle(it) },
-                        onLogout = {
-                            vaultViewModel.logout()
-                            navManager.navigate(NavRoute.LOGIN)
-                        },
-                        onAccountClick = {
-                            navManager.navigateWithVaultKey(NavRoute.ACCOUNT, vaultKey)
-                        },
-                        onSettingsClick = {
-                            navManager.navigateWithVaultKey(NavRoute.SETTINGS, vaultKey)
-                        }
+                        onLogout = { showLogoutDialog = true },
+                        onAccountClick = { navController.navigate(NavRoute.ACCOUNT.path) },
+                        onSettingsClick = { navController.navigate(NavRoute.SETTINGS.path) }
                     )
                 },
                 floatingActionButton = {
@@ -128,7 +123,7 @@ fun VaultScreen(
                                     if (expandedEntriesMap[id] != null) {
                                         vaultViewModel.clearEntryDetails(id)
                                     } else {
-                                        vaultViewModel.fetchEntryDetails(id)
+                                        vaultViewModel.fetchEntryDetails(id, decryptedKey)
                                     }
                                 },
                                 onDelete = { id ->
@@ -181,7 +176,7 @@ fun VaultScreen(
                                 },
                                 onSubmit = {
                                     if (entryToModifyId != -1L) {
-                                        vaultViewModel.updateEntry(entryToModifyId, it)
+                                        vaultViewModel.updateEntry(entryToModifyId, it, decryptedKey)
                                         entryToModifyId = -1L
                                         showEditEntryDialog = false
                                     }
@@ -198,7 +193,8 @@ fun VaultScreen(
                                 onSubmit = {
                                     if (it) {
                                         vaultViewModel.logout()
-                                        navManager.navigate(NavRoute.LOGIN)
+                                        vaultKeyViewModel.clearDecryptedKey()
+                                        navController.navigate(NavRoute.LOGIN.path)
                                     }
                                 }
                             )
@@ -208,7 +204,7 @@ fun VaultScreen(
                                 formTitle = stringResource(R.string.add_entry_form_title),
                                 onDismissRequest = { showAddEntryDialog = false },
                                 onSubmit = {
-                                    vaultViewModel.addEntry(it)
+                                    vaultViewModel.addEntry(it, decryptedKey)
                                     showAddEntryDialog = false
                                 },
                                 validator = utilityViewModel::getFieldValidator,

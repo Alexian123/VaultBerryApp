@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alexianhentiu.vaultberryapp.domain.model.entity.AccountInfo
-import com.alexianhentiu.vaultberryapp.domain.model.entity.DecryptedKey
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.account.ChangeAccountInfoUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.account.ChangePasswordUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.account.DeleteAccountUseCase
@@ -14,7 +13,7 @@ import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.account.GetAccou
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.account.Setup2FAUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.auth.LogoutUseCase
 import com.alexianhentiu.vaultberryapp.domain.utils.UseCaseResult
-import com.alexianhentiu.vaultberryapp.presentation.utils.ErrorInfo
+import com.alexianhentiu.vaultberryapp.presentation.utils.errors.ErrorInfo
 import com.alexianhentiu.vaultberryapp.presentation.utils.state.AccountState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -135,7 +134,7 @@ class AccountViewModel @Inject constructor(
         }
     }
 
-    fun changePassword(decryptedKey: DecryptedKey, newPassword: String, reEncrypt: Boolean) {
+    fun changePassword(decryptedKey: ByteArray, newPassword: String, reEncrypt: Boolean) {
         viewModelScope.launch {
             _accountState.value = AccountState.Loading
             when (val result = changePasswordUseCase(decryptedKey, newPassword, reEncrypt)) {

@@ -15,7 +15,6 @@ import dagger.hilt.android.AndroidEntryPoint
 
 /*
     TODO:
-        - Figure out how to more safely handle the master key within memory
         - Implement autofill
         - Integrate VPN connection (optional)
         - Improve error handling
