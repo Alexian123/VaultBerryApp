@@ -1,4 +1,4 @@
-package com.alexianhentiu.vaultberryapp.di
+package com.alexianhentiu.vaultberryapp.di.modules
 
 import android.content.Context
 import com.alexianhentiu.vaultberryapp.R

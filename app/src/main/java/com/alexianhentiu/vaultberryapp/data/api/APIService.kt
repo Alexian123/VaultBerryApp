@@ -11,6 +11,7 @@ import com.alexianhentiu.vaultberryapp.data.model.entity.UserDTO
 import com.alexianhentiu.vaultberryapp.data.model.entity.VaultEntryPreviewDTO
 import com.alexianhentiu.vaultberryapp.data.model.request.LoginRequestDTO
 import com.alexianhentiu.vaultberryapp.data.model.request.RecoveryLoginRequestDTO
+import com.alexianhentiu.vaultberryapp.data.model.request.VaultSearchRequest
 import com.alexianhentiu.vaultberryapp.data.model.response.LoginResponseDTO
 import retrofit2.Response
 import retrofit2.http.Body
@@ -66,6 +67,11 @@ interface APIService {
 
     @DELETE("$VAULT_PREFIX/delete/{id}")
     suspend fun deleteEntry(@Path("id") id: Long): Response<MessageResponseDTO>
+
+    @POST("$VAULT_PREFIX/search")
+    suspend fun searchVaultEntries(
+        @Body keywords: VaultSearchRequest
+    ): Response<List<EncryptedVaultEntryDTO>?>
 
     @GET(ACCOUNT_PREFIX)
     suspend fun getAccountInfo(): Response<AccountInfoDTO>

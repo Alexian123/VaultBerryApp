@@ -1,11 +1,11 @@
-package com.alexianhentiu.vaultberryapp.di
+package com.alexianhentiu.vaultberryapp.di.modules
 
-import com.alexianhentiu.vaultberryapp.data.utils.APIResponseHandler
 import com.alexianhentiu.vaultberryapp.data.api.APIService
 import com.alexianhentiu.vaultberryapp.data.repository.AccountRepositoryImpl
-import com.alexianhentiu.vaultberryapp.data.utils.ModelConverter
 import com.alexianhentiu.vaultberryapp.data.repository.AuthRepositoryImpl
 import com.alexianhentiu.vaultberryapp.data.repository.VaultRepositoryImpl
+import com.alexianhentiu.vaultberryapp.data.utils.APIResponseHandler
+import com.alexianhentiu.vaultberryapp.data.utils.ModelConverter
 import com.alexianhentiu.vaultberryapp.domain.repository.AccountRepository
 import com.alexianhentiu.vaultberryapp.domain.repository.AuthRepository
 import com.alexianhentiu.vaultberryapp.domain.repository.VaultRepository

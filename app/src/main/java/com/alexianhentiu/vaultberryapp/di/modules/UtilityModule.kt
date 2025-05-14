@@ -1,4 +1,4 @@
-package com.alexianhentiu.vaultberryapp.di
+package com.alexianhentiu.vaultberryapp.di.modules
 
 import android.content.ClipboardManager
 import android.content.Context
@@ -9,15 +9,15 @@ import com.alexianhentiu.vaultberryapp.data.utils.APIResponseHandler
 import com.alexianhentiu.vaultberryapp.data.utils.ModelConverter
 import com.alexianhentiu.vaultberryapp.di.qualifiers.DebugValidatorQualifier
 import com.alexianhentiu.vaultberryapp.di.qualifiers.RegularValidatorQualifier
-import com.alexianhentiu.vaultberryapp.domain.utils.settings.SettingsManager
 import com.alexianhentiu.vaultberryapp.domain.utils.security.AuthGuardian
 import com.alexianhentiu.vaultberryapp.domain.utils.security.PasswordEvaluator
-import com.alexianhentiu.vaultberryapp.domain.utils.validation.InputValidator
 import com.alexianhentiu.vaultberryapp.domain.utils.security.PasswordGenerator
 import com.alexianhentiu.vaultberryapp.domain.utils.security.VaultGuardian
 import com.alexianhentiu.vaultberryapp.domain.utils.security.cryptography.AESHandler
 import com.alexianhentiu.vaultberryapp.domain.utils.security.cryptography.CryptographyHandler
+import com.alexianhentiu.vaultberryapp.domain.utils.settings.SettingsManager
 import com.alexianhentiu.vaultberryapp.domain.utils.validation.DebugValidator
+import com.alexianhentiu.vaultberryapp.domain.utils.validation.InputValidator
 import com.alexianhentiu.vaultberryapp.domain.utils.validation.RegularValidator
 import dagger.Module
 import dagger.Provides

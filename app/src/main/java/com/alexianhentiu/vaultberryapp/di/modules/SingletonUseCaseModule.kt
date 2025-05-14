@@ -1,12 +1,12 @@
-package com.alexianhentiu.vaultberryapp.di
+package com.alexianhentiu.vaultberryapp.di.modules
 
 import com.alexianhentiu.vaultberryapp.domain.repository.VaultRepository
 import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.DecryptKeyUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.DecryptVaultEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.EncryptVaultEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.Extract2FASecret
-import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.GeneratePasswordPairUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.GenerateKeyChainUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.GeneratePasswordPairUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.ReEncryptVaultUseCase
 import com.alexianhentiu.vaultberryapp.domain.utils.security.PasswordGenerator
 import com.alexianhentiu.vaultberryapp.domain.utils.security.VaultGuardian

@@ -71,4 +71,18 @@ class VaultRepositoryImpl(
             transform = { modelConverter.messageResponseFromDTO(it) }
         )
     }
+
+    override suspend fun searchVaultEntries(
+        keywords: List<String>
+    ): APIResult<List<EncryptedVaultEntry>> {
+        val keywordsDTO = modelConverter.keywordsToVaultSearchRequest(keywords)
+        return apiResponseHandler.safeApiCall(
+            apiCall = { apiService.searchVaultEntries(keywordsDTO) },
+            transform = {
+                it?.map { entryDTO ->
+                    modelConverter.encryptedVaultEntryFromDTO(entryDTO)
+                } ?: emptyList()
+            }
+        )
+    }
 }

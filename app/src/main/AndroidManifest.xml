@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:networkSecurityConfig="@xml/network_security_config"
         android:name=".di.App"
@@ -15,16 +16,43 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.VaultBerryApp"
         tools:targetApi="31">
+
         <activity
             android:name=".presentation.activity.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.VaultBerryApp">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".presentation.activity.AutofillActivity"
+            android:exported="false"
+            android:launchMode="singleTop"
+            android:excludeFromRecents="true"
+            android:theme="@style/Theme.VaultBerryApp">
+        </activity>
+
+        <service
+            android:name=".presentation.utils.autofill.MyAutofillService"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:permission="android.permission.BIND_AUTOFILL_SERVICE">
+
+            <intent-filter>
+                <action android:name="android.service.autofill.AutofillService" />
+            </intent-filter>
+
+        </service>
+
     </application>
+
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+        </intent>
+    </queries>
 
 </manifest>

@@ -11,6 +11,7 @@ import com.alexianhentiu.vaultberryapp.data.model.entity.UserDTO
 import com.alexianhentiu.vaultberryapp.data.model.entity.VaultEntryPreviewDTO
 import com.alexianhentiu.vaultberryapp.data.model.request.LoginRequestDTO
 import com.alexianhentiu.vaultberryapp.data.model.request.RecoveryLoginRequestDTO
+import com.alexianhentiu.vaultberryapp.data.model.request.VaultSearchRequest
 import com.alexianhentiu.vaultberryapp.data.model.response.LoginResponseDTO
 import com.alexianhentiu.vaultberryapp.domain.model.entity.AccountInfo
 import com.alexianhentiu.vaultberryapp.domain.model.entity.EncryptedVaultEntry
@@ -153,5 +154,9 @@ class ModelConverter {
             id = vaultEntryPreviewDTO.id,
             title = vaultEntryPreviewDTO.title
         )
+    }
+
+    fun keywordsToVaultSearchRequest(keywords: List<String>): VaultSearchRequest {
+        return VaultSearchRequest(keywords)
     }
 }

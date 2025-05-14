@@ -21,4 +21,6 @@ interface VaultRepository {
     ): APIResult<MessageResponse>
 
     suspend fun deleteEntry(id: Long): APIResult<MessageResponse>
+
+    suspend fun searchVaultEntries(keywords: List<String>): APIResult<List<EncryptedVaultEntry>>
 }

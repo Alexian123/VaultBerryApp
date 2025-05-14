@@ -34,4 +34,5 @@
     <string name="confirm_new_password_label">Confirm new password</string>
     <string name="update_account_form_title">Update account</string>
     <string name="toggle_section_expansion_action_content_description">Expand section</string>
+    <string name="autofill_service_label">VaultBerry Autofill</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.alexianhentiu.vaultberryapp.di
+package com.alexianhentiu.vaultberryapp.di.modules
 
 import android.content.ClipboardManager
 import com.alexianhentiu.vaultberryapp.di.qualifiers.DebugValidatorQualifier
@@ -6,6 +6,13 @@ import com.alexianhentiu.vaultberryapp.di.qualifiers.RegularValidatorQualifier
 import com.alexianhentiu.vaultberryapp.domain.repository.AccountRepository
 import com.alexianhentiu.vaultberryapp.domain.repository.AuthRepository
 import com.alexianhentiu.vaultberryapp.domain.repository.VaultRepository
+import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.DecryptKeyUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.DecryptVaultEntryUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.EncryptVaultEntryUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.Extract2FASecret
+import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.GenerateKeyChainUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.GeneratePasswordPairUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.ReEncryptVaultUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.account.ChangeAccountInfoUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.account.ChangePasswordUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.account.DeleteAccountUseCase
@@ -13,32 +20,26 @@ import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.account.Disable2
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.account.Get2FAStatusUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.account.GetAccountInfoUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.account.Setup2FAUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.auth.RecoverySendUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.vault.AddEntryUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.vault.GetAllVaultEntryPreviewsUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.GenerateKeyChainUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.DecryptKeyUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.auth.LoginUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.auth.LogoutUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.auth.RecoveryLoginUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.vault.UpdateEntryUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.auth.RecoverySendUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.auth.RegisterUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.EncryptVaultEntryUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.DecryptVaultEntryUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.vault.DeleteEntryUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.vault.GetDecryptedVaultEntryUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.Extract2FASecret
-import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.GeneratePasswordPairUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.ReEncryptVaultUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.utility.CopyToClipboardUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.utility.EvalPasswordStrengthUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.utility.GetValidatorUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.utility.LoadSettingUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.utility.ObserveSettingUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.utility.SaveSettingUseCase
-import com.alexianhentiu.vaultberryapp.domain.utils.settings.SettingsManager
+import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.vault.AddEntryUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.vault.DeleteEntryUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.vault.GetAllVaultEntryPreviewsUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.vault.GetDecryptedVaultEntryUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.vault.SearchVaultEntriesUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.vault.UpdateEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.utils.security.AuthGuardian
 import com.alexianhentiu.vaultberryapp.domain.utils.security.PasswordEvaluator
+import com.alexianhentiu.vaultberryapp.domain.utils.settings.SettingsManager
 import com.alexianhentiu.vaultberryapp.domain.utils.validation.InputValidator
 import dagger.Module
 import dagger.Provides
@@ -153,6 +154,15 @@ object ViewModelUseCaseModule {
     fun provideDeleteEntryUseCase(
         vaultRepository: VaultRepository
     ): DeleteEntryUseCase = DeleteEntryUseCase(vaultRepository)
+
+    @Provides
+    fun provideSearchVaultEntriesUseCase(
+        vaultRepository: VaultRepository,
+        decryptVaultEntryUseCase: DecryptVaultEntryUseCase
+    ): SearchVaultEntriesUseCase = SearchVaultEntriesUseCase(
+        vaultRepository,
+        decryptVaultEntryUseCase
+    )
 
     @Provides
     fun provideChangeAccountInfoUseCase(

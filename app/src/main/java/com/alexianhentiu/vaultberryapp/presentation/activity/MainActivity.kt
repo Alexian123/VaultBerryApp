@@ -16,6 +16,7 @@ import dagger.hilt.android.AndroidEntryPoint
 /*
     TODO:
         - Implement autofill
+        - Security concern - do not keep the credentials/keys in screen state objects
         - Integrate VPN connection (optional)
         - Improve error handling
 */
