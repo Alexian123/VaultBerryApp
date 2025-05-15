@@ -30,11 +30,11 @@ class APIResponseHandler {
                 try {
                     val jsonObject = errorBody?.let { JSONObject(it) } // Parse as JSON
                     val errorMessage = jsonObject?.getString("error") ?: "Unknown error"
-                    APIResult.Error(JSON_ERROR_SOURCE, errorMessage)
+                    APIResult.Error(BACKEND_ERROR_SOURCE, errorMessage, response.code())
                 } catch (e: JSONException) {
                     APIResult.Error(
-                        UNKNOWN_ERROR_SOURCE,
-                        errorBody ?: "Unknown error",
+                        JSON_ERROR_SOURCE,
+                        errorBody ?: e.message ?: "An unexpected error occurred",
                         response.code()
                     )
                 }

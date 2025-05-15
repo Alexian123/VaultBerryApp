@@ -18,7 +18,8 @@ import dagger.hilt.android.AndroidEntryPoint
         - Security concern - do not keep the credentials/keys in screen state objects
             - Move the logout logic to the vault key view model
             - Rename the vault key view model to something more appropriate (e.g. SessionViewModel)
-        - Don't rely on the "2FA Required" error message to show the 2FA screen, use a code instead
+        - Add setting for autofill
+        - Add option to remember email
         - Integrate VPN connection (optional)
         - Improve error handling
 */

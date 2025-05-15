@@ -42,7 +42,7 @@ class AutofillViewModel @Inject constructor(
                 }
 
                 is UseCaseResult.Error -> {
-                    if (result.message == "2FA required") {
+                    if (result.type == ErrorType.REQUIRES_2FA) {
                         _autofillState.value = AutofillState.Verify2FA
                     } else {
                         _autofillState.value = AutofillState.Error(

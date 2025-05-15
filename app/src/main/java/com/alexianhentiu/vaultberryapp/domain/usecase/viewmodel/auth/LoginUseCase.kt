@@ -1,6 +1,7 @@
 package com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.auth
 
 import com.alexianhentiu.vaultberryapp.data.utils.APIResult
+import com.alexianhentiu.vaultberryapp.data.utils.enums.HttpResponseCode
 import com.alexianhentiu.vaultberryapp.domain.model.request.LoginRequest
 import com.alexianhentiu.vaultberryapp.domain.repository.AuthRepository
 import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.DecryptKeyUseCase
@@ -28,8 +29,13 @@ class LoginUseCase(
         val credentials1 = LoginRequest(email, firstMessage, totpCode)
         val response1 = authRepository.loginFirstStep(credentials1)
         if (response1 is APIResult.Error) {
+            // Check if 2FA is required
+            val type =
+                if (response1.code == HttpResponseCode.BAD_REQUEST.code) ErrorType.REQUIRES_2FA
+                else ErrorType.EXTERNAL
+
             return UseCaseResult.Error(
-                ErrorType.EXTERNAL,
+                type,
                 response1.source,
                 response1.message
             )

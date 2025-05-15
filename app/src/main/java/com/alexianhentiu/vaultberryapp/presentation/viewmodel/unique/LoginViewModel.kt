@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.auth.LoginUseCase
 import com.alexianhentiu.vaultberryapp.domain.utils.UseCaseResult
+import com.alexianhentiu.vaultberryapp.domain.utils.enums.ErrorType
 import com.alexianhentiu.vaultberryapp.presentation.utils.errors.ErrorInfo
 import com.alexianhentiu.vaultberryapp.presentation.utils.state.LoginState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -56,7 +57,7 @@ class LoginViewModel @Inject constructor(
                 }
 
                 is UseCaseResult.Error -> {  // Handle 2FA required case
-                    if (result.message == "2FA required") {
+                    if (result.type == ErrorType.REQUIRES_2FA) {
                         _loginState.value = LoginState.Verify2FA(email, password)
                     } else {
                         _loginState.value = LoginState.Error(
