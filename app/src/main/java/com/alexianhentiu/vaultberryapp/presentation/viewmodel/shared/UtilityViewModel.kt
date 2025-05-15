@@ -8,10 +8,10 @@ import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.utility.EvalPass
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.utility.GetValidatorUseCase
 import com.alexianhentiu.vaultberryapp.domain.utils.enums.PasswordStrength
 import com.alexianhentiu.vaultberryapp.domain.utils.UseCaseResult
-import com.alexianhentiu.vaultberryapp.domain.utils.enums.ValidatedFieldType
 import com.alexianhentiu.vaultberryapp.domain.utils.validation.InputValidator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,18 +22,19 @@ class UtilityViewModel @Inject constructor(
     private val getValidatorUseCase: GetValidatorUseCase
 ): ViewModel() {
 
-    private val _validator = MutableStateFlow<InputValidator?>(null)
+    private val _inputValidator = MutableStateFlow<InputValidator?>(null)
+    val inputValidator: StateFlow<InputValidator?> = _inputValidator
 
     init {
         viewModelScope.launch {
             when (val result = getValidatorUseCase()) {
                 is UseCaseResult.Success -> {
-                    _validator.value = result.data
-                    Log.d("UtilityViewModel", "Successfully loaded validator")
+                    _inputValidator.value = result.data
+                    Log.d("UtilityViewModel", "Successfully loaded ${result.data::class}")
                 }
                 is UseCaseResult.Error -> {
                     Log.e(result.source, result.message)
-                    _validator.value = null
+                    _inputValidator.value = null
                 }
             }
         }
@@ -59,18 +60,6 @@ class UtilityViewModel @Inject constructor(
                 Log.e(result.source, result.message)
                 return PasswordStrength.NONE
             }
-        }
-    }
-
-    fun getFieldValidator(field: ValidatedFieldType): (String) -> Boolean {
-        val fieldValidator = _validator.value ?: return { false }
-        return when (field) {
-            ValidatedFieldType.EMAIL -> fieldValidator::validateEmail
-            ValidatedFieldType.PASSWORD -> fieldValidator::validatePassword
-            ValidatedFieldType.MFA_CODE -> fieldValidator::validate2FACode
-            ValidatedFieldType.OTP -> fieldValidator::validateOTP
-            ValidatedFieldType.ENTRY_TITLE -> fieldValidator::validateEntryTitle
-            ValidatedFieldType.NONE -> { _ -> true }
         }
     }
 }

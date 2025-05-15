@@ -29,6 +29,8 @@ fun RegisterScreen(
     val activity = LocalActivity.current as ComponentActivity
     val utilityViewModel: UtilityViewModel = hiltViewModel(activity)
 
+    val inputValidator by utilityViewModel.inputValidator.collectAsState()
+
     val registerViewModel: RegisterViewModel = hiltViewModel()
     val registerState by registerViewModel.registerState.collectAsState()
 
@@ -47,7 +49,9 @@ fun RegisterScreen(
                         onRegisterClicked = { email, password, firstName, lastName ->
                             registerViewModel.register(email, password, firstName, lastName)
                         },
-                        validator = utilityViewModel::getFieldValidator
+                        validator = {
+                            inputValidator?.getValidatorFunction(it) ?: { false }
+                        }
                     )
                 }
             }

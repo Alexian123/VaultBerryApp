@@ -52,6 +52,8 @@ fun VaultScreen(
     val vaultKeyViewModel: VaultKeyViewModel = hiltViewModel(activity)
     val utilityViewModel: UtilityViewModel = hiltViewModel(activity)
 
+    val inputValidator by utilityViewModel.inputValidator.collectAsState()
+
     val vaultViewModel: VaultViewModel = hiltViewModel()
 
     val decryptedKey = vaultKeyViewModel.decryptedKey
@@ -181,7 +183,9 @@ fun VaultScreen(
                                         showEditEntryDialog = false
                                     }
                                 },
-                                validator = utilityViewModel::getFieldValidator,
+                                validator = {
+                                    inputValidator?.getValidatorFunction(it) ?: { false }
+                                },
                                 evaluatePasswordStrength = utilityViewModel::evalPasswordStrength
                             )
                         }
@@ -207,7 +211,9 @@ fun VaultScreen(
                                     vaultViewModel.addEntry(it, decryptedKey)
                                     showAddEntryDialog = false
                                 },
-                                validator = utilityViewModel::getFieldValidator,
+                                validator = {
+                                    inputValidator?.getValidatorFunction(it) ?: { false }
+                                },
                                 evaluatePasswordStrength = utilityViewModel::evalPasswordStrength
                             )
                         }

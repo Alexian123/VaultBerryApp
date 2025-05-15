@@ -32,24 +32,28 @@ class AutofillViewModel @Inject constructor(
     private val _autofillSuggestions = MutableStateFlow<List<AutofillEntry>>(emptyList())
     val autofillSuggestions: StateFlow<List<AutofillEntry>> = _autofillSuggestions
 
-    fun login(email: String, password: String) {
+    fun login(email: String, password: String, code: String? = null) {
         viewModelScope.launch {
             _autofillState.value = AutofillState.Loading
-            when (val result = loginUseCase(email = email, password = password)) {
+            when (val result = loginUseCase(email, password, code)) {
                 is UseCaseResult.Success -> {
                     _autofillState.value = AutofillState.LoggedIn
                     _decryptedKey.value = result.data
                 }
 
                 is UseCaseResult.Error -> {
-                    _autofillState.value = AutofillState.Error(
-                        ErrorInfo(
-                            type = result.type,
-                            source = result.source,
-                            message = result.message
+                    if (result.message == "2FA required") {
+                        _autofillState.value = AutofillState.Verify2FA
+                    } else {
+                        _autofillState.value = AutofillState.Error(
+                            ErrorInfo(
+                                type = result.type,
+                                source = result.source,
+                                message = result.message
+                            )
                         )
-                    )
-                    Log.e(result.source, result.message)
+                        Log.e(result.source, result.message)
+                    }
                 }
             }
         }

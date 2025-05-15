@@ -32,6 +32,8 @@ fun RecoveryScreen(
     val activity = LocalActivity.current as ComponentActivity
     val utilityViewModel: UtilityViewModel = hiltViewModel(activity)
 
+    val inputValidator by utilityViewModel.inputValidator.collectAsState()
+
     val recoveryViewModel: RecoveryViewModel = hiltViewModel()
     val recoveryState by recoveryViewModel.recoveryState.collectAsState()
 
@@ -61,7 +63,9 @@ fun RecoveryScreen(
                     OTPRequestForm(
                         onContinueClicked = { email -> recoveryViewModel.requestOTP(email) },
                         onCancelClicked = { navController.navigate(NavRoute.LOGIN.path) },
-                        validator = utilityViewModel::getFieldValidator
+                        validator = {
+                            inputValidator?.getValidatorFunction(it) ?: { false }
+                        }
                     )
                 }
             }
@@ -79,7 +83,9 @@ fun RecoveryScreen(
                             recoveryViewModel.resetState()
                             navController.navigate(NavRoute.LOGIN.path)
                         },
-                        validator = utilityViewModel::getFieldValidator
+                        validator = {
+                            inputValidator?.getValidatorFunction(it) ?: { false }
+                        }
                     )
                 }
             }
@@ -93,7 +99,9 @@ fun RecoveryScreen(
                         onChangePassword = { newPassword, reEncrypt ->
                             recoveryViewModel.resetPassword(decryptedKey, newPassword, reEncrypt)
                         },
-                        validator = utilityViewModel::getFieldValidator,
+                        validator = {
+                            inputValidator?.getValidatorFunction(it) ?: { false }
+                        },
                         textFieldType = TextFieldType.REGULAR
                     )
                 }

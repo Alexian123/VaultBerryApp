@@ -19,7 +19,7 @@ import androidx.annotation.RequiresApi
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.main.AutofillScreen
+import com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc.AutofillScreen
 import com.alexianhentiu.vaultberryapp.presentation.ui.theme.VaultBerryAppTheme
 import com.alexianhentiu.vaultberryapp.presentation.utils.autofill.AutofillEntry
 import com.alexianhentiu.vaultberryapp.presentation.utils.enums.AppTheme
@@ -65,7 +65,6 @@ class AutofillActivity : ComponentActivity() {
                         val resultIntent = Intent().apply {
                             putExtra(AutofillManager.EXTRA_AUTHENTICATION_RESULT, fillResponse)
                         }
-                        Log.d("AutofillActivity", "entries: $entries")
                         setResult(RESULT_OK, resultIntent)
                         finish()
                     }

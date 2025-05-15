@@ -11,6 +11,7 @@ import android.service.autofill.FillRequest
 import android.service.autofill.FillResponse
 import android.service.autofill.Presentations
 import android.service.autofill.SaveCallback
+import android.service.autofill.SaveInfo
 import android.service.autofill.SaveRequest
 import android.util.Log
 import android.view.autofill.AutofillId
@@ -19,7 +20,7 @@ import androidx.annotation.RequiresApi
 import com.alexianhentiu.vaultberryapp.presentation.activity.AutofillActivity
 import kotlin.jvm.java
 
-class MyAutofillService : AutofillService() {
+class VaultBerryAutofillService : AutofillService() {
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onFillRequest(
@@ -27,7 +28,7 @@ class MyAutofillService : AutofillService() {
         cancellationSignal: CancellationSignal,
         callback: FillCallback
     ) {
-        Log.d("MyAutofillService", "onFillRequest")
+        Log.d("VaultBerryAutofillService", "Autofill request received")
         val structure = request.fillContexts.last().structure
         val component = structure.activityComponent
 
@@ -35,12 +36,11 @@ class MyAutofillService : AutofillService() {
         val passwordId = findNode(structure, "password")
 
         if (usernameId == null || passwordId == null) {
-            Log.e("MyAutofillService", "usernameId: $usernameId, passwordId: $passwordId")
             callback.onSuccess(null)
             return
         }
 
-        // Keywords for the AutofillActivity
+        // Keywords for searching the database
         val keywords = arrayListOf(component.packageName)
         try {
             val label = packageManager.getApplicationLabel(
@@ -48,9 +48,9 @@ class MyAutofillService : AutofillService() {
             ).toString()
             keywords.add(label)
         } catch (e: Exception) {
-            Log.w("MyAutofillService", "Label not found for ${component.packageName}", e)
+            Log.w("VaultBerryAutofillService", "Label not found for ${component.packageName}", e)
         }
-        Log.d("MyAutofillService", "keywords: $keywords")
+        Log.d("VaultBerryAutofillService", "Extracted keywords: $keywords")
 
         val intent = Intent(this, AutofillActivity::class.java).apply {
             putStringArrayListExtra("keywords", keywords)
@@ -64,7 +64,7 @@ class MyAutofillService : AutofillService() {
         ).intentSender
 
         val presentation = RemoteViews(packageName, android.R.layout.simple_list_item_1).apply {
-            setTextViewText(android.R.id.text1, "Unlock to autofill")
+            setTextViewText(android.R.id.text1, "Login to VaultBerry to autofill")
         }
 
         val presentations = Presentations.Builder()
@@ -72,11 +72,17 @@ class MyAutofillService : AutofillService() {
             .setMenuPresentation(presentation)
             .build()
 
+        val saveInfo = SaveInfo.Builder(
+           SaveInfo.SAVE_DATA_TYPE_EMAIL_ADDRESS
+                    or SaveInfo.SAVE_DATA_TYPE_PASSWORD,
+            arrayOf(usernameId, passwordId)
+        ).build()
+
         val response = FillResponse.Builder()
             .setAuthentication(arrayOf(usernameId, passwordId), sender, presentations)
+            .setSaveInfo(saveInfo)
             .build()
 
-        Log.d("MyAutofillService", "response: $response")
         callback.onSuccess(response)
     }
 
@@ -85,7 +91,7 @@ class MyAutofillService : AutofillService() {
         request: SaveRequest,
         callback: SaveCallback
     ) {
-        // TODO: Save credentials entered by user
+        Log.d("VaultBerryAutofillService", "Save request not implemented")
     }
 
     fun findNode(structure: AssistStructure, hint: String): AutofillId? {

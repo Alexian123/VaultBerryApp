@@ -31,6 +31,8 @@ fun AccountScreen(
     val vaultKeyViewModel: VaultKeyViewModel = hiltViewModel(activity)
     val utilityViewModel: UtilityViewModel = hiltViewModel(activity)
 
+    val inputValidator by utilityViewModel.inputValidator.collectAsState()
+
     val accountViewModel: AccountViewModel = hiltViewModel()
 
     val vaultKey = vaultKeyViewModel.decryptedKey
@@ -59,7 +61,9 @@ fun AccountScreen(
                     )
                 }
             ) { contentPadding ->
-                Box(modifier = Modifier.fillMaxSize().padding(contentPadding)) {
+                Box(modifier = Modifier
+                    .fillMaxSize()
+                    .padding(contentPadding)) {
                     AccountForm(
                         accountInfo = account,
                         is2FAEnabled = is2FAEnabled,
@@ -80,7 +84,9 @@ fun AccountScreen(
                         onDeleteAccount = {
                             accountViewModel.deleteAccount()
                         },
-                        validator = utilityViewModel::getFieldValidator
+                        validator = {
+                            inputValidator?.getValidatorFunction(it) ?: { false }
+                        }
                     )
                 }
             }

@@ -32,6 +32,8 @@ fun LoginScreen(
     val vaultKeyViewModel: VaultKeyViewModel = hiltViewModel(activity)
     val utilityViewModel: UtilityViewModel = hiltViewModel(activity)
 
+    val inputValidator by utilityViewModel.inputValidator.collectAsState()
+
     val loginViewModel: LoginViewModel = hiltViewModel()
     val loginState by loginViewModel.loginState.collectAsState()
 
@@ -51,7 +53,9 @@ fun LoginScreen(
                         navController = navController,
                         onLoginClicked = { email, password -> loginViewModel.login(email, password) },
                         onForgotPasswordClicked = { navController.navigate(NavRoute.RECOVERY.path) },
-                        validator = utilityViewModel::getFieldValidator
+                        validator = {
+                            inputValidator?.getValidatorFunction(it) ?: { false }
+                        }
                     )
                 }
             }
@@ -78,7 +82,9 @@ fun LoginScreen(
                             loginViewModel.verify2FA(email, password, code)
                         },
                         onCancelClicked = { loginViewModel.resetState() },
-                        validator = utilityViewModel::getFieldValidator
+                        validator = {
+                            inputValidator?.getValidatorFunction(it) ?: { false }
+                        }
                     )
                 }
             }
