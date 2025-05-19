@@ -15,10 +15,10 @@ import dagger.hilt.android.AndroidEntryPoint
 
 /*
     TODO:
-        - Add setting for autofill
         - Add option to remember email
         - Integrate VPN connection (optional)
         - Improve error handling
+        - Add comments
 */
 
 @AndroidEntryPoint

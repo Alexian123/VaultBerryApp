@@ -1,29 +1,27 @@
 package com.alexianhentiu.vaultberryapp.presentation.ui.screens.main
 
+import android.content.Intent
+import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.LocalActivity
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.SettingsForm
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.topBars.TopBarWithBackButton
-import com.alexianhentiu.vaultberryapp.presentation.ui.components.misc.SwitchSettingItem
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.SettingsViewModel
+import androidx.core.net.toUri
 
 @Composable
 fun SettingsScreen(
@@ -35,6 +33,17 @@ fun SettingsScreen(
     val useSystemTheme by settingsViewModel.useSystemTheme.collectAsState()
     val darkTheme by settingsViewModel.darkTheme.collectAsState()
     val debugMode by settingsViewModel.debugMode.collectAsState()
+
+    var goToSystemSettings by remember { mutableStateOf(false) }
+
+    if (goToSystemSettings) {
+        goToSystemSettings = false
+        val context = LocalContext.current
+        val intent = Intent(Settings.ACTION_REQUEST_SET_AUTOFILL_SERVICE).apply {
+            data = "package:${context.packageName}".toUri()
+        }
+        context.startActivity(intent)
+    }
 
     Scaffold(
         topBar = {
@@ -49,55 +58,17 @@ fun SettingsScreen(
                 .fillMaxSize()
                 .padding(contentPadding)
         ) {
-            Column(
-                verticalArrangement = Arrangement.Top,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
-            ) {
-                Text(
-                    text = "Theme",
-                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
-                SwitchSettingItem(
-                    text = "Use system theme",
-                    checked = useSystemTheme,
-                    onCheckedChange = {
-                        settingsViewModel.setUseSystemTheme(it)
-                    }
-                )
-                SwitchSettingItem(
-                    enabled = !useSystemTheme,
-                    text = "Dark theme",
-                    checked = darkTheme,
-                    onCheckedChange = {
-                        settingsViewModel.setDarkTheme(it)
-                    }
-                )
-                HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
-
-                Text(
-                    text = "Advanced",
-                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                    modifier = Modifier.padding(top = 8.dp, bottom = 8.dp)
-                )
-                SwitchSettingItem(
-                    text = "Debug mode (restart required)",
-                    checked = debugMode,
-                    onCheckedChange = {
-                        settingsViewModel.setDebugMode(it)
-                    }
-                )
-            }
+            SettingsForm(
+                useSystemTheme = useSystemTheme,
+                darkTheme = darkTheme,
+                debugMode = debugMode,
+                onUseSystemThemeChange = { settingsViewModel.setUseSystemTheme(it) },
+                onDarkThemeChange = { settingsViewModel.setDarkTheme(it) },
+                onDebugModeChange = { settingsViewModel.setDebugMode(it) },
+                onAutofillActivation = {
+                    goToSystemSettings = true
+                }
+            )
         }
     }
-}
-
-@Composable
-@Preview(showBackground = true)
-fun SettingsScreenPreview() {
-    SettingsScreen(
-        navController = NavHostController(LocalContext.current)
-    )
 }
