@@ -19,28 +19,26 @@ import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.LoginFor
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.Verify2FAForm
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc.LoadingScreen
 import com.alexianhentiu.vaultberryapp.presentation.utils.enums.NavRoute
-import com.alexianhentiu.vaultberryapp.presentation.viewmodel.unique.LoginViewModel
-import com.alexianhentiu.vaultberryapp.presentation.utils.state.LoginState
+import com.alexianhentiu.vaultberryapp.presentation.utils.state.SessionState
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.UtilityViewModel
-import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.VaultKeyViewModel
+import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.SessionViewModel
 
 @Composable
 fun LoginScreen(
     navController: NavHostController
 ) {
     val activity = LocalActivity.current as ComponentActivity
-    val vaultKeyViewModel: VaultKeyViewModel = hiltViewModel(activity)
+    val sessionViewModel: SessionViewModel = hiltViewModel(activity)
     val utilityViewModel: UtilityViewModel = hiltViewModel(activity)
 
     val inputValidator by utilityViewModel.inputValidator.collectAsState()
 
-    val loginViewModel: LoginViewModel = hiltViewModel()
-    val loginState by loginViewModel.loginState.collectAsState()
+    val screenState by sessionViewModel.sessionState.collectAsState()
 
     BackHandler(enabled = true) {}
 
-    when (loginState) {
-        is LoginState.LoggedOut -> {
+    when (screenState) {
+        is SessionState.LoggedOut -> {
             Scaffold(
                 topBar = {
                     AuthTopBar(
@@ -51,7 +49,7 @@ fun LoginScreen(
                 Box(modifier = Modifier.fillMaxSize().padding(contentPadding)) {
                     LoginForm(
                         navController = navController,
-                        onLoginClicked = { email, password -> loginViewModel.login(email, password) },
+                        onLoginClicked = { email, password -> sessionViewModel.login(email, password) },
                         onForgotPasswordClicked = { navController.navigate(NavRoute.RECOVERY.path) },
                         validator = {
                             inputValidator?.getValidatorFunction(it) ?: { false }
@@ -61,14 +59,11 @@ fun LoginScreen(
             }
         }
 
-        is LoginState.Loading -> {
+        is SessionState.Loading -> {
             LoadingScreen()
         }
 
-        is LoginState.Verify2FA -> {
-            val currentLoginState = loginState as LoginState.Verify2FA
-            val email = currentLoginState.email
-            val password = currentLoginState.password
+        is SessionState.TwoFactorRequired -> {
             Scaffold(
                 topBar = {
                     AuthTopBar(
@@ -79,9 +74,9 @@ fun LoginScreen(
                 Box(modifier = Modifier.fillMaxSize().padding(contentPadding)) {
                     Verify2FAForm(
                         onContinueClicked = { code ->
-                            loginViewModel.verify2FA(email, password, code)
+                            sessionViewModel.login(null, null, code)
                         },
-                        onCancelClicked = { loginViewModel.resetState() },
+                        onCancelClicked = { sessionViewModel.resetState() },
                         validator = {
                             inputValidator?.getValidatorFunction(it) ?: { false }
                         }
@@ -90,16 +85,14 @@ fun LoginScreen(
             }
         }
 
-        is LoginState.LoggedIn -> {
-            val currentLoginState = loginState as LoginState.LoggedIn
-            vaultKeyViewModel.setDecryptedKey(currentLoginState.decryptedKey)
+        is SessionState.LoggedIn -> {
             navController.navigate(NavRoute.VAULT.path)
         }
 
-        is LoginState.Error -> {
-            val errorMessage = (loginState as LoginState.Error).info.message
+        is SessionState.Error -> {
+            val errorMessage = (screenState as SessionState.Error).info.message
             ErrorDialog(
-                onConfirm = { loginViewModel.resetState() },
+                onConfirm = { sessionViewModel.resetState() },
                 title = "Login Error",
                 message = errorMessage
             )

@@ -15,9 +15,6 @@ import dagger.hilt.android.AndroidEntryPoint
 
 /*
     TODO:
-        - Security concern - do not keep the credentials/keys in screen state objects
-            - Move the logout logic to the vault key view model
-            - Rename the vault key view model to something more appropriate (e.g. SessionViewModel)
         - Add setting for autofill
         - Add option to remember email
         - Integrate VPN connection (optional)

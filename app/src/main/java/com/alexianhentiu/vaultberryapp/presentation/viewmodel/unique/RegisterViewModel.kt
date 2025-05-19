@@ -7,7 +7,7 @@ import com.alexianhentiu.vaultberryapp.domain.model.entity.AccountInfo
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.auth.RegisterUseCase
 import com.alexianhentiu.vaultberryapp.domain.utils.UseCaseResult
 import com.alexianhentiu.vaultberryapp.presentation.utils.errors.ErrorInfo
-import com.alexianhentiu.vaultberryapp.presentation.utils.state.RegisterState
+import com.alexianhentiu.vaultberryapp.presentation.utils.state.RegisterScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,8 +19,8 @@ class RegisterViewModel @Inject constructor(
     private val registerUseCase: RegisterUseCase
 ) : ViewModel() {
 
-    private val _registerState = MutableStateFlow<RegisterState>(RegisterState.Idle)
-    val registerState: StateFlow<RegisterState> = _registerState
+    private val _registerScreenState = MutableStateFlow<RegisterScreenState>(RegisterScreenState.Idle)
+    val registerScreenState: StateFlow<RegisterScreenState> = _registerScreenState
 
     fun register(email: String, password: String, firstName: String?, lastName: String?) {
         val accountInfo = AccountInfo(
@@ -29,14 +29,14 @@ class RegisterViewModel @Inject constructor(
             lastName = lastName
         )
         viewModelScope.launch {
-            _registerState.value = RegisterState.Loading
+            _registerScreenState.value = RegisterScreenState.Loading
             when (val result = registerUseCase(accountInfo, password)) {
                 is UseCaseResult.Success -> {
-                    _registerState.value = RegisterState.Success(result.data)
+                    _registerScreenState.value = RegisterScreenState.Success(result.data)
                 }
 
                 is UseCaseResult.Error -> {
-                    _registerState.value = RegisterState.Error(
+                    _registerScreenState.value = RegisterScreenState.Error(
                         ErrorInfo(
                             type = result.type,
                             source = result.source,
@@ -50,6 +50,6 @@ class RegisterViewModel @Inject constructor(
     }
 
     fun resetState() {
-        _registerState.value = RegisterState.Idle
+        _registerScreenState.value = RegisterScreenState.Idle
     }
 }

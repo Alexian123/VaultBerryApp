@@ -5,16 +5,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alexianhentiu.vaultberryapp.domain.model.entity.DecryptedVaultEntry
 import com.alexianhentiu.vaultberryapp.domain.model.entity.VaultEntryPreview
-import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.auth.LogoutUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.vault.AddEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.vault.GetAllVaultEntryPreviewsUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.vault.UpdateEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.vault.DeleteEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.vault.GetDecryptedVaultEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.utils.UseCaseResult
-import com.alexianhentiu.vaultberryapp.domain.utils.enums.ErrorType
 import com.alexianhentiu.vaultberryapp.presentation.utils.errors.ErrorInfo
-import com.alexianhentiu.vaultberryapp.presentation.utils.state.VaultState
+import com.alexianhentiu.vaultberryapp.presentation.utils.state.VaultScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -24,7 +22,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class VaultViewModel @Inject constructor(
-    private val logoutUseCase: LogoutUseCase,
     private val getAllVaultEntryPreviewsUseCase: GetAllVaultEntryPreviewsUseCase,
     private val getDecryptedVaultEntryUseCase: GetDecryptedVaultEntryUseCase,
     private val addEntryUseCase: AddEntryUseCase,
@@ -32,8 +29,8 @@ class VaultViewModel @Inject constructor(
     private val updateEntryUseCase: UpdateEntryUseCase
 ): ViewModel() {
 
-    private val _vaultState = MutableStateFlow<VaultState>(VaultState.Locked)
-    val vaultState: StateFlow<VaultState> = _vaultState
+    private val _vaultScreenState = MutableStateFlow<VaultScreenState>(VaultScreenState.Locked)
+    val vaultScreenState: StateFlow<VaultScreenState> = _vaultScreenState
 
     private val _allPreviews = MutableStateFlow<List<VaultEntryPreview>>(emptyList())
     private val _filteredPreviews = MutableStateFlow<List<VaultEntryPreview>>(emptyList())
@@ -58,7 +55,7 @@ class VaultViewModel @Inject constructor(
                 }
 
                 is UseCaseResult.Error -> {
-                    _vaultState.value = VaultState.Error(
+                    _vaultScreenState.value = VaultScreenState.Error(
                         ErrorInfo(
                             type = result.type,
                             source = result.source,
@@ -69,28 +66,6 @@ class VaultViewModel @Inject constructor(
                 }
             }
             _isRefreshing.value = false
-        }
-    }
-
-    fun logout() {
-        viewModelScope.launch {
-            _vaultState.value = VaultState.Loading
-            when (val result = logoutUseCase()) {
-                is UseCaseResult.Success -> {
-                    resetPreviews()
-                }
-
-                is UseCaseResult.Error -> {
-                    _vaultState.value = VaultState.Error(
-                        ErrorInfo(
-                            type = result.type,
-                            source = result.source,
-                            message = result.message
-                        )
-                    )
-                    Log.e(result.source, result.message)
-                }
-            }
         }
     }
 
@@ -107,21 +82,18 @@ class VaultViewModel @Inject constructor(
         }
     }
 
-    fun fetchPreviews(decryptedKey: ByteArray?) {
+    fun fetchPreviews() {
         viewModelScope.launch {
-            _vaultState.value = VaultState.Loading
-            if (checkIfVaultKeyIsNull(decryptedKey)) {
-                return@launch
-            }
+            _vaultScreenState.value = VaultScreenState.Loading
             when (val result = getAllVaultEntryPreviewsUseCase()) {
                 is UseCaseResult.Success -> {
-                    _vaultState.value = VaultState.Unlocked
+                    _vaultScreenState.value = VaultScreenState.Unlocked
                     _allPreviews.value = result.data
                     resetShownEntries()
                 }
 
                 is UseCaseResult.Error -> {
-                    _vaultState.value = VaultState.Error(
+                    _vaultScreenState.value = VaultScreenState.Error(
                         ErrorInfo(
                             type = result.type,
                             source = result.source,
@@ -134,17 +106,14 @@ class VaultViewModel @Inject constructor(
         }
     }
 
-    fun fetchEntryDetails(id: Long, decryptedKey: ByteArray?) {
+    fun fetchEntryDetails(id: Long, decryptedKey: ByteArray) {
         viewModelScope.launch {
-            if (checkIfVaultKeyIsNull(decryptedKey)) {
-                return@launch
-            }
-            when (val result = getDecryptedVaultEntryUseCase(id, decryptedKey!!)) {
+            when (val result = getDecryptedVaultEntryUseCase(id, decryptedKey)) {
                 is UseCaseResult.Success -> {
                     _expandedEntriesMap.update { it + (id to result.data) }
                 }
                 is UseCaseResult.Error -> {
-                    _vaultState.value = VaultState.Error(
+                    _vaultScreenState.value = VaultScreenState.Error(
                         ErrorInfo(
                             type = result.type,
                             source = result.source,
@@ -159,21 +128,18 @@ class VaultViewModel @Inject constructor(
 
     fun clearEntryDetails(id: Long) {
         viewModelScope.launch {
-            _vaultState.value = VaultState.Loading
+            _vaultScreenState.value = VaultScreenState.Loading
             _expandedEntriesMap.update { it + (id to null) }
-            _vaultState.value = VaultState.Unlocked
+            _vaultScreenState.value = VaultScreenState.Unlocked
         }
     }
 
-    fun addEntry(decryptedVaultEntry: DecryptedVaultEntry, decryptedKey: ByteArray?) {
+    fun addEntry(decryptedVaultEntry: DecryptedVaultEntry, decryptedKey: ByteArray) {
         viewModelScope.launch {
-            _vaultState.value = VaultState.Loading
-            if (checkIfVaultKeyIsNull(decryptedKey)) {
-                return@launch
-            }
-            when (val result = addEntryUseCase(decryptedVaultEntry, decryptedKey!!)) {
+            _vaultScreenState.value = VaultScreenState.Loading
+            when (val result = addEntryUseCase(decryptedVaultEntry, decryptedKey)) {
                 is UseCaseResult.Success -> {
-                    _vaultState.value = VaultState.Unlocked
+                    _vaultScreenState.value = VaultScreenState.Unlocked
                     _allPreviews.update { currentList ->
                         currentList + result.data
                     }
@@ -181,7 +147,7 @@ class VaultViewModel @Inject constructor(
                 }
 
                 is UseCaseResult.Error -> {
-                    _vaultState.value = VaultState.Error(
+                    _vaultScreenState.value = VaultScreenState.Error(
                         ErrorInfo(
                             type = result.type,
                             source = result.source,
@@ -196,10 +162,10 @@ class VaultViewModel @Inject constructor(
 
     fun deleteEntry(id: Long) {
         viewModelScope.launch {
-            _vaultState.value = VaultState.Loading
+            _vaultScreenState.value = VaultScreenState.Loading
             when (val result = deleteEntryUseCase(id)) {
                 is UseCaseResult.Success -> {
-                    _vaultState.value = VaultState.Unlocked
+                    _vaultScreenState.value = VaultScreenState.Unlocked
                     _allPreviews.update { currentList ->
                         currentList.filter { it.id != id }
                     }
@@ -207,7 +173,7 @@ class VaultViewModel @Inject constructor(
                 }
 
                 is UseCaseResult.Error -> {
-                    _vaultState.value = VaultState.Error(
+                    _vaultScreenState.value = VaultScreenState.Error(
                         ErrorInfo(
                             type = result.type,
                             source = result.source,
@@ -220,15 +186,12 @@ class VaultViewModel @Inject constructor(
         }
     }
 
-    fun updateEntry(id: Long, decryptedVaultEntry: DecryptedVaultEntry, decryptedKey: ByteArray?) {
+    fun updateEntry(id: Long, decryptedVaultEntry: DecryptedVaultEntry, decryptedKey: ByteArray) {
         viewModelScope.launch {
-            _vaultState.value = VaultState.Loading
-            if (checkIfVaultKeyIsNull(decryptedKey)) {
-                return@launch
-            }
-            when (val result = updateEntryUseCase(id, decryptedVaultEntry, decryptedKey!!)) {
+            _vaultScreenState.value = VaultScreenState.Loading
+            when (val result = updateEntryUseCase(id, decryptedVaultEntry, decryptedKey)) {
                 is UseCaseResult.Success -> {
-                    _vaultState.value = VaultState.Unlocked
+                    _vaultScreenState.value = VaultScreenState.Unlocked
                     _allPreviews.update { currentList ->
                         currentList.map {
                             if (it.id == id)
@@ -240,7 +203,7 @@ class VaultViewModel @Inject constructor(
                 }
 
                 is UseCaseResult.Error -> {
-                    _vaultState.value = VaultState.Error(
+                    _vaultScreenState.value = VaultScreenState.Error(
                         ErrorInfo(
                             type = result.type,
                             source = result.source,
@@ -254,28 +217,20 @@ class VaultViewModel @Inject constructor(
     }
 
     fun resetState() {
-        resetPreviews()
-        _vaultState.value = VaultState.Locked
+        clearData()
+        _vaultScreenState.value = VaultScreenState.Locked
     }
 
-    private fun resetPreviews() {
+    @Override
+    override fun onCleared() {
+        super.onCleared()
+        clearData()
+    }
+
+    fun clearData() {
         _allPreviews.value = emptyList()
         _filteredPreviews.value = emptyList()
         _expandedEntriesMap.value = emptyMap()
-    }
-
-    private fun checkIfVaultKeyIsNull(decryptedKey: ByteArray?): Boolean {
-        if (decryptedKey == null) {
-            Log.e("VaultViewModel", "Nonexistent vault key")
-            _vaultState.value = VaultState.Error(
-                ErrorInfo(
-                    type = ErrorType.INTERNAL,
-                    source = "VaultViewModel",
-                    message = "Nonexistent vault key"
-                )
-            )
-        }
-        return decryptedKey == null
     }
 
     private fun resetShownEntries() {

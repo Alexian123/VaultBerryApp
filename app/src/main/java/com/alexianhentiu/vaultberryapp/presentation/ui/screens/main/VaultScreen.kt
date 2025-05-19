@@ -38,9 +38,9 @@ import com.alexianhentiu.vaultberryapp.presentation.ui.components.misc.VaultEntr
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ErrorDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc.LoadingScreen
 import com.alexianhentiu.vaultberryapp.presentation.utils.enums.NavRoute
-import com.alexianhentiu.vaultberryapp.presentation.utils.state.VaultState
+import com.alexianhentiu.vaultberryapp.presentation.utils.state.VaultScreenState
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.UtilityViewModel
-import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.VaultKeyViewModel
+import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.SessionViewModel
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.unique.VaultViewModel
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -49,16 +49,16 @@ fun VaultScreen(
     navController: NavHostController
 ) {
     val activity = LocalActivity.current as ComponentActivity
-    val vaultKeyViewModel: VaultKeyViewModel = hiltViewModel(activity)
+    val sessionViewModel: SessionViewModel = hiltViewModel(activity)
     val utilityViewModel: UtilityViewModel = hiltViewModel(activity)
 
     val inputValidator by utilityViewModel.inputValidator.collectAsState()
 
     val vaultViewModel: VaultViewModel = hiltViewModel()
 
-    val decryptedKey = vaultKeyViewModel.decryptedKey
+    val decryptedKey = sessionViewModel.decryptedKey.collectAsState()
 
-    val vaultState by vaultViewModel.vaultState.collectAsState()
+    val screenState by vaultViewModel.vaultScreenState.collectAsState()
     val previews by vaultViewModel.filteredPreviews.collectAsState()
     val expandedEntriesMap by vaultViewModel.expandedEntriesMap.collectAsState()
 
@@ -75,16 +75,16 @@ fun VaultScreen(
         showLogoutDialog = true
     }
 
-    when (vaultState) {
-        is VaultState.Loading -> {
+    when (screenState) {
+        is VaultScreenState.Loading -> {
             LoadingScreen()
         }
 
-        is VaultState.Locked -> {
-            vaultViewModel.fetchPreviews(decryptedKey)
+        is VaultScreenState.Locked -> {
+            vaultViewModel.fetchPreviews()
         }
 
-        is VaultState.Unlocked -> {
+        is VaultScreenState.Unlocked -> {
             val pullRefreshState = rememberPullRefreshState(
                 refreshing = isRefreshing,
                 onRefresh = { vaultViewModel.refreshVaultEntries() }
@@ -125,7 +125,7 @@ fun VaultScreen(
                                     if (expandedEntriesMap[id] != null) {
                                         vaultViewModel.clearEntryDetails(id)
                                     } else {
-                                        vaultViewModel.fetchEntryDetails(id, decryptedKey)
+                                        vaultViewModel.fetchEntryDetails(id, decryptedKey.value)
                                     }
                                 },
                                 onDelete = { id ->
@@ -178,7 +178,7 @@ fun VaultScreen(
                                 },
                                 onSubmit = {
                                     if (entryToModifyId != -1L) {
-                                        vaultViewModel.updateEntry(entryToModifyId, it, decryptedKey)
+                                        vaultViewModel.updateEntry(entryToModifyId, it, decryptedKey.value)
                                         entryToModifyId = -1L
                                         showEditEntryDialog = false
                                     }
@@ -196,8 +196,8 @@ fun VaultScreen(
                                 onDismissRequest = { showLogoutDialog = false },
                                 onSubmit = {
                                     if (it) {
-                                        vaultViewModel.logout()
-                                        vaultKeyViewModel.clearDecryptedKey()
+                                        sessionViewModel.logout()
+                                        vaultViewModel.clearData()
                                         navController.navigate(NavRoute.LOGIN.path)
                                     }
                                 }
@@ -208,7 +208,7 @@ fun VaultScreen(
                                 formTitle = stringResource(R.string.add_entry_form_title),
                                 onDismissRequest = { showAddEntryDialog = false },
                                 onSubmit = {
-                                    vaultViewModel.addEntry(it, decryptedKey)
+                                    vaultViewModel.addEntry(it, decryptedKey.value)
                                     showAddEntryDialog = false
                                 },
                                 validator = {
@@ -222,8 +222,8 @@ fun VaultScreen(
             }
         }
 
-        is VaultState.Error ->  {
-            val errorMessage = (vaultState as VaultState.Error).info.message
+        is VaultScreenState.Error ->  {
+            val errorMessage = (screenState as VaultScreenState.Error).info.message
             ErrorDialog(
                 onConfirm = { vaultViewModel.resetState() },
                 title = "Vault Error",

@@ -11,10 +11,9 @@ import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.account.Disable2
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.account.Get2FAStatusUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.account.GetAccountInfoUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.account.Setup2FAUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.auth.LogoutUseCase
 import com.alexianhentiu.vaultberryapp.domain.utils.UseCaseResult
 import com.alexianhentiu.vaultberryapp.presentation.utils.errors.ErrorInfo
-import com.alexianhentiu.vaultberryapp.presentation.utils.state.AccountState
+import com.alexianhentiu.vaultberryapp.presentation.utils.state.AccountScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -29,29 +28,38 @@ class AccountViewModel @Inject constructor(
     private val changeAccountInfoUseCase: ChangeAccountInfoUseCase,
     private val changePasswordUseCase: ChangePasswordUseCase,
     private val setup2FAUseCase: Setup2FAUseCase,
-    private val disable2FAUseCase: Disable2FAUseCase,
-    private val logoutUseCase: LogoutUseCase
+    private val disable2FAUseCase: Disable2FAUseCase
 ) : ViewModel() {
 
-    private val _accountState = MutableStateFlow<AccountState>(AccountState.Init)
-    val accountState: StateFlow<AccountState> = _accountState
+    private val _accountScreenState = MutableStateFlow<AccountScreenState>(AccountScreenState.Init)
+    val accountScreenState: StateFlow<AccountScreenState> = _accountScreenState
+
+    private val _accountInfo = MutableStateFlow<AccountInfo>(AccountInfo("", null, null))
+    val accountInfo: StateFlow<AccountInfo> = _accountInfo
+
+    private val _is2FAEnabled = MutableStateFlow<Boolean>(false)
+    val is2FAEnabled: StateFlow<Boolean> = _is2FAEnabled
+
+    private val _secretKey = MutableStateFlow<String>("")
+    val secretKey: StateFlow<String> = _secretKey
+
+    private val _recoveryPassword = MutableStateFlow<String>("")
+    val recoveryPassword: StateFlow<String> = _recoveryPassword
 
     fun getAccountInfo() {
         viewModelScope.launch {
-            _accountState.value = AccountState.Loading
+            _accountScreenState.value = AccountScreenState.Loading
             when (val resultAccount = getAccountInfoUseCase()) {
                 is UseCaseResult.Success -> {
-
+                    _accountInfo.value = resultAccount.data
                     when (val result2FA = get2FAStatusUseCase()) {
                         is UseCaseResult.Success -> {
-                            _accountState.value = AccountState.Idle(
-                                resultAccount.data,
-                                result2FA.data
-                            )
+                            _is2FAEnabled.value = result2FA.data
+                            _accountScreenState.value = AccountScreenState.Idle
                         }
 
                         is UseCaseResult.Error -> {
-                            _accountState.value = AccountState.Error(
+                            _accountScreenState.value = AccountScreenState.Error(
                                 ErrorInfo(
                                     type = result2FA.type,
                                     source = result2FA.source,
@@ -64,7 +72,7 @@ class AccountViewModel @Inject constructor(
                 }
 
                 is UseCaseResult.Error -> {
-                    _accountState.value = AccountState.Error(
+                    _accountScreenState.value = AccountScreenState.Error(
                         ErrorInfo(
                             type = resultAccount.type,
                             source = resultAccount.source,
@@ -79,14 +87,15 @@ class AccountViewModel @Inject constructor(
 
     fun deleteAccount() {
         viewModelScope.launch {
-            _accountState.value = AccountState.Loading
+            _accountScreenState.value = AccountScreenState.Loading
             when (val result = deleteAccountUseCase()) {
                 is UseCaseResult.Success -> {
-                    _accountState.value = AccountState.LoggedOut
+                    _accountScreenState.value = AccountScreenState.Init
+                    clearData()
                 }
 
                 is UseCaseResult.Error -> {
-                    _accountState.value = AccountState.Error(
+                    _accountScreenState.value = AccountScreenState.Error(
                         ErrorInfo(
                             type = result.type,
                             source = result.source,
@@ -101,27 +110,22 @@ class AccountViewModel @Inject constructor(
 
     fun changeAccountInfo(email: String?, firstName: String?, lastName: String?) {
         viewModelScope.launch {
-            val savedState = (_accountState.value as AccountState.Idle)
-            _accountState.value = AccountState.Loading
+            _accountScreenState.value = AccountScreenState.Loading
 
-            val accountInfo = AccountInfo(
-                email = email ?: savedState.accountInfo.email,
+            val newAccountInfo =  _accountInfo.value.copy(
                 firstName = firstName,
-                lastName = lastName
+                lastName = lastName,
+                email = email ?: _accountInfo.value.email
             )
-            when (val result = changeAccountInfoUseCase(accountInfo)) {
+
+            when (val result = changeAccountInfoUseCase(newAccountInfo)) {
                 is UseCaseResult.Success -> {
-                    _accountState.value = AccountState.Idle(
-                        accountInfo.copy(
-                            firstName = accountInfo.firstName ?: savedState.accountInfo.firstName,
-                            lastName = accountInfo.lastName ?: savedState.accountInfo.lastName
-                        ),
-                        savedState.is2FAEnabled
-                    )
+                    _accountScreenState.value = AccountScreenState.Idle
+                    _accountInfo.value = newAccountInfo
                 }
 
                 is UseCaseResult.Error -> {
-                    _accountState.value = AccountState.Error(
+                    _accountScreenState.value = AccountScreenState.Error(
                         ErrorInfo(
                             type = result.type,
                             source = result.source,
@@ -136,14 +140,15 @@ class AccountViewModel @Inject constructor(
 
     fun changePassword(decryptedKey: ByteArray, newPassword: String, reEncrypt: Boolean) {
         viewModelScope.launch {
-            _accountState.value = AccountState.Loading
+            _accountScreenState.value = AccountScreenState.Loading
             when (val result = changePasswordUseCase(decryptedKey, newPassword, reEncrypt)) {
                 is UseCaseResult.Success -> {
-                    _accountState.value = AccountState.ChangedPassword(result.data)
+                    _accountScreenState.value = AccountScreenState.ChangedPassword
+                    _recoveryPassword.value = result.data
                 }
 
                 is UseCaseResult.Error -> {
-                    _accountState.value = AccountState.Error(
+                    _accountScreenState.value = AccountScreenState.Error(
                         ErrorInfo(
                             type = result.type,
                             source = result.source,
@@ -158,14 +163,15 @@ class AccountViewModel @Inject constructor(
 
     fun setup2FA() {
         viewModelScope.launch {
-            _accountState.value = AccountState.Loading
+            _accountScreenState.value = AccountScreenState.Loading
             when (val result = setup2FAUseCase()) {
                 is UseCaseResult.Success -> {
-                    _accountState.value = AccountState.Setup2FA(result.data)
+                    _accountScreenState.value = AccountScreenState.Setup2FA
+                    _secretKey.value = result.data
                 }
 
                 is UseCaseResult.Error -> {
-                    _accountState.value = AccountState.Error(
+                    _accountScreenState.value = AccountScreenState.Error(
                         ErrorInfo(
                             type = result.type,
                             source = result.source,
@@ -180,40 +186,15 @@ class AccountViewModel @Inject constructor(
 
     fun disable2FA() {
         viewModelScope.launch {
-            val savedState = (_accountState.value as AccountState.Idle)
-            _accountState.value = AccountState.Loading
+            _accountScreenState.value = AccountScreenState.Loading
             when (val result = disable2FAUseCase()) {
                 is UseCaseResult.Success -> {
-                    _accountState.value = AccountState.Idle(
-                        savedState.accountInfo,
-                        false
-                    )
+                    _accountScreenState.value = AccountScreenState.Idle
+                    _is2FAEnabled.value = false
                 }
 
                 is UseCaseResult.Error -> {
-                    _accountState.value = AccountState.Error(
-                        ErrorInfo(
-                            type = result.type,
-                            source = result.source,
-                            message = result.message
-                        )
-                    )
-                    Log.e(result.source, result.message)
-                }
-            }
-        }
-    }
-
-    fun logout() {
-        viewModelScope.launch {
-            _accountState.value = AccountState.Loading
-            when (val result = logoutUseCase()) {
-                is UseCaseResult.Success -> {
-                    _accountState.value = AccountState.LoggedOut
-                }
-
-                is UseCaseResult.Error -> {
-                    _accountState.value = AccountState.Error(
+                    _accountScreenState.value = AccountScreenState.Error(
                         ErrorInfo(
                             type = result.type,
                             source = result.source,
@@ -227,6 +208,19 @@ class AccountViewModel @Inject constructor(
     }
 
     fun resetState() {
-        _accountState.value = AccountState.Init
+        _accountScreenState.value = AccountScreenState.Init
+        clearData()
+    }
+
+    fun clearData() {
+        _accountInfo.value = AccountInfo("", null, null)
+        _is2FAEnabled.value = false
+        _secretKey.value = ""
+        _recoveryPassword.value = ""
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        clearData()
     }
 }

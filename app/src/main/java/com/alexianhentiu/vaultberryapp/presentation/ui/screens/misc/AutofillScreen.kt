@@ -30,6 +30,8 @@ import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.Validat
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.Verify2FAForm
 import com.alexianhentiu.vaultberryapp.presentation.utils.autofill.AutofillEntry
 import com.alexianhentiu.vaultberryapp.presentation.utils.state.AutofillState
+import com.alexianhentiu.vaultberryapp.presentation.utils.state.SessionState
+import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.SessionViewModel
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.UtilityViewModel
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.unique.AutofillViewModel
 
@@ -40,28 +42,25 @@ fun AutofillScreen(
 ) {
     val activity = LocalActivity.current as ComponentActivity
     val utilityViewModel: UtilityViewModel = hiltViewModel(activity)
+    val sessionViewModel: SessionViewModel = hiltViewModel(activity)
+
+    val screenState by sessionViewModel.sessionState.collectAsState()
 
     val inputValidator by utilityViewModel.inputValidator.collectAsState()
 
     val autofillViewModel: AutofillViewModel = hiltViewModel()
-    val autofillState by autofillViewModel.autofillState.collectAsState()
 
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var isEmailValid by remember { mutableStateOf(false) }
-    var isPasswordValid by remember { mutableStateOf(false) }
-
-    fun resetFields() {
-        email = ""
-        password = ""
-        isEmailValid = false
-        isPasswordValid = false
-    }
+    var finishedSearching by remember { mutableStateOf(false) }
 
     BackHandler(enabled = true) {}
 
-    when (autofillState) {
-        is AutofillState.Idle -> {
+    when (screenState) {
+        is SessionState.LoggedOut -> {
+            var email by remember { mutableStateOf("") }
+            var password by remember { mutableStateOf("") }
+            var isEmailValid by remember { mutableStateOf(false) }
+            var isPasswordValid by remember { mutableStateOf(false) }
+
             Scaffold { contentPadding ->
                 Box(modifier = Modifier.fillMaxSize().padding(contentPadding)) {
                     Column(
@@ -100,9 +99,9 @@ fun AutofillScreen(
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                         Button(
-                            onClick = { autofillViewModel.login(email, password) },
+                            onClick = { sessionViewModel.login(email, password) },
                             modifier = Modifier.fillMaxWidth(),
-                            enabled = isEmailValid && isPasswordValid
+                            enabled = isEmailValid && isPasswordValid && !finishedSearching
                         ) {
                             Text("Login")
                         }
@@ -111,20 +110,20 @@ fun AutofillScreen(
             }
         }
 
-        is AutofillState.Loading -> {
+        is SessionState.Loading -> {
             LoadingScreen()
         }
 
-        is AutofillState.Verify2FA -> {
+        is SessionState.TwoFactorRequired -> {
             Scaffold { contentPadding ->
                 Box(modifier = Modifier.fillMaxSize().padding(contentPadding)) {
                     Verify2FAForm(
                         onContinueClicked = { code ->
-                            autofillViewModel.login(email, password, code)
+                            sessionViewModel.login(null, null, code)
                         },
                         onCancelClicked = {
                             autofillViewModel.resetState()
-                            resetFields()
+                            sessionViewModel.resetState()
                         },
                         validator = {
                             inputValidator?.getValidatorFunction(it) ?: { false }
@@ -134,22 +133,45 @@ fun AutofillScreen(
             }
         }
 
-        is AutofillState.LoggedIn -> {
-            autofillViewModel.searchVaultEntries(keywords)
-            resetFields()
+        is SessionState.LoggedIn -> {
+            val autofillState by autofillViewModel.state.collectAsState()
+            when (autofillState) {
+                is AutofillState.Idle -> {
+                    val decryptedKey by sessionViewModel.decryptedKey.collectAsState()
+                    autofillViewModel.searchVaultEntries(keywords, decryptedKey)
+                }
+
+                is AutofillState.Loading -> {
+                    LoadingScreen()
+                }
+
+                is AutofillState.Success -> {
+                    val suggestions by autofillViewModel.autofillSuggestions.collectAsState()
+                    finishedSearching = true
+                    onSuccess(suggestions)
+                    autofillViewModel.resetState()
+                    sessionViewModel.logout()
+                }
+
+                is AutofillState.Error -> {
+                    val errorMessage = (autofillState as AutofillState.Error).info.message
+                    ErrorDialog(
+                        onConfirm = {
+                            autofillViewModel.resetState()
+                        },
+                        title = "Autofill Error",
+                        message = errorMessage
+                    )
+                }
+            }
         }
 
-        is AutofillState.Success -> {
-            val autofillSuggestions by autofillViewModel.autofillSuggestions.collectAsState()
-            onSuccess(autofillSuggestions)
-            autofillViewModel.logout()
-            resetFields()
-        }
-
-        is AutofillState.Error -> {
-            val errorMessage = (autofillState as AutofillState.Error).info.message
+        is SessionState.Error -> {
+            val errorMessage = (screenState as SessionState.Error).info.message
             ErrorDialog(
-                onConfirm = { autofillViewModel.resetState() },
+                onConfirm = {
+                    sessionViewModel.resetState()
+                },
                 title = "Autofill Error",
                 message = errorMessage
             )

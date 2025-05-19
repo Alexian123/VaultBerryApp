@@ -19,7 +19,7 @@ import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.Register
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc.LoadingScreen
 import com.alexianhentiu.vaultberryapp.presentation.utils.enums.NavRoute
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.unique.RegisterViewModel
-import com.alexianhentiu.vaultberryapp.presentation.utils.state.RegisterState
+import com.alexianhentiu.vaultberryapp.presentation.utils.state.RegisterScreenState
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.UtilityViewModel
 
 @Composable
@@ -32,10 +32,10 @@ fun RegisterScreen(
     val inputValidator by utilityViewModel.inputValidator.collectAsState()
 
     val registerViewModel: RegisterViewModel = hiltViewModel()
-    val registerState by registerViewModel.registerState.collectAsState()
+    val screenState by registerViewModel.registerScreenState.collectAsState()
 
-    when (registerState) {
-        is RegisterState.Idle -> {
+    when (screenState) {
+        is RegisterScreenState.Idle -> {
             Scaffold(
                 topBar = {
                     AuthTopBar(
@@ -57,12 +57,12 @@ fun RegisterScreen(
             }
         }
 
-        is RegisterState.Loading -> {
+        is RegisterScreenState.Loading -> {
             LoadingScreen()
         }
 
-        is RegisterState.Success -> {
-            val recoveryPassword = (registerState as RegisterState.Success).recoveryPassword
+        is RegisterScreenState.Success -> {
+            val recoveryPassword = (screenState as RegisterScreenState.Success).recoveryPassword
             InfoDialog(
                 title = "Account registration successful",
                 message = "Your new recovery password is: \"$recoveryPassword\". " +
@@ -76,8 +76,8 @@ fun RegisterScreen(
             )
         }
 
-        is RegisterState.Error -> {
-            val errorMessage = (registerState as RegisterState.Error).info.message
+        is RegisterScreenState.Error -> {
+            val errorMessage = (screenState as RegisterScreenState.Error).info.message
             ErrorDialog(
                 onConfirm = { registerViewModel.resetState() },
                 title = "Registration Error",
