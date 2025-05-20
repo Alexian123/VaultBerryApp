@@ -53,9 +53,13 @@ class AutofillViewModel @Inject constructor(
         }
     }
 
-    fun resetState() {
+    fun clearSuggestions() {
         _autofillSuggestions.value = emptyList()
+    }
+
+    fun resetState() {
         _state.value = AutofillState.Idle
+        clearSuggestions()
     }
 
     override fun onCleared() {

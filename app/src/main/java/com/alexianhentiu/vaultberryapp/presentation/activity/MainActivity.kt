@@ -15,6 +15,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 /*
     TODO:
+        - Password generator screen
         - Integrate VPN connection (optional)
         - Improve error handling
         - Add comments

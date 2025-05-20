@@ -163,10 +163,15 @@ fun AutofillScreen(
 
                 is AutofillState.Success -> {
                     val suggestions by autofillViewModel.autofillSuggestions.collectAsState()
-                    finishedSearching = true
-                    onSuccess(suggestions)
-                    autofillViewModel.resetState()
-                    sessionViewModel.logout()
+                    AnimatedSuccessScreen(
+                        displayDurationMillis = 1000,
+                        onTimeout = {
+                            finishedSearching = true
+                            onSuccess(suggestions)
+                            autofillViewModel.clearSuggestions()
+                            sessionViewModel.logout()
+                        }
+                    )
                 }
 
                 is AutofillState.Error -> {

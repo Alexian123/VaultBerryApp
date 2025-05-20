@@ -17,6 +17,7 @@ import com.alexianhentiu.vaultberryapp.presentation.ui.components.topBars.AuthTo
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ErrorDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.LoginForm
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.Verify2FAForm
+import com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc.AnimatedSuccessScreen
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc.LoadingScreen
 import com.alexianhentiu.vaultberryapp.presentation.utils.enums.NavRoute
 import com.alexianhentiu.vaultberryapp.presentation.utils.state.SessionState
@@ -101,7 +102,10 @@ fun LoginScreen(
         }
 
         is SessionState.LoggedIn -> {
-            navController.navigate(NavRoute.VAULT.path)
+            AnimatedSuccessScreen(
+                displayDurationMillis = 1000,
+                onTimeout = { navController.navigate(NavRoute.VAULT.path) }
+            )
         }
 
         is SessionState.Error -> {
