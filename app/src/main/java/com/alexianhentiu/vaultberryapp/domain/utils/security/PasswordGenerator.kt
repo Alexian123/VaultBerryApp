@@ -9,6 +9,7 @@ class PasswordGenerator {
         includeSpecialChars: Boolean,
         includeSpaces: Boolean
     ): String {
+        if (length <= 0) throw IllegalArgumentException("Length must be greater than 0")
         val charPool = mutableListOf<Char>()
         charPool.addAll(('a'..'z').toList())
         if (includeUppercase) charPool.addAll(('A'..'Z').toList())

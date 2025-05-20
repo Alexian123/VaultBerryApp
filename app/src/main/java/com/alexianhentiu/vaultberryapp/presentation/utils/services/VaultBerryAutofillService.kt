@@ -1,4 +1,4 @@
-package com.alexianhentiu.vaultberryapp.presentation.utils.autofill
+package com.alexianhentiu.vaultberryapp.presentation.utils.services
 
 import android.app.PendingIntent
 import android.app.assist.AssistStructure

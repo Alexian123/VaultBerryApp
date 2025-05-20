@@ -21,7 +21,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc.AutofillScreen
 import com.alexianhentiu.vaultberryapp.presentation.ui.theme.VaultBerryAppTheme
-import com.alexianhentiu.vaultberryapp.presentation.utils.autofill.AutofillEntry
+import com.alexianhentiu.vaultberryapp.presentation.utils.store.AutofillEntry
 import com.alexianhentiu.vaultberryapp.presentation.utils.enums.AppTheme
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.SettingsViewModel
 import dagger.hilt.android.AndroidEntryPoint

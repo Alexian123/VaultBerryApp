@@ -11,7 +11,7 @@ import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.vault.UpdateEntr
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.vault.DeleteEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.vault.GetDecryptedVaultEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.utils.UseCaseResult
-import com.alexianhentiu.vaultberryapp.presentation.utils.errors.ErrorInfo
+import com.alexianhentiu.vaultberryapp.presentation.utils.store.ErrorInfo
 import com.alexianhentiu.vaultberryapp.presentation.utils.state.VaultScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

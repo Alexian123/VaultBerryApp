@@ -5,6 +5,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import com.alexianhentiu.vaultberryapp.R
 
 data class MenuItem(
@@ -16,12 +17,14 @@ data class MenuItem(
 fun MainMenu(
     onDismissRequest: () -> Unit,
     expanded: Boolean,
-    onLogout: () -> Unit = {},
-    onAccountClick: () -> Unit = {},
-    onSettingsClick: () -> Unit = {}
+    onLogout: () -> Unit,
+    onAccountClick: () -> Unit,
+    onPasswordGeneratorClick: () -> Unit,
+    onSettingsClick: () -> Unit
 ) {
     val menuItems = listOf(
         MenuItem(stringResource(R.string.account_menu_item_text), onAccountClick),
+        MenuItem(stringResource(R.string.password_generator_menu_item_text), onPasswordGeneratorClick),
         MenuItem(stringResource(R.string.settings_menu_item_text), onSettingsClick),
         MenuItem(stringResource(R.string.logout_menu_item_text), onLogout)
     )
@@ -40,4 +43,17 @@ fun MainMenu(
             )
         }
     }
+}
+
+@Composable
+@Preview(showBackground = true)
+fun PreviewMainMenu() {
+    MainMenu(
+        onDismissRequest = { },
+        expanded = true,
+        onLogout = { },
+        onAccountClick = { },
+        onPasswordGeneratorClick = { },
+        onSettingsClick = { }
+    )
 }

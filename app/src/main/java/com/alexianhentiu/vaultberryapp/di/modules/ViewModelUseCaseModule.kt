@@ -27,6 +27,7 @@ import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.auth.RecoverySen
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.auth.RegisterUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.utility.CopyToClipboardUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.utility.EvalPasswordStrengthUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.utility.GeneratePasswordUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.utility.GetValidatorUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.utility.LoadSettingUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.utility.ObserveSettingUseCase
@@ -39,6 +40,7 @@ import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.vault.SearchVaul
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.vault.UpdateEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.utils.security.AuthGuardian
 import com.alexianhentiu.vaultberryapp.domain.utils.security.PasswordEvaluator
+import com.alexianhentiu.vaultberryapp.domain.utils.security.PasswordGenerator
 import com.alexianhentiu.vaultberryapp.domain.utils.settings.SettingsManager
 import com.alexianhentiu.vaultberryapp.domain.utils.validation.InputValidator
 import dagger.Module
@@ -49,6 +51,11 @@ import dagger.hilt.android.components.ViewModelComponent
 @Module
 @InstallIn(ViewModelComponent::class)
 object ViewModelUseCaseModule {
+
+    @Provides
+    fun provideGeneratePasswordUseCase(
+        passwordGenerator: PasswordGenerator
+    ): GeneratePasswordUseCase = GeneratePasswordUseCase(passwordGenerator)
 
     @Provides
     fun provideSaveSettingUseCase(

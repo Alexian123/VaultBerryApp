@@ -1,4 +1,4 @@
-package com.alexianhentiu.vaultberryapp.presentation.utils.autofill
+package com.alexianhentiu.vaultberryapp.presentation.utils.store
 
 data class AutofillEntry(
     val username: String,

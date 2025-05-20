@@ -25,7 +25,9 @@ import com.alexianhentiu.vaultberryapp.presentation.utils.enums.TextFieldType
 @Composable
 fun PasswordField(
     modifier: Modifier = Modifier,
-    onPasswordChange: (String, Boolean) -> Unit,
+    onPasswordChange: (String, Boolean) -> Unit = { _, _ -> },
+    initiallyVisible: Boolean = false,
+    showToggleVisibilityButton: Boolean = true,
     initialText: String = "",
     isValid: (String) -> Boolean = { true },
     showCopyToClipboardButton: Boolean = false,
@@ -37,9 +39,9 @@ fun PasswordField(
     showStrengthIndicator: Boolean = false,
     evaluateStrength: (String) -> PasswordStrength = { PasswordStrength.NONE }
 ) {
-    var password by remember { mutableStateOf(initialText) }
-    var isVisible by remember { mutableStateOf(false) }
-    var passwordStrength by remember {
+    var password by remember(initialText) { mutableStateOf(initialText) }
+    var isVisible by remember { mutableStateOf(initiallyVisible) }
+    var passwordStrength by remember(password) {
         mutableStateOf(evaluateStrength(initialText))
     }
 
@@ -62,7 +64,9 @@ fun PasswordField(
         Row(
             modifier = Modifier.align(Alignment.CenterEnd)
         ) {
-            ToggleVisibilityButton(onVisibilityChanged = { isVisible = it })
+            if (showToggleVisibilityButton) {
+                ToggleVisibilityButton(onVisibilityChanged = { isVisible = it })
+            }
             if (showCopyToClipboardButton) {
                 CopyToClipboardButton(
                     onClick = {
@@ -87,7 +91,6 @@ fun PasswordField(
 @Composable
 fun PasswordFieldPreview() {
     PasswordField(
-        onPasswordChange = { _, _ -> },
         showStrengthIndicator = true,
         textFieldType = TextFieldType.OUTLINED
     )

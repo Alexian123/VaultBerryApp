@@ -11,7 +11,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun DebouncedBackButton(navController: NavController, enabled: Boolean = true, delayMs: Long = 200) {
+fun DebouncedBackButton(navController: NavController, enabled: Boolean = true, delayMs: Long = 1000) {
     val coroutineScope = rememberCoroutineScope()
     var isEnabledInternal by remember { mutableStateOf(enabled) }
 

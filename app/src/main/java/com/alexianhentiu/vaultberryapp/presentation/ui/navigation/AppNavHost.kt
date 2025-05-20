@@ -6,6 +6,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.main.AccountScreen
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.main.LoginScreen
+import com.alexianhentiu.vaultberryapp.presentation.ui.screens.main.PasswordGeneratorScreen
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.main.RecoveryScreen
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.main.RegisterScreen
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.main.SettingsScreen
@@ -31,6 +32,9 @@ fun AppNavHost() {
         }
         composable(NavRoute.ACCOUNT.path) {
             AccountScreen(navController)
+        }
+        composable(NavRoute.PASSWORD_GENERATOR.path) {
+            PasswordGeneratorScreen(navController)
         }
         composable(NavRoute.SETTINGS.path) {
             SettingsScreen(navController)

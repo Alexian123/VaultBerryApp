@@ -7,7 +7,7 @@ import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.account.ChangePa
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.auth.RecoverySendUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.auth.RecoveryLoginUseCase
 import com.alexianhentiu.vaultberryapp.domain.utils.UseCaseResult
-import com.alexianhentiu.vaultberryapp.presentation.utils.errors.ErrorInfo
+import com.alexianhentiu.vaultberryapp.presentation.utils.store.ErrorInfo
 import com.alexianhentiu.vaultberryapp.presentation.utils.state.RecoveryScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

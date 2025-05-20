@@ -96,6 +96,9 @@ fun VaultScreen(
                         onSearch = { vaultViewModel.searchPreviewsByTitle(it) },
                         onLogout = { showLogoutDialog = true },
                         onAccountClick = { navController.navigate(NavRoute.ACCOUNT.path) },
+                        onPasswordGeneratorClick = {
+                            navController.navigate(NavRoute.PASSWORD_GENERATOR.path)
+                        },
                         onSettingsClick = { navController.navigate(NavRoute.SETTINGS.path) }
                     )
                 },

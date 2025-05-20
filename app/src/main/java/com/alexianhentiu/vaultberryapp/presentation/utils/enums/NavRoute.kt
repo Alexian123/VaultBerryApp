@@ -6,5 +6,6 @@ enum class NavRoute(val path: String) {
     RECOVERY("recovery"),
     VAULT("vault"),
     ACCOUNT("account"),
+    PASSWORD_GENERATOR("password_generator"),
     SETTINGS("settings")
 }
