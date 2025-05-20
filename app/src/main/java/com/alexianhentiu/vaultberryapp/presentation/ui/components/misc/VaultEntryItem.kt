@@ -47,6 +47,7 @@ fun VaultEntryItem(
     onDelete: (Long) -> Unit,
     onEdit: (Long) -> Unit,
     evaluatePasswordStrength: (String) -> PasswordStrength = { PasswordStrength.NONE },
+    onCopyClicked: (String) -> Unit
 ) {
     var title by remember(preview) { mutableStateOf(preview.title) }
     var url by remember(decryptedEntry) { mutableStateOf(decryptedEntry?.url ?: "") }
@@ -147,14 +148,16 @@ fun VaultEntryItem(
                             modifier = Modifier.fillMaxWidth(),
                             label = "URL",
                             initialText = url,
-                            showCopyToClipboardButton = true
+                            showCopyToClipboardButton = true,
+                            onCopyClicked = onCopyClicked
                         )
                         ValidatedTextField(
                             readOnly = true,
                             modifier = Modifier.fillMaxWidth(),
                             label = "Username",
                             initialText = username,
-                            showCopyToClipboardButton = true
+                            showCopyToClipboardButton = true,
+                            onCopyClicked = onCopyClicked
                         )
                         PasswordField(
                             readOnly = true,
@@ -162,15 +165,17 @@ fun VaultEntryItem(
                             modifier = Modifier.fillMaxWidth(),
                             initialText = password,
                             showCopyToClipboardButton = true,
+                            onCopyClicked = onCopyClicked,
                             evaluateStrength = evaluatePasswordStrength,
-                            showStrengthIndicator = true
+                            showStrengthIndicator = true,
                         )
                         ValidatedTextField(
                             readOnly = true,
                             modifier = Modifier.fillMaxWidth(),
                             label = "Notes",
                             initialText = notes,
-                            showCopyToClipboardButton = true
+                            showCopyToClipboardButton = true,
+                            onCopyClicked = onCopyClicked
                         )
 
                         Row(
@@ -211,7 +216,8 @@ fun VaultEntryPreview() {
         decryptedEntry = null,
         onItemClick = {},
         onDelete = {},
-        onEdit = {}
+        onEdit = {},
+        onCopyClicked = {}
     )
 }
 
@@ -229,6 +235,7 @@ fun ExpandedVaultEntryPreview() {
         ),
         onItemClick = {},
         onDelete = {},
-        onEdit = {}
+        onEdit = {},
+        onCopyClicked = {}
     )
 }

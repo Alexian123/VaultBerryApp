@@ -29,6 +29,7 @@ fun PasswordField(
     initialText: String = "",
     isValid: (String) -> Boolean = { true },
     showCopyToClipboardButton: Boolean = false,
+    onCopyClicked: (String) -> Unit = {},
     enabled: Boolean = true,
     readOnly: Boolean = false,
     label: String = "Password",
@@ -63,7 +64,11 @@ fun PasswordField(
         ) {
             ToggleVisibilityButton(onVisibilityChanged = { isVisible = it })
             if (showCopyToClipboardButton) {
-                CopyToClipboardButton(textToCopy = password)
+                CopyToClipboardButton(
+                    onClick = {
+                        onCopyClicked(password)
+                    }
+                )
             }
         }
         Column (

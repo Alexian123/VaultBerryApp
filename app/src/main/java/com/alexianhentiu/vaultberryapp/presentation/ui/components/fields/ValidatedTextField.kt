@@ -26,12 +26,13 @@ fun ValidatedTextField(
     isValid: (String) -> Boolean = { true },
     visualTransformation: VisualTransformation = VisualTransformation.None,
     showCopyToClipboardButton: Boolean = false,
+    onCopyClicked: (String) -> Unit = {},
     enabled: Boolean = true,
     readOnly: Boolean = false,
     textFieldType: TextFieldType = TextFieldType.REGULAR
 ) {
-    var input by remember { mutableStateOf(initialText) }
-    var isInputValid by remember { mutableStateOf(isValid(input)) }
+    var input by remember(initialText) { mutableStateOf(initialText) }
+    var isInputValid by remember(input) { mutableStateOf(isValid(input)) }
 
     Box(modifier = modifier) {
         when (textFieldType) {
@@ -69,8 +70,10 @@ fun ValidatedTextField(
 
         if (showCopyToClipboardButton) {
             CopyToClipboardButton(
-                textToCopy = input,
-                modifier = Modifier.align(Alignment.CenterEnd)
+                modifier = Modifier.align(Alignment.CenterEnd),
+                onClick = {
+                    onCopyClicked(input)
+                }
             )
         }
     }

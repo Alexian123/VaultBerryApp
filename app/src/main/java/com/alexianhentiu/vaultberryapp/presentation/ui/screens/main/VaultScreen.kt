@@ -136,7 +136,8 @@ fun VaultScreen(
                                     entryToModifyId = id
                                     showEditEntryDialog = true
                                 },
-                                evaluatePasswordStrength = utilityViewModel::evalPasswordStrength
+                                evaluatePasswordStrength = utilityViewModel::evalPasswordStrength,
+                                onCopyClicked = utilityViewModel::copyToClipboard
                             )
                         }
                     }

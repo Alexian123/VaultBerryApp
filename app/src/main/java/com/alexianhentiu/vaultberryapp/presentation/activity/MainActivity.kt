@@ -15,7 +15,6 @@ import dagger.hilt.android.AndroidEntryPoint
 
 /*
     TODO:
-        - Add option to remember email
         - Integrate VPN connection (optional)
         - Improve error handling
         - Add comments

@@ -22,6 +22,7 @@ import com.alexianhentiu.vaultberryapp.presentation.utils.enums.NavRoute
 import com.alexianhentiu.vaultberryapp.presentation.utils.state.SessionState
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.UtilityViewModel
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.SessionViewModel
+import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.SettingsViewModel
 
 @Composable
 fun LoginScreen(
@@ -30,6 +31,10 @@ fun LoginScreen(
     val activity = LocalActivity.current as ComponentActivity
     val sessionViewModel: SessionViewModel = hiltViewModel(activity)
     val utilityViewModel: UtilityViewModel = hiltViewModel(activity)
+    val settingsViewModel: SettingsViewModel = hiltViewModel(activity)
+
+    val savedEmail by settingsViewModel.savedEmail.collectAsState()
+    val rememberEmail by settingsViewModel.rememberEmail.collectAsState()
 
     val inputValidator by utilityViewModel.inputValidator.collectAsState()
 
@@ -49,7 +54,17 @@ fun LoginScreen(
                 Box(modifier = Modifier.fillMaxSize().padding(contentPadding)) {
                     LoginForm(
                         navController = navController,
-                        onLoginClicked = { email, password -> sessionViewModel.login(email, password) },
+                        savedEmail = savedEmail,
+                        rememberEmail = rememberEmail,
+                        onLoginClicked = { email, password, rememberEmailChecked ->
+                            if (rememberEmailChecked) {
+                                settingsViewModel.setSavedEmail(email)
+                                settingsViewModel.setRememberEmail(true)
+                            } else {
+                                settingsViewModel.setRememberEmail(false)
+                            }
+                            sessionViewModel.login(email, password)
+                        },
                         onForgotPasswordClicked = { navController.navigate(NavRoute.RECOVERY.path) },
                         validator = {
                             inputValidator?.getValidatorFunction(it) ?: { false }

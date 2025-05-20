@@ -60,6 +60,32 @@ class SettingsViewModel @Inject constructor(
             initialValue = AppSettings.DEBUG_MODE.defaultValue
         )
 
+    val savedEmail: StateFlow<String> =
+        when (val result = observeSettingUseCase(AppSettings.SAVED_EMAIL)) {
+            is UseCaseResult.Success -> result.data
+            is UseCaseResult.Error -> {
+                Log.e(result.source, result.message)
+                flowOf(AppSettings.SAVED_EMAIL.defaultValue)
+            }
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = AppSettings.SAVED_EMAIL.defaultValue
+        )
+
+    val rememberEmail: StateFlow<Boolean> =
+        when (val result = observeSettingUseCase(AppSettings.REMEMBER_EMAIL)) {
+            is UseCaseResult.Success -> result.data
+            is UseCaseResult.Error -> {
+                Log.e(result.source, result.message)
+                flowOf(AppSettings.REMEMBER_EMAIL.defaultValue)
+            }
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = AppSettings.REMEMBER_EMAIL.defaultValue
+        )
+
     fun setUseSystemTheme(useSystemTheme: Boolean) {
         viewModelScope.launch {
             when (val result = saveSettingUseCase(AppSettings.USE_SYSTEM_THEME, useSystemTheme)) {
@@ -92,6 +118,32 @@ class SettingsViewModel @Inject constructor(
             when (val result = saveSettingUseCase(AppSettings.DEBUG_MODE, debugMode)) {
                 is UseCaseResult.Success -> {
                     Log.d("SettingsViewModel", "setDebugMode: $debugMode")
+                }
+                is UseCaseResult.Error -> {
+                    Log.e(result.source, result.message)
+                }
+            }
+        }
+    }
+
+    fun setSavedEmail(email: String) {
+        viewModelScope.launch {
+            when (val result = saveSettingUseCase(AppSettings.SAVED_EMAIL, email)) {
+                is UseCaseResult.Success -> {
+                    Log.d("SettingsViewModel", "setSavedEmail: $email")
+                }
+                is UseCaseResult.Error -> {
+                    Log.e(result.source, result.message)
+                }
+            }
+        }
+    }
+
+    fun setRememberEmail(rememberEmail: Boolean) {
+        viewModelScope.launch {
+            when (val result = saveSettingUseCase(AppSettings.REMEMBER_EMAIL, rememberEmail)) {
+                is UseCaseResult.Success -> {
+                    Log.d("SettingsViewModel", "setRememberEmail: $rememberEmail")
                 }
                 is UseCaseResult.Error -> {
                     Log.e(result.source, result.message)

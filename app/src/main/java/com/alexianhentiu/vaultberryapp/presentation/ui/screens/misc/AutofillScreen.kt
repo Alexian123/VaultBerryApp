@@ -32,6 +32,7 @@ import com.alexianhentiu.vaultberryapp.presentation.utils.autofill.AutofillEntry
 import com.alexianhentiu.vaultberryapp.presentation.utils.state.AutofillState
 import com.alexianhentiu.vaultberryapp.presentation.utils.state.SessionState
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.SessionViewModel
+import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.SettingsViewModel
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.UtilityViewModel
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.unique.AutofillViewModel
 
@@ -43,6 +44,10 @@ fun AutofillScreen(
     val activity = LocalActivity.current as ComponentActivity
     val utilityViewModel: UtilityViewModel = hiltViewModel(activity)
     val sessionViewModel: SessionViewModel = hiltViewModel(activity)
+    val settingsViewModel: SettingsViewModel = hiltViewModel(activity)
+
+    val savedEmail by settingsViewModel.savedEmail.collectAsState()
+    val rememberEmail by settingsViewModel.rememberEmail.collectAsState()
 
     val screenState by sessionViewModel.sessionState.collectAsState()
 
@@ -56,9 +61,19 @@ fun AutofillScreen(
 
     when (screenState) {
         is SessionState.LoggedOut -> {
-            var email by remember { mutableStateOf("") }
+            var email by remember(savedEmail, rememberEmail) {
+                mutableStateOf(if (rememberEmail) savedEmail else "")
+            }
             var password by remember { mutableStateOf("") }
-            var isEmailValid by remember { mutableStateOf(false) }
+
+            var isEmailValid by remember(email) {
+                mutableStateOf(
+                    inputValidator?.getValidatorFunction(
+                        ValidatedFieldType.EMAIL
+                    )?.invoke(email) == true
+                )
+            }
+
             var isPasswordValid by remember { mutableStateOf(false) }
 
             Scaffold { contentPadding ->
@@ -71,6 +86,7 @@ fun AutofillScreen(
                     ) {
                         ValidatedTextField(
                             label = "Email",
+                            initialText = email,
                             onInputChange = { newEmail, valid ->
                                 email = newEmail
                                 isEmailValid = valid

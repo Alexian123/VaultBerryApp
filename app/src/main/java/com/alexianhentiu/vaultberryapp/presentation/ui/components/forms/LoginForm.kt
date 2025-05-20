@@ -2,12 +2,14 @@ package com.alexianhentiu.vaultberryapp.presentation.ui.components.forms
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -15,6 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -28,15 +31,29 @@ import com.alexianhentiu.vaultberryapp.presentation.utils.enums.NavRoute
 @Composable
 fun LoginForm(
     navController: NavHostController,
-    onLoginClicked: (String, String) -> Unit,
+    savedEmail: String = "",
+    rememberEmail: Boolean = false,
+    onLoginClicked: (String, String, Boolean) -> Unit,
     onForgotPasswordClicked: () -> Unit,
     validator: (ValidatedFieldType) -> (String) -> Boolean = { { true } }
 ) {
-    var email by remember { mutableStateOf("") }
+    var email by remember(rememberEmail, savedEmail) {
+        mutableStateOf(if (rememberEmail) savedEmail else "")
+    }
     var password by remember { mutableStateOf("") }
 
-    var isEmailValid by remember { mutableStateOf(false) }
-    var isPasswordValid by remember { mutableStateOf(false) }
+    var isEmailValid by remember(email) {
+        mutableStateOf(
+            validator(ValidatedFieldType.EMAIL)(email)
+        )
+    }
+    var isPasswordValid by remember {
+        mutableStateOf(
+            validator(ValidatedFieldType.PASSWORD)(password)
+        )
+    }
+
+    var rememberEmailChecked by remember(rememberEmail) { mutableStateOf(rememberEmail) }
 
     Column(
         verticalArrangement = Arrangement.Center,
@@ -46,6 +63,7 @@ fun LoginForm(
     ) {
         ValidatedTextField(
             label = "Email",
+            initialText = email,
             onInputChange = { newEmail, valid ->
                 email = newEmail
                 isEmailValid = valid
@@ -62,9 +80,20 @@ fun LoginForm(
             isValid = validator(ValidatedFieldType.PASSWORD),
             modifier = Modifier.fillMaxWidth()
         )
+        Spacer(modifier = Modifier.height(8.dp))
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Checkbox(
+                checked = rememberEmailChecked,
+                onCheckedChange = { rememberEmailChecked = it }
+            )
+            Text("Remember Email")
+        }
         Spacer(modifier = Modifier.height(16.dp))
         Button(
-            onClick = { onLoginClicked(email, password) },
+            onClick = { onLoginClicked(email, password, rememberEmailChecked) },
             modifier = Modifier.fillMaxWidth(),
             enabled = isEmailValid && isPasswordValid
         ) {
@@ -90,7 +119,7 @@ fun LoginForm(
 fun LoginFormPreview() {
     LoginForm(
         navController = NavHostController(LocalContext.current),
-        onLoginClicked = { _, _ -> },
+        onLoginClicked = { _, _, _ -> },
         onForgotPasswordClicked = {}
     )
 }
