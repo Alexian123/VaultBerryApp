@@ -40,6 +40,21 @@ class ChangePasswordUseCase(
         }
         val newKeyChain = (generateKeyChainResult as UseCaseResult.Success).data
 
+        // Update the password & keychain
+        val passwordChangeRequest = PasswordChangeRequest(
+            passwordPair = newPasswordPair,
+            keyChain = newKeyChain,
+            reEncrypt = reEncrypt
+        )
+        val changeResult = accountRepository.changePassword(passwordChangeRequest)
+        if (changeResult is APIResult.Error) {
+            return UseCaseResult.Error(
+                ErrorType.EXTERNAL,
+                changeResult.source,
+                changeResult.message
+            )
+        }
+
         // Re-encrypt vault if requested
         if (reEncrypt) {
             val decryptKeyResult = decryptKeyUseCase(
@@ -60,22 +75,6 @@ class ChangePasswordUseCase(
             Log.d("ChangePasswordUseCase", msg.message)
         }
 
-        val passwordChangeRequest = PasswordChangeRequest(
-            passwordPair = newPasswordPair,
-            keyChain = newKeyChain
-        )
-        return when (val changeResult = accountRepository.changePassword(passwordChangeRequest)) {
-            is APIResult.Success -> {
-                UseCaseResult.Success(newPasswordPair.recoveryPassword)
-            }
-
-            is APIResult.Error -> {
-                UseCaseResult.Error(
-                    ErrorType.EXTERNAL,
-                    changeResult.source,
-                    changeResult.message
-                )
-            }
-        }
+        return UseCaseResult.Success(newPasswordPair.recoveryPassword)
     }
 }

@@ -15,10 +15,13 @@ import dagger.hilt.android.AndroidEntryPoint
 
 /*
     TODO:
-        - Password generator screen
-        - Integrate VPN connection (optional)
         - Improve error handling
-        - Add comments
+            - Create log file for errors
+            - Display more information about the error
+            - Implement failsafe mechanisms
+        - Create string resources for all strings
+        - Integrate VPN connection (optional)
+        - Cleanup code & add comments
 */
 
 @AndroidEntryPoint

@@ -121,7 +121,8 @@ class ModelConverter {
     ): PasswordChangeRequestDTO {
         return PasswordChangeRequestDTO(
             passwordPair = passwordPairToDTO(passwordChangeRequest.passwordPair),
-            keyChain = keyChainToDTO(passwordChangeRequest.keyChain)
+            keyChain = keyChainToDTO(passwordChangeRequest.keyChain),
+            reEncrypt = passwordChangeRequest.reEncrypt
         )
     }
 
