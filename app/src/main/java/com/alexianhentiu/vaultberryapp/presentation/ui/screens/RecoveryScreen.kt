@@ -1,7 +1,5 @@
-package com.alexianhentiu.vaultberryapp.presentation.ui.screens.main
+package com.alexianhentiu.vaultberryapp.presentation.ui.screens
 
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -19,7 +17,7 @@ import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.ChangePa
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.OTPRequestForm
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.RecoveryLoginForm
 import com.alexianhentiu.vaultberryapp.presentation.utils.enums.TextFieldType
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc.LoadingScreen
+import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.animated.LoadingAnimationDialog
 import com.alexianhentiu.vaultberryapp.presentation.utils.enums.NavRoute
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.unique.RecoveryViewModel
 import com.alexianhentiu.vaultberryapp.presentation.utils.state.RecoveryScreenState
@@ -28,40 +26,39 @@ import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.UtilityView
 
 @Composable
 fun RecoveryScreen(
-    navController: NavHostController
+    navController: NavHostController,
+    sessionViewModel: SessionViewModel,
+    utilityViewModel: UtilityViewModel,
+    recoveryViewModel: RecoveryViewModel = hiltViewModel()
 ) {
-    val activity = LocalActivity.current as ComponentActivity
-    val utilityViewModel: UtilityViewModel = hiltViewModel(activity)
-    val sessionViewModel: SessionViewModel = hiltViewModel(activity)
-
     val inputValidator by utilityViewModel.inputValidator.collectAsState()
-
-    val recoveryViewModel: RecoveryViewModel = hiltViewModel()
     val screenState by recoveryViewModel.recoveryScreenState.collectAsState()
 
-    when (screenState) {
-        is RecoveryScreenState.Error -> {
-            val errorMessage = (screenState as RecoveryScreenState.Error).info.message
-            ErrorDialog(
-                onConfirm = { recoveryViewModel.resetState() },
-                title = "Recovery Error",
-                message = errorMessage
+    Scaffold(
+        topBar = {
+            AuthTopBar(
+                onSettingsClick = { navController.navigate(NavRoute.SETTINGS.path) }
             )
         }
+    ) { contentPadding ->
+        Box(modifier = Modifier.fillMaxSize().padding(contentPadding)) {
 
-        is RecoveryScreenState.Loading -> {
-            LoadingScreen()
-        }
-
-        is RecoveryScreenState.Idle -> {
-            Scaffold(
-                topBar = {
-                    AuthTopBar(
-                        onSettingsClick = { navController.navigate(NavRoute.SETTINGS.path) }
+            when (screenState) {
+                is RecoveryScreenState.Error -> {
+                    val errorMessage = (screenState as RecoveryScreenState.Error).info.message
+                    ErrorDialog(
+                        onConfirm = { recoveryViewModel.resetState() },
+                        title = "Recovery Error",
+                        message = errorMessage
                     )
                 }
-            ) { contentPadding ->
-                Box(modifier = Modifier.fillMaxSize().padding(contentPadding)) {
+
+                is RecoveryScreenState.Loading -> {
+                    LoadingAnimationDialog()
+                }
+
+                is RecoveryScreenState.Idle -> {
+
                     OTPRequestForm(
                         onContinueClicked = { email -> recoveryViewModel.requestOTP(email) },
                         onCancelClicked = { navController.navigate(NavRoute.LOGIN.path) },
@@ -70,12 +67,8 @@ fun RecoveryScreen(
                         }
                     )
                 }
-            }
-        }
 
-        is RecoveryScreenState.OTPRequested -> {
-            Scaffold { contentPadding ->
-                Box(modifier = Modifier.fillMaxSize().padding(contentPadding)) {
+                is RecoveryScreenState.OTPRequested -> {
                     RecoveryLoginForm(
                         onContinueClicked = { recoveryPassword, otp ->
                             recoveryViewModel.recoveryLogin(null, recoveryPassword, otp)
@@ -88,12 +81,8 @@ fun RecoveryScreen(
                         }
                     )
                 }
-            }
-        }
 
-        is RecoveryScreenState.LoggedIn -> {
-            Scaffold { contentPadding ->
-                Box(modifier = Modifier.fillMaxSize().padding(contentPadding)) {
+                is RecoveryScreenState.LoggedIn -> {
                     ChangePasswordForm(
                         onChangePassword = { newPassword, reEncrypt ->
                             recoveryViewModel.resetPassword(newPassword, reEncrypt)
@@ -104,22 +93,23 @@ fun RecoveryScreen(
                         textFieldType = TextFieldType.REGULAR
                     )
                 }
-            }
-        }
 
-        is RecoveryScreenState.PasswordReset -> {
-            val recoveryPassword = recoveryViewModel.tempRecoveryPassword.collectAsState()
-            InfoDialog(
-                title = "Password reset successfully",
-                message = "Your new recovery password is: \"${recoveryPassword.value}\". " +
-                        "It will be copied into the clipboard upon confirmation.",
-                onDismissRequest = {
-                    utilityViewModel.copyToClipboard(recoveryPassword.value)
-                    sessionViewModel.logout()
-                    recoveryViewModel.clearData()
-                    navController.navigate(NavRoute.LOGIN.path)
+                is RecoveryScreenState.PasswordReset -> {
+                    val recoveryPassword = recoveryViewModel.tempRecoveryPassword.collectAsState()
+                    InfoDialog(
+                        title = "Password reset successfully",
+                        message = "Your new recovery password is: \"${recoveryPassword.value}\". " +
+                                "Make sure to save it in a safe place." +
+                                "It will be copied into the clipboard upon confirmation.",
+                        onDismissRequest = {
+                            utilityViewModel.copyToClipboard(recoveryPassword.value)
+                            sessionViewModel.logout()
+                            recoveryViewModel.clearData()
+                            navController.navigate(NavRoute.LOGIN.path)
+                        }
+                    )
                 }
-            )
+            }
         }
     }
 }

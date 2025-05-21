@@ -1,8 +1,6 @@
-package com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc
+package com.alexianhentiu.vaultberryapp.presentation.ui.screens
 
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
-import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,6 +22,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.alexianhentiu.vaultberryapp.domain.utils.enums.ValidatedFieldType
+import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.animated.SuccessAnimationDialog
+import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.animated.LoadingAnimationDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ErrorDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.PasswordField
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.ValidatedTextField
@@ -38,14 +38,13 @@ import com.alexianhentiu.vaultberryapp.presentation.viewmodel.unique.AutofillVie
 
 @Composable
 fun AutofillScreen(
+    utilityViewModel: UtilityViewModel,
+    sessionViewModel: SessionViewModel,
+    settingsViewModel: SettingsViewModel,
+    autofillViewModel: AutofillViewModel = hiltViewModel(),
     keywords: List<String>,
     onSuccess: (List<AutofillEntry>) -> Unit,
 ) {
-    val activity = LocalActivity.current as ComponentActivity
-    val utilityViewModel: UtilityViewModel = hiltViewModel(activity)
-    val sessionViewModel: SessionViewModel = hiltViewModel(activity)
-    val settingsViewModel: SettingsViewModel = hiltViewModel(activity)
-
     val savedEmail by settingsViewModel.savedEmail.collectAsState()
     val rememberEmail by settingsViewModel.rememberEmail.collectAsState()
 
@@ -53,31 +52,29 @@ fun AutofillScreen(
 
     val inputValidator by utilityViewModel.inputValidator.collectAsState()
 
-    val autofillViewModel: AutofillViewModel = hiltViewModel()
-
     var finishedSearching by remember { mutableStateOf(false) }
 
     BackHandler(enabled = true) {}
 
-    when (screenState) {
-        is SessionState.LoggedOut -> {
-            var email by remember(savedEmail, rememberEmail) {
-                mutableStateOf(if (rememberEmail) savedEmail else "")
-            }
-            var password by remember { mutableStateOf("") }
+    Scaffold { contentPadding ->
+        Box(modifier = Modifier.fillMaxSize().padding(contentPadding)) {
 
-            var isEmailValid by remember(email) {
-                mutableStateOf(
-                    inputValidator?.getValidatorFunction(
-                        ValidatedFieldType.EMAIL
-                    )?.invoke(email) == true
-                )
-            }
+            when (screenState) {
+                is SessionState.LoggedOut -> {
+                    var email by remember(savedEmail, rememberEmail) {
+                        mutableStateOf(if (rememberEmail) savedEmail else "")
+                    }
+                    var password by remember { mutableStateOf("") }
 
-            var isPasswordValid by remember { mutableStateOf(false) }
+                    var isEmailValid by remember(email) {
+                        mutableStateOf(
+                            inputValidator?.getValidatorFunction(
+                                ValidatedFieldType.EMAIL
+                            )?.invoke(email) == true
+                        )
+                    }
 
-            Scaffold { contentPadding ->
-                Box(modifier = Modifier.fillMaxSize().padding(contentPadding)) {
+                    var isPasswordValid by remember { mutableStateOf(false) }
                     Column(
                         verticalArrangement = Arrangement.Center,
                         modifier = Modifier
@@ -123,16 +120,12 @@ fun AutofillScreen(
                         }
                     }
                 }
-            }
-        }
 
-        is SessionState.Loading -> {
-            LoadingScreen()
-        }
+                is SessionState.Loading -> {
+                    LoadingAnimationDialog()
+                }
 
-        is SessionState.TwoFactorRequired -> {
-            Scaffold { contentPadding ->
-                Box(modifier = Modifier.fillMaxSize().padding(contentPadding)) {
+                is SessionState.TwoFactorRequired -> {
                     Verify2FAForm(
                         onContinueClicked = { code ->
                             sessionViewModel.login(null, null, code)
@@ -146,56 +139,60 @@ fun AutofillScreen(
                         }
                     )
                 }
-            }
-        }
 
-        is SessionState.LoggedIn -> {
-            val autofillState by autofillViewModel.state.collectAsState()
-            when (autofillState) {
-                is AutofillState.Idle -> {
-                    val decryptedKey by sessionViewModel.decryptedKey.collectAsState()
-                    autofillViewModel.searchVaultEntries(keywords, decryptedKey)
-                }
-
-                is AutofillState.Loading -> {
-                    LoadingScreen()
-                }
-
-                is AutofillState.Success -> {
-                    val suggestions by autofillViewModel.autofillSuggestions.collectAsState()
-                    AnimatedSuccessScreen(
-                        displayDurationMillis = 1000,
-                        onTimeout = {
-                            finishedSearching = true
-                            onSuccess(suggestions)
-                            autofillViewModel.clearSuggestions()
-                            sessionViewModel.logout()
+                is SessionState.LoggedIn -> {
+                    val autofillState by autofillViewModel.state.collectAsState()
+                    when (autofillState) {
+                        is AutofillState.Idle -> {
+                            val decryptedKey by sessionViewModel.decryptedKey.collectAsState()
+                            autofillViewModel.searchVaultEntries(keywords, decryptedKey)
                         }
-                    )
+
+                        is AutofillState.Loading -> {
+                            LoadingAnimationDialog()
+                        }
+
+                        is AutofillState.Success -> {
+                            val suggestions by autofillViewModel.autofillSuggestions.collectAsState()
+                            var showAnimation by remember { mutableStateOf(false) }
+                            if (!showAnimation) {
+                                SuccessAnimationDialog(
+                                    displayDurationMillis = 1000,
+                                    onTimeout = {
+                                        showAnimation = true
+                                        finishedSearching = true
+                                        onSuccess(suggestions)
+                                        autofillViewModel.clearSuggestions()
+                                        sessionViewModel.logout()
+                                    }
+                                )
+                            }
+                        }
+
+                        is AutofillState.Error -> {
+                            val errorMessage = (autofillState as AutofillState.Error).info.message
+                            ErrorDialog(
+                                onConfirm = {
+                                    autofillViewModel.resetState()
+                                },
+                                title = "Autofill Error",
+                                message = errorMessage
+                            )
+                        }
+                    }
                 }
 
-                is AutofillState.Error -> {
-                    val errorMessage = (autofillState as AutofillState.Error).info.message
+                is SessionState.Error -> {
+                    val errorMessage = (screenState as SessionState.Error).info.message
                     ErrorDialog(
                         onConfirm = {
-                            autofillViewModel.resetState()
+                            sessionViewModel.resetState()
                         },
                         title = "Autofill Error",
                         message = errorMessage
                     )
                 }
             }
-        }
-
-        is SessionState.Error -> {
-            val errorMessage = (screenState as SessionState.Error).info.message
-            ErrorDialog(
-                onConfirm = {
-                    sessionViewModel.resetState()
-                },
-                title = "Autofill Error",
-                message = errorMessage
-            )
         }
     }
 }

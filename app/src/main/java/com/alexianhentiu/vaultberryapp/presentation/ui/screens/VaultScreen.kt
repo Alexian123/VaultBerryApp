@@ -1,8 +1,6 @@
-package com.alexianhentiu.vaultberryapp.presentation.ui.screens.main
+package com.alexianhentiu.vaultberryapp.presentation.ui.screens
 
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
-import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -36,7 +34,7 @@ import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.Confir
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.topBars.VaultTopBar
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.misc.VaultEntryItem
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ErrorDialog
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc.LoadingScreen
+import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.animated.LoadingAnimationDialog
 import com.alexianhentiu.vaultberryapp.presentation.utils.enums.NavRoute
 import com.alexianhentiu.vaultberryapp.presentation.utils.state.VaultScreenState
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.UtilityViewModel
@@ -46,15 +44,12 @@ import com.alexianhentiu.vaultberryapp.presentation.viewmodel.unique.VaultViewMo
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun VaultScreen(
-    navController: NavHostController
+    navController: NavHostController,
+    sessionViewModel: SessionViewModel,
+    utilityViewModel: UtilityViewModel,
+    vaultViewModel: VaultViewModel = hiltViewModel()
 ) {
-    val activity = LocalActivity.current as ComponentActivity
-    val sessionViewModel: SessionViewModel = hiltViewModel(activity)
-    val utilityViewModel: UtilityViewModel = hiltViewModel(activity)
-
     val inputValidator by utilityViewModel.inputValidator.collectAsState()
-
-    val vaultViewModel: VaultViewModel = hiltViewModel()
 
     val decryptedKey = sessionViewModel.decryptedKey.collectAsState()
 
@@ -75,50 +70,52 @@ fun VaultScreen(
         showLogoutDialog = true
     }
 
-    when (screenState) {
-        is VaultScreenState.Loading -> {
-            LoadingScreen()
-        }
+    val pullRefreshState = rememberPullRefreshState(
+        refreshing = isRefreshing,
+        onRefresh = { vaultViewModel.refreshVaultEntries() }
+    )
 
-        is VaultScreenState.Locked -> {
-            vaultViewModel.fetchPreviews()
-        }
-
-        is VaultScreenState.Unlocked -> {
-            val pullRefreshState = rememberPullRefreshState(
-                refreshing = isRefreshing,
-                onRefresh = { vaultViewModel.refreshVaultEntries() }
-            )
-
-            Scaffold(
-                topBar = {
-                    VaultTopBar(
-                        onSearch = { vaultViewModel.searchPreviewsByTitle(it) },
-                        onLogout = { showLogoutDialog = true },
-                        onAccountClick = { navController.navigate(NavRoute.ACCOUNT.path) },
-                        onPasswordGeneratorClick = {
-                            navController.navigate(NavRoute.PASSWORD_GENERATOR.path)
-                        },
-                        onSettingsClick = { navController.navigate(NavRoute.SETTINGS.path) }
-                    )
+    Scaffold(
+        topBar = {
+            VaultTopBar(
+                onSearch = { vaultViewModel.searchPreviewsByTitle(it) },
+                onLogout = { showLogoutDialog = true },
+                onAccountClick = { navController.navigate(NavRoute.ACCOUNT.path) },
+                onPasswordGeneratorClick = {
+                    navController.navigate(NavRoute.PASSWORD_GENERATOR.path)
                 },
-                floatingActionButton = {
-                    FloatingActionButton(
-                        onClick = { showAddEntryDialog = true },
-                        modifier = Modifier.padding(16.dp)
-                    ) {
-                        Icon(
-                            Icons.Filled.Add,
-                            stringResource(R.string.add_entry_action_content_description)
-                        )
-                    }
+                onSettingsClick = { navController.navigate(NavRoute.SETTINGS.path) }
+            )
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = { showAddEntryDialog = true },
+                modifier = Modifier.padding(16.dp)
+            ) {
+                Icon(
+                    Icons.Filled.Add,
+                    stringResource(R.string.add_entry_action_content_description)
+                )
+            }
+        }
+    ) { contentPadding ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(contentPadding)
+                .pullRefresh(pullRefreshState)
+        ) {
+
+            when (screenState) {
+                is VaultScreenState.Loading -> {
+                    LoadingAnimationDialog()
                 }
-            ) { contentPadding ->
-                Box(modifier = Modifier
-                    .fillMaxSize()
-                    .padding(contentPadding)
-                    .pullRefresh(pullRefreshState)
-                ) {
+
+                is VaultScreenState.Locked -> {
+                    vaultViewModel.fetchPreviews()
+                }
+
+                is VaultScreenState.Unlocked -> {
                     LazyColumn {
                         items(previews, key = { it.id }) { entryPreview ->
                             VaultEntryItem(
@@ -172,6 +169,7 @@ fun VaultScreen(
                                 }
                             )
                         }
+
                         showEditEntryDialog -> {
                             VaultEntryDialog(
                                 formTitle = stringResource(R.string.edit_entry_dialog_title),
@@ -182,7 +180,11 @@ fun VaultScreen(
                                 },
                                 onSubmit = {
                                     if (entryToModifyId != -1L) {
-                                        vaultViewModel.updateEntry(entryToModifyId, it, decryptedKey.value)
+                                        vaultViewModel.updateEntry(
+                                            entryToModifyId,
+                                            it,
+                                            decryptedKey.value
+                                        )
                                         entryToModifyId = -1L
                                         showEditEntryDialog = false
                                     }
@@ -193,6 +195,7 @@ fun VaultScreen(
                                 evaluatePasswordStrength = utilityViewModel::evalPasswordStrength
                             )
                         }
+
                         showLogoutDialog -> {
                             ConfirmActionDialog(
                                 title = "Log Out",
@@ -207,6 +210,7 @@ fun VaultScreen(
                                 }
                             )
                         }
+
                         showAddEntryDialog -> {
                             VaultEntryDialog(
                                 formTitle = stringResource(R.string.add_entry_form_title),
@@ -223,16 +227,16 @@ fun VaultScreen(
                         }
                     }
                 }
-            }
-        }
 
-        is VaultScreenState.Error ->  {
-            val errorMessage = (screenState as VaultScreenState.Error).info.message
-            ErrorDialog(
-                onConfirm = { vaultViewModel.resetState() },
-                title = "Vault Error",
-                message = errorMessage
-            )
+                is VaultScreenState.Error -> {
+                    val errorMessage = (screenState as VaultScreenState.Error).info.message
+                    ErrorDialog(
+                        onConfirm = { vaultViewModel.resetState() },
+                        title = "Vault Error",
+                        message = errorMessage
+                    )
+                }
+            }
         }
     }
 }

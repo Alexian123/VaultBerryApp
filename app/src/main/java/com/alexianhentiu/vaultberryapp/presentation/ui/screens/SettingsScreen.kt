@@ -1,9 +1,7 @@
-package com.alexianhentiu.vaultberryapp.presentation.ui.screens.main
+package com.alexianhentiu.vaultberryapp.presentation.ui.screens
 
 import android.content.Intent
 import android.provider.Settings
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -16,7 +14,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.SettingsForm
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.topBars.TopBarWithBackButton
@@ -26,10 +23,8 @@ import androidx.core.net.toUri
 @Composable
 fun SettingsScreen(
     navController: NavHostController,
+    settingsViewModel: SettingsViewModel
 ) {
-    val activity = LocalActivity.current as ComponentActivity
-    val settingsViewModel: SettingsViewModel = hiltViewModel(activity)
-
     val useSystemTheme by settingsViewModel.useSystemTheme.collectAsState()
     val darkTheme by settingsViewModel.darkTheme.collectAsState()
     val debugMode by settingsViewModel.debugMode.collectAsState()

@@ -29,6 +29,7 @@ import com.alexianhentiu.vaultberryapp.presentation.ui.components.misc.MainMenu
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun VaultTopBar(
+    modifier: Modifier = Modifier,
     onSearch: (String) -> Unit,
     onLogout: () -> Unit,
     onAccountClick: () -> Unit,
@@ -51,7 +52,7 @@ fun VaultTopBar(
                         searchText = it
                         onSearch(it.text)
                     },
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = modifier.fillMaxWidth(),
                     textStyle = MaterialTheme.typography.bodyMedium.copy(
                         color = contentColor
                     ),
@@ -67,7 +68,7 @@ fun VaultTopBar(
                     }
                 )
             } else {
-                Text(stringResource(R.string.app_name))
+                Text(stringResource(R.string.vault_screen_title))
             }
         },
         navigationIcon = {
@@ -107,7 +108,7 @@ fun VaultTopBar(
                 }
             }
         },
-        modifier = Modifier.fillMaxWidth()
+        modifier = modifier.fillMaxWidth()
     )
 }
 

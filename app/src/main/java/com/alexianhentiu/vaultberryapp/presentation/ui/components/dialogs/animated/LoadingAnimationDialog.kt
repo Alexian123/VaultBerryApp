@@ -1,26 +1,26 @@
-package com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc
+package com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.animated
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 
 @Composable
-fun LoadingScreen() {
-    BackHandler(enabled = true) {}
-    Scaffold { contentPadding ->
+fun LoadingAnimationDialog(
+    modifier: Modifier = Modifier
+) {
+    Dialog(
+        onDismissRequest = {}
+    ) {
         Box(
-            modifier = Modifier.fillMaxSize()
-                .padding(contentPadding),
+            modifier = modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
             CircularProgressIndicator(
@@ -34,6 +34,6 @@ fun LoadingScreen() {
 
 @Preview(showBackground = true)
 @Composable
-fun LoadingScreenPreview() {
-    LoadingScreen()
+fun LoadingAnimationDialogPreview() {
+    LoadingAnimationDialog()
 }

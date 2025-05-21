@@ -1,15 +1,12 @@
-package com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc
+package com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.animated
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -24,10 +21,11 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import kotlinx.coroutines.delay
 
 @Composable
-fun AnimatedSuccessScreen(
+fun SuccessAnimationDialog(
     modifier: Modifier = Modifier,
     checkmarkColor: Color = MaterialTheme.colorScheme.primary,
     strokeWidth: Dp = 8.dp,
@@ -37,24 +35,22 @@ fun AnimatedSuccessScreen(
 ) {
     val progress = remember { Animatable(0f) } // For drawing the checkmark path
 
-    BackHandler(enabled = true) {}
+    Dialog(
+        onDismissRequest = {}
+    ) {
+        LaunchedEffect(key1 = Unit) {
+            // Animate the checkmark drawing
+            progress.animateTo(
+                targetValue = 1f,
+                animationSpec = tween(durationMillis = animationDurationMillis)
+            )
+            // Wait for the specified display duration
+            delay(displayDurationMillis - animationDurationMillis.toLong().coerceAtLeast(0L))
+            onTimeout()
+        }
 
-    LaunchedEffect(key1 = Unit) {
-        // Animate the checkmark drawing
-        progress.animateTo(
-            targetValue = 1f,
-            animationSpec = tween(durationMillis = animationDurationMillis)
-        )
-        // Wait for the specified display duration
-        delay(displayDurationMillis - animationDurationMillis.toLong().coerceAtLeast(0L))
-        onTimeout()
-    }
-
-    Scaffold { contentPadding ->
         Box(
-            modifier = modifier
-                .fillMaxSize()
-                .padding(contentPadding),
+            modifier = modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
             Canvas(modifier = Modifier.size(120.dp)) {
@@ -87,6 +83,6 @@ fun AnimatedSuccessScreen(
 
 @Preview(showBackground = true)
 @Composable
-fun AnimatedSuccessScreenPreview() {
-    AnimatedSuccessScreen()
+fun SuccessAnimationDialogPreview() {
+    SuccessAnimationDialog()
 }

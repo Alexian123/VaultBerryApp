@@ -17,13 +17,15 @@ import com.alexianhentiu.vaultberryapp.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AuthTopBar(
+    modifier: Modifier = Modifier,
+    titleText: String = stringResource(R.string.app_name),
     onSettingsClick: () -> Unit = {}
 ) {
     TopAppBar(
         title = {
             Text(
-                text = stringResource(R.string.app_name),
-                modifier = Modifier.fillMaxWidth()
+                text = titleText,
+                modifier = modifier.fillMaxWidth()
             )
         },
         actions = {

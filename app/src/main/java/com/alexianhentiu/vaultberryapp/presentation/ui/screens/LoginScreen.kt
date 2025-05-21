@@ -1,8 +1,6 @@
-package com.alexianhentiu.vaultberryapp.presentation.ui.screens.main
+package com.alexianhentiu.vaultberryapp.presentation.ui.screens
 
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
-import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -10,15 +8,17 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.topBars.AuthTopBar
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ErrorDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.LoginForm
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.Verify2FAForm
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc.AnimatedSuccessScreen
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc.LoadingScreen
+import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.animated.SuccessAnimationDialog
+import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.animated.LoadingAnimationDialog
 import com.alexianhentiu.vaultberryapp.presentation.utils.enums.NavRoute
 import com.alexianhentiu.vaultberryapp.presentation.utils.state.SessionState
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.UtilityViewModel
@@ -27,13 +27,11 @@ import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.SettingsVie
 
 @Composable
 fun LoginScreen(
-    navController: NavHostController
+    navController: NavHostController,
+    sessionViewModel: SessionViewModel,
+    utilityViewModel: UtilityViewModel,
+    settingsViewModel: SettingsViewModel,
 ) {
-    val activity = LocalActivity.current as ComponentActivity
-    val sessionViewModel: SessionViewModel = hiltViewModel(activity)
-    val utilityViewModel: UtilityViewModel = hiltViewModel(activity)
-    val settingsViewModel: SettingsViewModel = hiltViewModel(activity)
-
     val savedEmail by settingsViewModel.savedEmail.collectAsState()
     val rememberEmail by settingsViewModel.rememberEmail.collectAsState()
 
@@ -43,16 +41,16 @@ fun LoginScreen(
 
     BackHandler(enabled = true) {}
 
-    when (screenState) {
-        is SessionState.LoggedOut -> {
-            Scaffold(
-                topBar = {
-                    AuthTopBar(
-                        onSettingsClick = { navController.navigate(NavRoute.SETTINGS.path) }
-                    )
-                }
-            ) { contentPadding ->
-                Box(modifier = Modifier.fillMaxSize().padding(contentPadding)) {
+    Scaffold(
+        topBar = {
+            AuthTopBar(
+                onSettingsClick = { navController.navigate(NavRoute.SETTINGS.path) }
+            )
+        }
+    ) { contentPadding ->
+        Box(modifier = Modifier.fillMaxSize().padding(contentPadding)) {
+            when (screenState) {
+                is SessionState.LoggedOut -> {
                     LoginForm(
                         navController = navController,
                         savedEmail = savedEmail,
@@ -72,22 +70,12 @@ fun LoginScreen(
                         }
                     )
                 }
-            }
-        }
 
-        is SessionState.Loading -> {
-            LoadingScreen()
-        }
-
-        is SessionState.TwoFactorRequired -> {
-            Scaffold(
-                topBar = {
-                    AuthTopBar(
-                        onSettingsClick = { navController.navigate(NavRoute.SETTINGS.path) }
-                    )
+                is SessionState.Loading -> {
+                    LoadingAnimationDialog()
                 }
-            ) { contentPadding ->
-                Box(modifier = Modifier.fillMaxSize().padding(contentPadding)) {
+
+                is SessionState.TwoFactorRequired -> {
                     Verify2FAForm(
                         onContinueClicked = { code ->
                             sessionViewModel.login(null, null, code)
@@ -98,23 +86,29 @@ fun LoginScreen(
                         }
                     )
                 }
+
+                is SessionState.LoggedIn -> {
+                    var shownAnimation by remember { mutableStateOf(false) }
+                    if (!shownAnimation) {
+                        SuccessAnimationDialog(
+                            displayDurationMillis = 1000,
+                            onTimeout = {
+                                shownAnimation = true
+                                navController.navigate(NavRoute.VAULT.path)
+                            }
+                        )
+                    }
+                }
+
+                is SessionState.Error -> {
+                    val errorMessage = (screenState as SessionState.Error).info.message
+                    ErrorDialog(
+                        onConfirm = { sessionViewModel.resetState() },
+                        title = "Login Error",
+                        message = errorMessage
+                    )
+                }
             }
-        }
-
-        is SessionState.LoggedIn -> {
-            AnimatedSuccessScreen(
-                displayDurationMillis = 1000,
-                onTimeout = { navController.navigate(NavRoute.VAULT.path) }
-            )
-        }
-
-        is SessionState.Error -> {
-            val errorMessage = (screenState as SessionState.Error).info.message
-            ErrorDialog(
-                onConfirm = { sessionViewModel.resetState() },
-                title = "Login Error",
-                message = errorMessage
-            )
         }
     }
 }

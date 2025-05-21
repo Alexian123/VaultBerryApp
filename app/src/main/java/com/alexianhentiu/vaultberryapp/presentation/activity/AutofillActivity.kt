@@ -19,11 +19,13 @@ import androidx.annotation.RequiresApi
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.misc.AutofillScreen
+import com.alexianhentiu.vaultberryapp.presentation.ui.screens.AutofillScreen
 import com.alexianhentiu.vaultberryapp.presentation.ui.theme.VaultBerryAppTheme
 import com.alexianhentiu.vaultberryapp.presentation.utils.store.AutofillEntry
 import com.alexianhentiu.vaultberryapp.presentation.utils.enums.AppTheme
+import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.SessionViewModel
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.SettingsViewModel
+import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.UtilityViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.getValue
 
@@ -31,6 +33,8 @@ import kotlin.getValue
 class AutofillActivity : ComponentActivity() {
 
     private val settingsViewModel: SettingsViewModel by viewModels()
+    private val utilityViewModel: UtilityViewModel by viewModels()
+    private val sessionViewModel: SessionViewModel by viewModels()
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,6 +63,9 @@ class AutofillActivity : ComponentActivity() {
 
             VaultBerryAppTheme(appTheme = currentTheme.value) {
                 AutofillScreen(
+                    utilityViewModel = utilityViewModel,
+                    sessionViewModel = sessionViewModel,
+                    settingsViewModel = settingsViewModel,
                     keywords = keywords,
                     onSuccess = { entries ->
                         val fillResponse = buildFillResponse(usernameId, passwordId, entries)

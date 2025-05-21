@@ -15,14 +15,15 @@ import com.alexianhentiu.vaultberryapp.presentation.ui.components.buttons.Deboun
 @Composable
 fun TopBarWithBackButton(
     navController: NavController,
-    title: String
+    title: String,
+    modifier: Modifier = Modifier
 ) {
     TopAppBar(
         title = { Text(text = title) },
         navigationIcon = {
             DebouncedBackButton(navController)
         },
-        modifier = Modifier.fillMaxWidth()
+        modifier = modifier.fillMaxWidth()
     )
 }
 
