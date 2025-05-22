@@ -32,7 +32,8 @@ fun RegisterScreen(
     Scaffold(
         topBar = {
             AuthTopBar(
-                onSettingsClick = { navController.navigate(NavRoute.SETTINGS.path) }
+                onSettingsClick = { navController.navigate(NavRoute.SETTINGS.path) },
+                titleText = "Register"
             )
         }
     ) { contentPadding ->

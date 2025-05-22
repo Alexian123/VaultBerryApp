@@ -19,7 +19,7 @@ fun SwitchSettingItem(
     checked: Boolean,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    fontSize: Int = 16,
+    fontSize: Int = 14,
     onCheckedChange: (Boolean) -> Unit,
 ) {
     Row(

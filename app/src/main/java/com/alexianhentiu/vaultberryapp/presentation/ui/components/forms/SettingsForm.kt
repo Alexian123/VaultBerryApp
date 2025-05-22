@@ -34,7 +34,7 @@ fun SettingsForm(
     ) {
         Text(
             text = "Appearance",
-            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
             modifier = Modifier.padding(bottom = 8.dp)
         )
         SwitchSettingItem(
@@ -52,7 +52,7 @@ fun SettingsForm(
 
         Text(
             text = "Autofill",
-            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
             modifier = Modifier.padding(top = 8.dp, bottom = 8.dp)
         )
         TextButton(
@@ -60,14 +60,14 @@ fun SettingsForm(
         ) {
             Text(
                 text = "Enable in System Settings",
-                fontSize = 16.sp
+                fontSize = 14.sp
             )
         }
         HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
 
         Text(
             text = "Advanced",
-            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
             modifier = Modifier.padding(top = 8.dp, bottom = 8.dp)
         )
         SwitchSettingItem(

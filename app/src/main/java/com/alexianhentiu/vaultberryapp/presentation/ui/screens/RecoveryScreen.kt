@@ -37,7 +37,8 @@ fun RecoveryScreen(
     Scaffold(
         topBar = {
             AuthTopBar(
-                onSettingsClick = { navController.navigate(NavRoute.SETTINGS.path) }
+                onSettingsClick = { navController.navigate(NavRoute.SETTINGS.path) },
+                titleText = "Account Recovery"
             )
         }
     ) { contentPadding ->

@@ -44,7 +44,8 @@ fun LoginScreen(
     Scaffold(
         topBar = {
             AuthTopBar(
-                onSettingsClick = { navController.navigate(NavRoute.SETTINGS.path) }
+                onSettingsClick = { navController.navigate(NavRoute.SETTINGS.path) },
+                titleText = "Login to VaultBerry"
             )
         }
     ) { contentPadding ->
