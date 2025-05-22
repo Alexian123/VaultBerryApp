@@ -79,12 +79,12 @@ fun VaultScreen(
         topBar = {
             VaultTopBar(
                 onSearch = { vaultViewModel.searchPreviewsByTitle(it) },
-                onLogout = { showLogoutDialog = true },
                 onAccountClick = { navController.navigate(NavRoute.ACCOUNT.path) },
                 onPasswordGeneratorClick = {
                     navController.navigate(NavRoute.PASSWORD_GENERATOR.path)
                 },
-                onSettingsClick = { navController.navigate(NavRoute.SETTINGS.path) }
+                onSettingsClick = { navController.navigate(NavRoute.SETTINGS.path) },
+                onAboutClick = { TODO("Implement about screen") }
             )
         },
         floatingActionButton = {

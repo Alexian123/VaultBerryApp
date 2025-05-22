@@ -20,7 +20,6 @@
     <string name="delete_entry_dialog_message">This cannot be undone.</string>
     <string name="edit_entry_dialog_title">Edit entry</string>
     <string name="entry_content_description">Entry</string>
-    <string name="logout_menu_item_text">Logout</string>
     <string name="account_menu_item_text">Account</string>
     <string name="settings_menu_item_text">Settings</string>
     <string name="settings_icon_content_description">Settings</string>
@@ -38,4 +37,5 @@
     <string name="password_generator_menu_item_text">Password Generator</string>
     <string name="vault_screen_title">Vault</string>
     <string name="expandable_section_icon_content_description">Expandable section icon</string>
+    <string name="about_menu_item_text">About</string>
 </resources>

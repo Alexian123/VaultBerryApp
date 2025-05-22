@@ -31,10 +31,10 @@ import com.alexianhentiu.vaultberryapp.presentation.ui.components.misc.MainMenu
 fun VaultTopBar(
     modifier: Modifier = Modifier,
     onSearch: (String) -> Unit,
-    onLogout: () -> Unit,
     onAccountClick: () -> Unit,
     onPasswordGeneratorClick: () -> Unit,
-    onSettingsClick: () -> Unit
+    onSettingsClick: () -> Unit,
+    onAboutClick: () -> Unit
 ) {
     var isSearching by remember { mutableStateOf(false) }
     var searchText by remember { mutableStateOf(TextFieldValue("")) }
@@ -81,10 +81,10 @@ fun VaultTopBar(
             MainMenu(
                 onDismissRequest = { showMenu = false },
                 expanded = showMenu,
-                onLogout = onLogout,
                 onAccountClick = onAccountClick,
                 onPasswordGeneratorClick = onPasswordGeneratorClick,
-                onSettingsClick = onSettingsClick
+                onSettingsClick = onSettingsClick,
+                onAboutClick = onAboutClick
             )
         },
         actions = {
@@ -117,9 +117,9 @@ fun VaultTopBar(
 fun PreviewVaultTopBar() {
     VaultTopBar(
         onSearch = { },
-        onLogout = { },
         onAccountClick = { },
         onPasswordGeneratorClick = { },
-        onSettingsClick = { }
+        onSettingsClick = { },
+        onAboutClick = { }
     )
 }
