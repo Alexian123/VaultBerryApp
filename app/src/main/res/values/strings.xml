@@ -37,4 +37,5 @@
     <string name="autofill_service_label">VaultBerry Autofill</string>
     <string name="password_generator_menu_item_text">Password Generator</string>
     <string name="vault_screen_title">Vault</string>
+    <string name="expandable_section_icon_content_description">Expandable section icon</string>
 </resources>

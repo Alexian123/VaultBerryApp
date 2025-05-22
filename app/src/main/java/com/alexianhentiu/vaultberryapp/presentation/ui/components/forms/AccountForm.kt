@@ -6,6 +6,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material.icons.filled.Dangerous
+import androidx.compose.material.icons.filled.Security
 import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -79,7 +83,8 @@ fun AccountForm(
         item {
             ExpandableSectionItem(
                 title = "Information",
-                onExpand = { isInfoExpanded = !isInfoExpanded }
+                onExpand = { isInfoExpanded = !isInfoExpanded },
+                imageVector = Icons.Filled.AccountBox
             )
             AnimatedVisibility(visible = isInfoExpanded) {
                 ChangeAccountInfoForm(
@@ -91,7 +96,8 @@ fun AccountForm(
         item {
             ExpandableSectionItem(
                 title = "Security",
-                onExpand = { isSecurityExpanded = !isSecurityExpanded }
+                onExpand = { isSecurityExpanded = !isSecurityExpanded },
+                imageVector = Icons.Filled.Security
             )
             AnimatedVisibility(visible = isSecurityExpanded) {
                 Column(
@@ -133,7 +139,8 @@ fun AccountForm(
         item {
             ExpandableSectionItem(
                 title = "Dangerous",
-                onExpand = { isDangerousExpanded = !isDangerousExpanded }
+                onExpand = { isDangerousExpanded = !isDangerousExpanded },
+                imageVector = Icons.Filled.Dangerous
             )
             AnimatedVisibility(
                 visible = isDangerousExpanded
