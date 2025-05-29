@@ -39,7 +39,7 @@ fun AccountScreen(
         topBar = {
             TopBarWithBackButton(
                 navController = navController,
-                title = "Account"
+                title = stringResource(R.string.account_screen_title)
             )
         }
     ) { contentPadding ->
@@ -88,9 +88,11 @@ fun AccountScreen(
                 is AccountScreenState.ChangedPassword -> {
                     val recoveryPassword = accountViewModel.recoveryPassword.collectAsState()
                     InfoDialog(
-                        title = "Password changed successfully",
-                        message = "Your new recovery password is:\n${recoveryPassword.value}\n" +
-                                "It will be copied into the clipboard upon confirmation.",
+                        title = stringResource(R.string.account_screen_changed_password_title),
+                        message = stringResource(R.string.recovery_password_message_p1) +
+                                " \"${recoveryPassword.value}\". " +
+                                stringResource(R.string.recovery_password_message_p2) +
+                                stringResource(R.string.recovery_password_message_p3),
                         onDismissRequest = {
                             utilityViewModel.copyToClipboard(recoveryPassword.value)
                             accountViewModel.setLoadingState()
@@ -104,9 +106,10 @@ fun AccountScreen(
                 is AccountScreenState.Setup2FA -> {
                     val secretKey = accountViewModel.secretKey.collectAsState()
                     InfoDialog(
-                        title = "2FA Setup",
-                        message = "Your secret key is:\n${secretKey.value}\n" +
-                                "It will be copied into the clipboard upon confirmation.",
+                        title = stringResource(R.string.account_screen_setup_2fa_title),
+                        message = stringResource(R.string.account_screen_setup_2fa_message_p1) +
+                                " \n${secretKey.value}\n" +
+                                stringResource(R.string.account_screen_setup_2fa_message_p2),
                         onDismissRequest = {
                             utilityViewModel.copyToClipboard(secretKey.value)
                             accountViewModel.resetState()

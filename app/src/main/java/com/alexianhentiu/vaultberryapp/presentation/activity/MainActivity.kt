@@ -15,7 +15,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 /*
     TODO:
-        - Create string resources for all strings
+        - Biometric login?
         - Integrate VPN connection (optional)
         - Cleanup code & add comments
 */

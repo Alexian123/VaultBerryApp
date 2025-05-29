@@ -17,8 +17,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.alexianhentiu.vaultberryapp.R
 import com.alexianhentiu.vaultberryapp.domain.model.entity.AccountInfo
 
 @Composable
@@ -38,14 +40,14 @@ fun ChangeAccountInfoForm(
             OutlinedTextField(
                 value = firstName ?: "",
                 onValueChange = { firstName = it },
-                label = { Text("First Name") },
+                label = { Text(stringResource(R.string.first_name_label)) },
                 modifier = Modifier.weight(0.49f)
             )
             Spacer(modifier = Modifier.weight(0.02f))
             OutlinedTextField(
                 value = lastName ?: "",
                 onValueChange = { lastName = it },
-                label = { Text("Last Name") },
+                label = { Text(stringResource(R.string.last_name_label)) },
                 modifier = Modifier.weight(0.49f)
             )
         }
@@ -53,7 +55,7 @@ fun ChangeAccountInfoForm(
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
-            label = { Text("Email") },
+            label = { Text(stringResource(R.string.email_label)) },
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(16.dp))
@@ -69,7 +71,7 @@ fun ChangeAccountInfoForm(
             },
             modifier = Modifier.align(Alignment.CenterHorizontally)
         ) {
-            Text("Save Changes")
+            Text(stringResource(R.string.save_button_text))
         }
     }
 }

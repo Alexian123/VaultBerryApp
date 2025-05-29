@@ -200,8 +200,8 @@ fun VaultScreen(
 
                         showLogoutDialog -> {
                             ConfirmActionDialog(
-                                title = "Log Out",
-                                message = "Are you sure you want to log out?",
+                                title = stringResource(R.string.logout_dialog_title),
+                                message = stringResource(R.string.logout_dialog_message),
                                 onDismissRequest = { showLogoutDialog = false },
                                 onSubmit = {
                                     if (it) {

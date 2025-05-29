@@ -17,8 +17,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.alexianhentiu.vaultberryapp.R
 import com.alexianhentiu.vaultberryapp.domain.utils.enums.ValidatedFieldType
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.PasswordField
 
@@ -45,7 +47,7 @@ fun RecoveryLoginForm(
                 recoveryPassword = newPassword
                 isRecoveryPasswordValid = valid
             },
-            label = "Recovery Password",
+            label = stringResource(R.string.recovery_password_label),
             isValid = validator(ValidatedFieldType.PASSWORD),
             modifier = Modifier.fillMaxWidth()
         )
@@ -55,7 +57,7 @@ fun RecoveryLoginForm(
                 otp = newPassword
                 isOTPValid = valid
             },
-            label = "One Time Password",
+            label = stringResource(R.string.otp_label),
             isValid = validator(ValidatedFieldType.OTP),
             modifier = Modifier.fillMaxWidth()
         )
@@ -65,7 +67,7 @@ fun RecoveryLoginForm(
                 onClick = { onCancelClicked() },
                 modifier = Modifier.weight(0.4f)
             ) {
-                Text("Cancel")
+                Text(stringResource(R.string.cancel_button_text))
             }
             Spacer(modifier = Modifier.weight(0.2f))
             Button(
@@ -73,7 +75,7 @@ fun RecoveryLoginForm(
                 modifier = Modifier.weight(0.4f),
                 enabled = isRecoveryPasswordValid && isOTPValid
             ) {
-                Text("Continue")
+                Text(stringResource(R.string.continue_button_text))
             }
         }
     }

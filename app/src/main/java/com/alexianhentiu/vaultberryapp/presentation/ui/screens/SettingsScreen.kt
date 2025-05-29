@@ -14,11 +14,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.SettingsForm
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.topBars.TopBarWithBackButton
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.SettingsViewModel
 import androidx.core.net.toUri
+import com.alexianhentiu.vaultberryapp.R
 
 @Composable
 fun SettingsScreen(
@@ -44,7 +46,7 @@ fun SettingsScreen(
         topBar = {
             TopBarWithBackButton(
                 navController = navController,
-                title = "Settings"
+                title = stringResource(R.string.settings_screen_title)
             )
         }
     ) { contentPadding ->

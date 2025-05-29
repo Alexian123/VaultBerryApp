@@ -12,10 +12,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.alexianhentiu.vaultberryapp.R
 import com.alexianhentiu.vaultberryapp.domain.utils.enums.PasswordStrength
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.buttons.CopyToClipboardButton
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.buttons.ToggleVisibilityButton
@@ -34,7 +36,7 @@ fun PasswordField(
     onCopyClicked: (String) -> Unit = {},
     enabled: Boolean = true,
     readOnly: Boolean = false,
-    label: String = "Password",
+    label: String = stringResource(R.string.password_label),
     textFieldType: TextFieldType = TextFieldType.REGULAR,
     showStrengthIndicator: Boolean = false,
     evaluateStrength: (String) -> PasswordStrength = { PasswordStrength.NONE }

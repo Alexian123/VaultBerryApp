@@ -17,9 +17,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.alexianhentiu.vaultberryapp.R
 import com.alexianhentiu.vaultberryapp.domain.utils.enums.ValidatedFieldType
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.ValidatedTextField
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.PasswordField
@@ -60,7 +62,7 @@ fun LoginForm(
             .fillMaxSize()
     ) {
         ValidatedTextField(
-            label = "Email",
+            label = stringResource(R.string.email_label),
             initialText = email,
             onInputChange = { newEmail, valid ->
                 email = newEmail
@@ -80,7 +82,7 @@ fun LoginForm(
         )
         Spacer(modifier = Modifier.height(8.dp))
         CheckboxOptionRow(
-            text = "Remember Email",
+            text = stringResource(R.string.remember_email_label),
             checked = rememberEmailChecked,
             onCheckedChange = { rememberEmailChecked = it }
         )
@@ -90,19 +92,19 @@ fun LoginForm(
             modifier = Modifier.fillMaxWidth(),
             enabled = isEmailValid && isPasswordValid
         ) {
-            Text("Login")
+            Text(stringResource(R.string.login_button_text))
         }
         TextButton(
             onClick = { navController.navigate(NavRoute.REGISTER.path) },
             modifier = Modifier.fillMaxWidth(),
         ) {
-            Text("Register")
+            Text(stringResource(R.string.register_button_text))
         }
         TextButton(
             onClick = { onForgotPasswordClicked() },
             modifier = Modifier.fillMaxWidth(),
         ) {
-            Text("Forgot password")
+            Text(stringResource(R.string.forgot_password_button_text))
         }
     }
 }

@@ -52,7 +52,11 @@ fun AboutInfoRow(
             Text(
                 text = value,
                 style = MaterialTheme.typography.bodyMedium,
-                color = if (isClickable) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+                color =
+                    if (isClickable)
+                        MaterialTheme.colorScheme.primary
+                    else
+                        MaterialTheme.colorScheme.onSurface
             )
         }
     }

@@ -13,17 +13,19 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.alexianhentiu.vaultberryapp.R
 
 @Composable
 fun ConfirmActionDialog(
     title: String,
     message: String,
-    confirmButtonText: String = "Confirm",
+    confirmButtonText: String = stringResource(R.string.confirm_button_text),
     onDismissRequest: () -> Unit,
     onSubmit: (Boolean) -> Unit
 ) {
@@ -52,7 +54,7 @@ fun ConfirmActionDialog(
                             .padding(6.dp),
                         onClick = onDismissRequest
                     ) {
-                        Text("Cancel")
+                        Text(stringResource(R.string.cancel_button_text))
                     }
                     Button(
                         modifier = Modifier

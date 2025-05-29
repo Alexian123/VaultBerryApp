@@ -6,7 +6,9 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.*
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
+import com.alexianhentiu.vaultberryapp.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -27,7 +29,10 @@ fun DebouncedBackButton(navController: NavController, enabled: Boolean = true, d
     }
 
     IconButton(onClick = onBack, enabled = isEnabledInternal) {
-        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back")
+        Icon(
+            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+            contentDescription = stringResource(R.string.back_button_content_description)
+        )
     }
 
     BackHandler(enabled = isEnabledInternal) {

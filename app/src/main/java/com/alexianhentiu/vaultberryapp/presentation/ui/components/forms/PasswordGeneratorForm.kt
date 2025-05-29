@@ -21,10 +21,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.alexianhentiu.vaultberryapp.R
 import com.alexianhentiu.vaultberryapp.domain.utils.enums.PasswordStrength
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.PasswordField
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.misc.CheckboxOptionRow
@@ -81,7 +83,10 @@ fun PasswordGeneratorForm(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Length:", modifier = Modifier.width(80.dp))
+            Text(
+                text = stringResource(R.string.password_length_label),
+                modifier = Modifier.width(80.dp)
+            )
             OutlinedTextField(
                 value = options.length.toString(),
                 onValueChange = { value ->
@@ -115,22 +120,22 @@ fun PasswordGeneratorForm(
 
         // Checkbox Options
         CheckboxOptionRow(
-            text = "Include Uppercase (A-Z)",
+            text = stringResource(R.string.include_uppercase_label),
             checked = options.includeUppercase,
             onCheckedChange = { options = options.copy(includeUppercase = it) }
         )
         CheckboxOptionRow(
-            text = "Include Numbers (0-9)",
+            text = stringResource(R.string.include_digits_label),
             checked = options.includeNumbers,
             onCheckedChange = { options = options.copy(includeNumbers = it) }
         )
         CheckboxOptionRow(
-            text = "Include Special Chars (!@#...)",
+            text = stringResource(R.string.include_special_chars_label),
             checked = options.includeSpecialChars,
             onCheckedChange = { options = options.copy(includeSpecialChars = it) }
         )
         CheckboxOptionRow(
-            text = "Include Spaces",
+            text = stringResource(R.string.include_spaces_label),
             checked = options.includeSpaces,
             onCheckedChange = { options = options.copy(includeSpaces = it) }
         )
@@ -138,7 +143,7 @@ fun PasswordGeneratorForm(
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(onClick = { generate() }) { // Explicit generate button
-            Text("Generate")
+            Text(stringResource(R.string.generate_button_text))
         }
     }
 }

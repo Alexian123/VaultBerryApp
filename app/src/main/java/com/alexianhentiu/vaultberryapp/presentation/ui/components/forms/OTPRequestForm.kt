@@ -18,9 +18,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.alexianhentiu.vaultberryapp.R
 import com.alexianhentiu.vaultberryapp.domain.utils.enums.ValidatedFieldType
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.ValidatedTextField
 
@@ -40,7 +42,7 @@ fun OTPRequestForm(
             .fillMaxSize()
     ) {
         Text(
-            text = "A one-time password will be sent to your email.",
+            text = stringResource(R.string.otp_request_text),
             style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier
                 .fillMaxWidth()
@@ -48,7 +50,7 @@ fun OTPRequestForm(
             textAlign = TextAlign.Left
         )
         ValidatedTextField(
-            label = "Email",
+            label = stringResource(R.string.email_label),
             onInputChange = { newEmail, valid ->
                 email = newEmail
                 isEmailValid = valid
@@ -62,7 +64,7 @@ fun OTPRequestForm(
                 onClick = { onCancelClicked() },
                 modifier = Modifier.weight(0.4f)
             ) {
-                Text("Cancel")
+                Text(stringResource(R.string.cancel_button_text))
             }
             Spacer(modifier = Modifier.weight(0.2f))
             Button(
@@ -70,7 +72,7 @@ fun OTPRequestForm(
                 modifier = Modifier.weight(0.4f),
                 enabled = isEmailValid
             ) {
-                Text("Continue")
+                Text(stringResource(R.string.continue_button_text))
             }
         }
     }

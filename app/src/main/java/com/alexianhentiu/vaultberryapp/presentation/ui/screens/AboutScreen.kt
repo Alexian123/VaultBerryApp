@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -67,7 +68,7 @@ fun AboutScreen(
         topBar = {
             TopBarWithBackButton(
                 navController = navController,
-                title = "About"
+                title = stringResource(R.string.about_screen_title)
             )
         }
     ) { paddingValues ->
@@ -110,12 +111,12 @@ fun AboutScreen(
 
             AboutInfoRow(
                 icon = Icons.Filled.Business,
-                label = "Developer",
+                label = stringResource(R.string.developer_name_label),
                 value = developerName
             )
             AboutInfoRow(
                 icon = Icons.Filled.Email,
-                label = "Contact",
+                label = stringResource(R.string.contact_email_label),
                 value = contactEmail,
                 isClickable = true,
                 onClick = {
@@ -132,7 +133,7 @@ fun AboutScreen(
             )
             AboutInfoRow(
                 icon = Icons.Filled.Language,
-                label = "Website",
+                label = stringResource(R.string.website_label),
                 value = websiteUrl,
                 isClickable = true,
                 onClick = {
@@ -146,8 +147,8 @@ fun AboutScreen(
             )
             AboutInfoRow(
                 icon = Icons.AutoMirrored.Filled.ListAlt,
-                label = "Open Source License",
-                value = "View license",
+                label = stringResource(R.string.license_label),
+                value = stringResource(R.string.view_license_text),
                 isClickable = true,
                 onClick = {
                     val intent = Intent(Intent.ACTION_VIEW, licenseUrl.toUri())
@@ -165,7 +166,7 @@ fun AboutScreen(
 
             AboutInfoRow(
                 icon = Icons.Filled.Copyright,
-                label = "Copyright",
+                label = stringResource(R.string.copyright_label),
                 value = "© $currentYear $developerName. All rights reserved."
             )
         }

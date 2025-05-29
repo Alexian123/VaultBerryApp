@@ -21,9 +21,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.alexianhentiu.vaultberryapp.R
 import com.alexianhentiu.vaultberryapp.domain.model.entity.AccountInfo
 import com.alexianhentiu.vaultberryapp.domain.utils.enums.ValidatedFieldType
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ConfirmActionDialog
@@ -52,8 +54,8 @@ fun AccountForm(
 
     if (showConfirmDeleteDialog) {
         ConfirmActionDialog(
-            title = "Delete Account",
-            message = "Are you sure you want to delete your account?",
+            title = stringResource(R.string.delete_account_title),
+            message = stringResource(R.string.delete_account_message),
             onDismissRequest = { showConfirmDeleteDialog = false },
             onSubmit = {
                 if (it) {
@@ -66,8 +68,8 @@ fun AccountForm(
 
     if (showConfirmPasswordChangeDialog) {
         ConfirmActionDialog(
-            title = "Change Password",
-            message = "Are you sure you want to change your password?",
+            title = stringResource(R.string.change_password_title),
+            message = stringResource(R.string.change_password_message),
             onDismissRequest = { showConfirmPasswordChangeDialog = false },
             onSubmit = {
                 if (it) {
@@ -82,7 +84,7 @@ fun AccountForm(
     LazyColumn(state = lazyListState) {
         item {
             ExpandableSectionItem(
-                title = "Information",
+                title = stringResource(R.string.account_info_title),
                 onExpand = { isInfoExpanded = !isInfoExpanded },
                 imageVector = Icons.Filled.AccountBox
             )
@@ -95,7 +97,7 @@ fun AccountForm(
         }
         item {
             ExpandableSectionItem(
-                title = "Security",
+                title = stringResource(R.string.account_security_title),
                 onExpand = { isSecurityExpanded = !isSecurityExpanded },
                 imageVector = Icons.Filled.Security
             )
@@ -106,7 +108,7 @@ fun AccountForm(
                         .padding(16.dp)
                 ) {
                     Text(
-                        text = "Password",
+                        text = stringResource(R.string.password_label),
                         style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                         modifier = Modifier.padding(top = 8.dp, bottom = 8.dp)
                     )
@@ -120,17 +122,17 @@ fun AccountForm(
                     )
                     HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
                     Text(
-                        text = "Two-Factor Authentication",
+                        text = stringResource(R.string.two_factor_auth_label),
                         style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                         modifier = Modifier.padding(top = 8.dp, bottom = 8.dp)
                     )
                     if (is2FAEnabled) {
                         Button(onClick = onDisable2FA) {
-                            Text("Disable")
+                            Text(stringResource(R.string.disable_button_text))
                         }
                     } else {
                         Button(onClick = onEnable2FA) {
-                            Text("Enable")
+                            Text(stringResource(R.string.enable_button_text))
                         }
                     }
                 }
@@ -138,7 +140,7 @@ fun AccountForm(
         }
         item {
             ExpandableSectionItem(
-                title = "Dangerous",
+                title = stringResource(R.string.account_danger_title),
                 onExpand = { isDangerousExpanded = !isDangerousExpanded },
                 imageVector = Icons.Filled.Dangerous
             )
@@ -153,7 +155,7 @@ fun AccountForm(
                     Button(
                         onClick = { showConfirmDeleteDialog = true }
                     ) {
-                        Text("Delete Account")
+                        Text(stringResource(R.string.delete_account_button_text))
                     }
                 }
             }

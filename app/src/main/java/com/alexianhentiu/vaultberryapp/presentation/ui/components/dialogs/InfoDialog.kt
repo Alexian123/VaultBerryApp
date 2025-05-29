@@ -12,17 +12,19 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.alexianhentiu.vaultberryapp.R
 
 @Composable
 fun InfoDialog(
-    title: String = "Info",
+    title: String = stringResource(R.string.info_dialog_title),
     message: String,
-    confirmButtonText: String = "OK",
+    confirmButtonText: String = stringResource(R.string.ok_button_text),
     onDismissRequest: () -> Unit,
 ) {
     Dialog(

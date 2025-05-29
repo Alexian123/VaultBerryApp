@@ -19,12 +19,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.alexianhentiu.vaultberryapp.R
 import com.alexianhentiu.vaultberryapp.domain.model.entity.DecryptedVaultEntry
 import com.alexianhentiu.vaultberryapp.domain.utils.enums.PasswordStrength
 import com.alexianhentiu.vaultberryapp.domain.utils.enums.ValidatedFieldType
@@ -82,7 +84,7 @@ fun VaultEntryDialog(
 
                         ValidatedTextField(
                             modifier = Modifier.fillMaxWidth(),
-                            label = "Title",
+                            label = stringResource(R.string.entry_title_label),
                             initialText = title,
                             onInputChange = { newTitle, valid ->
                                 title = newTitle
@@ -92,7 +94,7 @@ fun VaultEntryDialog(
                         )
                         ValidatedTextField(
                             modifier = Modifier.fillMaxWidth(),
-                            label = "URL",
+                            label = stringResource(R.string.entry_url_label),
                             initialText = url,
                             onInputChange = { newUrl, _ ->
                                 url = newUrl
@@ -100,7 +102,7 @@ fun VaultEntryDialog(
                         )
                         ValidatedTextField(
                             modifier = Modifier.fillMaxWidth(),
-                            label = "Username",
+                            label = stringResource(R.string.entry_username_label),
                             initialText = username,
                             onInputChange = { newUsername, _ ->
                                 username = newUsername
@@ -117,7 +119,7 @@ fun VaultEntryDialog(
                         )
                         ValidatedTextField(
                             modifier = Modifier.fillMaxWidth(),
-                            label = "Notes",
+                            label = stringResource(R.string.entry_notes_label),
                             initialText = notes,
                             onInputChange = { newNotes, _ ->
                                 notes = newNotes
@@ -131,7 +133,7 @@ fun VaultEntryDialog(
                                     .padding(16.dp),
                                 onClick = onDismissRequest
                             ) {
-                                Text("Cancel")
+                                Text(stringResource(R.string.cancel_button_text))
                             }
                             Button(
                                 enabled = isTitleValid,
@@ -149,7 +151,7 @@ fun VaultEntryDialog(
                                     onSubmit(entry)
                                 }
                             ) {
-                                Text("Confirm")
+                                Text(stringResource(R.string.confirm_button_text))
                             }
                         }
                     }

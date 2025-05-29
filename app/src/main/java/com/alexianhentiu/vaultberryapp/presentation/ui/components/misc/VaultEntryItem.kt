@@ -128,7 +128,7 @@ fun VaultEntryItem(
                             ValidatedTextField(
                                 readOnly = true,
                                 modifier = Modifier.fillMaxWidth(),
-                                label = "Title",
+                                label = stringResource(R.string.entry_title_label),
                                 initialText = title,
                             )
                             IconButton(
@@ -146,7 +146,7 @@ fun VaultEntryItem(
                         ValidatedTextField(
                             readOnly = true,
                             modifier = Modifier.fillMaxWidth(),
-                            label = "URL",
+                            label = stringResource(R.string.entry_url_label),
                             initialText = url,
                             showCopyToClipboardButton = true,
                             onCopyClicked = onCopyClicked
@@ -154,7 +154,7 @@ fun VaultEntryItem(
                         ValidatedTextField(
                             readOnly = true,
                             modifier = Modifier.fillMaxWidth(),
-                            label = "Username",
+                            label = stringResource(R.string.entry_username_label),
                             initialText = username,
                             showCopyToClipboardButton = true,
                             onCopyClicked = onCopyClicked
@@ -172,7 +172,7 @@ fun VaultEntryItem(
                         ValidatedTextField(
                             readOnly = true,
                             modifier = Modifier.fillMaxWidth(),
-                            label = "Notes",
+                            label = stringResource(R.string.entry_notes_label),
                             initialText = notes,
                             showCopyToClipboardButton = true,
                             onCopyClicked = onCopyClicked

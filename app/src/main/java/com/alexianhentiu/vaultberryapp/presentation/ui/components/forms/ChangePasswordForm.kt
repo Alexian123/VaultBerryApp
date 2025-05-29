@@ -13,8 +13,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.alexianhentiu.vaultberryapp.R
 import com.alexianhentiu.vaultberryapp.domain.utils.enums.ValidatedFieldType
 import com.alexianhentiu.vaultberryapp.presentation.utils.enums.TextFieldType
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.PasswordField
@@ -38,7 +40,7 @@ fun ChangePasswordForm(
                 isPasswordValid = valid
             },
             isValid = validator(ValidatedFieldType.PASSWORD),
-            label = "New Password",
+            label = stringResource(R.string.new_password_label),
             textFieldType = textFieldType
         )
         PasswordField(
@@ -47,7 +49,7 @@ fun ChangePasswordForm(
                 isConfirmPasswordValid = valid
             },
             isValid = password::equals,
-            label = "Confirm New Password",
+            label = stringResource(R.string.confirm_new_password_label),
             textFieldType = textFieldType
         )
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -55,7 +57,7 @@ fun ChangePasswordForm(
                 checked = shouldReEncrypt,
                 onCheckedChange = { shouldReEncrypt = it }
             )
-            Text("Re-encrypt all vault entries")
+            Text(stringResource(R.string.re_encrypt_label))
         }
         Button(
             enabled = isPasswordValid && isConfirmPasswordValid && password == confirmPassword,
@@ -64,7 +66,7 @@ fun ChangePasswordForm(
                 .align(Alignment.CenterHorizontally)
                 .padding(top = 4.dp)
         ) {
-            Text("Change Password")
+            Text(stringResource(R.string.change_password_button_text))
         }
     }
 }

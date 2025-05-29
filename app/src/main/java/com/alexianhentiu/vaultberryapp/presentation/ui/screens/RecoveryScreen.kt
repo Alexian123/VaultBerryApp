@@ -93,10 +93,11 @@ fun RecoveryScreen(
                 is RecoveryScreenState.PasswordReset -> {
                     val recoveryPassword = recoveryViewModel.tempRecoveryPassword.collectAsState()
                     InfoDialog(
-                        title = "Password reset successfully",
-                        message = "Your new recovery password is: \"${recoveryPassword.value}\". " +
-                                "Make sure to save it in a safe place." +
-                                "It will be copied into the clipboard upon confirmation.",
+                        title = stringResource(R.string.recovery_screen_success_title),
+                        message = stringResource(R.string.recovery_password_message_p1) +
+                                " \"${recoveryPassword.value}\". " +
+                                stringResource(R.string.recovery_password_message_p2) +
+                                stringResource(R.string.recovery_password_message_p3),
                         onDismissRequest = {
                             utilityViewModel.copyToClipboard(recoveryPassword.value)
                             sessionViewModel.logout()

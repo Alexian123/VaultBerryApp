@@ -18,9 +18,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.alexianhentiu.vaultberryapp.R
 import com.alexianhentiu.vaultberryapp.domain.utils.enums.ValidatedFieldType
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.ValidatedTextField
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.PasswordField
@@ -47,7 +49,7 @@ fun RegisterForm(
             .fillMaxSize()
     ) {
         ValidatedTextField(
-            label = "Email",
+            label = stringResource(R.string.email_label),
             onInputChange = { newEmail, valid ->
                 email = newEmail
                 isEmailValid = valid
@@ -68,7 +70,7 @@ fun RegisterForm(
         TextField(
             value = firstName,
             onValueChange = { firstName = it },
-            label = { Text("First Name") },
+            label = { Text(stringResource(R.string.first_name_label)) },
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(8.dp))
@@ -76,7 +78,7 @@ fun RegisterForm(
         TextField(
             value = lastName,
             onValueChange = { lastName = it },
-            label = { Text("Last Name") },
+            label = { Text(stringResource(R.string.last_name_label)) },
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(16.dp))
@@ -85,13 +87,13 @@ fun RegisterForm(
             modifier = Modifier.fillMaxWidth(),
             enabled = isEmailValid && isPasswordValid
         ) {
-            Text("Register")
+            Text(stringResource(R.string.register_button_text))
         }
         TextButton(
             onClick = { navController.navigate(NavRoute.LOGIN.path) },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Already have an account?")
+            Text(stringResource(R.string.already_have_account_button_text))
         }
     }
 }

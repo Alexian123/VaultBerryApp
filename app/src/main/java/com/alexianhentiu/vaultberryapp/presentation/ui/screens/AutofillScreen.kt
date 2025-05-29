@@ -86,7 +86,7 @@ fun AutofillScreen(
                             .fillMaxSize()
                     ) {
                         ValidatedTextField(
-                            label = "Email",
+                            label = stringResource(R.string.email_label),
                             initialText = email,
                             onInputChange = { newEmail, valid ->
                                 email = newEmail
@@ -120,7 +120,7 @@ fun AutofillScreen(
                             modifier = Modifier.fillMaxWidth(),
                             enabled = isEmailValid && isPasswordValid && !finishedSearching
                         ) {
-                            Text("Login")
+                            Text(stringResource(R.string.login_button_text))
                         }
                     }
                 }

@@ -37,7 +37,7 @@ fun RegisterScreen(
         topBar = {
             AuthTopBar(
                 onSettingsClick = { navController.navigate(NavRoute.SETTINGS.path) },
-                titleText = "Register"
+                titleText = stringResource(R.string.register_screen_title)
             )
         }
     ) { contentPadding ->
@@ -65,10 +65,11 @@ fun RegisterScreen(
                     val recoveryPassword =
                         (screenState as RegisterScreenState.Success).recoveryPassword
                     InfoDialog(
-                        title = "Account registration successful",
-                        message = "Your new recovery password is: \"$recoveryPassword\". " +
-                                "It will be copied into the clipboard upon confirmation. " +
-                                "Make sure to write it down!",
+                        title = stringResource(R.string.register_screen_success_title),
+                        message = stringResource(R.string.recovery_password_message_p1) +
+                                " \"$recoveryPassword\". " +
+                                stringResource(R.string.recovery_password_message_p2) +
+                                stringResource(R.string.recovery_password_message_p3),
                         onDismissRequest = {
                             utilityViewModel.copyToClipboard(recoveryPassword)
                             registerViewModel.resetState()

@@ -7,7 +7,6 @@ import android.service.autofill.Dataset
 import android.service.autofill.Field
 import android.service.autofill.FillResponse
 import android.service.autofill.Presentations
-import android.util.Log
 import android.view.autofill.AutofillId
 import android.view.autofill.AutofillManager
 import android.view.autofill.AutofillValue
@@ -39,8 +38,6 @@ class AutofillActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d("AutofillActivity", "onCreate")
-
         val keywords = intent.getStringArrayListExtra("keywords") ?: return finish()
         val usernameId = intent.getParcelableExtra<AutofillId>(
             "usernameId",

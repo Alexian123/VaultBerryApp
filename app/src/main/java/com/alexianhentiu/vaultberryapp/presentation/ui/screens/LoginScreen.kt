@@ -49,7 +49,7 @@ fun LoginScreen(
         topBar = {
             AuthTopBar(
                 onSettingsClick = { navController.navigate(NavRoute.SETTINGS.path) },
-                titleText = "Login to VaultBerry"
+                titleText = stringResource(R.string.login_screen_title)
             )
         }
     ) { contentPadding ->
