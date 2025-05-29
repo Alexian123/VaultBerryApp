@@ -19,8 +19,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.alexianhentiu.vaultberryapp.R
 import com.alexianhentiu.vaultberryapp.domain.utils.enums.ValidatedFieldType
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.animated.SuccessAnimationDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.animated.LoadingAnimationDialog
@@ -28,6 +31,7 @@ import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ErrorD
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.PasswordField
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.ValidatedTextField
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.Verify2FAForm
+import com.alexianhentiu.vaultberryapp.presentation.utils.helper.launchErrorReportEmailIntent
 import com.alexianhentiu.vaultberryapp.presentation.utils.store.AutofillEntry
 import com.alexianhentiu.vaultberryapp.presentation.utils.state.AutofillState
 import com.alexianhentiu.vaultberryapp.presentation.utils.state.SessionState
@@ -170,26 +174,42 @@ fun AutofillScreen(
                         }
 
                         is AutofillState.Error -> {
-                            val errorMessage = (autofillState as AutofillState.Error).info.message
+                            val errorInfo = (autofillState as AutofillState.Error).info
+                            val context = LocalContext.current
+                            val contactEmail = stringResource(R.string.contact_email)
                             ErrorDialog(
-                                onConfirm = {
-                                    autofillViewModel.resetState()
-                                },
-                                title = "Autofill Error",
-                                message = errorMessage
+                                onConfirm = { autofillViewModel.resetState() },
+                                title = "${errorInfo.type.name} ERROR",
+                                source = errorInfo.source,
+                                message = errorInfo.message,
+                                onSendReport = {
+                                    launchErrorReportEmailIntent(
+                                        context = context,
+                                        errorInfo = errorInfo,
+                                        recipientEmail = contactEmail
+                                    )
+                                }
                             )
                         }
                     }
                 }
 
                 is SessionState.Error -> {
-                    val errorMessage = (screenState as SessionState.Error).info.message
+                    val errorInfo = (screenState as SessionState.Error).info
+                    val context = LocalContext.current
+                    val contactEmail = stringResource(R.string.contact_email)
                     ErrorDialog(
-                        onConfirm = {
-                            sessionViewModel.resetState()
-                        },
-                        title = "Autofill Error",
-                        message = errorMessage
+                        onConfirm = { sessionViewModel.resetState() },
+                        title = "${errorInfo.type.name} ERROR",
+                        source = errorInfo.source,
+                        message = errorInfo.message,
+                        onSendReport = {
+                            launchErrorReportEmailIntent(
+                                context = context,
+                                errorInfo = errorInfo,
+                                recipientEmail = contactEmail
+                            )
+                        }
                     )
                 }
             }

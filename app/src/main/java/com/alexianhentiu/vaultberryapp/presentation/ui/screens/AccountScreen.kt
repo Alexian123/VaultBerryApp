@@ -1,5 +1,7 @@
 package com.alexianhentiu.vaultberryapp.presentation.ui.screens
 
+import android.content.Intent
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -8,14 +10,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.alexianhentiu.vaultberryapp.R
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.topBars.TopBarWithBackButton
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ErrorDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.InfoDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.AccountForm
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.animated.LoadingAnimationDialog
 import com.alexianhentiu.vaultberryapp.presentation.utils.enums.NavRoute
+import com.alexianhentiu.vaultberryapp.presentation.utils.helper.launchErrorReportEmailIntent
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.unique.AccountViewModel
 import com.alexianhentiu.vaultberryapp.presentation.utils.state.AccountScreenState
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.UtilityViewModel
@@ -85,12 +92,13 @@ fun AccountScreen(
                     val recoveryPassword = accountViewModel.recoveryPassword.collectAsState()
                     InfoDialog(
                         title = "Password changed successfully",
-                        message = "Your new recovery password is: \"$recoveryPassword\". " +
+                        message = "Your new recovery password is:\n${recoveryPassword.value}\n" +
                                 "It will be copied into the clipboard upon confirmation.",
                         onDismissRequest = {
                             utilityViewModel.copyToClipboard(recoveryPassword.value)
-                            sessionViewModel.logout()
+                            accountViewModel.setLoadingState()
                             accountViewModel.clearData()
+                            sessionViewModel.logout()
                             navController.navigate(NavRoute.LOGIN.path)
                         }
                     )
@@ -100,7 +108,7 @@ fun AccountScreen(
                     val secretKey = accountViewModel.secretKey.collectAsState()
                     InfoDialog(
                         title = "2FA Setup",
-                        message = "Your secret key is: \"$secretKey\". " +
+                        message = "Your secret key is:\n${secretKey.value}\n" +
                                 "It will be copied into the clipboard upon confirmation.",
                         onDismissRequest = {
                             utilityViewModel.copyToClipboard(secretKey.value)
@@ -110,11 +118,21 @@ fun AccountScreen(
                 }
 
                 is AccountScreenState.Error -> {
-                    val errorMessage = (screenState as AccountScreenState.Error).info.message
+                    val errorInfo = (screenState as AccountScreenState.Error).info
+                    val context = LocalContext.current
+                    val contactEmail = stringResource(R.string.contact_email)
                     ErrorDialog(
                         onConfirm = { accountViewModel.resetState() },
-                        title = "Account Error",
-                        message = errorMessage
+                        title = "${errorInfo.type.name} ERROR",
+                        source = errorInfo.source,
+                        message = errorInfo.message,
+                        onSendReport = {
+                            launchErrorReportEmailIntent(
+                                context = context,
+                                errorInfo = errorInfo,
+                                recipientEmail = contactEmail
+                            )
+                        }
                     )
                 }
             }

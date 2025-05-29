@@ -24,6 +24,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -36,6 +37,7 @@ import com.alexianhentiu.vaultberryapp.presentation.ui.components.misc.VaultEntr
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ErrorDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.animated.LoadingAnimationDialog
 import com.alexianhentiu.vaultberryapp.presentation.utils.enums.NavRoute
+import com.alexianhentiu.vaultberryapp.presentation.utils.helper.launchErrorReportEmailIntent
 import com.alexianhentiu.vaultberryapp.presentation.utils.state.VaultScreenState
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.UtilityViewModel
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.SessionViewModel
@@ -229,11 +231,21 @@ fun VaultScreen(
                 }
 
                 is VaultScreenState.Error -> {
-                    val errorMessage = (screenState as VaultScreenState.Error).info.message
+                    val errorInfo = (screenState as VaultScreenState.Error).info
+                    val context = LocalContext.current
+                    val contactEmail = stringResource(R.string.contact_email)
                     ErrorDialog(
                         onConfirm = { vaultViewModel.resetState() },
-                        title = "Vault Error",
-                        message = errorMessage
+                        title = "${errorInfo.type.name} ERROR",
+                        source = errorInfo.source,
+                        message = errorInfo.message,
+                        onSendReport = {
+                            launchErrorReportEmailIntent(
+                                context = context,
+                                errorInfo = errorInfo,
+                                recipientEmail = contactEmail
+                            )
+                        }
                     )
                 }
             }

@@ -12,7 +12,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
+import com.alexianhentiu.vaultberryapp.R
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.topBars.AuthTopBar
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ErrorDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.LoginForm
@@ -20,6 +23,7 @@ import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.Verify2F
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.animated.SuccessAnimationDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.animated.LoadingAnimationDialog
 import com.alexianhentiu.vaultberryapp.presentation.utils.enums.NavRoute
+import com.alexianhentiu.vaultberryapp.presentation.utils.helper.launchErrorReportEmailIntent
 import com.alexianhentiu.vaultberryapp.presentation.utils.state.SessionState
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.UtilityViewModel
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.SessionViewModel
@@ -102,11 +106,21 @@ fun LoginScreen(
                 }
 
                 is SessionState.Error -> {
-                    val errorMessage = (screenState as SessionState.Error).info.message
+                    val errorInfo = (screenState as SessionState.Error).info
+                    val context = LocalContext.current
+                    val contactEmail = stringResource(R.string.contact_email)
                     ErrorDialog(
                         onConfirm = { sessionViewModel.resetState() },
-                        title = "Login Error",
-                        message = errorMessage
+                        title = "${errorInfo.type.name} ERROR",
+                        source = errorInfo.source,
+                        message = errorInfo.message,
+                        onSendReport = {
+                            launchErrorReportEmailIntent(
+                                context = context,
+                                errorInfo = errorInfo,
+                                recipientEmail = contactEmail
+                            )
+                        }
                     )
                 }
             }

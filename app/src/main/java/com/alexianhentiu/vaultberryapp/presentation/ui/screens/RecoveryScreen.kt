@@ -8,8 +8,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.alexianhentiu.vaultberryapp.R
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.topBars.AuthTopBar
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ErrorDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.InfoDialog
@@ -19,6 +22,7 @@ import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.Recovery
 import com.alexianhentiu.vaultberryapp.presentation.utils.enums.TextFieldType
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.animated.LoadingAnimationDialog
 import com.alexianhentiu.vaultberryapp.presentation.utils.enums.NavRoute
+import com.alexianhentiu.vaultberryapp.presentation.utils.helper.launchErrorReportEmailIntent
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.unique.RecoveryViewModel
 import com.alexianhentiu.vaultberryapp.presentation.utils.state.RecoveryScreenState
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.SessionViewModel
@@ -45,15 +49,6 @@ fun RecoveryScreen(
         Box(modifier = Modifier.fillMaxSize().padding(contentPadding)) {
 
             when (screenState) {
-                is RecoveryScreenState.Error -> {
-                    val errorMessage = (screenState as RecoveryScreenState.Error).info.message
-                    ErrorDialog(
-                        onConfirm = { recoveryViewModel.resetState() },
-                        title = "Recovery Error",
-                        message = errorMessage
-                    )
-                }
-
                 is RecoveryScreenState.Loading -> {
                     LoadingAnimationDialog()
                 }
@@ -110,6 +105,26 @@ fun RecoveryScreen(
                         }
                     )
                 }
+
+                is RecoveryScreenState.Error -> {
+                    val errorInfo = (screenState as RecoveryScreenState.Error).info
+                    val context = LocalContext.current
+                    val contactEmail = stringResource(R.string.contact_email)
+                    ErrorDialog(
+                        onConfirm = { recoveryViewModel.resetState() },
+                        title = "${errorInfo.type.name} ERROR",
+                        source = errorInfo.source,
+                        message = errorInfo.message,
+                        onSendReport = {
+                            launchErrorReportEmailIntent(
+                                context = context,
+                                errorInfo = errorInfo,
+                                recipientEmail = contactEmail
+                            )
+                        }
+                    )
+                }
+
             }
         }
     }

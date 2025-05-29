@@ -207,6 +207,10 @@ class AccountViewModel @Inject constructor(
         }
     }
 
+    fun setLoadingState() {
+        _accountScreenState.value = AccountScreenState.Loading
+    }
+
     fun resetState() {
         _accountScreenState.value = AccountScreenState.Init
         clearData()

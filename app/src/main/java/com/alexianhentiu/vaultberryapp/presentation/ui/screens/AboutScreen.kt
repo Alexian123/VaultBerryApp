@@ -36,6 +36,7 @@ import com.alexianhentiu.vaultberryapp.R
 import androidx.core.net.toUri
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.misc.AboutInfoRow
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.topBars.TopBarWithBackButton
+import com.alexianhentiu.vaultberryapp.presentation.utils.helper.createEmailIntent
 import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -118,11 +119,10 @@ fun AboutScreen(
                 value = contactEmail,
                 isClickable = true,
                 onClick = {
-                    val intent = Intent(Intent.ACTION_SENDTO).apply {
-                        data = "mailto:".toUri()
-                        putExtra(Intent.EXTRA_EMAIL, arrayOf(contactEmail))
-                        putExtra(Intent.EXTRA_SUBJECT, "Regarding $appName App")
-                    }
+                    val intent = createEmailIntent(
+                        recipientEmail = contactEmail,
+                        subject = "Regarding $appName App"
+                    )
                     try {
                         context.startActivity(intent)
                     } catch (e: Exception) {

@@ -15,10 +15,6 @@ import dagger.hilt.android.AndroidEntryPoint
 
 /*
     TODO:
-        - Improve error handling
-            - Create log file for errors
-            - Display more information about the error
-            - Implement failsafe mechanisms
         - Create string resources for all strings
         - Integrate VPN connection (optional)
         - Cleanup code & add comments

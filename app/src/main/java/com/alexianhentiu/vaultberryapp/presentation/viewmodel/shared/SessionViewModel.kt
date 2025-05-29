@@ -73,7 +73,6 @@ class SessionViewModel @Inject constructor(
             when (val result = logoutUseCase()) {
                 is UseCaseResult.Success -> {
                     resetState()
-                    _sessionState.value = SessionState.LoggedOut
                 }
 
                 is UseCaseResult.Error -> {

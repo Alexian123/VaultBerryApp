@@ -25,7 +25,7 @@
     <string name="settings_icon_content_description">Settings</string>
     <string name="unlock_vault_icon_content_description">Unlock vault</string>
     <string name="unlock_vault_text">Tap the screen to unlock the vault</string>
-    <string name="error_dialog_title_default">Error</string>
+    <string name="error_dialog_title_default">ERROR</string>
     <string name="error_dialog_message_default">An error occurred. Please try again.</string>
     <string name="error_dialog_confirm_button_text">OK</string>
     <string name="reset_password_form_title">Reset password</string>
@@ -43,4 +43,5 @@
     <string name="website_url">https://www.github.com/Alexian123/VaultBerryApp</string>
     <string name="app_description">VaultBerry helps you securely store and manage your accounts with ease and peace of mind.</string>
     <string name="license_url">https://raw.githubusercontent.com/Alexian123/VaultBerryApp/refs/heads/master/LICENSE</string>
+    <string name="error_dialog_send_report_text">Send Report</string>
 </resources>
