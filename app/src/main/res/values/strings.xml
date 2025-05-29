@@ -38,4 +38,9 @@
     <string name="vault_screen_title">Vault</string>
     <string name="expandable_section_icon_content_description">Expandable section icon</string>
     <string name="about_menu_item_text">About</string>
+    <string name="developer_name">Alexian H.</string>
+    <string name="contact_email">alexianhentiu1208@gmail.com</string>
+    <string name="website_url">https://www.github.com/Alexian123/VaultBerryApp</string>
+    <string name="app_description">VaultBerry helps you securely store and manage your accounts with ease and peace of mind.</string>
+    <string name="license_url">https://raw.githubusercontent.com/Alexian123/VaultBerryApp/refs/heads/master/LICENSE</string>
 </resources>

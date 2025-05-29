@@ -7,6 +7,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.alexianhentiu.vaultberryapp.presentation.ui.screens.AboutScreen
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.AccountScreen
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.LoginScreen
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.PasswordGeneratorScreen
@@ -49,6 +50,9 @@ fun AppNavHost() {
         }
         composable(NavRoute.SETTINGS.path) {
             SettingsScreen(navController, settingsViewModel)
+        }
+        composable(NavRoute.ABOUT.path) {
+            AboutScreen(navController)
         }
     }
 }

@@ -2,7 +2,7 @@ package com.alexianhentiu.vaultberryapp.presentation.ui.components.buttons
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBackIosNew
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.*
@@ -27,7 +27,7 @@ fun DebouncedBackButton(navController: NavController, enabled: Boolean = true, d
     }
 
     IconButton(onClick = onBack, enabled = isEnabledInternal) {
-        Icon(Icons.Filled.ArrowBackIosNew, "Back")
+        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back")
     }
 
     BackHandler(enabled = isEnabledInternal) {

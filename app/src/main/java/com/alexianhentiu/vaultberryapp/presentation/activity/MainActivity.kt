@@ -15,7 +15,6 @@ import dagger.hilt.android.AndroidEntryPoint
 
 /*
     TODO:
-        - About Page
         - Improve error handling
             - Create log file for errors
             - Display more information about the error

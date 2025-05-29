@@ -84,7 +84,7 @@ fun VaultScreen(
                     navController.navigate(NavRoute.PASSWORD_GENERATOR.path)
                 },
                 onSettingsClick = { navController.navigate(NavRoute.SETTINGS.path) },
-                onAboutClick = { TODO("Implement about screen") }
+                onAboutClick = { navController.navigate(NavRoute.ABOUT.path) }
             )
         },
         floatingActionButton = {
