@@ -12,7 +12,7 @@ import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.account.Get2FASt
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.account.GetAccountInfoUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.account.Setup2FAUseCase
 import com.alexianhentiu.vaultberryapp.domain.utils.UseCaseResult
-import com.alexianhentiu.vaultberryapp.presentation.utils.store.ErrorInfo
+import com.alexianhentiu.vaultberryapp.presentation.utils.containers.ErrorInfo
 import com.alexianhentiu.vaultberryapp.presentation.utils.state.AccountScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -31,7 +31,7 @@ import com.alexianhentiu.vaultberryapp.domain.utils.enums.PasswordStrength
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.PasswordField
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.misc.CheckboxOptionRow
 import com.alexianhentiu.vaultberryapp.presentation.utils.enums.TextFieldType
-import com.alexianhentiu.vaultberryapp.presentation.utils.store.PasswordGenOptions
+import com.alexianhentiu.vaultberryapp.presentation.utils.containers.PasswordGenOptions
 import java.lang.NumberFormatException
 
 @Composable

@@ -32,7 +32,7 @@ import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.Passwor
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.ValidatedTextField
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.Verify2FAForm
 import com.alexianhentiu.vaultberryapp.presentation.utils.helper.launchErrorReportEmailIntent
-import com.alexianhentiu.vaultberryapp.presentation.utils.store.AutofillEntry
+import com.alexianhentiu.vaultberryapp.presentation.utils.containers.AutofillEntry
 import com.alexianhentiu.vaultberryapp.presentation.utils.state.AutofillState
 import com.alexianhentiu.vaultberryapp.presentation.utils.state.SessionState
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.SessionViewModel

@@ -1,16 +1,19 @@
 package com.alexianhentiu.vaultberryapp.di.modules
 
+import android.content.SharedPreferences
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import com.alexianhentiu.vaultberryapp.data.api.APIService
 import com.alexianhentiu.vaultberryapp.data.repository.AccountRepositoryImpl
 import com.alexianhentiu.vaultberryapp.data.repository.AuthRepositoryImpl
+import com.alexianhentiu.vaultberryapp.data.repository.CredentialsRepositoryImpl
 import com.alexianhentiu.vaultberryapp.data.repository.SettingsRepositoryImpl
 import com.alexianhentiu.vaultberryapp.data.repository.VaultRepositoryImpl
 import com.alexianhentiu.vaultberryapp.data.utils.APIResponseHandler
 import com.alexianhentiu.vaultberryapp.data.utils.ModelConverter
 import com.alexianhentiu.vaultberryapp.domain.repository.AccountRepository
 import com.alexianhentiu.vaultberryapp.domain.repository.AuthRepository
+import com.alexianhentiu.vaultberryapp.domain.repository.CredentialsRepository
 import com.alexianhentiu.vaultberryapp.domain.repository.SettingsRepository
 import com.alexianhentiu.vaultberryapp.domain.repository.VaultRepository
 import dagger.Module
@@ -53,4 +56,10 @@ object RepositoryModule {
     fun provideSettingsRepository(
         dataStore: DataStore<Preferences>
     ): SettingsRepository = SettingsRepositoryImpl(dataStore)
+
+    @Provides
+    @Singleton
+    fun provideCredentialsRepository(
+        sharedPreferences: SharedPreferences
+    ): CredentialsRepository = CredentialsRepositoryImpl(sharedPreferences)
 }

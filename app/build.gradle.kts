@@ -76,6 +76,8 @@ dependencies {
     implementation(libs.saslprep)
     implementation(libs.stringprep)
 
+    implementation(libs.androidx.biometric)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

@@ -1,5 +1,6 @@
 package com.alexianhentiu.vaultberryapp.presentation.ui.screens
 
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,6 +15,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.fragment.app.FragmentActivity
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.alexianhentiu.vaultberryapp.R
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.topBars.AuthTopBar
@@ -24,7 +27,9 @@ import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.animat
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.animated.LoadingAnimationDialog
 import com.alexianhentiu.vaultberryapp.presentation.utils.enums.NavRoute
 import com.alexianhentiu.vaultberryapp.presentation.utils.helper.launchErrorReportEmailIntent
+import com.alexianhentiu.vaultberryapp.presentation.utils.state.BiometricState
 import com.alexianhentiu.vaultberryapp.presentation.utils.state.SessionState
+import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.BiometricViewModel
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.UtilityViewModel
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.SessionViewModel
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.SettingsViewModel
@@ -42,6 +47,12 @@ fun LoginScreen(
     val inputValidator by utilityViewModel.inputValidator.collectAsState()
 
     val screenState by sessionViewModel.sessionState.collectAsState()
+
+    val activity = (LocalContext.current) as FragmentActivity
+    val biometricViewModel: BiometricViewModel = hiltViewModel()
+    val biometricState by biometricViewModel.biometricState.collectAsState()
+    val hasStoredCredentials by biometricViewModel.hasStoredCredentials.collectAsState()
+    biometricViewModel.checkStoredCredentials()
 
     BackHandler(enabled = true) {}
 
@@ -67,7 +78,38 @@ fun LoginScreen(
                             } else {
                                 settingsViewModel.setRememberEmail(false)
                             }
-                            sessionViewModel.login(email, password)
+                            if (!hasStoredCredentials) {
+                                biometricViewModel.storeCredentials(
+                                    activity,
+                                    email,
+                                    password
+                                )
+                                when (biometricState) {
+                                    is BiometricState.CredentialsStored -> {
+                                        Log.d("LoginScreen", "Credentials stored")
+                                        sessionViewModel.login(email, password)
+                                    }
+                                    is BiometricState.Error -> {
+                                        val errorInfo = (biometricState as BiometricState.Error).info
+                                        Log.d("LoginScreen", "Error storing credentials: ${errorInfo.message}")
+                                    }
+                                    else -> {
+                                        Log.d("LoginScreen", "Biometric state: $biometricState")
+                                    }
+                                }
+                            } else {
+                                biometricViewModel.authenticate(activity)
+                                when (biometricState) {
+                                    is BiometricState.Authenticated -> {
+                                        Log.d("LoginScreen", "Credentials authenticated")
+                                        Log.d("LoginScreen", "Email: $email, Password: $password")
+                                    }
+                                    else -> {
+                                        Log.d("LoginScreen", "Biometric state: $biometricState")
+                                    }
+                                }
+                            }
+                            //sessionViewModel.login(email, password)
                         },
                         onForgotPasswordClicked = { navController.navigate(NavRoute.RECOVERY.path) },
                         validator = {

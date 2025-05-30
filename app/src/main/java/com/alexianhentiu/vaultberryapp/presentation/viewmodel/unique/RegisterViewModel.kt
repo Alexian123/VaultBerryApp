@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.alexianhentiu.vaultberryapp.domain.model.entity.AccountInfo
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.auth.RegisterUseCase
 import com.alexianhentiu.vaultberryapp.domain.utils.UseCaseResult
-import com.alexianhentiu.vaultberryapp.presentation.utils.store.ErrorInfo
+import com.alexianhentiu.vaultberryapp.presentation.utils.containers.ErrorInfo
 import com.alexianhentiu.vaultberryapp.presentation.utils.state.RegisterScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.vault.SearchVaultEntriesUseCase
 import com.alexianhentiu.vaultberryapp.domain.utils.UseCaseResult
-import com.alexianhentiu.vaultberryapp.presentation.utils.store.AutofillEntry
-import com.alexianhentiu.vaultberryapp.presentation.utils.store.ErrorInfo
+import com.alexianhentiu.vaultberryapp.presentation.utils.containers.AutofillEntry
+import com.alexianhentiu.vaultberryapp.presentation.utils.containers.ErrorInfo
 import com.alexianhentiu.vaultberryapp.presentation.utils.state.AutofillState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -1,12 +1,12 @@
 package com.alexianhentiu.vaultberryapp.presentation.activity
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.fragment.app.FragmentActivity
 import com.alexianhentiu.vaultberryapp.presentation.utils.enums.AppTheme
 import com.alexianhentiu.vaultberryapp.presentation.ui.navigation.AppNavHost
 import com.alexianhentiu.vaultberryapp.presentation.ui.theme.VaultBerryAppTheme
@@ -21,7 +21,7 @@ import dagger.hilt.android.AndroidEntryPoint
 */
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity : FragmentActivity() {
 
     private val settingsViewModel: SettingsViewModel by viewModels()
 

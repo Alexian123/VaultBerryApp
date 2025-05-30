@@ -15,7 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.alexianhentiu.vaultberryapp.R
-import com.alexianhentiu.vaultberryapp.presentation.utils.store.MenuItem
+import com.alexianhentiu.vaultberryapp.presentation.utils.containers.MenuItem
 
 @Composable
 fun MainMenu(

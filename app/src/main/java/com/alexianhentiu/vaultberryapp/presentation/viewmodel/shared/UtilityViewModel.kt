@@ -10,7 +10,7 @@ import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.utility.GetValid
 import com.alexianhentiu.vaultberryapp.domain.utils.enums.PasswordStrength
 import com.alexianhentiu.vaultberryapp.domain.utils.UseCaseResult
 import com.alexianhentiu.vaultberryapp.domain.utils.validation.InputValidator
-import com.alexianhentiu.vaultberryapp.presentation.utils.store.PasswordGenOptions
+import com.alexianhentiu.vaultberryapp.presentation.utils.containers.PasswordGenOptions
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

@@ -6,7 +6,7 @@ import android.content.Intent
 import android.os.Build
 import android.util.Log
 import androidx.core.net.toUri
-import com.alexianhentiu.vaultberryapp.presentation.utils.store.ErrorInfo
+import com.alexianhentiu.vaultberryapp.presentation.utils.containers.ErrorInfo
 
 fun createEmailIntent(
     recipientEmail: String,

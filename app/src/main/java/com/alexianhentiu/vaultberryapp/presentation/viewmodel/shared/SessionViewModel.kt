@@ -7,7 +7,7 @@ import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.auth.LoginUseCas
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.auth.LogoutUseCase
 import com.alexianhentiu.vaultberryapp.domain.utils.UseCaseResult
 import com.alexianhentiu.vaultberryapp.domain.utils.enums.ErrorType
-import com.alexianhentiu.vaultberryapp.presentation.utils.store.ErrorInfo
+import com.alexianhentiu.vaultberryapp.presentation.utils.containers.ErrorInfo
 import com.alexianhentiu.vaultberryapp.presentation.utils.state.SessionState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
