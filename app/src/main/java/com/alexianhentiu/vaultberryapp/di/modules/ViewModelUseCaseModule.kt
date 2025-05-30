@@ -5,6 +5,7 @@ import com.alexianhentiu.vaultberryapp.di.qualifiers.DebugValidatorQualifier
 import com.alexianhentiu.vaultberryapp.di.qualifiers.RegularValidatorQualifier
 import com.alexianhentiu.vaultberryapp.domain.repository.AccountRepository
 import com.alexianhentiu.vaultberryapp.domain.repository.AuthRepository
+import com.alexianhentiu.vaultberryapp.domain.repository.SettingsRepository
 import com.alexianhentiu.vaultberryapp.domain.repository.VaultRepository
 import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.DecryptKeyUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.DecryptVaultEntryUseCase
@@ -41,7 +42,6 @@ import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.vault.UpdateEntr
 import com.alexianhentiu.vaultberryapp.domain.utils.security.AuthGuardian
 import com.alexianhentiu.vaultberryapp.domain.utils.security.PasswordEvaluator
 import com.alexianhentiu.vaultberryapp.domain.utils.security.PasswordGenerator
-import com.alexianhentiu.vaultberryapp.domain.utils.settings.SettingsManager
 import com.alexianhentiu.vaultberryapp.domain.utils.validation.InputValidator
 import dagger.Module
 import dagger.Provides
@@ -59,18 +59,18 @@ object ViewModelUseCaseModule {
 
     @Provides
     fun provideSaveSettingUseCase(
-        settingsManager: SettingsManager
-    ): SaveSettingUseCase = SaveSettingUseCase(settingsManager)
+        settingsRepository: SettingsRepository
+    ): SaveSettingUseCase = SaveSettingUseCase(settingsRepository)
 
     @Provides
     fun provideLoadSettingUseCase(
-        settingsManager: SettingsManager
-    ): LoadSettingUseCase = LoadSettingUseCase(settingsManager)
+        settingsRepository: SettingsRepository
+    ): LoadSettingUseCase = LoadSettingUseCase(settingsRepository)
 
     @Provides
     fun provideObserveSettingUseCase(
-        settingsManager: SettingsManager
-    ): ObserveSettingUseCase = ObserveSettingUseCase(settingsManager)
+        settingsRepository: SettingsRepository
+    ): ObserveSettingUseCase = ObserveSettingUseCase(settingsRepository)
 
     @Provides
     fun provideEvalPasswordUseCase(

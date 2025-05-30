@@ -1,4 +1,4 @@
-package com.alexianhentiu.vaultberryapp.data.utils
+package com.alexianhentiu.vaultberryapp.data.api
 
 import okhttp3.Cookie
 import okhttp3.CookieJar

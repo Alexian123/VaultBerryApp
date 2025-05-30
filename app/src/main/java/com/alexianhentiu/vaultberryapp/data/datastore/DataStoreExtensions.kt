@@ -1,4 +1,4 @@
-package com.alexianhentiu.vaultberryapp.data.local
+package com.alexianhentiu.vaultberryapp.data.datastore
 
 import android.content.Context
 import androidx.datastore.core.DataStore

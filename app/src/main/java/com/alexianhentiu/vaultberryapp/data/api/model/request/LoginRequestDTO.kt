@@ -1,4 +1,4 @@
-package com.alexianhentiu.vaultberryapp.data.model.request
+package com.alexianhentiu.vaultberryapp.data.api.model.request
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
