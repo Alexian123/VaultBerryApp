@@ -86,6 +86,19 @@ class SettingsViewModel @Inject constructor(
             initialValue = AppSettings.REMEMBER_EMAIL.defaultValue
         )
 
+    val biometricEnabled: StateFlow<Boolean> =
+        when (val result = observeSettingUseCase(AppSettings.BIOMETRIC_ENABLED)) {
+            is UseCaseResult.Success -> result.data
+            is UseCaseResult.Error -> {
+                Log.e(result.source, result.message)
+                flowOf(AppSettings.BIOMETRIC_ENABLED.defaultValue)
+            }
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = AppSettings.BIOMETRIC_ENABLED.defaultValue
+        )
+
     fun setUseSystemTheme(useSystemTheme: Boolean) {
         viewModelScope.launch {
             when (val result = saveSettingUseCase(AppSettings.USE_SYSTEM_THEME, useSystemTheme)) {
@@ -144,6 +157,19 @@ class SettingsViewModel @Inject constructor(
             when (val result = saveSettingUseCase(AppSettings.REMEMBER_EMAIL, rememberEmail)) {
                 is UseCaseResult.Success -> {
                     Log.d("SettingsViewModel", "setRememberEmail: $rememberEmail")
+                }
+                is UseCaseResult.Error -> {
+                    Log.e(result.source, result.message)
+                }
+            }
+        }
+    }
+
+    fun setBiometricEnabled(biometricEnabled: Boolean) {
+        viewModelScope.launch {
+            when (val result = saveSettingUseCase(AppSettings.BIOMETRIC_ENABLED, biometricEnabled)) {
+                is UseCaseResult.Success -> {
+                    Log.d("SettingsViewModel", "setBiometricEnabled: $biometricEnabled")
                 }
                 is UseCaseResult.Error -> {
                     Log.e(result.source, result.message)

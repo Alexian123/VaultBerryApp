@@ -7,12 +7,15 @@ import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.auth.LoginUseCas
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.auth.LogoutUseCase
 import com.alexianhentiu.vaultberryapp.domain.utils.UseCaseResult
 import com.alexianhentiu.vaultberryapp.domain.utils.enums.ErrorType
+import com.alexianhentiu.vaultberryapp.presentation.utils.containers.AuthCredentials
 import com.alexianhentiu.vaultberryapp.presentation.utils.containers.ErrorInfo
 import com.alexianhentiu.vaultberryapp.presentation.utils.state.SessionState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,6 +30,9 @@ class SessionViewModel @Inject constructor(
 
     private val _decryptedKey = MutableStateFlow<ByteArray>(ByteArray(0))
     val decryptedKey: StateFlow<ByteArray> = _decryptedKey
+
+    private val _credentialsEvent = Channel<AuthCredentials>()
+    val credentialsEvent = _credentialsEvent.receiveAsFlow()
 
     private val _tempEmail = MutableStateFlow<String>("")
     private val _tempPassword = MutableStateFlow<String>("")
@@ -43,6 +49,10 @@ class SessionViewModel @Inject constructor(
                 is UseCaseResult.Success -> {
                     _sessionState.value = SessionState.LoggedIn
                     _decryptedKey.value = result.data
+                    _credentialsEvent.send(AuthCredentials(
+                        email ?: _tempEmail.value,
+                        password ?: _tempPassword.value)
+                    )
                     clearTempData()
                 }
 

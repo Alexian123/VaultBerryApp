@@ -9,10 +9,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Fingerprint
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -35,6 +40,7 @@ import com.alexianhentiu.vaultberryapp.presentation.utils.helper.launchErrorRepo
 import com.alexianhentiu.vaultberryapp.presentation.utils.containers.AutofillEntry
 import com.alexianhentiu.vaultberryapp.presentation.utils.state.AutofillState
 import com.alexianhentiu.vaultberryapp.presentation.utils.state.SessionState
+import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.BiometricViewModel
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.SessionViewModel
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.SettingsViewModel
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.UtilityViewModel
@@ -45,24 +51,35 @@ fun AutofillScreen(
     utilityViewModel: UtilityViewModel,
     sessionViewModel: SessionViewModel,
     settingsViewModel: SettingsViewModel,
+    biometricViewModel: BiometricViewModel,
     autofillViewModel: AutofillViewModel = hiltViewModel(),
     keywords: List<String>,
     onSuccess: (List<AutofillEntry>) -> Unit,
 ) {
     val savedEmail by settingsViewModel.savedEmail.collectAsState()
     val rememberEmail by settingsViewModel.rememberEmail.collectAsState()
+    val biometricEnabled by settingsViewModel.biometricEnabled.collectAsState()
 
     val screenState by sessionViewModel.sessionState.collectAsState()
 
     val inputValidator by utilityViewModel.inputValidator.collectAsState()
 
+    val hasStoredCredentials by biometricViewModel.hasStoredCredentials.collectAsState()
+
     var finishedSearching by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        biometricViewModel.credentialsEvent.collect { credentials ->
+            sessionViewModel.login(credentials.email, credentials.password)
+        }
+    }
 
     BackHandler(enabled = true) {}
 
     Scaffold { contentPadding ->
-        Box(modifier = Modifier.fillMaxSize().padding(contentPadding)) {
-
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .padding(contentPadding)) {
             when (screenState) {
                 is SessionState.LoggedOut -> {
                     var email by remember(savedEmail, rememberEmail) {
@@ -116,11 +133,28 @@ fun AutofillScreen(
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                         Button(
-                            onClick = { sessionViewModel.login(email, password) },
+                            onClick = {
+                                sessionViewModel.login(email, password)
+                            },
                             modifier = Modifier.fillMaxWidth(),
                             enabled = isEmailValid && isPasswordValid && !finishedSearching
                         ) {
                             Text(stringResource(R.string.login_button_text))
+                        }
+                        Spacer(modifier = Modifier.height(8.dp))
+                        IconButton(
+                            onClick = {
+                                if (hasStoredCredentials) {
+                                    biometricViewModel.requestAuthenticateAndRetrieveCredentials()
+                                }
+                            },
+                            enabled = biometricEnabled,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Icon(
+                                Icons.Filled.Fingerprint,
+                                stringResource(R.string.biometric_icon_description)
+                            )
                         }
                     }
                 }

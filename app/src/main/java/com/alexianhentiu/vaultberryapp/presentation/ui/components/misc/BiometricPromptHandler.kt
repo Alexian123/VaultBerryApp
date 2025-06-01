@@ -48,6 +48,13 @@ fun BiometricPromptHandler(
                     ).show()
                     biometricViewModel.resetState()
                 }
+                is BiometricState.ClearedCredentials -> {
+                    Toast.makeText(context,
+                        "Credentials cleared successfully!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    biometricViewModel.resetState()
+                }
                 else -> {}
             }
         }

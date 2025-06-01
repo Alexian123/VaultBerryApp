@@ -17,7 +17,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 /*
     TODO:
-        - Biometric login?
+        - Improve and cleanup states and flows in view models
         - Add option to set the backend ip and import SSL certificate
         - Cleanup code & add comments
 */

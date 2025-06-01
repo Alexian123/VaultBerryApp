@@ -2,7 +2,7 @@ package com.alexianhentiu.vaultberryapp.domain.utils.settings
 
 object AppSettings {
 
-    val USE_SYSTEM_THEME = SettingDefinition.BooleanDefinition("use_system_theme", false)
+    val USE_SYSTEM_THEME = SettingDefinition.BooleanDefinition("use_system_theme", true)
 
     val DARK_THEME = SettingDefinition.BooleanDefinition("dark_theme")
 
@@ -12,4 +12,5 @@ object AppSettings {
 
     val REMEMBER_EMAIL = SettingDefinition.BooleanDefinition("remember_email")
 
+    val BIOMETRIC_ENABLED = SettingDefinition.BooleanDefinition("biometric_enabled", true)
 }

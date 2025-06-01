@@ -23,10 +23,13 @@ fun SettingsForm(
     useSystemTheme: Boolean,
     darkTheme: Boolean,
     debugMode: Boolean,
+    biometricEnabled: Boolean,
     onUseSystemThemeChange: (Boolean) -> Unit,
     onDarkThemeChange: (Boolean) -> Unit,
     onDebugModeChange: (Boolean) -> Unit,
     onAutofillActivation: () -> Unit,
+    onBiometricEnabledChange: (Boolean) -> Unit,
+    onClearBiometricData: () -> Unit
 ) {
     Column(
         verticalArrangement = Arrangement.Top,
@@ -50,6 +53,26 @@ fun SettingsForm(
             checked = darkTheme,
             onCheckedChange = onDarkThemeChange
         )
+        HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+
+        Text(
+            text = stringResource(R.string.security_settings_text),
+            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+            modifier = Modifier.padding(top = 8.dp, bottom = 8.dp)
+        )
+        SwitchSettingItem(
+            text = stringResource(R.string.biometric_login_setting_text),
+            checked = biometricEnabled,
+            onCheckedChange = onBiometricEnabledChange
+        )
+        TextButton(
+            onClick = onClearBiometricData,
+        ) {
+            Text(
+                text = stringResource(R.string.clear_biometric_data_text),
+                fontSize = 14.sp
+            )
+        }
         HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
 
         Text(
@@ -87,9 +110,12 @@ fun SettingsFormPreview() {
         useSystemTheme = false,
         darkTheme = true,
         debugMode = true,
+        biometricEnabled = true,
         onUseSystemThemeChange = {},
         onDarkThemeChange = {},
         onDebugModeChange = {},
-        onAutofillActivation = {}
+        onAutofillActivation = {},
+        onBiometricEnabledChange = {},
+        onClearBiometricData = {}
     )
 }

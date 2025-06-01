@@ -21,15 +21,18 @@ import com.alexianhentiu.vaultberryapp.presentation.ui.components.topBars.TopBar
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.SettingsViewModel
 import androidx.core.net.toUri
 import com.alexianhentiu.vaultberryapp.R
+import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.BiometricViewModel
 
 @Composable
 fun SettingsScreen(
     navController: NavHostController,
-    settingsViewModel: SettingsViewModel
+    settingsViewModel: SettingsViewModel,
+    biometricViewModel: BiometricViewModel
 ) {
     val useSystemTheme by settingsViewModel.useSystemTheme.collectAsState()
     val darkTheme by settingsViewModel.darkTheme.collectAsState()
     val debugMode by settingsViewModel.debugMode.collectAsState()
+    val biometricEnabled by settingsViewModel.biometricEnabled.collectAsState()
 
     var goToSystemSettings by remember { mutableStateOf(false) }
 
@@ -59,12 +62,15 @@ fun SettingsScreen(
                 useSystemTheme = useSystemTheme,
                 darkTheme = darkTheme,
                 debugMode = debugMode,
+                biometricEnabled = biometricEnabled,
                 onUseSystemThemeChange = { settingsViewModel.setUseSystemTheme(it) },
                 onDarkThemeChange = { settingsViewModel.setDarkTheme(it) },
                 onDebugModeChange = { settingsViewModel.setDebugMode(it) },
                 onAutofillActivation = {
                     goToSystemSettings = true
-                }
+                },
+                onBiometricEnabledChange = { settingsViewModel.setBiometricEnabled(it) },
+                onClearBiometricData = { biometricViewModel.clearStoredCredentials() }
             )
         }
     }

@@ -11,17 +11,19 @@ import android.view.autofill.AutofillId
 import android.view.autofill.AutofillManager
 import android.view.autofill.AutofillValue
 import android.widget.RemoteViews
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.fragment.app.FragmentActivity
+import com.alexianhentiu.vaultberryapp.presentation.ui.components.misc.BiometricPromptHandler
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.AutofillScreen
 import com.alexianhentiu.vaultberryapp.presentation.ui.theme.VaultBerryAppTheme
 import com.alexianhentiu.vaultberryapp.presentation.utils.containers.AutofillEntry
 import com.alexianhentiu.vaultberryapp.presentation.utils.enums.AppTheme
+import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.BiometricViewModel
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.SessionViewModel
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.SettingsViewModel
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.UtilityViewModel
@@ -29,11 +31,12 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlin.getValue
 
 @AndroidEntryPoint
-class AutofillActivity : ComponentActivity() {
+class AutofillActivity : FragmentActivity() {
 
     private val settingsViewModel: SettingsViewModel by viewModels()
     private val utilityViewModel: UtilityViewModel by viewModels()
     private val sessionViewModel: SessionViewModel by viewModels()
+    private val biometricViewModel: BiometricViewModel by viewModels()
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,6 +66,7 @@ class AutofillActivity : ComponentActivity() {
                     utilityViewModel = utilityViewModel,
                     sessionViewModel = sessionViewModel,
                     settingsViewModel = settingsViewModel,
+                    biometricViewModel = biometricViewModel,
                     keywords = keywords,
                     onSuccess = { entries ->
                         val fillResponse = buildFillResponse(usernameId, passwordId, entries)
@@ -72,6 +76,10 @@ class AutofillActivity : ComponentActivity() {
                         setResult(RESULT_OK, resultIntent)
                         finish()
                     }
+                )
+                BiometricPromptHandler(
+                    fragmentActivity = this,
+                    biometricViewModel = biometricViewModel
                 )
             }
         }

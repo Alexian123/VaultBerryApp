@@ -117,4 +117,8 @@
     <string name="info_dialog_title">Info</string>
     <string name="ok_button_text">OK</string>
     <string name="back_button_content_description">Back</string>
+    <string name="biometric_icon_description">Biometric Login</string>
+    <string name="security_settings_text">Security</string>
+    <string name="biometric_login_setting_text">Enable Biometric login</string>
+    <string name="clear_biometric_data_text">Clear biometric data</string>
 </resources>

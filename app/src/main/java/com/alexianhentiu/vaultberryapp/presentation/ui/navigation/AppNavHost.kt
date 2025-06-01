@@ -57,7 +57,7 @@ fun AppNavHost() {
             PasswordGeneratorScreen(navController, utilityViewModel)
         }
         composable(NavRoute.SETTINGS.path) {
-            SettingsScreen(navController, settingsViewModel)
+            SettingsScreen(navController, settingsViewModel, biometricViewModel)
         }
         composable(NavRoute.ABOUT.path) {
             AboutScreen(navController)

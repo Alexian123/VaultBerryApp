@@ -16,12 +16,9 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -37,24 +34,24 @@ class BiometricViewModel @Inject constructor(
     val credentialsEvent = _credentialsEvent.receiveAsFlow()
 
     private val _startBiometricPrompt = MutableSharedFlow<BiometricPromptRequest>()
-    val startBiometricPrompt: SharedFlow<BiometricPromptRequest> = _startBiometricPrompt.asSharedFlow()
+    val startBiometricPrompt: SharedFlow<BiometricPromptRequest> =
+        _startBiometricPrompt.asSharedFlow()
+
+    private val _hasStoredCredentials = MutableStateFlow<Boolean>(false)
+    val hasStoredCredentials: StateFlow<Boolean> = _hasStoredCredentials
 
     // Internal state to hold pending data until biometric authentication is successful
     private var pendingStoreEmail: String? = null
     private var pendingStorePassword: String? = null
     private var pendingEncryptedData: EncryptedAuthCredentials? = null
 
-    val hasStoredCredentials: StateFlow<Boolean> =
-        flowOf(biometricAuthManager.hasStoredCredentials()).stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = false
-        )
+    init {
+        _hasStoredCredentials.value = biometricAuthManager.hasStoredCredentials()
+    }
 
     fun requestStoreCredentials(email: String, password: String) {
         viewModelScope.launch {
             _biometricState.value = BiometricState.Loading
-
             when (val result = biometricAuthManager.isBiometricAvailable()) {
                 BiometricStatus.Available -> {
                     try {
@@ -88,7 +85,6 @@ class BiometricViewModel @Inject constructor(
     fun requestAuthenticateAndRetrieveCredentials() {
         viewModelScope.launch {
             _biometricState.value = BiometricState.Loading
-
             when (val result = biometricAuthManager.isBiometricAvailable()) {
                 BiometricStatus.Available -> {
                     val encryptedData = biometricAuthManager.getCredentials()
@@ -102,7 +98,6 @@ class BiometricViewModel @Inject constructor(
                         )
                         return@launch
                     }
-
                     try {
                         pendingEncryptedData = encryptedData
                         val passwordCipher = biometricAuthManager.getCipherForDecryption(
@@ -146,7 +141,7 @@ class BiometricViewModel @Inject constructor(
                     email = email
                 )
                 biometricAuthManager.storeCredentials(encryptedAuthCredentials)
-
+                _hasStoredCredentials.value = true
                 _biometricState.value = BiometricState.CredentialsStored
                 clearPendingStoreData()
             } catch (e: Exception) {
@@ -200,7 +195,8 @@ class BiometricViewModel @Inject constructor(
     fun clearStoredCredentials() {
         viewModelScope.launch {
             biometricAuthManager.clearStoredCredentials()
-            _biometricState.value = BiometricState.Idle
+            _biometricState.value = BiometricState.ClearedCredentials
+            _hasStoredCredentials.value = false
             clearPendingData()
         }
     }

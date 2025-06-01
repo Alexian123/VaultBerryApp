@@ -41,21 +41,15 @@ fun LoginScreen(
     settingsViewModel: SettingsViewModel,
     biometricViewModel: BiometricViewModel,
 ) {
-    val context = LocalContext.current
-
     val screenState by sessionViewModel.sessionState.collectAsState()
 
     val savedEmail by settingsViewModel.savedEmail.collectAsState()
     val rememberEmail by settingsViewModel.rememberEmail.collectAsState()
+    val biometricEnabled by settingsViewModel.biometricEnabled.collectAsState()
 
     val inputValidator by utilityViewModel.inputValidator.collectAsState()
 
-    val hasStoredCredentials by biometricViewModel.hasStoredCredentials.collectAsState()
-
     LaunchedEffect(Unit) {
-        if (hasStoredCredentials) {
-            biometricViewModel.requestAuthenticateAndRetrieveCredentials()
-        }
         biometricViewModel.credentialsEvent.collect { credentials ->
             sessionViewModel.login(credentials.email, credentials.password)
         }
@@ -82,6 +76,10 @@ fun LoginScreen(
                             navController = navController,
                             savedEmail = savedEmail,
                             rememberEmail = rememberEmail,
+                            onBiometricLoginClicked = {
+                                biometricViewModel.requestAuthenticateAndRetrieveCredentials()
+                            },
+                            isBiometricAuthAvailable = biometricEnabled,
                             onLoginClicked = { email, password, rememberEmailChecked ->
                                 if (rememberEmailChecked) {
                                     settingsViewModel.setSavedEmail(email)
@@ -91,7 +89,9 @@ fun LoginScreen(
                                 }
                                 sessionViewModel.login(email, password)
                             },
-                            onForgotPasswordClicked = { navController.navigate(NavRoute.RECOVERY.path) },
+                            onForgotPasswordClicked = {
+                                navController.navigate(NavRoute.RECOVERY.path)
+                            },
                             validator = {
                                 inputValidator?.getValidatorFunction(it) ?: { false }
                             },
@@ -117,21 +117,32 @@ fun LoginScreen(
                 }
 
                 is SessionState.LoggedIn -> {
+                    val credentials by sessionViewModel
+                        .credentialsEvent.collectAsState(initial = null)
+                    val hasStoredCredentials by biometricViewModel
+                        .hasStoredCredentials.collectAsState()
+                    LaunchedEffect(credentials) {
+                        if (credentials != null && biometricEnabled && !hasStoredCredentials) {
+                            biometricViewModel.requestStoreCredentials(
+                                credentials!!.email,
+                                credentials!!.password
+                            )
+                        }
+                    }
                     var shownAnimation by remember { mutableStateOf(false) }
                     if (!shownAnimation) {
                         SuccessAnimationDialog(
                             displayDurationMillis = 1000,
                             onTimeout = {
                                 shownAnimation = true
-                                navController.navigate(NavRoute.VAULT.path) {
-                                    popUpTo(NavRoute.LOGIN.path) { inclusive = true } // Clear back stack
-                                }
+                                navController.navigate(NavRoute.VAULT.path)
                             }
                         )
                     }
                 }
 
                 is SessionState.Error -> {
+                    val context = LocalContext.current
                     val errorInfo = (screenState as SessionState.Error).info
                     val contactEmail = stringResource(R.string.contact_email)
                     ErrorDialog(
