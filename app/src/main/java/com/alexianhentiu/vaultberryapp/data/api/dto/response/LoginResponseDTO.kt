@@ -1,6 +1,6 @@
-package com.alexianhentiu.vaultberryapp.data.api.model.response
+package com.alexianhentiu.vaultberryapp.data.api.dto.response
 
-import com.alexianhentiu.vaultberryapp.data.api.model.entity.KeyChainDTO
+import com.alexianhentiu.vaultberryapp.data.api.dto.entity.KeyChainDTO
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 

@@ -10,7 +10,6 @@ import com.alexianhentiu.vaultberryapp.data.utils.APIResponseHandler
 import com.alexianhentiu.vaultberryapp.data.utils.ModelConverter
 import com.alexianhentiu.vaultberryapp.di.qualifiers.DebugValidatorQualifier
 import com.alexianhentiu.vaultberryapp.di.qualifiers.RegularValidatorQualifier
-import com.alexianhentiu.vaultberryapp.domain.repository.CredentialsRepository
 import com.alexianhentiu.vaultberryapp.domain.utils.security.AuthGuardian
 import com.alexianhentiu.vaultberryapp.domain.utils.security.PasswordEvaluator
 import com.alexianhentiu.vaultberryapp.domain.utils.security.PasswordGenerator
@@ -20,8 +19,6 @@ import com.alexianhentiu.vaultberryapp.domain.utils.security.cryptography.Crypto
 import com.alexianhentiu.vaultberryapp.domain.utils.validation.DebugValidator
 import com.alexianhentiu.vaultberryapp.domain.utils.validation.InputValidator
 import com.alexianhentiu.vaultberryapp.domain.utils.validation.RegularValidator
-import com.alexianhentiu.vaultberryapp.presentation.utils.biometric.BiometricAuthManager
-import com.alexianhentiu.vaultberryapp.presentation.utils.biometric.BiometricCryptoManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -32,17 +29,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object UtilityModule {
-
-    @Provides
-    @Singleton
-    fun provideBiometricAuthManager(
-        cryptoManager: BiometricCryptoManager,
-        credentialsRepository: CredentialsRepository
-    ): BiometricAuthManager = BiometricAuthManager(cryptoManager, credentialsRepository)
-
-    @Provides
-    @Singleton
-    fun provideBiometricCryptoManager(): BiometricCryptoManager = BiometricCryptoManager()
 
     @Provides
     @Singleton

@@ -1,4 +1,4 @@
-package com.alexianhentiu.vaultberryapp.data.api.model.entity
+package com.alexianhentiu.vaultberryapp.data.api.dto.entity
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass

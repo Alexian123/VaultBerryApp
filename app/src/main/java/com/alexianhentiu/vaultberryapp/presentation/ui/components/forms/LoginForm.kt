@@ -30,6 +30,7 @@ import com.alexianhentiu.vaultberryapp.presentation.utils.enums.NavRoute
 
 @Composable
 fun LoginForm(
+    modifier: Modifier = Modifier,
     navController: NavHostController,
     savedEmail: String = "",
     rememberEmail: Boolean = false,
@@ -57,7 +58,7 @@ fun LoginForm(
 
     Column(
         verticalArrangement = Arrangement.Center,
-        modifier = Modifier
+        modifier = modifier
             .padding(16.dp)
             .fillMaxSize()
     ) {

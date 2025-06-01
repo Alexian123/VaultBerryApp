@@ -16,6 +16,7 @@ import com.alexianhentiu.vaultberryapp.presentation.ui.screens.RegisterScreen
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.SettingsScreen
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.VaultScreen
 import com.alexianhentiu.vaultberryapp.presentation.utils.enums.NavRoute
+import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.BiometricViewModel
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.SessionViewModel
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.SettingsViewModel
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.UtilityViewModel
@@ -28,10 +29,17 @@ fun AppNavHost() {
     val sessionViewModel: SessionViewModel = hiltViewModel(activity)
     val utilityViewModel: UtilityViewModel = hiltViewModel(activity)
     val settingsViewModel: SettingsViewModel = hiltViewModel(activity)
+    val biometricViewModel: BiometricViewModel = hiltViewModel(activity)
 
     NavHost(navController = navController, startDestination = NavRoute.LOGIN.path) {
         composable(NavRoute.LOGIN.path) {
-            LoginScreen(navController, sessionViewModel, utilityViewModel, settingsViewModel)
+            LoginScreen(
+                navController,
+                sessionViewModel,
+                utilityViewModel,
+                settingsViewModel,
+                biometricViewModel
+            )
         }
         composable(NavRoute.REGISTER.path) {
             RegisterScreen(navController, utilityViewModel)

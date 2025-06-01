@@ -1,19 +1,21 @@
 package com.alexianhentiu.vaultberryapp.presentation.utils.biometric
 
+import android.content.Context
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
-import androidx.core.content.ContextCompat
-import androidx.fragment.app.FragmentActivity
 import com.alexianhentiu.vaultberryapp.domain.utils.enums.ErrorType
 import com.alexianhentiu.vaultberryapp.presentation.utils.containers.AuthCredentials
 import com.alexianhentiu.vaultberryapp.presentation.utils.containers.ErrorInfo
 import com.alexianhentiu.vaultberryapp.domain.model.entity.EncryptedAuthCredentials
 import com.alexianhentiu.vaultberryapp.domain.repository.CredentialsRepository
+import javax.crypto.Cipher
 
 class BiometricAuthManager(
     private val cryptoManager: BiometricCryptoManager,
-    private val credentialsRepository: CredentialsRepository
+    private val credentialsRepository: CredentialsRepository,
+    private val applicationContext: Context
 ) {
+
     fun hasStoredCredentials(): Boolean = credentialsRepository.hasStoredCredentials()
 
     fun clearStoredCredentials() {
@@ -21,218 +23,99 @@ class BiometricAuthManager(
         cryptoManager.deleteKey()
     }
 
-    fun storeCredentialsWithBiometric(
-        activity: FragmentActivity,
-        email: String,
+    fun getCipherForEncryption(): Cipher {
+        return cryptoManager.getCipherForEncryption()
+    }
+
+    fun getCipherForDecryption(iv: ByteArray): Cipher {
+        return cryptoManager.getCipherForDecryption(iv)
+    }
+
+    fun performEncryption(
+        cryptoObject: BiometricPrompt.CryptoObject?,
         password: String,
-        onSuccess: () -> Unit,
-        onError: (ErrorInfo) -> Unit
-    ) {
-        try {
-            val passwordCipher = cryptoManager.getCipherForEncryption()
-
-            val biometricPrompt = createBiometricPrompt(
-                activity = activity,
-                onAuthSuccess = { result ->
-                    try {
-                        val encryptedPassword = passwordCipher.doFinal(password.toByteArray())
-                        val passwordIv = passwordCipher.iv
-                        val encryptedCredentials = EncryptedAuthCredentials(
-                            encryptedPassword = encryptedPassword,
-                            passwordIv = passwordIv,
-                            email = email
-                        )
-                        credentialsRepository.storeCredentials(encryptedCredentials)
-                        onSuccess()
-                    } catch (e: Exception) {
-                        onError(
-                            ErrorInfo(
-                                type = ErrorType.INTERNAL,
-                                source = "Biometric",
-                                message = "Encryption failed: ${e.message ?: "Unknown error"}"
-                            )
-                        )
-                    }
-                },
-                onAuthError = onError
-            )
-
-            val promptInfo = createPromptInfo(
-                title = "Store Credentials",
-                subtitle = "Authenticate to securely store your login credentials"
-            )
-
-            biometricPrompt.authenticate(promptInfo, BiometricPrompt.CryptoObject(passwordCipher))
-
-        } catch (e: Exception) {
-            onError(
-                ErrorInfo(
-                    type = ErrorType.INTERNAL,
-                    source = "Biometric",
-                    message = "Failed to initialize encryption: ${e.message}"
-                )
-            )
-        }
+        email: String
+    ): EncryptedAuthCredentials {
+        val cipher = cryptoObject?.cipher
+            ?:throw IllegalStateException("Cipher not available from crypto object for encryption")
+        val encryptedPassword = cipher.doFinal(password.toByteArray())
+        val passwordIv = cipher.iv
+        return EncryptedAuthCredentials(
+            encryptedPassword = encryptedPassword,
+            passwordIv = passwordIv,
+            email = email
+        )
     }
 
-    fun retrieveCredentialsWithBiometric(
-        activity: FragmentActivity,
-        onSuccess: (AuthCredentials) -> Unit,
-        onError: (ErrorInfo) -> Unit
-    ) {
-        val encryptedData = credentialsRepository.getCredentials()
-        if (encryptedData == null) {
-            onError(
-                ErrorInfo(
-                    type = ErrorType.INTERNAL,
-                    source = "Biometric",
-                    message = "No stored credentials found"
-                )
-            )
-            return
-        }
-
-        try {
-            val passwordCipher = cryptoManager.getCipherForDecryption(encryptedData.passwordIv)
-
-            val biometricPrompt = createBiometricPrompt(
-                activity = activity,
-                onAuthSuccess = { result ->
-                    try {
-                        val decryptedPassword = passwordCipher.doFinal(encryptedData.encryptedPassword)
-
-                        val credentials = AuthCredentials(
-                            email = encryptedData.email,
-                            password = String(decryptedPassword)
-                        )
-                        onSuccess(credentials)
-                    } catch (e: Exception) {
-                        onError(
-                            ErrorInfo(
-                                type = ErrorType.INTERNAL,
-                                source = "Biometric",
-                                message = "Decryption failed: ${e.message}"
-                            )
-                        )
-                    }
-                },
-                onAuthError = onError
-            )
-
-            val promptInfo = createPromptInfo(
-                title = "Unlock Credentials",
-                subtitle = "Authenticate to retrieve your stored login credentials"
-            )
-
-            biometricPrompt.authenticate(promptInfo, BiometricPrompt.CryptoObject(passwordCipher))
-
-        } catch (e: Exception) {
-            onError(
-                ErrorInfo(
-                    type = ErrorType.INTERNAL,
-                    source = "Biometric",
-                    message = "Failed to initialize decryption: ${e.message}"
-                )
-            )
-        }
+    fun performDecryption(
+        cryptoObject: BiometricPrompt.CryptoObject?,
+        encryptedData: EncryptedAuthCredentials
+    ): AuthCredentials {
+        val cipher = cryptoObject?.cipher
+            ?: throw IllegalStateException("Cipher not available from crypto object for decryption")
+        val decryptedPassword = cipher.doFinal(encryptedData.encryptedPassword)
+        return AuthCredentials(
+            email = encryptedData.email,
+            password = String(decryptedPassword)
+        )
     }
 
-    private fun createBiometricPrompt(
-        activity: FragmentActivity,
-        onAuthSuccess: (BiometricPrompt.AuthenticationResult) -> Unit,
-        onAuthError: (ErrorInfo) -> Unit
-    ): BiometricPrompt {
-        val executor = ContextCompat.getMainExecutor(activity)
-        return BiometricPrompt(activity, executor, object : BiometricPrompt.AuthenticationCallback() {
-            override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
-                super.onAuthenticationError(errorCode, errString)
-                onAuthError(
-                    ErrorInfo(
-                        type = ErrorType.INTERNAL,
-                        source = "Biometric",
-                        message = errString.toString()
-                    )
-                )
-            }
+    fun getCredentials(): EncryptedAuthCredentials? = credentialsRepository.getCredentials()
 
-            override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
-                super.onAuthenticationSucceeded(result)
-                onAuthSuccess(result)
-            }
-
-            override fun onAuthenticationFailed() {
-                super.onAuthenticationFailed()
-                onAuthError(
-                    ErrorInfo(
-                        type = ErrorType.INTERNAL,
-                        source = "Biometric",
-                        message = "Authentication failed"
-                    )
-                )
-            }
-        })
+    fun storeCredentials(encryptedAuthCredentials: EncryptedAuthCredentials) {
+        credentialsRepository.storeCredentials(encryptedAuthCredentials)
     }
 
-    fun isBiometricAvailable(activity: FragmentActivity): BiometricStatus {
-        val biometricManager = BiometricManager.from(activity)
-        return when (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG)) {
+    fun isBiometricAvailable(): BiometricStatus {
+        val biometricManager = BiometricManager.from(applicationContext)
+        return when (biometricManager.canAuthenticate(
+            BiometricManager.Authenticators.BIOMETRIC_STRONG or
+                    BiometricManager.Authenticators.DEVICE_CREDENTIAL
+        )) {
             BiometricManager.BIOMETRIC_SUCCESS -> BiometricStatus.Available
 
             BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE -> BiometricStatus.Error(
                 ErrorInfo(
                     type = ErrorType.INTERNAL,
-                    source = "Biometric",
-                    message = "No biometric hardware available"
+                    source = "BiometricAuthManager",
+                    message = "No biometric hardware available on this device."
                 )
             )
-
             BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE -> BiometricStatus.Error(
                 ErrorInfo(
                     type = ErrorType.INTERNAL,
-                    source = "Biometric",
-                    message = "Biometric hardware unavailable"
+                    source = "BiometricAuthManager",
+                    message = "Biometric hardware is currently unavailable or busy."
                 )
             )
-
             BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED -> BiometricStatus.Error(
                 ErrorInfo(
                     type = ErrorType.INTERNAL,
-                    source = "Biometric",
-                    message = "No biometrics enrolled."
+                    source = "BiometricAuthManager",
+                    message = "No biometrics (fingerprint/face) enrolled."
                 )
             )
-
             BiometricManager.BIOMETRIC_ERROR_SECURITY_UPDATE_REQUIRED -> BiometricStatus.Error(
                 ErrorInfo(
                     type = ErrorType.INTERNAL,
-                    source = "Biometric",
-                    message = "Security update required"
+                    source = "BiometricAuthManager",
+                    message = "A security update is required for biometric authentication."
                 )
             )
-
             BiometricManager.BIOMETRIC_ERROR_UNSUPPORTED -> BiometricStatus.Error(
                 ErrorInfo(
                     type = ErrorType.INTERNAL,
-                    source = "Biometric",
-                    message = "Biometric authentication not supported"
+                    source = "BiometricAuthManager",
+                    message = "The biometric authentication method is not supported on this device."
                 )
             )
-
             else -> BiometricStatus.Error(
                 ErrorInfo(
-                    type = ErrorType.INTERNAL,
-                    source = "Biometric",
-                    message = "Unknown biometric status"
+                    type = ErrorType.UNKNOWN,
+                    source = "BiometricAuthManager",
+                    message = "An unknown biometric status occurred."
                 )
             )
         }
-    }
-
-    private fun createPromptInfo(title: String, subtitle: String): BiometricPrompt.PromptInfo {
-        return BiometricPrompt.PromptInfo.Builder()
-            .setTitle(title)
-            .setSubtitle(subtitle)
-            .setNegativeButtonText("Cancel")
-            .build()
     }
 }

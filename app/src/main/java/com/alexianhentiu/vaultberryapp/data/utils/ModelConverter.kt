@@ -1,18 +1,18 @@
 package com.alexianhentiu.vaultberryapp.data.utils
 
-import com.alexianhentiu.vaultberryapp.data.api.model.entity.AccountInfoDTO
-import com.alexianhentiu.vaultberryapp.data.api.model.entity.EncryptedVaultEntryDTO
-import com.alexianhentiu.vaultberryapp.data.api.model.entity.KeyChainDTO
-import com.alexianhentiu.vaultberryapp.data.api.model.response.MessageResponseDTO
-import com.alexianhentiu.vaultberryapp.data.api.model.request.PasswordChangeRequestDTO
-import com.alexianhentiu.vaultberryapp.data.api.model.entity.PasswordPairDTO
-import com.alexianhentiu.vaultberryapp.data.api.model.response.TotpResponseDTO
-import com.alexianhentiu.vaultberryapp.data.api.model.entity.UserDTO
-import com.alexianhentiu.vaultberryapp.data.api.model.entity.VaultEntryPreviewDTO
-import com.alexianhentiu.vaultberryapp.data.api.model.request.LoginRequestDTO
-import com.alexianhentiu.vaultberryapp.data.api.model.request.RecoveryLoginRequestDTO
-import com.alexianhentiu.vaultberryapp.data.api.model.request.VaultSearchRequest
-import com.alexianhentiu.vaultberryapp.data.api.model.response.LoginResponseDTO
+import com.alexianhentiu.vaultberryapp.data.api.dto.entity.AccountInfoDTO
+import com.alexianhentiu.vaultberryapp.data.api.dto.entity.EncryptedVaultEntryDTO
+import com.alexianhentiu.vaultberryapp.data.api.dto.entity.KeyChainDTO
+import com.alexianhentiu.vaultberryapp.data.api.dto.response.MessageResponseDTO
+import com.alexianhentiu.vaultberryapp.data.api.dto.request.PasswordChangeRequestDTO
+import com.alexianhentiu.vaultberryapp.data.api.dto.entity.PasswordPairDTO
+import com.alexianhentiu.vaultberryapp.data.api.dto.response.TotpResponseDTO
+import com.alexianhentiu.vaultberryapp.data.api.dto.entity.UserDTO
+import com.alexianhentiu.vaultberryapp.data.api.dto.entity.VaultEntryPreviewDTO
+import com.alexianhentiu.vaultberryapp.data.api.dto.request.LoginRequestDTO
+import com.alexianhentiu.vaultberryapp.data.api.dto.request.RecoveryLoginRequestDTO
+import com.alexianhentiu.vaultberryapp.data.api.dto.request.VaultSearchRequestDTO
+import com.alexianhentiu.vaultberryapp.data.api.dto.response.LoginResponseDTO
 import com.alexianhentiu.vaultberryapp.domain.model.entity.AccountInfo
 import com.alexianhentiu.vaultberryapp.domain.model.entity.EncryptedVaultEntry
 import com.alexianhentiu.vaultberryapp.domain.model.entity.KeyChain
@@ -157,7 +157,7 @@ class ModelConverter {
         )
     }
 
-    fun keywordsToVaultSearchRequest(keywords: List<String>): VaultSearchRequest {
-        return VaultSearchRequest(keywords)
+    fun keywordsToVaultSearchRequest(keywords: List<String>): VaultSearchRequestDTO {
+        return VaultSearchRequestDTO(keywords)
     }
 }
