@@ -12,7 +12,6 @@ import com.alexianhentiu.vaultberryapp.presentation.utils.containers.ErrorInfo
 import com.alexianhentiu.vaultberryapp.presentation.utils.state.SessionState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -40,7 +39,6 @@ class SessionViewModel @Inject constructor(
     fun login(email: String?, password: String?, totpCode: String? = null) {
         viewModelScope.launch {
             _sessionState.value = SessionState.Loading
-            delay(1000) // Simulate network delay
             when (val result = loginUseCase(
                 email = email ?: _tempEmail.value,
                 password = password ?: _tempPassword.value,

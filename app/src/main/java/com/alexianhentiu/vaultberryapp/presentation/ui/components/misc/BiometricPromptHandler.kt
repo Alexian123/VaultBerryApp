@@ -72,7 +72,9 @@ fun BiometricPromptHandler(
                         biometricViewModel.onBiometricAuthError(errString.toString())
                     }
 
-                    override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                    override fun onAuthenticationSucceeded(
+                        result: BiometricPrompt.AuthenticationResult
+                    ) {
                         super.onAuthenticationSucceeded(result)
                         when (request) {
                             is BiometricPromptRequest.Store ->

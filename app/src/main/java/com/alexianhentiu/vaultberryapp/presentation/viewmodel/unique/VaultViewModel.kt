@@ -221,7 +221,6 @@ class VaultViewModel @Inject constructor(
         _vaultScreenState.value = VaultScreenState.Locked
     }
 
-    @Override
     override fun onCleared() {
         super.onCleared()
         clearData()

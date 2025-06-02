@@ -37,7 +37,7 @@ import com.alexianhentiu.vaultberryapp.R
 import androidx.core.net.toUri
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.misc.AboutInfoRow
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.topBars.TopBarWithBackButton
-import com.alexianhentiu.vaultberryapp.presentation.utils.helper.createEmailIntent
+import com.alexianhentiu.vaultberryapp.presentation.utils.helper.EmailIntentUtils.createEmailIntent
 import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)

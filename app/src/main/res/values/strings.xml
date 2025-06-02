@@ -74,7 +74,7 @@
     <string name="entry_url_label">URL</string>
     <string name="entry_username_label">Username</string>
     <string name="entry_notes_label">Notes</string>
-    <string name="mfa_code_label">Code</string>
+    <string name="mfa_code_label">Two-Factor Authentication Code</string>
     <string name="continue_button_text">Continue</string>
     <string name="cancel_button_text">Cancel</string>
     <string name="appearance_settings_title">Appearance</string>

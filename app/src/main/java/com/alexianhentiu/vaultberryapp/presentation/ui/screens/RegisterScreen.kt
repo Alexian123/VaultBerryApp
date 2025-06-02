@@ -5,8 +5,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -19,7 +23,7 @@ import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.InfoDi
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.RegisterForm
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.animated.LoadingAnimationDialog
 import com.alexianhentiu.vaultberryapp.presentation.utils.enums.NavRoute
-import com.alexianhentiu.vaultberryapp.presentation.utils.helper.launchErrorReportEmailIntent
+import com.alexianhentiu.vaultberryapp.presentation.utils.helper.EmailIntentUtils.launchErrorReportEmailIntent
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.unique.RegisterViewModel
 import com.alexianhentiu.vaultberryapp.presentation.utils.state.RegisterScreenState
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.UtilityViewModel
@@ -32,6 +36,15 @@ fun RegisterScreen(
 ) {
     val inputValidator by utilityViewModel.inputValidator.collectAsState()
     val screenState by registerViewModel.registerScreenState.collectAsState()
+    val recoveryPassword by registerViewModel.recoveryPasswordEvent.collectAsState(initial = "")
+
+    var showRecoveryPasswordDialog by remember { mutableStateOf(false) }
+
+    LaunchedEffect(recoveryPassword) {
+        if (recoveryPassword.isNotEmpty()) {
+            showRecoveryPasswordDialog = true
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -62,20 +75,20 @@ fun RegisterScreen(
                 }
 
                 is RegisterScreenState.Success -> {
-                    val recoveryPassword =
-                        (screenState as RegisterScreenState.Success).recoveryPassword
-                    InfoDialog(
-                        title = stringResource(R.string.register_screen_success_title),
-                        message = stringResource(R.string.recovery_password_message_p1) +
-                                " \"$recoveryPassword\". " +
-                                stringResource(R.string.recovery_password_message_p2) +
-                                stringResource(R.string.recovery_password_message_p3),
-                        onDismissRequest = {
-                            utilityViewModel.copyToClipboard(recoveryPassword)
-                            registerViewModel.resetState()
-                            navController.navigate(NavRoute.LOGIN.path)
-                        }
-                    )
+                    if (showRecoveryPasswordDialog) {
+                        InfoDialog(
+                            title = stringResource(R.string.register_screen_success_title),
+                            message = stringResource(R.string.recovery_password_message_p1) +
+                                    "\n$recoveryPassword" +
+                                    stringResource(R.string.recovery_password_message_p2) +
+                                    stringResource(R.string.recovery_password_message_p3),
+                            onDismissRequest = {
+                                utilityViewModel.copyToClipboard(recoveryPassword)
+                                registerViewModel.resetState()
+                                navController.navigate(NavRoute.LOGIN.path)
+                            }
+                        )
+                    }
                 }
 
                 is RegisterScreenState.Error -> {

@@ -7,45 +7,49 @@ import android.os.Build
 import android.util.Log
 import androidx.core.net.toUri
 import com.alexianhentiu.vaultberryapp.presentation.utils.containers.ErrorInfo
+import com.alexianhentiu.vaultberryapp.presentation.utils.helper.AppInfoUtils.getAppName
+import com.alexianhentiu.vaultberryapp.presentation.utils.helper.AppInfoUtils.getAppVersionName
 
-fun createEmailIntent(
-    recipientEmail: String,
-    subject: String = "",
-    body: String = ""
-): Intent {
-    return Intent(Intent.ACTION_SENDTO).apply {
-        data = "mailto:".toUri()
-        putExtra(Intent.EXTRA_EMAIL, arrayOf(recipientEmail))
-        if (subject.isNotBlank()) {
-            putExtra(Intent.EXTRA_SUBJECT, subject)
-        }
-        if (body.isNotBlank()) {
-            putExtra(Intent.EXTRA_TEXT, body)
+object EmailIntentUtils {
+
+    fun createEmailIntent(
+        recipientEmail: String,
+        subject: String = "",
+        body: String = ""
+    ): Intent {
+        return Intent(Intent.ACTION_SENDTO).apply {
+            data = "mailto:".toUri()
+            putExtra(Intent.EXTRA_EMAIL, arrayOf(recipientEmail))
+            if (subject.isNotBlank()) {
+                putExtra(Intent.EXTRA_SUBJECT, subject)
+            }
+            if (body.isNotBlank()) {
+                putExtra(Intent.EXTRA_TEXT, body)
+            }
         }
     }
-}
 
 
-/**
- * Creates an Intent to send an error report via email.
- *
- * @param context Context used to get app and device information.
- * @param errorInfo The ErrorInfo object containing details about the error.
- * @param recipientEmail The email address to send the report to.
- * @return An Intent configured to send an email with the error report details.
- */
-fun launchErrorReportEmailIntent(
-    context: Context,
-    errorInfo: ErrorInfo,
-    recipientEmail: String
-) {
-    val appVersion = getAppVersionName(context)
-    val deviceManufacturer = Build.MANUFACTURER
-    val deviceModel = Build.MODEL
-    val androidVersion = Build.VERSION.RELEASE
-    val androidApiLevel = Build.VERSION.SDK_INT
+    /**
+     * Creates an Intent to send an error report via email.
+     *
+     * @param context Context used to get app and device information.
+     * @param errorInfo The ErrorInfo object containing details about the error.
+     * @param recipientEmail The email address to send the report to.
+     * @return An Intent configured to send an email with the error report details.
+     */
+    fun launchErrorReportEmailIntent(
+        context: Context,
+        errorInfo: ErrorInfo,
+        recipientEmail: String
+    ) {
+        val appVersion = getAppVersionName(context)
+        val deviceManufacturer = Build.MANUFACTURER
+        val deviceModel = Build.MODEL
+        val androidVersion = Build.VERSION.RELEASE
+        val androidApiLevel = Build.VERSION.SDK_INT
 
-    val body = """
+        val body = """
         IMPORTANT: Please describe what you were doing when the error occurred.
         Any additional details can help us fix the issue faster!
         ----------------------------------------------------
@@ -73,19 +77,21 @@ fun launchErrorReportEmailIntent(
         ----------------------------------------------------
     """.trimIndent()
 
-    val intent = Intent(Intent.ACTION_SENDTO).apply {
-        data = "mailto:".toUri()
-        putExtra(Intent.EXTRA_EMAIL, arrayOf(recipientEmail))
-        putExtra(Intent.EXTRA_SUBJECT, "${getAppName(context)} Error Report")
-        putExtra(Intent.EXTRA_TEXT, body)
+        val intent = Intent(Intent.ACTION_SENDTO).apply {
+            data = "mailto:".toUri()
+            putExtra(Intent.EXTRA_EMAIL, arrayOf(recipientEmail))
+            putExtra(Intent.EXTRA_SUBJECT, "${getAppName(context)} Error Report")
+            putExtra(Intent.EXTRA_TEXT, body)
+        }
+
+        try {
+            context.startActivity(intent)
+        } catch (e: ActivityNotFoundException) {
+            Log.e("ErrorReport", "No email client found to send the report.", e)
+        } catch (e: Exception) {
+            Log.e("ErrorReport", "Error sending the report via email.", e)
+        }
     }
 
-    try {
-        context.startActivity(intent)
-    } catch (e: ActivityNotFoundException) {
-        Log.e("ErrorReport", "No email client found to send the report.", e)
-    } catch (e: Exception) {
-        Log.e("ErrorReport", "Error sending the report via email.", e)
-    }
 }
 

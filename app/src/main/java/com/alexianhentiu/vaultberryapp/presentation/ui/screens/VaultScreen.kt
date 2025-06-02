@@ -37,7 +37,7 @@ import com.alexianhentiu.vaultberryapp.presentation.ui.components.misc.VaultEntr
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ErrorDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.animated.LoadingAnimationDialog
 import com.alexianhentiu.vaultberryapp.presentation.utils.enums.NavRoute
-import com.alexianhentiu.vaultberryapp.presentation.utils.helper.launchErrorReportEmailIntent
+import com.alexianhentiu.vaultberryapp.presentation.utils.helper.EmailIntentUtils.launchErrorReportEmailIntent
 import com.alexianhentiu.vaultberryapp.presentation.utils.state.VaultScreenState
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.UtilityViewModel
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.SessionViewModel

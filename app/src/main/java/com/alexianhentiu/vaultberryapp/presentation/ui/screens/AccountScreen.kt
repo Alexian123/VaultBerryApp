@@ -5,8 +5,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -19,7 +23,7 @@ import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.InfoDi
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.AccountForm
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.animated.LoadingAnimationDialog
 import com.alexianhentiu.vaultberryapp.presentation.utils.enums.NavRoute
-import com.alexianhentiu.vaultberryapp.presentation.utils.helper.launchErrorReportEmailIntent
+import com.alexianhentiu.vaultberryapp.presentation.utils.helper.EmailIntentUtils.launchErrorReportEmailIntent
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.unique.AccountViewModel
 import com.alexianhentiu.vaultberryapp.presentation.utils.state.AccountScreenState
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.UtilityViewModel
@@ -33,7 +37,25 @@ fun AccountScreen(
     accountViewModel: AccountViewModel = hiltViewModel(),
 ) {
     val inputValidator by utilityViewModel.inputValidator.collectAsState()
+
     val screenState by accountViewModel.accountScreenState.collectAsState()
+    val secretKey by accountViewModel.secretKeyEvent.collectAsState(initial = "")
+    val recoveryPassword by accountViewModel.recoveryPasswordEvent.collectAsState(initial = "")
+
+    var show2FAInfoDialog by remember { mutableStateOf(false) }
+    var showRecoveryPasswordDialog by remember { mutableStateOf(false) }
+
+    LaunchedEffect(secretKey) {
+        if (secretKey.isNotEmpty()) {
+            show2FAInfoDialog = true
+        }
+    }
+
+    LaunchedEffect(recoveryPassword) {
+        if (recoveryPassword.isNotEmpty()) {
+            showRecoveryPasswordDialog = true
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -86,35 +108,37 @@ fun AccountScreen(
                 }
 
                 is AccountScreenState.ChangedPassword -> {
-                    val recoveryPassword = accountViewModel.recoveryPassword.collectAsState()
-                    InfoDialog(
-                        title = stringResource(R.string.account_screen_changed_password_title),
-                        message = stringResource(R.string.recovery_password_message_p1) +
-                                " \"${recoveryPassword.value}\". " +
-                                stringResource(R.string.recovery_password_message_p2) +
-                                stringResource(R.string.recovery_password_message_p3),
-                        onDismissRequest = {
-                            utilityViewModel.copyToClipboard(recoveryPassword.value)
-                            accountViewModel.setLoadingState()
-                            accountViewModel.clearData()
-                            sessionViewModel.logout()
-                            navController.navigate(NavRoute.LOGIN.path)
-                        }
-                    )
+                    if (showRecoveryPasswordDialog) {
+                        InfoDialog(
+                            title = stringResource(R.string.account_screen_changed_password_title),
+                            message = stringResource(R.string.recovery_password_message_p1) +
+                                    "\n$recoveryPassword" +
+                                    stringResource(R.string.recovery_password_message_p2) +
+                                    stringResource(R.string.recovery_password_message_p3),
+                            onDismissRequest = {
+                                utilityViewModel.copyToClipboard(recoveryPassword)
+                                accountViewModel.setLoadingState()
+                                accountViewModel.clearData()
+                                sessionViewModel.logout()
+                                navController.navigate(NavRoute.LOGIN.path)
+                            }
+                        )
+                    }
                 }
 
                 is AccountScreenState.Setup2FA -> {
-                    val secretKey = accountViewModel.secretKey.collectAsState()
-                    InfoDialog(
-                        title = stringResource(R.string.account_screen_setup_2fa_title),
-                        message = stringResource(R.string.account_screen_setup_2fa_message_p1) +
-                                " \n${secretKey.value}\n" +
-                                stringResource(R.string.account_screen_setup_2fa_message_p2),
-                        onDismissRequest = {
-                            utilityViewModel.copyToClipboard(secretKey.value)
-                            accountViewModel.resetState()
-                        }
-                    )
+                    if (show2FAInfoDialog) {
+                        InfoDialog(
+                            title = stringResource(R.string.account_screen_setup_2fa_title),
+                            message = stringResource(R.string.account_screen_setup_2fa_message_p1) +
+                                    "\n$secretKey" +
+                                    stringResource(R.string.account_screen_setup_2fa_message_p2),
+                            onDismissRequest = {
+                                utilityViewModel.copyToClipboard(secretKey)
+                                accountViewModel.resetState()
+                            }
+                        )
+                    }
                 }
 
                 is AccountScreenState.Error -> {

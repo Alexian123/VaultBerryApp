@@ -15,8 +15,10 @@ import com.alexianhentiu.vaultberryapp.domain.utils.UseCaseResult
 import com.alexianhentiu.vaultberryapp.presentation.utils.containers.ErrorInfo
 import com.alexianhentiu.vaultberryapp.presentation.utils.state.AccountScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -40,11 +42,11 @@ class AccountViewModel @Inject constructor(
     private val _is2FAEnabled = MutableStateFlow<Boolean>(false)
     val is2FAEnabled: StateFlow<Boolean> = _is2FAEnabled
 
-    private val _secretKey = MutableStateFlow<String>("")
-    val secretKey: StateFlow<String> = _secretKey
+    private val _secretKeyEvent = Channel<String>()
+    val secretKeyEvent = _secretKeyEvent.receiveAsFlow()
 
-    private val _recoveryPassword = MutableStateFlow<String>("")
-    val recoveryPassword: StateFlow<String> = _recoveryPassword
+    private val _recoveryPasswordEvent = Channel<String>()
+    val recoveryPasswordEvent = _recoveryPasswordEvent.receiveAsFlow()
 
     fun getAccountInfo() {
         viewModelScope.launch {
@@ -144,7 +146,7 @@ class AccountViewModel @Inject constructor(
             when (val result = changePasswordUseCase(decryptedKey, newPassword, reEncrypt)) {
                 is UseCaseResult.Success -> {
                     _accountScreenState.value = AccountScreenState.ChangedPassword
-                    _recoveryPassword.value = result.data
+                    _recoveryPasswordEvent.send(result.data)
                 }
 
                 is UseCaseResult.Error -> {
@@ -167,7 +169,7 @@ class AccountViewModel @Inject constructor(
             when (val result = setup2FAUseCase()) {
                 is UseCaseResult.Success -> {
                     _accountScreenState.value = AccountScreenState.Setup2FA
-                    _secretKey.value = result.data
+                    _secretKeyEvent.send(result.data)
                 }
 
                 is UseCaseResult.Error -> {
@@ -219,8 +221,6 @@ class AccountViewModel @Inject constructor(
     fun clearData() {
         _accountInfo.value = AccountInfo("", null, null)
         _is2FAEnabled.value = false
-        _secretKey.value = ""
-        _recoveryPassword.value = ""
     }
 
     override fun onCleared() {

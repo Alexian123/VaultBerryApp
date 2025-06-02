@@ -26,7 +26,7 @@ import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.Verify2F
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.animated.SuccessAnimationDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.animated.LoadingAnimationDialog
 import com.alexianhentiu.vaultberryapp.presentation.utils.enums.NavRoute
-import com.alexianhentiu.vaultberryapp.presentation.utils.helper.launchErrorReportEmailIntent
+import com.alexianhentiu.vaultberryapp.presentation.utils.helper.EmailIntentUtils.launchErrorReportEmailIntent
 import com.alexianhentiu.vaultberryapp.presentation.utils.state.SessionState
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.BiometricViewModel
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.UtilityViewModel

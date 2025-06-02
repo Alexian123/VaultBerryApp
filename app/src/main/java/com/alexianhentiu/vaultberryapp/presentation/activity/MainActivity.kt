@@ -17,7 +17,8 @@ import dagger.hilt.android.AndroidEntryPoint
 
 /*
     TODO:
-        - Improve and cleanup states and flows in view models
+        - Confirm password on register
+        - Email verification & account activation for register/email change
         - Add option to set the backend ip and import SSL certificate
         - Cleanup code & add comments
 */

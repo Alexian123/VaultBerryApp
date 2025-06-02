@@ -10,8 +10,10 @@ import com.alexianhentiu.vaultberryapp.domain.utils.UseCaseResult
 import com.alexianhentiu.vaultberryapp.presentation.utils.containers.ErrorInfo
 import com.alexianhentiu.vaultberryapp.presentation.utils.state.RecoveryScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -28,8 +30,8 @@ class RecoveryViewModel @Inject constructor(
     private val _tempEmail = MutableStateFlow<String>("")
     private val _tempDecryptedKey = MutableStateFlow<ByteArray>(ByteArray(0))
 
-    private val _tempRecoveryPassword = MutableStateFlow<String>("")
-    val tempRecoveryPassword: StateFlow<String> = _tempRecoveryPassword
+    private val _recoveryPasswordEvent = Channel<String>()
+    val recoveryPasswordEvent = _recoveryPasswordEvent.receiveAsFlow()
 
     fun requestOTP(email: String) {
         viewModelScope.launch {
@@ -82,7 +84,7 @@ class RecoveryViewModel @Inject constructor(
             when (val result = changePasswordUseCase(_tempDecryptedKey.value, newPassword, reEncrypt)) {
                 is UseCaseResult.Success -> {
                     _recoveryScreenState.value = RecoveryScreenState.PasswordReset
-                    _tempRecoveryPassword.value = result.data
+                    _recoveryPasswordEvent.send(newPassword)
                 }
 
                 is UseCaseResult.Error -> {
@@ -107,7 +109,6 @@ class RecoveryViewModel @Inject constructor(
     fun clearData() {
         _tempEmail.value = ""
         _tempDecryptedKey.value.fill(0)
-        _tempRecoveryPassword.value = ""
     }
 
     override fun onCleared() {
