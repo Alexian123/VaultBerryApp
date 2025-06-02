@@ -27,6 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.alexianhentiu.vaultberryapp.R
 import com.alexianhentiu.vaultberryapp.domain.model.entity.AccountInfo
+import com.alexianhentiu.vaultberryapp.domain.utils.enums.PasswordStrength
 import com.alexianhentiu.vaultberryapp.domain.utils.enums.ValidatedFieldType
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ConfirmActionDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.misc.ExpandableSectionItem
@@ -40,7 +41,8 @@ fun AccountForm(
     onEnable2FA: () -> Unit,
     onDisable2FA: () -> Unit,
     onDeleteAccount: () -> Unit,
-    validator: (ValidatedFieldType) -> (String) -> Boolean = { { true } }
+    validator: (ValidatedFieldType) -> (String) -> Boolean = { { true } },
+    evaluatePasswordStrength: (String) -> PasswordStrength = { PasswordStrength.NONE },
 ) {
     var isInfoExpanded by remember { mutableStateOf(false) }
     var isSecurityExpanded by remember { mutableStateOf(false) }
@@ -91,7 +93,8 @@ fun AccountForm(
             AnimatedVisibility(visible = isInfoExpanded) {
                 ChangeAccountInfoForm(
                     accountInfo = accountInfo,
-                    onSaveInfo = onSaveInfo
+                    onSaveInfo = onSaveInfo,
+                    validator = validator
                 )
             }
         }
@@ -118,7 +121,8 @@ fun AccountForm(
                             shouldReEncrypt = reEncrypt
                             showConfirmPasswordChangeDialog = true
                         },
-                        validator = validator
+                        validator = validator,
+                        evaluatePasswordStrength = evaluatePasswordStrength
                     )
                     HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
                     Text(

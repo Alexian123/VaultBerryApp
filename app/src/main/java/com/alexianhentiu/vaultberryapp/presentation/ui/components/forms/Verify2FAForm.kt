@@ -44,7 +44,8 @@ fun Verify2FAForm(
                 code = newCode
                 isCodeValid = valid
             },
-            isValid = validator(ValidatedFieldType.MFA_CODE),
+            isValid = isCodeValid,
+            validate = validator(ValidatedFieldType.MFA_CODE),
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(16.dp))

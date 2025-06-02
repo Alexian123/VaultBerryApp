@@ -22,15 +22,21 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.alexianhentiu.vaultberryapp.R
 import com.alexianhentiu.vaultberryapp.domain.model.entity.AccountInfo
+import com.alexianhentiu.vaultberryapp.domain.utils.enums.ValidatedFieldType
+import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.ValidatedTextField
+import com.alexianhentiu.vaultberryapp.presentation.utils.enums.TextFieldType
 
 @Composable
 fun ChangeAccountInfoForm(
     accountInfo: AccountInfo,
     onSaveInfo: (String?, String?, String?) -> Unit, // Pass null for unchanged values
+    validator: (ValidatedFieldType) -> (String) -> Boolean = { { true } }
 ) {
     var firstName by remember { mutableStateOf(accountInfo.firstName) }
     var lastName by remember { mutableStateOf(accountInfo.lastName) }
+
     var email by remember { mutableStateOf(accountInfo.email) }
+    var isEmailValid by remember { mutableStateOf(true) }
 
     Column(
         verticalArrangement = Arrangement.Top,
@@ -52,10 +58,16 @@ fun ChangeAccountInfoForm(
             )
         }
         Spacer(modifier = Modifier.height(8.dp))
-        OutlinedTextField(
-            value = email,
-            onValueChange = { email = it },
-            label = { Text(stringResource(R.string.email_label)) },
+        ValidatedTextField(
+            initialText = email,
+            onInputChange = { newEmail, valid ->
+                email = newEmail
+                isEmailValid = valid
+            },
+            isValid = isEmailValid,
+            validate = validator(ValidatedFieldType.EMAIL),
+            label = stringResource(R.string.email_label),
+            textFieldType = TextFieldType.OUTLINED,
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(16.dp))
@@ -69,6 +81,7 @@ fun ChangeAccountInfoForm(
                         null else lastName
                 )
             },
+            enabled = isEmailValid,
             modifier = Modifier.align(Alignment.CenterHorizontally)
         ) {
             Text(stringResource(R.string.save_button_text))

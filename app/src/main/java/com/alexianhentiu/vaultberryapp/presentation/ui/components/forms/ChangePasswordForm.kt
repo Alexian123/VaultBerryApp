@@ -17,6 +17,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.alexianhentiu.vaultberryapp.R
+import com.alexianhentiu.vaultberryapp.domain.utils.enums.PasswordStrength
 import com.alexianhentiu.vaultberryapp.domain.utils.enums.ValidatedFieldType
 import com.alexianhentiu.vaultberryapp.presentation.utils.enums.TextFieldType
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.PasswordField
@@ -25,6 +26,7 @@ import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.Passwor
 fun ChangePasswordForm(
     onChangePassword: (String, Boolean) -> Unit,
     validator: (ValidatedFieldType) -> (String) -> Boolean = { { true } },
+    evaluatePasswordStrength: (String) -> PasswordStrength = { PasswordStrength.NONE },
     textFieldType: TextFieldType = TextFieldType.OUTLINED
 ) {
     var password by remember { mutableStateOf("") }
@@ -38,9 +40,13 @@ fun ChangePasswordForm(
             onPasswordChange = { newPassword, valid ->
                 password = newPassword
                 isPasswordValid = valid
+                isConfirmPasswordValid = password == confirmPassword
             },
-            isValid = validator(ValidatedFieldType.PASSWORD),
+            isValid = isPasswordValid,
+            validate = validator(ValidatedFieldType.PASSWORD),
             label = stringResource(R.string.new_password_label),
+            evaluateStrength = evaluatePasswordStrength,
+            showStrengthIndicator = true,
             textFieldType = textFieldType
         )
         PasswordField(
@@ -48,7 +54,8 @@ fun ChangePasswordForm(
                 confirmPassword = newPassword
                 isConfirmPasswordValid = valid
             },
-            isValid = password::equals,
+            isValid = isConfirmPasswordValid,
+            validate = password::equals,
             label = stringResource(R.string.confirm_new_password_label),
             textFieldType = textFieldType
         )
@@ -75,6 +82,6 @@ fun ChangePasswordForm(
 @Preview(showBackground = true)
 fun ChangePasswordFormPreview() {
     ChangePasswordForm(
-        onChangePassword = { _, _ -> }
+        onChangePassword = { _, _ -> },
     )
 }

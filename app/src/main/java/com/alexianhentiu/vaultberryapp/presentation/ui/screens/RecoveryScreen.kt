@@ -99,6 +99,7 @@ fun RecoveryScreen(
                         validator = {
                             inputValidator?.getValidatorFunction(it) ?: { false }
                         },
+                        evaluatePasswordStrength = utilityViewModel::evalPasswordStrength,
                         textFieldType = TextFieldType.REGULAR
                     )
                 }

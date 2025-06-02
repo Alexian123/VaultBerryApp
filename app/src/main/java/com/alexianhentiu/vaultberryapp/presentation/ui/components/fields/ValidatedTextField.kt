@@ -23,7 +23,8 @@ fun ValidatedTextField(
     onInputChange: (String, Boolean) -> Unit = { _, _ -> },
     label: String = "",
     initialText: String = "",
-    isValid: (String) -> Boolean = { true },
+    isValid: Boolean = true,
+    validate: (String) -> Boolean = { true },
     visualTransformation: VisualTransformation = VisualTransformation.None,
     showCopyToClipboardButton: Boolean = false,
     onCopyClicked: (String) -> Unit = {},
@@ -32,7 +33,6 @@ fun ValidatedTextField(
     textFieldType: TextFieldType = TextFieldType.REGULAR
 ) {
     var input by remember(initialText) { mutableStateOf(initialText) }
-    var isInputValid by remember(input) { mutableStateOf(isValid(input)) }
 
     Box(modifier = modifier) {
         when (textFieldType) {
@@ -41,11 +41,10 @@ fun ValidatedTextField(
                     value = input,
                     onValueChange = {
                         input = it
-                        isInputValid = isValid(it)
-                        onInputChange(it, isInputValid)
+                        onInputChange(it, validate(it))
                     },
                     label = { Text(label) },
-                    isError = !isInputValid,
+                    isError = !isValid,
                     modifier = Modifier.fillMaxWidth(),
                     visualTransformation = visualTransformation,
                     enabled = enabled,
@@ -56,11 +55,10 @@ fun ValidatedTextField(
                     value = input,
                     onValueChange = {
                         input = it
-                        isInputValid = isValid(it)
-                        onInputChange(it, isInputValid)
+                        onInputChange(it, validate(it))
                     },
                     label = { Text(label) },
-                    isError = !isInputValid,
+                    isError = !isValid,
                     modifier = Modifier.fillMaxWidth(),
                     visualTransformation = visualTransformation,
                     enabled = enabled,

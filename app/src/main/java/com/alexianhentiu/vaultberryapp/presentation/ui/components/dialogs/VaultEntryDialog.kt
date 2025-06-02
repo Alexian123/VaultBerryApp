@@ -90,7 +90,7 @@ fun VaultEntryDialog(
                                 title = newTitle
                                 isTitleValid = valid
                             },
-                            isValid = validator(ValidatedFieldType.ENTRY_TITLE)
+                            validate = validator(ValidatedFieldType.ENTRY_TITLE)
                         )
                         ValidatedTextField(
                             modifier = Modifier.fillMaxWidth(),

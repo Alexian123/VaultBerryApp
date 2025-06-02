@@ -76,7 +76,8 @@ fun LoginForm(
                 email = newEmail
                 isEmailValid = valid
             },
-            isValid = validator(ValidatedFieldType.EMAIL),
+            isValid = isEmailValid,
+            validate = validator(ValidatedFieldType.EMAIL),
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(8.dp))
@@ -85,7 +86,8 @@ fun LoginForm(
                 password = newPassword
                 isPasswordValid = valid
             },
-            isValid = validator(ValidatedFieldType.PASSWORD),
+            isValid = isPasswordValid,
+            validate = validator(ValidatedFieldType.PASSWORD),
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(8.dp))

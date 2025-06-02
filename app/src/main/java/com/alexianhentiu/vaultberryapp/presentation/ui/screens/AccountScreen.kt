@@ -103,7 +103,8 @@ fun AccountScreen(
                         },
                         validator = {
                             inputValidator?.getValidatorFunction(it) ?: { false }
-                        }
+                        },
+                        evaluatePasswordStrength = utilityViewModel::evalPasswordStrength
                     )
                 }
 

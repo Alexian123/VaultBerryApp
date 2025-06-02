@@ -55,7 +55,8 @@ fun OTPRequestForm(
                 email = newEmail
                 isEmailValid = valid
                 },
-            isValid = validator(ValidatedFieldType.EMAIL),
+            isValid = isEmailValid,
+            validate = validator(ValidatedFieldType.EMAIL),
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(16.dp))

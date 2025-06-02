@@ -58,7 +58,6 @@ fun RegisterScreen(
 
             when (screenState) {
                 is RegisterScreenState.Idle -> {
-
                     RegisterForm(
                         navController = navController,
                         onRegisterClicked = { email, password, firstName, lastName ->
@@ -66,7 +65,8 @@ fun RegisterScreen(
                         },
                         validator = {
                             inputValidator?.getValidatorFunction(it) ?: { false }
-                        }
+                        },
+                        evaluatePasswordStrength = utilityViewModel::evalPasswordStrength
                     )
                 }
 

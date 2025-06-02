@@ -23,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.alexianhentiu.vaultberryapp.R
+import com.alexianhentiu.vaultberryapp.domain.utils.enums.PasswordStrength
 import com.alexianhentiu.vaultberryapp.domain.utils.enums.ValidatedFieldType
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.ValidatedTextField
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.PasswordField
@@ -32,15 +33,18 @@ import com.alexianhentiu.vaultberryapp.presentation.utils.enums.NavRoute
 fun RegisterForm(
     navController: NavHostController,
     onRegisterClicked: (String, String, String?, String?) -> Unit,
-    validator: (ValidatedFieldType) -> (String) -> Boolean = { { true } }
+    validator: (ValidatedFieldType) -> (String) -> Boolean = { { true } },
+    evaluatePasswordStrength: (String) -> PasswordStrength = { PasswordStrength.NONE }
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var confirmPassword by remember { mutableStateOf("") }
     var firstName by remember { mutableStateOf("") }
     var lastName by remember { mutableStateOf("") }
 
     var isEmailValid by remember { mutableStateOf(false) }
     var isPasswordValid by remember { mutableStateOf(false) }
+    var isConfirmPasswordValid by remember { mutableStateOf(false) }
 
     Column(
         verticalArrangement = Arrangement.Center,
@@ -48,25 +52,6 @@ fun RegisterForm(
             .padding(16.dp)
             .fillMaxSize()
     ) {
-        ValidatedTextField(
-            label = stringResource(R.string.email_label),
-            onInputChange = { newEmail, valid ->
-                email = newEmail
-                isEmailValid = valid
-            },
-            isValid = validator(ValidatedFieldType.EMAIL),
-            modifier = Modifier.fillMaxWidth()
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        PasswordField(
-            onPasswordChange = { newPassword, valid ->
-                password = newPassword
-                isPasswordValid = valid
-            },
-            isValid = validator(ValidatedFieldType.PASSWORD),
-            modifier = Modifier.fillMaxWidth()
-        )
-        Spacer(modifier = Modifier.height(8.dp))
         TextField(
             value = firstName,
             onValueChange = { firstName = it },
@@ -74,18 +59,53 @@ fun RegisterForm(
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(8.dp))
-        Spacer(modifier = Modifier.height(8.dp))
         TextField(
             value = lastName,
             onValueChange = { lastName = it },
             label = { Text(stringResource(R.string.last_name_label)) },
             modifier = Modifier.fillMaxWidth()
         )
+        Spacer(modifier = Modifier.height(8.dp))
+        ValidatedTextField(
+            label = stringResource(R.string.email_label),
+            onInputChange = { newEmail, valid ->
+                email = newEmail
+                isEmailValid = valid
+            },
+            isValid = isEmailValid,
+            validate = validator(ValidatedFieldType.EMAIL),
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        PasswordField(
+            onPasswordChange = { newPassword, valid ->
+                password = newPassword
+                isPasswordValid = valid
+                isConfirmPasswordValid = password == confirmPassword
+            },
+            isValid = isPasswordValid,
+            validate = validator(ValidatedFieldType.PASSWORD),
+            showStrengthIndicator = true,
+            evaluateStrength = evaluatePasswordStrength,
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        PasswordField(
+            onPasswordChange = { newPassword, valid ->
+                confirmPassword = newPassword
+                isConfirmPasswordValid = valid
+            },
+            isValid = isConfirmPasswordValid,
+            validate = password::equals,
+            label = stringResource(R.string.confirm_password_label),
+            modifier = Modifier.fillMaxWidth()
+        )
         Spacer(modifier = Modifier.height(16.dp))
         Button(
             onClick = { onRegisterClicked(email, password, firstName, lastName) },
             modifier = Modifier.fillMaxWidth(),
-            enabled = isEmailValid && isPasswordValid
+            enabled = isEmailValid && isPasswordValid && isConfirmPasswordValid
+                    && password == confirmPassword
         ) {
             Text(stringResource(R.string.register_button_text))
         }

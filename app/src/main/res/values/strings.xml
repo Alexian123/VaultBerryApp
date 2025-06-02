@@ -125,4 +125,5 @@
     <string name="biometric_store_subtitle">Authenticate to securely store your login credentials</string>
     <string name="biometric_retrieve_title">Unlock Credentials</string>
     <string name="biometric_retrieve_subtitle">Authenticate to retrieve your stored login credentials</string>
+    <string name="confirm_password_label">Confirm password</string>
 </resources>

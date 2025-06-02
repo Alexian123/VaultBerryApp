@@ -109,7 +109,8 @@ fun AutofillScreen(
                                 email = newEmail
                                 isEmailValid = valid
                             },
-                            isValid = {
+                            isValid = isEmailValid,
+                            validate = {
                                 val func = inputValidator?.getValidatorFunction(
                                     ValidatedFieldType.EMAIL
                                 )
@@ -123,7 +124,8 @@ fun AutofillScreen(
                                 password = newPassword
                                 isPasswordValid = valid
                             },
-                            isValid = {
+                            isValid = isPasswordValid,
+                            validate = {
                                 val func = inputValidator?.getValidatorFunction(
                                     ValidatedFieldType.PASSWORD
                                 )

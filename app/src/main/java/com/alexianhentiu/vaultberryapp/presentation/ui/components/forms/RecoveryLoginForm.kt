@@ -48,7 +48,7 @@ fun RecoveryLoginForm(
                 isRecoveryPasswordValid = valid
             },
             label = stringResource(R.string.recovery_password_label),
-            isValid = validator(ValidatedFieldType.PASSWORD),
+            validate = validator(ValidatedFieldType.PASSWORD),
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(8.dp))
@@ -58,7 +58,7 @@ fun RecoveryLoginForm(
                 isOTPValid = valid
             },
             label = stringResource(R.string.otp_label),
-            isValid = validator(ValidatedFieldType.OTP),
+            validate = validator(ValidatedFieldType.OTP),
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(16.dp))

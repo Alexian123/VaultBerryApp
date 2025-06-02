@@ -31,7 +31,8 @@ fun PasswordField(
     initiallyVisible: Boolean = false,
     showToggleVisibilityButton: Boolean = true,
     initialText: String = "",
-    isValid: (String) -> Boolean = { true },
+    isValid: Boolean = true,
+    validate: (String) -> Boolean = { true },
     showCopyToClipboardButton: Boolean = false,
     onCopyClicked: (String) -> Unit = {},
     enabled: Boolean = true,
@@ -43,7 +44,7 @@ fun PasswordField(
 ) {
     var password by remember(initialText) { mutableStateOf(initialText) }
     var isVisible by remember { mutableStateOf(initiallyVisible) }
-    var passwordStrength by remember(password) {
+    var passwordStrength by remember {
         mutableStateOf(evaluateStrength(initialText))
     }
 
@@ -58,6 +59,7 @@ fun PasswordField(
             label = label,
             initialText = initialText,
             isValid = isValid,
+            validate = validate,
             visualTransformation = if (isVisible) VisualTransformation.None else PasswordVisualTransformation(),
             enabled = enabled,
             readOnly = readOnly,
@@ -94,6 +96,7 @@ fun PasswordField(
 fun PasswordFieldPreview() {
     PasswordField(
         showStrengthIndicator = true,
-        textFieldType = TextFieldType.OUTLINED
+        textFieldType = TextFieldType.OUTLINED,
+        evaluateStrength = { PasswordStrength.STRONG }
     )
 }
