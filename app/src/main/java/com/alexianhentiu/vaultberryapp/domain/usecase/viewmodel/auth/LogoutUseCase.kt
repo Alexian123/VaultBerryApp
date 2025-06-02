@@ -16,7 +16,7 @@ class LogoutUseCase(private val authRepository: AuthRepository) {
 
             is APIResult.Error -> {
                 UseCaseResult.Error(
-                    ErrorType.EXTERNAL,
+                    ErrorType.API,
                     response.source,
                     response.message
                 )

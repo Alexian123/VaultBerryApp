@@ -12,9 +12,9 @@ class LoadSettingUseCase(private val settingsRepository: SettingsRepository) {
             return UseCaseResult.Success(value)
         } catch (e: Exception) {
             return UseCaseResult.Error(
-                type = ErrorType.EXTERNAL,
-                source = "Settings Repository",
-                message = "Error loading setting: ${e.message}"
+                type = ErrorType.LOAD_SETTINGS_FAILURE,
+                source = "Application Settings",
+                message = e.message ?: "Unknown error"
             )
         }
     }

@@ -7,9 +7,13 @@ import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.utility.ObserveS
 import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.utility.SaveSettingUseCase
 import com.alexianhentiu.vaultberryapp.domain.utils.UseCaseResult
 import com.alexianhentiu.vaultberryapp.domain.utils.settings.AppSettings
+import com.alexianhentiu.vaultberryapp.presentation.utils.containers.ErrorInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -20,6 +24,9 @@ class SettingsViewModel @Inject constructor(
     private val saveSettingUseCase: SaveSettingUseCase,
     observeSettingUseCase: ObserveSettingUseCase
 ) : ViewModel() {
+
+    private val _errorInfo = MutableSharedFlow<ErrorInfo>()
+    val errorInfo: SharedFlow<ErrorInfo> = _errorInfo.asSharedFlow()
 
     val useSystemTheme: StateFlow<Boolean> =
         when (val result = observeSettingUseCase(AppSettings.USE_SYSTEM_THEME)) {
@@ -108,6 +115,13 @@ class SettingsViewModel @Inject constructor(
 
                 is UseCaseResult.Error -> {
                     Log.e(result.source, result.message)
+                    _errorInfo.emit(
+                        ErrorInfo(
+                            type = result.type,
+                            source = result.source,
+                            message = result.message
+                        )
+                    )
                 }
             }
         }
@@ -121,6 +135,13 @@ class SettingsViewModel @Inject constructor(
                 }
                 is UseCaseResult.Error -> {
                     Log.e(result.source, result.message)
+                    _errorInfo.emit(
+                        ErrorInfo(
+                            type = result.type,
+                            source = result.source,
+                            message = result.message
+                        )
+                    )
                 }
             }
         }
@@ -134,6 +155,13 @@ class SettingsViewModel @Inject constructor(
                 }
                 is UseCaseResult.Error -> {
                     Log.e(result.source, result.message)
+                    _errorInfo.emit(
+                        ErrorInfo(
+                            type = result.type,
+                            source = result.source,
+                            message = result.message
+                        )
+                    )
                 }
             }
         }
@@ -147,6 +175,13 @@ class SettingsViewModel @Inject constructor(
                 }
                 is UseCaseResult.Error -> {
                     Log.e(result.source, result.message)
+                    _errorInfo.emit(
+                        ErrorInfo(
+                            type = result.type,
+                            source = result.source,
+                            message = result.message
+                        )
+                    )
                 }
             }
         }
@@ -160,6 +195,13 @@ class SettingsViewModel @Inject constructor(
                 }
                 is UseCaseResult.Error -> {
                     Log.e(result.source, result.message)
+                    _errorInfo.emit(
+                        ErrorInfo(
+                            type = result.type,
+                            source = result.source,
+                            message = result.message
+                        )
+                    )
                 }
             }
         }
@@ -173,6 +215,13 @@ class SettingsViewModel @Inject constructor(
                 }
                 is UseCaseResult.Error -> {
                     Log.e(result.source, result.message)
+                    _errorInfo.emit(
+                        ErrorInfo(
+                            type = result.type,
+                            source = result.source,
+                            message = result.message
+                        )
+                    )
                 }
             }
         }

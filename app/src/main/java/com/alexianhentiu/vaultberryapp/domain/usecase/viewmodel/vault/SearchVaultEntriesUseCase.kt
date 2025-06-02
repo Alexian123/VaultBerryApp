@@ -18,7 +18,7 @@ class SearchVaultEntriesUseCase(
         val vaultEntriesResult = vaultRepository.searchVaultEntries(keywords)
         if (vaultEntriesResult is APIResult.Error) {
             return UseCaseResult.Error(
-                ErrorType.EXTERNAL,
+                ErrorType.API,
                 vaultEntriesResult.source,
                 vaultEntriesResult.message
             )

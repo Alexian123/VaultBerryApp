@@ -16,7 +16,7 @@ class DeleteAccountUseCase(private val accountRepository: AccountRepository) {
 
             is APIResult.Error -> {
                 UseCaseResult.Error(
-                    ErrorType.EXTERNAL,
+                    ErrorType.API,
                     response.source,
                     response.message
                 )

@@ -15,9 +15,9 @@ class EvalPasswordStrengthUseCase(
             return UseCaseResult.Success(strength)
         } catch (e: Exception) {
             return UseCaseResult.Error(
-                ErrorType.INTERNAL,
+                ErrorType.PASSWORD_STRENGTH_EVALUATION_FAILURE,
                 "Password Evaluator",
-                "Password strength evaluation failed: ${e.message}"
+                e.message ?: "Unknown error"
             )
         }
     }

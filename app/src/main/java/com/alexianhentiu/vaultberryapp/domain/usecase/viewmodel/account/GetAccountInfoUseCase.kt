@@ -16,7 +16,7 @@ class GetAccountInfoUseCase(private val accountRepository: AccountRepository) {
 
             is APIResult.Error -> {
                 UseCaseResult.Error(
-                    ErrorType.EXTERNAL,
+                    ErrorType.API,
                     accountResult.source,
                     accountResult.message
                 )

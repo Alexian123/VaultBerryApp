@@ -2,6 +2,7 @@ package com.alexianhentiu.vaultberryapp.presentation.ui.screens
 
 import android.content.Intent
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -127,6 +128,7 @@ fun AboutScreen(
                     try {
                         context.startActivity(intent)
                     } catch (e: Exception) {
+                        Toast.makeText(context, "Error sending email", Toast.LENGTH_SHORT).show()
                         Log.e("AboutScreen", "Error sending email", e)
                     }
                 }
@@ -141,6 +143,7 @@ fun AboutScreen(
                     try {
                         context.startActivity(intent)
                     } catch (e: Exception) {
+                        Toast.makeText(context, "Error opening website", Toast.LENGTH_SHORT).show()
                         Log.e("AboutScreen", "Error opening website", e)
                     }
                 }
@@ -155,12 +158,13 @@ fun AboutScreen(
                     try {
                         context.startActivity(intent)
                     } catch (e: Exception) {
+                        Toast.makeText(context, "Error opening license", Toast.LENGTH_SHORT).show()
                         Log.e("AboutScreen", "Error opening license", e)
                     }
                 }
             )
 
-            Spacer(modifier = Modifier.weight(1f)) // Pushes copyright to the bottom
+            Spacer(modifier = Modifier.weight(1f))
 
             HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
 

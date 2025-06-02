@@ -30,7 +30,7 @@ class UpdateEntryUseCase(
 
             is APIResult.Error -> {
                 UseCaseResult.Error(
-                    ErrorType.EXTERNAL,
+                    ErrorType.API,
                     response.source,
                     response.message
                 )

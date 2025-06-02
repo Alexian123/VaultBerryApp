@@ -15,9 +15,9 @@ class DecryptKeyUseCase(private val vaultGuardian: VaultGuardian) {
             return UseCaseResult.Success(decryptedKey)
         } catch (e: Exception) {
             return UseCaseResult.Error(
-                ErrorType.INTERNAL,
+                ErrorType.KEY_DECRYPTION_FAILURE,
                 "Vault Guardian",
-                "Key decryption failed: ${e.message}"
+                e.message ?: "Unknown error"
             )
         }
     }

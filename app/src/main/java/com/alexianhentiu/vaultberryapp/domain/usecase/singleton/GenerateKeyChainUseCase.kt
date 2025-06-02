@@ -17,9 +17,9 @@ class GenerateKeyChainUseCase(private val vaultGuardian: VaultGuardian) {
             return UseCaseResult.Success(keyChain)
         } catch (e: Exception) {
             return UseCaseResult.Error(
-                ErrorType.INTERNAL,
+                ErrorType.KEY_GENERATION_FAILURE,
                 "Vault Guardian",
-                "Key chain generation failed: ${e.message}"
+                e.message ?: "Unknown error"
             )
         }
     }

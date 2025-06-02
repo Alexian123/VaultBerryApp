@@ -1,6 +1,5 @@
 package com.alexianhentiu.vaultberryapp.domain.usecase.singleton
 
-import android.util.Log
 import com.alexianhentiu.vaultberryapp.data.utils.APIResult
 import com.alexianhentiu.vaultberryapp.domain.model.entity.EncryptedVaultEntry
 import com.alexianhentiu.vaultberryapp.domain.model.entity.VaultEntryPreview
@@ -27,7 +26,7 @@ class ReEncryptVaultUseCase(
 
                     is APIResult.Error -> {
                         return UseCaseResult.Error(
-                            ErrorType.EXTERNAL,
+                            ErrorType.API,
                             detailsResult.source,
                             detailsResult.message
                         )
@@ -37,7 +36,7 @@ class ReEncryptVaultUseCase(
 
             is APIResult.Error -> {
                 return UseCaseResult.Error(
-                    ErrorType.EXTERNAL,
+                    ErrorType.API,
                     previewsResult.source,
                     previewsResult.message
                 )
@@ -68,14 +67,12 @@ class ReEncryptVaultUseCase(
             val updateResult = vaultRepository.updateEntry(id, newEncryptedEntry)
             if (updateResult is APIResult.Error) {
                 return UseCaseResult.Error(
-                    ErrorType.EXTERNAL,
+                    ErrorType.API,
                     updateResult.source,
                     updateResult.message
                 )
             }
-            val updateMessageResponse = (updateResult as APIResult.Success).data
-            Log.d("ReEncryptVaultUseCase", updateMessageResponse.message)
         }
-        return UseCaseResult.Success(MessageResponse("All entries re-encrypted successfully"))
+        return UseCaseResult.Success(MessageResponse("Success"))
     }
 }

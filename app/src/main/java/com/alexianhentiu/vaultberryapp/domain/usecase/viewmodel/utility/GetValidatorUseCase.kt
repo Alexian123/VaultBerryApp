@@ -22,9 +22,9 @@ class GetValidatorUseCase(
             return UseCaseResult.Success(inputValidator)
         } catch (e: Exception) {
             return UseCaseResult.Error(
-                type = ErrorType.INTERNAL,
-                source = "Validation",
-                message = "Validation failed: ${e.message}"
+                type = ErrorType.LOAD_INPUT_VALIDATOR_FAILURE,
+                source = "Input Validator",
+                message = e.message ?: "Unknown error"
             )
         }
     }

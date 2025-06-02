@@ -1,7 +1,7 @@
 package com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.auth
 
 import com.alexianhentiu.vaultberryapp.data.utils.APIResult
-import com.alexianhentiu.vaultberryapp.data.utils.enums.HttpResponseCode
+import com.alexianhentiu.vaultberryapp.domain.utils.enums.HttpResponseCode
 import com.alexianhentiu.vaultberryapp.domain.model.request.LoginRequest
 import com.alexianhentiu.vaultberryapp.domain.repository.AuthRepository
 import com.alexianhentiu.vaultberryapp.domain.usecase.singleton.DecryptKeyUseCase
@@ -32,7 +32,7 @@ class LoginUseCase(
             // Check if 2FA is required
             val type =
                 if (response1.code == HttpResponseCode.BAD_REQUEST.code) ErrorType.REQUIRES_2FA
-                else ErrorType.EXTERNAL
+                else ErrorType.API
 
             return UseCaseResult.Error(
                 type,
@@ -50,7 +50,7 @@ class LoginUseCase(
         val response2 = authRepository.loginSecondStep(credentials2)
         if (response2 is APIResult.Error) {
             return UseCaseResult.Error(
-                ErrorType.EXTERNAL,
+                ErrorType.API,
                 response2.source,
                 response2.message
             )
@@ -62,18 +62,18 @@ class LoginUseCase(
             authGuardian.checkServerFinalMessage(response2Data.serverMessage)
         } catch (e: Exception) {
             return UseCaseResult.Error(
-                ErrorType.INTERNAL,
+                ErrorType.SERVER_IDENTITY_VERIFICATION_FAILURE,
                 "Auth Guardian",
-                "Server final message verification failed: ${e.message}"
+                e.message ?: "Unknown error"
             )
         }
 
         // Check if keychain is null
         if (response2Data.keyChain == null) {
             return UseCaseResult.Error(
-                ErrorType.INTERNAL,
+                ErrorType.MISSING_KEYCHAIN,
                 "Auth Guardian",
-                "Keychain is null"
+                "Keychain is missing"
             )
         }
 

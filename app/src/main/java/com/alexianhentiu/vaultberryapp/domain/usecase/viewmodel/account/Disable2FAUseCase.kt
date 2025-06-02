@@ -16,7 +16,7 @@ class Disable2FAUseCase(private val accountRepository: AccountRepository) {
 
             is APIResult.Error -> {
                 UseCaseResult.Error(
-                    ErrorType.EXTERNAL,
+                    ErrorType.API,
                     result.source,
                     result.message
                 )

@@ -59,16 +59,12 @@ class BiometricViewModel @Inject constructor(
                         pendingStorePassword = password
                         val passwordCipher = biometricAuthManager.getCipherForEncryption()
                         _startBiometricPrompt.emit(
-                            BiometricPromptRequest.Store(
-                                title = "Store Credentials",
-                                subtitle = "Authenticate to securely store your login credentials",
-                                cryptoObject = passwordCipher
-                            )
+                            BiometricPromptRequest.Store(passwordCipher)
                         )
                     } catch (e: Exception) {
                         _biometricState.value = BiometricState.Error(
                             ErrorInfo(
-                                type = ErrorType.INTERNAL,
+                                type = ErrorType.BIOMETRIC,
                                 source = "BiometricViewModel",
                                 message = "Failed to prepare encryption for storage: ${e.message}"
                             )
@@ -91,7 +87,7 @@ class BiometricViewModel @Inject constructor(
                     if (encryptedData == null) {
                         _biometricState.value = BiometricState.Error(
                             ErrorInfo(
-                                type = ErrorType.INTERNAL,
+                                type = ErrorType.BIOMETRIC,
                                 source = "BiometricViewModel",
                                 message = "No stored credentials found to retrieve."
                             )
@@ -104,17 +100,12 @@ class BiometricViewModel @Inject constructor(
                             encryptedData.passwordIv
                         )
                         _startBiometricPrompt.emit(
-                            BiometricPromptRequest.Retrieve(
-                                title = "Unlock Credentials",
-                                subtitle = "Authenticate to retrieve your stored login credentials",
-                                cryptoObject = passwordCipher,
-                                encryptedData = encryptedData
-                            )
+                            BiometricPromptRequest.Retrieve(passwordCipher, encryptedData)
                         )
                     } catch (e: Exception) {
                         _biometricState.value = BiometricState.Error(
                             ErrorInfo(
-                                type = ErrorType.INTERNAL,
+                                type = ErrorType.BIOMETRIC,
                                 source = "BiometricViewModel",
                                 message = "Failed to prepare decryption for retrieval: ${e.message}"
                             )
@@ -147,7 +138,7 @@ class BiometricViewModel @Inject constructor(
             } catch (e: Exception) {
                 _biometricState.value = BiometricState.Error(
                     ErrorInfo(
-                        type = ErrorType.INTERNAL,
+                        type = ErrorType.BIOMETRIC,
                         source = "BiometricViewModel",
                         message = "Error storing credentials: ${e.message ?: "Unknown error"}"
                     )
@@ -172,7 +163,7 @@ class BiometricViewModel @Inject constructor(
             } catch (e: Exception) {
                 _biometricState.value = BiometricState.Error(
                     ErrorInfo(
-                        type = ErrorType.INTERNAL,
+                        type = ErrorType.BIOMETRIC,
                         source = "BiometricViewModel",
                         message = "Error decrypting credentials: ${e.message ?: "Unknown error"}"
                     )
@@ -184,7 +175,7 @@ class BiometricViewModel @Inject constructor(
     fun onBiometricAuthError(message: String) {
         _biometricState.value = BiometricState.Error(
             ErrorInfo(
-                type = ErrorType.INTERNAL,
+                type = ErrorType.BIOMETRIC,
                 source = "BiometricViewModel",
                 message = message
             )

@@ -14,9 +14,9 @@ class CopyToClipboardUseCase(
             return UseCaseResult.Success(Unit)
         } catch (e: Exception) {
             return UseCaseResult.Error(
-                type = ErrorType.INTERNAL,
-                source = "Clipboard",
-                message = "Copy to clipboard failed: ${e.message}"
+                type = ErrorType.COPY_TO_CLIPBOARD_FAILURE,
+                source = "Clipboard Manager",
+                message = e.message ?: "Unknown error"
             )
         }
     }

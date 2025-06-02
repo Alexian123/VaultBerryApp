@@ -26,9 +26,9 @@ class GeneratePasswordPairUseCase(
             )
         } catch (e: Exception) {
             return UseCaseResult.Error(
-                ErrorType.INTERNAL,
+                ErrorType.PASSWORD_PAIR_GENERATION_FAILURE,
                 "Auth Guardian",
-                "Password pair generation failed: ${e.message}"
+                e.message ?: "Unknown error"
             )
         }
     }

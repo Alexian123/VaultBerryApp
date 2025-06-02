@@ -12,17 +12,21 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.alexianhentiu.vaultberryapp.R
+import com.alexianhentiu.vaultberryapp.domain.utils.enums.ErrorType
+import com.alexianhentiu.vaultberryapp.presentation.utils.containers.ErrorInfo
 
 @Composable
 fun ErrorDialog(
     onConfirm: () -> Unit,
     title: String = stringResource(R.string.error_dialog_title_default),
-    source: String = stringResource(R.string.app_name),
-    message: String = stringResource(R.string.error_dialog_message_default),
+    errorInfo: ErrorInfo = ErrorInfo(
+        type = ErrorType.UNKNOWN,
+        source = stringResource(R.string.app_name),
+        message = stringResource(R.string.error_dialog_message_default)
+    ),
     onSendReport: () -> Unit
 ) {
     AlertDialog(
@@ -30,11 +34,7 @@ fun ErrorDialog(
         title = { Text(title) },
         text = {
             Column {
-                Text(
-                    text = "Source: $source",
-                    fontWeight = FontWeight.Bold
-                )
-                Text(message)
+                Text("${errorInfo.type.text}: ${errorInfo.message}")
 
             }
         },

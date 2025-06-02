@@ -18,7 +18,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.fragment.app.FragmentActivity
-import com.alexianhentiu.vaultberryapp.presentation.ui.components.misc.BiometricPromptHandler
+import com.alexianhentiu.vaultberryapp.presentation.ui.handlers.BiometricPromptHandler
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.AutofillScreen
 import com.alexianhentiu.vaultberryapp.presentation.ui.theme.VaultBerryAppTheme
 import com.alexianhentiu.vaultberryapp.presentation.utils.containers.AutofillEntry

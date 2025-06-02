@@ -127,9 +127,7 @@ fun RecoveryScreen(
                     val contactEmail = stringResource(R.string.contact_email)
                     ErrorDialog(
                         onConfirm = { recoveryViewModel.resetState() },
-                        title = "${errorInfo.type.name} ERROR",
-                        source = errorInfo.source,
-                        message = errorInfo.message,
+                        errorInfo = errorInfo,
                         onSendReport = {
                             launchErrorReportEmailIntent(
                                 context = context,

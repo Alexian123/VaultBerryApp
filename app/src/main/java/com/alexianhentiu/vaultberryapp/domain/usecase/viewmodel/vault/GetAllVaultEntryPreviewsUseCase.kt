@@ -17,7 +17,7 @@ class GetAllVaultEntryPreviewsUseCase(
 
             is APIResult.Error -> {
                 UseCaseResult.Error(
-                    ErrorType.EXTERNAL,
+                    ErrorType.API,
                     result.source,
                     result.message
                 )

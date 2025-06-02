@@ -39,7 +39,7 @@ class RecoveryLoginUseCase(
             }
             is APIResult.Error -> {
                 return UseCaseResult.Error(
-                    ErrorType.EXTERNAL,
+                    ErrorType.API,
                     response.source,
                     response.message
                 )

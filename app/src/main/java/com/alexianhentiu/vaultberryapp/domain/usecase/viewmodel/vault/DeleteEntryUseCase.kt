@@ -16,7 +16,7 @@ class DeleteEntryUseCase(private val vaultRepository: VaultRepository) {
 
             is APIResult.Error -> {
                 UseCaseResult.Error(
-                    ErrorType.EXTERNAL,
+                    ErrorType.API,
                     response.source,
                     response.message
                 )

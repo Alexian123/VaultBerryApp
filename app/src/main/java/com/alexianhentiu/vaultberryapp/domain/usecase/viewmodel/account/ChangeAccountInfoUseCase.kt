@@ -17,7 +17,7 @@ class ChangeAccountInfoUseCase(private val accountRepository: AccountRepository)
 
             is APIResult.Error -> {
                 UseCaseResult.Error(
-                    ErrorType.EXTERNAL,
+                    ErrorType.API,
                     updateResult.source,
                     updateResult.message
                 )

@@ -213,9 +213,7 @@ fun AutofillScreen(
                             val contactEmail = stringResource(R.string.contact_email)
                             ErrorDialog(
                                 onConfirm = { autofillViewModel.resetState() },
-                                title = "${errorInfo.type.name} ERROR",
-                                source = errorInfo.source,
-                                message = errorInfo.message,
+                                errorInfo = errorInfo,
                                 onSendReport = {
                                     launchErrorReportEmailIntent(
                                         context = context,
@@ -234,9 +232,7 @@ fun AutofillScreen(
                     val contactEmail = stringResource(R.string.contact_email)
                     ErrorDialog(
                         onConfirm = { sessionViewModel.resetState() },
-                        title = "${errorInfo.type.name} ERROR",
-                        source = errorInfo.source,
-                        message = errorInfo.message,
+                        errorInfo = errorInfo,
                         onSendReport = {
                             launchErrorReportEmailIntent(
                                 context = context,

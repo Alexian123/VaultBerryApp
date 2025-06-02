@@ -97,9 +97,7 @@ fun RegisterScreen(
                     val contactEmail = stringResource(R.string.contact_email)
                     ErrorDialog(
                         onConfirm = { registerViewModel.resetState() },
-                        title = "${errorInfo.type.name} ERROR",
-                        source = errorInfo.source,
-                        message = errorInfo.message,
+                        errorInfo = errorInfo,
                         onSendReport = {
                             launchErrorReportEmailIntent(
                                 context = context,

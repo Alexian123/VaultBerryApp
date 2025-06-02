@@ -76,42 +76,42 @@ class BiometricAuthManager(
 
             BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE -> BiometricStatus.Error(
                 ErrorInfo(
-                    type = ErrorType.INTERNAL,
+                    type = ErrorType.BIOMETRIC,
                     source = "BiometricAuthManager",
                     message = "No biometric hardware available on this device."
                 )
             )
             BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE -> BiometricStatus.Error(
                 ErrorInfo(
-                    type = ErrorType.INTERNAL,
+                    type = ErrorType.BIOMETRIC,
                     source = "BiometricAuthManager",
                     message = "Biometric hardware is currently unavailable or busy."
                 )
             )
             BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED -> BiometricStatus.Error(
                 ErrorInfo(
-                    type = ErrorType.INTERNAL,
+                    type = ErrorType.BIOMETRIC,
                     source = "BiometricAuthManager",
                     message = "No biometrics (fingerprint/face) enrolled."
                 )
             )
             BiometricManager.BIOMETRIC_ERROR_SECURITY_UPDATE_REQUIRED -> BiometricStatus.Error(
                 ErrorInfo(
-                    type = ErrorType.INTERNAL,
+                    type = ErrorType.BIOMETRIC,
                     source = "BiometricAuthManager",
                     message = "A security update is required for biometric authentication."
                 )
             )
             BiometricManager.BIOMETRIC_ERROR_UNSUPPORTED -> BiometricStatus.Error(
                 ErrorInfo(
-                    type = ErrorType.INTERNAL,
+                    type = ErrorType.BIOMETRIC,
                     source = "BiometricAuthManager",
                     message = "The biometric authentication method is not supported on this device."
                 )
             )
             else -> BiometricStatus.Error(
                 ErrorInfo(
-                    type = ErrorType.UNKNOWN,
+                    type = ErrorType.BIOMETRIC,
                     source = "BiometricAuthManager",
                     message = "An unknown biometric status occurred."
                 )

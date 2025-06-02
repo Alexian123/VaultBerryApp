@@ -21,7 +21,7 @@ class GetDecryptedVaultEntryUseCase(
         } else {
             val result = (vaultEntry as APIResult.Error)
             UseCaseResult.Error(
-                ErrorType.EXTERNAL,
+                ErrorType.API,
                 result.source,
                 result.message
             )

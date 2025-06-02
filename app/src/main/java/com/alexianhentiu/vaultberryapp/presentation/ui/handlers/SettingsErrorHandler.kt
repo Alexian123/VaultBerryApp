@@ -1,0 +1,20 @@
+package com.alexianhentiu.vaultberryapp.presentation.ui.handlers
+
+import android.widget.Toast
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.platform.LocalContext
+import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.SettingsViewModel
+import kotlinx.coroutines.flow.collectLatest
+
+@Composable
+fun SettingsErrorHandler(
+    settingsViewModel: SettingsViewModel,
+) {
+    val context = LocalContext.current
+    LaunchedEffect(Unit) {
+        settingsViewModel.errorInfo.collectLatest { errorInfo ->
+            Toast.makeText(context, errorInfo.message, Toast.LENGTH_LONG).show()
+        }
+    }
+}

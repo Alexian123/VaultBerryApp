@@ -13,9 +13,9 @@ class ObserveSettingUseCase(private val settingsRepository: SettingsRepository) 
             return UseCaseResult.Success(flow)
         } catch (e: Exception) {
             return UseCaseResult.Error(
-                type = ErrorType.EXTERNAL,
+                type = ErrorType.OBSERVE_SETTINGS_FAILURE,
                 source = "Settings Repository",
-                message = "Error observing setting: ${e.message}"
+                message = e.message ?: "Unknown error"
             )
         }
     }

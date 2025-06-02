@@ -16,9 +16,9 @@ class SaveSettingUseCase(private val settingsRepository: SettingsRepository) {
             return UseCaseResult.Success(Unit)
         } catch (e: Exception) {
             return UseCaseResult.Error(
-                type = ErrorType.EXTERNAL,
+                type = ErrorType.SAVE_SETTINGS_FAILURE,
                 source = "Settings Repository",
-                message = "Error saving setting: ${e.message}"
+                message = e.message ?: "Unknown error"
             )
         }
     }

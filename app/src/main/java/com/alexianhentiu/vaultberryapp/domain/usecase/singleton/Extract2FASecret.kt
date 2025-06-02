@@ -14,8 +14,8 @@ class Extract2FASecret {
             UseCaseResult.Success(secret)
         } else {
             UseCaseResult.Error(
-                ErrorType.INTERNAL,
-                "Provisioning URI",
+                ErrorType.TWO_FACTOR_SETUP_FAILURE,
+                "Two-Factor Setup",
                 "Secret not found in provisioning URI"
             )
         }

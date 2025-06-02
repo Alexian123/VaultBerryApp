@@ -1,6 +1,5 @@
 package com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.account
 
-import android.util.Log
 import com.alexianhentiu.vaultberryapp.data.utils.APIResult
 import com.alexianhentiu.vaultberryapp.domain.model.request.PasswordChangeRequest
 import com.alexianhentiu.vaultberryapp.domain.repository.AccountRepository
@@ -49,7 +48,7 @@ class ChangePasswordUseCase(
         val changeResult = accountRepository.changePassword(passwordChangeRequest)
         if (changeResult is APIResult.Error) {
             return UseCaseResult.Error(
-                ErrorType.EXTERNAL,
+                ErrorType.API,
                 changeResult.source,
                 changeResult.message
             )
@@ -71,8 +70,6 @@ class ChangePasswordUseCase(
             if (reEncryptResult is UseCaseResult.Error) {
                 return reEncryptResult
             }
-            val msg = (reEncryptResult as UseCaseResult.Success).data
-            Log.d("ChangePasswordUseCase", msg.message)
         }
 
         return UseCaseResult.Success(newPasswordPair.recoveryPassword)

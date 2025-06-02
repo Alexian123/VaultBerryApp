@@ -236,9 +236,7 @@ fun VaultScreen(
                     val contactEmail = stringResource(R.string.contact_email)
                     ErrorDialog(
                         onConfirm = { vaultViewModel.resetState() },
-                        title = "${errorInfo.type.name} ERROR",
-                        source = errorInfo.source,
-                        message = errorInfo.message,
+                        errorInfo = errorInfo,
                         onSendReport = {
                             launchErrorReportEmailIntent(
                                 context = context,

@@ -14,7 +14,10 @@ class RegisterUseCase(
     private val generatePasswordPairUseCase: GeneratePasswordPairUseCase,
     private val generateKeyChainUseCase: GenerateKeyChainUseCase
 ) {
-    suspend operator fun invoke(accountInfo: AccountInfo, regularPassword: String): UseCaseResult<String> {
+    suspend operator fun invoke(
+        accountInfo: AccountInfo,
+        regularPassword: String
+    ): UseCaseResult<String> {
 
         val passwordPairResult = generatePasswordPairUseCase(regularPassword)
         if (passwordPairResult is UseCaseResult.Error) {
@@ -40,7 +43,7 @@ class RegisterUseCase(
 
             is APIResult.Error -> {
                 UseCaseResult.Error(
-                    ErrorType.EXTERNAL,
+                    ErrorType.API,
                     result.source,
                     result.message
                 )

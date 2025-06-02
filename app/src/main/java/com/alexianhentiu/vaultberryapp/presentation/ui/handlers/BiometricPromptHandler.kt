@@ -1,12 +1,14 @@
-package com.alexianhentiu.vaultberryapp.presentation.ui.components.misc
+package com.alexianhentiu.vaultberryapp.presentation.ui.handlers
 
 import android.widget.Toast
 import androidx.biometric.BiometricPrompt
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
+import com.alexianhentiu.vaultberryapp.R
 import com.alexianhentiu.vaultberryapp.presentation.utils.biometric.BiometricPromptRequest
 import com.alexianhentiu.vaultberryapp.presentation.utils.state.BiometricState
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.BiometricViewModel
@@ -22,6 +24,11 @@ fun BiometricPromptHandler(
     biometricViewModel: BiometricViewModel
 ) {
     val context = LocalContext.current
+
+    val storeTitle = stringResource(R.string.biometric_store_title)
+    val storeSubtitle = stringResource(R.string.biometric_store_subtitle)
+    val retrieveTitle = stringResource(R.string.biometric_retrieve_title)
+    val retrieveSubtitle = stringResource(R.string.biometric_retrieve_subtitle)
 
     LaunchedEffect(Unit) {
         biometricViewModel.biometricState.collectLatest { state ->
@@ -95,9 +102,17 @@ fun BiometricPromptHandler(
                 }
             )
 
+            val title = when (request) {
+                is BiometricPromptRequest.Store -> storeTitle
+                is BiometricPromptRequest.Retrieve -> retrieveTitle
+            }
+            val subtitle = when (request) {
+                is BiometricPromptRequest.Store -> storeSubtitle
+                is BiometricPromptRequest.Retrieve -> retrieveSubtitle
+            }
             val promptInfo = BiometricPrompt.PromptInfo.Builder()
-                .setTitle(request.title)
-                .setSubtitle(request.subtitle)
+                .setTitle(title)
+                .setSubtitle(subtitle)
                 .setNegativeButtonText("Cancel")
                 .build()
 

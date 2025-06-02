@@ -1,12 +1,19 @@
 package com.alexianhentiu.vaultberryapp.data.utils
 
-import android.util.Log
 import okio.ProtocolException
 import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Response
 
 class APIResponseHandler {
+
+    companion object {
+        private const val BACKEND_ERROR_SOURCE = "Backend"
+        private const val JSON_ERROR_SOURCE = "JSON"
+        private const val NETWORK_ERROR_SOURCE = "Network"
+        private const val UNKNOWN_ERROR_SOURCE = "Unknown"
+    }
+
     // Generic function to handle API calls and map responses
     suspend fun <T, R> safeApiCall(
         apiCall: suspend () -> Response<T>,
@@ -28,7 +35,7 @@ class APIResponseHandler {
             } else {
                 val errorBody = response.errorBody()?.string()
                 try {
-                    val jsonObject = errorBody?.let { JSONObject(it) } // Parse as JSON
+                    val jsonObject = errorBody?.let { JSONObject(it) }
                     val errorMessage = jsonObject?.getString("error") ?: "Unknown error"
                     APIResult.Error(BACKEND_ERROR_SOURCE, errorMessage, response.code())
                 } catch (e: JSONException) {
@@ -40,24 +47,15 @@ class APIResponseHandler {
                 }
             }
         } catch (e: ProtocolException) {
-            Log.e("APIResponseHandler", "ProtocolException: ${e.message}")
             APIResult.Error(
                 NETWORK_ERROR_SOURCE,
                 e.message ?: "An unexpected error occurred"
             )
         } catch (e: Exception) {
-            e.printStackTrace()
             APIResult.Error(
                 UNKNOWN_ERROR_SOURCE,
                 e.message ?: "An unexpected error occurred"
             )
         }
-    }
-
-    companion object {
-        private const val BACKEND_ERROR_SOURCE = "Backend"
-        private const val JSON_ERROR_SOURCE = "JSON"
-        private const val NETWORK_ERROR_SOURCE = "Network"
-        private const val UNKNOWN_ERROR_SOURCE = "Unknown"
     }
 }

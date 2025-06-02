@@ -26,9 +26,9 @@ class GeneratePasswordUseCase(
             )
         } catch (e: Exception) {
             return UseCaseResult.Error(
-                ErrorType.INTERNAL,
+                ErrorType.PASSWORD_GENERATION_FAILURE,
                 "Password Generator",
-                "Password generation failed: ${e.message}"
+                e.message ?: "Unknown error"
             )
         }
     }

@@ -10,10 +10,14 @@ import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.utility.GetValid
 import com.alexianhentiu.vaultberryapp.domain.utils.enums.PasswordStrength
 import com.alexianhentiu.vaultberryapp.domain.utils.UseCaseResult
 import com.alexianhentiu.vaultberryapp.domain.utils.validation.InputValidator
+import com.alexianhentiu.vaultberryapp.presentation.utils.containers.ErrorInfo
 import com.alexianhentiu.vaultberryapp.presentation.utils.containers.PasswordGenOptions
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -28,6 +32,9 @@ class UtilityViewModel @Inject constructor(
     private val _inputValidator = MutableStateFlow<InputValidator?>(null)
     val inputValidator: StateFlow<InputValidator?> = _inputValidator
 
+    private val _errorInfo = MutableSharedFlow<ErrorInfo>()
+    val errorInfo: SharedFlow<ErrorInfo> = _errorInfo.asSharedFlow()
+
     init {
         viewModelScope.launch {
             when (val result = getValidatorUseCase()) {
@@ -38,18 +45,35 @@ class UtilityViewModel @Inject constructor(
                 is UseCaseResult.Error -> {
                     Log.e(result.source, result.message)
                     _inputValidator.value = null
+                    _errorInfo.emit(
+                        ErrorInfo(
+                            type = result.type,
+                            source = result.source,
+                            message = result.message
+                        )
+                    )
                 }
             }
         }
     }
 
     fun copyToClipboard(text: String, label: String = "") {
-        when (val result = copyToClipboardUseCase(text, label)) {
-            is UseCaseResult.Success -> {
-                Log.d("UtilityViewModel", "Successfully copied to clipboard")
-            }
-            is UseCaseResult.Error -> {
-                Log.e(result.source, result.message)
+        viewModelScope.launch {
+            when (val result = copyToClipboardUseCase(text, label)) {
+                is UseCaseResult.Success -> {
+                    Log.d("UtilityViewModel", "Successfully copied to clipboard")
+                }
+
+                is UseCaseResult.Error -> {
+                    Log.e(result.source, result.message)
+                    _errorInfo.emit(
+                        ErrorInfo(
+                            type = result.type,
+                            source = result.source,
+                            message = result.message
+                        )
+                    )
+                }
             }
         }
     }
