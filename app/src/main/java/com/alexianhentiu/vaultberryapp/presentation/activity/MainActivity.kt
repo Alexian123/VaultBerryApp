@@ -20,7 +20,6 @@ import dagger.hilt.android.AndroidEntryPoint
 
 /*
     TODO:
-        - Display password requirement
         - Create interface and use cases for biometric authentication
         - Create string provider for error messages
         - Add option to set the backend ip and import SSL certificate

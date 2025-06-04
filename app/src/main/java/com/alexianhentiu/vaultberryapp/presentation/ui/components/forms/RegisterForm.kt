@@ -17,6 +17,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -89,6 +90,13 @@ fun RegisterForm(
             evaluateStrength = evaluatePasswordStrength,
             modifier = Modifier.fillMaxWidth()
         )
+        if (!isPasswordValid) {
+            Text(
+                text = stringResource(R.string.password_validity_hint),
+                color = Color.Red,
+                modifier = Modifier.padding(4.dp)
+            )
+        }
         Spacer(modifier = Modifier.height(8.dp))
         PasswordField(
             onPasswordChange = { newPassword, valid ->
