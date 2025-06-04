@@ -131,4 +131,6 @@
     <string name="account_screen_changed_email_message">Your new email address will be verified on the next login attempt.\nYou will now be logged out.</string>
     <string name="confirmation_checkbox_text">I know what I\'m doing</string>
     <string name="delete_account_message">Are you sure you want to delete your account?\nYour vault will be purged.\nThis cannot be undone!</string>
+    <string name="send_button_text">Send</string>
+    <string name="recovery_screen_title">Account Recovery</string>
 </resources>

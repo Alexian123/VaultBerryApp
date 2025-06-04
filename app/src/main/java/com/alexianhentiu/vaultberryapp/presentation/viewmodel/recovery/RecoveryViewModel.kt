@@ -31,16 +31,20 @@ class RecoveryViewModel @Inject constructor(
     private val _tempEmail = MutableStateFlow<String>("")
     private val _tempDecryptedKey = MutableStateFlow<ByteArray>(ByteArray(0))
 
+    private val _otpRequested = MutableStateFlow<Boolean>(false)
+    val otpRequested: StateFlow<Boolean> = _otpRequested
+
     private val _recoveryPasswordEvent = Channel<String>()
     val recoveryPasswordEvent = _recoveryPasswordEvent.receiveAsFlow()
 
     fun requestOTP(email: String) {
         viewModelScope.launch {
             _recoveryScreenState.value = RecoveryScreenState.Loading
+            _otpRequested.value = true
+            _tempEmail.value = email
             when (val result = recoverySendUseCase(email)) {
                 is UseCaseResult.Success -> {
-                    _recoveryScreenState.value = RecoveryScreenState.OTPRequested
-                    _tempEmail.value = email
+                    _recoveryScreenState.value = RecoveryScreenState.Idle
                 }
 
                 is UseCaseResult.Error -> {
@@ -56,10 +60,10 @@ class RecoveryViewModel @Inject constructor(
         }
     }
 
-    fun recoveryLogin(email: String?, recoveryPassword: String, otp: String) {
+    fun recoveryLogin(recoveryPassword: String, otp: String) {
         viewModelScope.launch {
             _recoveryScreenState.value = RecoveryScreenState.Loading
-            when (val result = recoveryLoginUseCase(email ?: _tempEmail.value, recoveryPassword, otp)) {
+            when (val result = recoveryLoginUseCase(_tempEmail.value, recoveryPassword, otp)) {
                 is UseCaseResult.Success -> {
                     _recoveryScreenState.value = RecoveryScreenState.LoggedIn
                     _tempDecryptedKey.value = result.data
@@ -82,10 +86,13 @@ class RecoveryViewModel @Inject constructor(
     fun resetPassword(newPassword: String, reEncrypt: Boolean) {
         viewModelScope.launch {
             _recoveryScreenState.value = RecoveryScreenState.Loading
-            when (val result = changePasswordUseCase(_tempDecryptedKey.value, newPassword, reEncrypt)) {
+            when (val result = changePasswordUseCase(
+                _tempDecryptedKey.value,
+                newPassword, reEncrypt
+            )) {
                 is UseCaseResult.Success -> {
                     _recoveryScreenState.value = RecoveryScreenState.PasswordReset
-                    _recoveryPasswordEvent.send(newPassword)
+                    _recoveryPasswordEvent.send(result.data)
                 }
 
                 is UseCaseResult.Error -> {
@@ -108,7 +115,6 @@ class RecoveryViewModel @Inject constructor(
     }
 
     fun clearData() {
-        _tempEmail.value = ""
         _tempDecryptedKey.value.fill(0)
     }
 

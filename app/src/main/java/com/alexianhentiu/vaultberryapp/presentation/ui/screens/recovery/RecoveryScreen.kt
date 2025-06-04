@@ -22,7 +22,6 @@ import com.alexianhentiu.vaultberryapp.presentation.ui.components.topBars.AuthTo
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ErrorDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.InfoDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.ChangePasswordForm
-import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.OTPRequestForm
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.RecoveryLoginForm
 import com.alexianhentiu.vaultberryapp.presentation.ui.common.enums.TextFieldType
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.animated.LoadingAnimationDialog
@@ -42,6 +41,7 @@ fun RecoveryScreen(
     recoveryViewModel: RecoveryViewModel = hiltViewModel()
 ) {
     val screenState by recoveryViewModel.recoveryScreenState.collectAsState()
+    val otpRequested by recoveryViewModel.otpRequested.collectAsState()
     val recoveryPassword by recoveryViewModel.recoveryPasswordEvent.collectAsState(initial = "")
 
     val isDebugMode by settingsViewModel.debugMode.collectAsState()
@@ -58,7 +58,7 @@ fun RecoveryScreen(
         topBar = {
             AuthTopBar(
                 onSettingsClick = { navController.navigate(NavRoute.SETTINGS.path) },
-                titleText = "Account Recovery"
+                titleText = stringResource(R.string.recovery_screen_title),
             )
         }
     ) { contentPadding ->
@@ -70,26 +70,16 @@ fun RecoveryScreen(
                 }
 
                 is RecoveryScreenState.Idle -> {
-
-                    OTPRequestForm(
-                        onContinueClicked = { email -> recoveryViewModel.requestOTP(email) },
-                        onCancelClicked = { navController.navigate(NavRoute.LOGIN.path) },
-                        validator = {
-                            utilityViewModel.getValidatorFunction(it, isDebugMode)
-                        }
-                    )
-                }
-
-                is RecoveryScreenState.OTPRequested -> {
                     RecoveryLoginForm(
-                        onContinueClicked = { recoveryPassword, otp ->
-                            recoveryViewModel.recoveryLogin(null, recoveryPassword, otp)
+                        onSendClicked = { email ->
+                            recoveryViewModel.requestOTP(email)
                         },
-                        onCancelClicked = {
-                            recoveryViewModel.resetState()
+                        onLoginClicked = { recoveryPassword, otp ->
+                            recoveryViewModel.recoveryLogin(recoveryPassword, otp)
                         },
+                        otpRequested = otpRequested,
                         validator = {
-                            utilityViewModel.getValidatorFunction(it, isDebugMode)
+                            utilityViewModel.getValidatorFunction(it, true)
                         }
                     )
                 }
