@@ -1,4 +1,4 @@
-package com.alexianhentiu.vaultberryapp.presentation.viewmodel.recovery
+package com.alexianhentiu.vaultberryapp.presentation.ui.screens.recovery
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -8,7 +8,6 @@ import com.alexianhentiu.vaultberryapp.domain.common.UseCaseResult
 import com.alexianhentiu.vaultberryapp.domain.usecase.account.ChangePasswordUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.auth.RecoveryLoginUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.auth.RecoverySendUseCase
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.recovery.RecoveryScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow

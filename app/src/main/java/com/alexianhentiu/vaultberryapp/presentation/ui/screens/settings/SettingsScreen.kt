@@ -18,10 +18,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.SettingsForm
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.topBars.TopBarWithBackButton
-import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.SettingsViewModel
+import com.alexianhentiu.vaultberryapp.presentation.ui.common.viewmodels.SettingsViewModel
 import androidx.core.net.toUri
 import com.alexianhentiu.vaultberryapp.R
-import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.BiometricViewModel
+import com.alexianhentiu.vaultberryapp.presentation.ui.common.viewmodels.BiometricViewModel
 
 @Composable
 fun SettingsScreen(

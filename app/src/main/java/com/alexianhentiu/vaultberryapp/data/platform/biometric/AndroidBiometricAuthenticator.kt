@@ -10,14 +10,17 @@ import com.alexianhentiu.vaultberryapp.domain.model.AuthCredentials
 import com.alexianhentiu.vaultberryapp.domain.common.ErrorInfo
 import com.alexianhentiu.vaultberryapp.domain.model.EncryptedAuthCredentials
 import com.alexianhentiu.vaultberryapp.domain.repository.CredentialsRepository
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.crypto.Cipher
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class AndroidBiometricAuthenticator(
+@Singleton
+class AndroidBiometricAuthenticator @Inject constructor(
     private val processor: AndroidEncryptDecryptProcessor,
     private val credentialsRepository: CredentialsRepository,
-    private val context: Context
+    @ApplicationContext private val context: Context
 ) {
-
     fun hasStoredCredentials(): Boolean = credentialsRepository.hasStoredCredentials()
 
     fun clearStoredCredentials() {
@@ -39,7 +42,7 @@ class AndroidBiometricAuthenticator(
         email: String
     ): EncryptedAuthCredentials {
         val cipher = cryptoObject?.cipher
-            ?:throw IllegalStateException("Cipher not available from crypto object for encryption")
+            ?: throw IllegalStateException("Cipher not available from crypto object for encryption")
         val encryptedPassword = cipher.doFinal(password.toByteArray())
         val passwordIv = cipher.iv
         return EncryptedAuthCredentials(

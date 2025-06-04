@@ -1,4 +1,4 @@
-package com.alexianhentiu.vaultberryapp.presentation.viewmodel.vault
+package com.alexianhentiu.vaultberryapp.presentation.ui.screens.vault
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -12,7 +12,6 @@ import com.alexianhentiu.vaultberryapp.domain.usecase.vault.DeleteEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.vault.GetAllVaultEntryPreviewsUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.vault.GetDecryptedVaultEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.vault.UpdateEntryUseCase
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.vault.VaultScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

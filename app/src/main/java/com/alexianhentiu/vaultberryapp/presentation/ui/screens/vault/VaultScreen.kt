@@ -39,10 +39,9 @@ import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ErrorD
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.animated.LoadingAnimationDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.common.enums.NavRoute
 import com.alexianhentiu.vaultberryapp.presentation.ui.common.EmailIntentUtils.launchErrorReportEmailIntent
-import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.UtilityViewModel
-import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.SessionViewModel
-import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.SettingsViewModel
-import com.alexianhentiu.vaultberryapp.presentation.viewmodel.vault.VaultViewModel
+import com.alexianhentiu.vaultberryapp.presentation.ui.common.viewmodels.UtilityViewModel
+import com.alexianhentiu.vaultberryapp.presentation.ui.common.viewmodels.SessionViewModel
+import com.alexianhentiu.vaultberryapp.presentation.ui.common.viewmodels.SettingsViewModel
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable

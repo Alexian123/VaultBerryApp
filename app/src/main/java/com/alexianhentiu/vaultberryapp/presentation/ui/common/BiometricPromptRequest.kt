@@ -1,4 +1,4 @@
-package com.alexianhentiu.vaultberryapp.application.usecase.biometric
+package com.alexianhentiu.vaultberryapp.presentation.ui.common
 
 import com.alexianhentiu.vaultberryapp.domain.model.EncryptedAuthCredentials
 import javax.crypto.Cipher

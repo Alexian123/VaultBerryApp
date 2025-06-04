@@ -23,10 +23,10 @@ import com.alexianhentiu.vaultberryapp.presentation.ui.screens.autofill.Autofill
 import com.alexianhentiu.vaultberryapp.presentation.ui.theme.VaultBerryAppTheme
 import com.alexianhentiu.vaultberryapp.domain.model.AutofillEntry
 import com.alexianhentiu.vaultberryapp.presentation.ui.common.enums.AppTheme
-import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.BiometricViewModel
-import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.SessionViewModel
-import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.SettingsViewModel
-import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.UtilityViewModel
+import com.alexianhentiu.vaultberryapp.presentation.ui.common.viewmodels.BiometricViewModel
+import com.alexianhentiu.vaultberryapp.presentation.ui.common.viewmodels.SessionViewModel
+import com.alexianhentiu.vaultberryapp.presentation.ui.common.viewmodels.SettingsViewModel
+import com.alexianhentiu.vaultberryapp.presentation.ui.common.viewmodels.UtilityViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.getValue
 

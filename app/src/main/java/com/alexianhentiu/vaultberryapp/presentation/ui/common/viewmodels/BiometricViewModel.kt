@@ -1,15 +1,15 @@
-package com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared
+package com.alexianhentiu.vaultberryapp.presentation.ui.common.viewmodels
 
 import androidx.biometric.BiometricPrompt
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.alexianhentiu.vaultberryapp.domain.model.EncryptedAuthCredentials
-import com.alexianhentiu.vaultberryapp.domain.common.enums.ErrorType
 import com.alexianhentiu.vaultberryapp.data.platform.biometric.AndroidBiometricAuthenticator
-import com.alexianhentiu.vaultberryapp.application.usecase.biometric.BiometricPromptRequest
 import com.alexianhentiu.vaultberryapp.domain.common.BiometricStatus
-import com.alexianhentiu.vaultberryapp.domain.model.AuthCredentials
 import com.alexianhentiu.vaultberryapp.domain.common.ErrorInfo
+import com.alexianhentiu.vaultberryapp.domain.common.enums.ErrorType
+import com.alexianhentiu.vaultberryapp.domain.model.AuthCredentials
+import com.alexianhentiu.vaultberryapp.domain.model.EncryptedAuthCredentials
+import com.alexianhentiu.vaultberryapp.presentation.ui.common.BiometricPromptRequest
 import com.alexianhentiu.vaultberryapp.presentation.ui.handlers.biometric.BiometricState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel

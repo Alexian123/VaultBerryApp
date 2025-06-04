@@ -1,14 +1,14 @@
-package com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared
+package com.alexianhentiu.vaultberryapp.presentation.ui.common.viewmodels
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.alexianhentiu.vaultberryapp.domain.common.enums.PasswordStrength
 import com.alexianhentiu.vaultberryapp.domain.common.ErrorInfo
 import com.alexianhentiu.vaultberryapp.domain.common.PasswordGenOptions
 import com.alexianhentiu.vaultberryapp.domain.common.UseCaseResult
 import com.alexianhentiu.vaultberryapp.domain.common.enums.AppInfo
 import com.alexianhentiu.vaultberryapp.domain.common.enums.InputType
+import com.alexianhentiu.vaultberryapp.domain.common.enums.PasswordStrength
 import com.alexianhentiu.vaultberryapp.domain.usecase.utility.CopyToClipboardUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.utility.EvalPasswordStrengthUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.utility.GeneratePasswordUseCase

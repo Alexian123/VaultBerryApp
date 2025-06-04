@@ -1,4 +1,4 @@
-package com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared
+package com.alexianhentiu.vaultberryapp.presentation.ui.common.viewmodels
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -37,7 +37,7 @@ class SettingsViewModel @Inject constructor(
             }
         }.stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
+            started = SharingStarted.Companion.WhileSubscribed(5000),
             initialValue = AppSettings.USE_SYSTEM_THEME.defaultValue
         )
 
@@ -50,7 +50,7 @@ class SettingsViewModel @Inject constructor(
             }
         }.stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
+            started = SharingStarted.Companion.WhileSubscribed(5000),
             initialValue = AppSettings.DARK_THEME.defaultValue
         )
 
@@ -63,7 +63,7 @@ class SettingsViewModel @Inject constructor(
             }
         }.stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
+            started = SharingStarted.Companion.WhileSubscribed(5000),
             initialValue = AppSettings.DEBUG_MODE.defaultValue
         )
 
@@ -76,7 +76,7 @@ class SettingsViewModel @Inject constructor(
             }
         }.stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
+            started = SharingStarted.Companion.WhileSubscribed(5000),
             initialValue = AppSettings.SAVED_EMAIL.defaultValue
         )
 
@@ -89,7 +89,7 @@ class SettingsViewModel @Inject constructor(
             }
         }.stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
+            started = SharingStarted.Companion.WhileSubscribed(5000),
             initialValue = AppSettings.REMEMBER_EMAIL.defaultValue
         )
 
@@ -102,7 +102,7 @@ class SettingsViewModel @Inject constructor(
             }
         }.stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
+            started = SharingStarted.Companion.WhileSubscribed(5000),
             initialValue = AppSettings.BIOMETRIC_ENABLED.defaultValue
         )
 

@@ -1,4 +1,4 @@
-package com.alexianhentiu.vaultberryapp.presentation.viewmodel.autofill
+package com.alexianhentiu.vaultberryapp.presentation.ui.screens.autofill
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -7,7 +7,6 @@ import com.alexianhentiu.vaultberryapp.domain.common.ErrorInfo
 import com.alexianhentiu.vaultberryapp.domain.common.UseCaseResult
 import com.alexianhentiu.vaultberryapp.domain.model.AutofillEntry
 import com.alexianhentiu.vaultberryapp.domain.usecase.vault.SearchVaultEntriesUseCase
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.autofill.AutofillState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

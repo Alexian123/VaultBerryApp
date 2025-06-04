@@ -1,12 +1,12 @@
-package com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared
+package com.alexianhentiu.vaultberryapp.presentation.ui.common.viewmodels
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.alexianhentiu.vaultberryapp.domain.common.enums.ErrorType
-import com.alexianhentiu.vaultberryapp.domain.model.AuthCredentials
 import com.alexianhentiu.vaultberryapp.domain.common.ErrorInfo
 import com.alexianhentiu.vaultberryapp.domain.common.UseCaseResult
+import com.alexianhentiu.vaultberryapp.domain.common.enums.ErrorType
+import com.alexianhentiu.vaultberryapp.domain.model.AuthCredentials
 import com.alexianhentiu.vaultberryapp.domain.usecase.auth.ActivationSendUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.auth.LoginUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.auth.LogoutUseCase
@@ -49,9 +49,11 @@ class SessionViewModel @Inject constructor(
                 is UseCaseResult.Success -> {
                     _sessionState.value = SessionState.LoggedIn
                     _decryptedKey.value = result.data
-                    _credentialsEvent.send(AuthCredentials(
-                        email ?: _tempEmail.value,
-                        password ?: _tempPassword.value)
+                    _credentialsEvent.send(
+                        AuthCredentials(
+                            email ?: _tempEmail.value,
+                            password ?: _tempPassword.value
+                        )
                     )
                     clearTempData()
                 }

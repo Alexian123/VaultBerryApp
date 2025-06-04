@@ -1,4 +1,4 @@
-package com.alexianhentiu.vaultberryapp.presentation.viewmodel.account
+package com.alexianhentiu.vaultberryapp.presentation.ui.screens.account
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -13,7 +13,6 @@ import com.alexianhentiu.vaultberryapp.domain.usecase.account.Disable2FAUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.account.Get2FAStatusUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.account.GetAccountInfoUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.account.Setup2FAUseCase
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.account.AccountScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow

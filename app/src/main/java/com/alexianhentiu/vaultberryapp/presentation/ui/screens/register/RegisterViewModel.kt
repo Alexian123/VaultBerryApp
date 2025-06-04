@@ -1,4 +1,4 @@
-package com.alexianhentiu.vaultberryapp.presentation.viewmodel.register
+package com.alexianhentiu.vaultberryapp.presentation.ui.screens.register
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -7,7 +7,6 @@ import com.alexianhentiu.vaultberryapp.domain.common.ErrorInfo
 import com.alexianhentiu.vaultberryapp.domain.common.UseCaseResult
 import com.alexianhentiu.vaultberryapp.domain.model.AccountInfo
 import com.alexianhentiu.vaultberryapp.domain.usecase.auth.RegisterUseCase
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.register.RegisterScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow

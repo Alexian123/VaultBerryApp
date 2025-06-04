@@ -13,14 +13,13 @@ import com.alexianhentiu.vaultberryapp.presentation.ui.handlers.UtilityErrorHand
 import com.alexianhentiu.vaultberryapp.presentation.ui.common.enums.AppTheme
 import com.alexianhentiu.vaultberryapp.presentation.ui.navigation.AppNavHost
 import com.alexianhentiu.vaultberryapp.presentation.ui.theme.VaultBerryAppTheme
-import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.BiometricViewModel
-import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.SettingsViewModel
-import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.UtilityViewModel
+import com.alexianhentiu.vaultberryapp.presentation.ui.common.viewmodels.BiometricViewModel
+import com.alexianhentiu.vaultberryapp.presentation.ui.common.viewmodels.SettingsViewModel
+import com.alexianhentiu.vaultberryapp.presentation.ui.common.viewmodels.UtilityViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 /*
     TODO:
-        - Create interface and use cases for biometric authentication
         - Create string provider for error messages
         - Add option to set the backend ip and import SSL certificate
         - Cleanup code & add comments
