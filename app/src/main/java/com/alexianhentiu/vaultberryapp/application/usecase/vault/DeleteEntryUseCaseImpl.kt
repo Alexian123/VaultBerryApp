@@ -1,0 +1,29 @@
+package com.alexianhentiu.vaultberryapp.application.usecase.vault
+
+import com.alexianhentiu.vaultberryapp.data.remote.ApiResult
+import com.alexianhentiu.vaultberryapp.domain.common.UseCaseResult
+import com.alexianhentiu.vaultberryapp.domain.model.response.MessageResponse
+import com.alexianhentiu.vaultberryapp.domain.repository.VaultRepository
+import com.alexianhentiu.vaultberryapp.domain.common.enums.ErrorType
+import com.alexianhentiu.vaultberryapp.domain.usecase.vault.DeleteEntryUseCase
+
+class DeleteEntryUseCaseImpl(
+    private val vaultRepository: VaultRepository
+) : DeleteEntryUseCase {
+
+    override suspend operator fun invoke(id: Long): UseCaseResult<MessageResponse> {
+        return when (val response = vaultRepository.deleteEntry(id)) {
+            is ApiResult.Success -> {
+                UseCaseResult.Success(response.data)
+            }
+
+            is ApiResult.Error -> {
+                UseCaseResult.Error(
+                    ErrorType.API,
+                    response.source,
+                    response.message
+                )
+            }
+        }
+    }
+}

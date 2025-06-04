@@ -1,6 +1,6 @@
 package com.alexianhentiu.vaultberryapp.domain.repository
 
-import com.alexianhentiu.vaultberryapp.domain.model.entity.EncryptedAuthCredentials
+import com.alexianhentiu.vaultberryapp.domain.model.EncryptedAuthCredentials
 
 interface CredentialsRepository {
 

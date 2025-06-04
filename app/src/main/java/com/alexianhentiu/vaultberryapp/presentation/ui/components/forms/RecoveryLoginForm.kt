@@ -21,14 +21,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.alexianhentiu.vaultberryapp.R
-import com.alexianhentiu.vaultberryapp.domain.utils.enums.ValidatedFieldType
+import com.alexianhentiu.vaultberryapp.domain.common.enums.InputType
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.PasswordField
 
 @Composable
 fun RecoveryLoginForm(
     onContinueClicked: (String, String) -> Unit,
     onCancelClicked: () -> Unit,
-    validator: (ValidatedFieldType) -> (String) -> Boolean = { { true } }
+    validator: (InputType) -> (String) -> Boolean = { { true } }
 ) {
     var recoveryPassword by remember { mutableStateOf("") }
     var otp by remember { mutableStateOf("") }
@@ -48,7 +48,7 @@ fun RecoveryLoginForm(
                 isRecoveryPasswordValid = valid
             },
             label = stringResource(R.string.recovery_password_label),
-            validate = validator(ValidatedFieldType.PASSWORD),
+            validate = validator(InputType.PASSWORD),
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(8.dp))
@@ -58,7 +58,7 @@ fun RecoveryLoginForm(
                 isOTPValid = valid
             },
             label = stringResource(R.string.otp_label),
-            validate = validator(ValidatedFieldType.OTP),
+            validate = validator(InputType.OTP),
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(16.dp))

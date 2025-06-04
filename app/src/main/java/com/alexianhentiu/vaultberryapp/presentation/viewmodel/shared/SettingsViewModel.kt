@@ -3,11 +3,11 @@ package com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.utility.ObserveSettingUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.utility.SaveSettingUseCase
-import com.alexianhentiu.vaultberryapp.domain.utils.UseCaseResult
-import com.alexianhentiu.vaultberryapp.domain.utils.settings.AppSettings
-import com.alexianhentiu.vaultberryapp.presentation.utils.containers.ErrorInfo
+import com.alexianhentiu.vaultberryapp.domain.common.AppSettings
+import com.alexianhentiu.vaultberryapp.domain.common.ErrorInfo
+import com.alexianhentiu.vaultberryapp.domain.common.UseCaseResult
+import com.alexianhentiu.vaultberryapp.domain.usecase.settings.ObserveSettingUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.settings.SaveSettingUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow

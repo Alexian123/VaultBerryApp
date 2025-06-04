@@ -18,11 +18,11 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.alexianhentiu.vaultberryapp.R
-import com.alexianhentiu.vaultberryapp.domain.utils.enums.PasswordStrength
+import com.alexianhentiu.vaultberryapp.domain.common.enums.PasswordStrength
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.buttons.CopyToClipboardButton
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.buttons.ToggleVisibilityButton
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.misc.PasswordStrengthIndicator
-import com.alexianhentiu.vaultberryapp.presentation.utils.enums.TextFieldType
+import com.alexianhentiu.vaultberryapp.presentation.ui.common.enums.TextFieldType
 
 @Composable
 fun PasswordField(

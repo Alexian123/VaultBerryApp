@@ -83,7 +83,7 @@
     <string name="autofill_settings_text">Autofill</string>
     <string name="autofill_activation_text">Enable in System Settings</string>
     <string name="advanced_settings_text">Advanced</string>
-    <string name="debug_mode_setting_text">Debug mode (restart required)</string>
+    <string name="debug_mode_setting_text">Debug mode</string>
     <string name="first_name_label">First Name</string>
     <string name="last_name_label">Last Name</string>
     <string name="register_button_text">Register</string>
@@ -126,4 +126,6 @@
     <string name="biometric_retrieve_title">Unlock Credentials</string>
     <string name="biometric_retrieve_subtitle">Authenticate to retrieve your stored login credentials</string>
     <string name="confirm_password_label">Confirm password</string>
+    <string name="activation_required_title">Activation Required</string>
+    <string name="activation_required_message">Your account must be activated before you can log in.\nAn email with an activation link has been sent to you.\nIt will expire in 24 hours.</string>
 </resources>

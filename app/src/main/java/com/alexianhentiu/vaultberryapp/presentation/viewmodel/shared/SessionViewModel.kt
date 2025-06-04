@@ -3,13 +3,14 @@ package com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.auth.LoginUseCase
-import com.alexianhentiu.vaultberryapp.domain.usecase.viewmodel.auth.LogoutUseCase
-import com.alexianhentiu.vaultberryapp.domain.utils.UseCaseResult
-import com.alexianhentiu.vaultberryapp.domain.utils.enums.ErrorType
-import com.alexianhentiu.vaultberryapp.presentation.utils.containers.AuthCredentials
-import com.alexianhentiu.vaultberryapp.presentation.utils.containers.ErrorInfo
-import com.alexianhentiu.vaultberryapp.presentation.utils.state.SessionState
+import com.alexianhentiu.vaultberryapp.domain.common.enums.ErrorType
+import com.alexianhentiu.vaultberryapp.domain.model.AuthCredentials
+import com.alexianhentiu.vaultberryapp.domain.common.ErrorInfo
+import com.alexianhentiu.vaultberryapp.domain.common.UseCaseResult
+import com.alexianhentiu.vaultberryapp.domain.usecase.auth.ActivationSendUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.auth.LoginUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.auth.LogoutUseCase
+import com.alexianhentiu.vaultberryapp.presentation.ui.common.SessionState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,7 +22,8 @@ import javax.inject.Inject
 @HiltViewModel
 class SessionViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
-    private val logoutUseCase: LogoutUseCase
+    private val logoutUseCase: LogoutUseCase,
+    private val activateSendUseCase: ActivationSendUseCase
 ) : ViewModel() {
 
     private val _sessionState = MutableStateFlow<SessionState>(SessionState.LoggedOut)
@@ -54,21 +56,44 @@ class SessionViewModel @Inject constructor(
                     clearTempData()
                 }
 
-                is UseCaseResult.Error -> {  // Handle 2FA required case
-                    if (result.type == ErrorType.REQUIRES_2FA) {
-                        _sessionState.value = SessionState.TwoFactorRequired
-                        _tempEmail.value = email ?: _tempEmail.value
-                        _tempPassword.value = password ?: _tempPassword.value
-                    } else {
-                        _sessionState.value = SessionState.Error(
-                            ErrorInfo(
-                                type = result.type,
-                                source = result.source,
-                                message = result.message
+                is UseCaseResult.Error -> {  // Handle special cases
+                    when (result.type) {
+                        ErrorType.ACTIVATION_REQUIRED -> {
+                            when (val activationResult = activateSendUseCase(email!!)) {
+                                is UseCaseResult.Success -> {
+                                    _sessionState.value = SessionState.ActivationEmailSent
+                                }
+                                is UseCaseResult.Error -> {
+                                    _sessionState.value = SessionState.Error(
+                                        ErrorInfo(
+                                            type = activationResult.type,
+                                            source = activationResult.source,
+                                            message = activationResult.message
+                                        )
+                                    )
+                                    Log.e(activationResult.source, activationResult.message)
+                                }
+                            }
+                        }
+
+                        ErrorType.TWO_FACTOR_REQUIRED -> {
+                            _sessionState.value = SessionState.TwoFactorRequired
+                            _tempEmail.value = email ?: _tempEmail.value
+                            _tempPassword.value = password ?: _tempPassword.value
+                        }
+
+                        else -> {
+                            _sessionState.value = SessionState.Error(
+                                ErrorInfo(
+                                    type = result.type,
+                                    source = result.source,
+                                    message = result.message
+                                )
                             )
-                        )
-                        clearTempData()
-                        Log.e(result.source, result.message)
+                            clearTempData()
+                            Log.e(result.source, result.message)
+                        }
+
                     }
                 }
             }

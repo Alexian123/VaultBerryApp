@@ -27,11 +27,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.alexianhentiu.vaultberryapp.R
-import com.alexianhentiu.vaultberryapp.domain.utils.enums.ValidatedFieldType
+import com.alexianhentiu.vaultberryapp.domain.common.enums.InputType
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.ValidatedTextField
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.PasswordField
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.misc.CheckboxOptionRow
-import com.alexianhentiu.vaultberryapp.presentation.utils.enums.NavRoute
+import com.alexianhentiu.vaultberryapp.presentation.ui.common.enums.NavRoute
 
 @Composable
 fun LoginForm(
@@ -43,7 +43,7 @@ fun LoginForm(
     isBiometricAuthAvailable: Boolean = false,
     onLoginClicked: (String, String, Boolean) -> Unit,
     onForgotPasswordClicked: () -> Unit,
-    validator: (ValidatedFieldType) -> (String) -> Boolean = { { true } }
+    validator: (InputType) -> (String) -> Boolean = { { true } }
 ) {
     var email by remember(rememberEmail, savedEmail) {
         mutableStateOf(if (rememberEmail) savedEmail else "")
@@ -52,12 +52,12 @@ fun LoginForm(
 
     var isEmailValid by remember(email) {
         mutableStateOf(
-            validator(ValidatedFieldType.EMAIL)(email)
+            validator(InputType.EMAIL)(email)
         )
     }
     var isPasswordValid by remember {
         mutableStateOf(
-            validator(ValidatedFieldType.PASSWORD)(password)
+            validator(InputType.PASSWORD)(password)
         )
     }
 
@@ -77,7 +77,7 @@ fun LoginForm(
                 isEmailValid = valid
             },
             isValid = isEmailValid,
-            validate = validator(ValidatedFieldType.EMAIL),
+            validate = validator(InputType.EMAIL),
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(8.dp))
@@ -87,7 +87,7 @@ fun LoginForm(
                 isPasswordValid = valid
             },
             isValid = isPasswordValid,
-            validate = validator(ValidatedFieldType.PASSWORD),
+            validate = validator(InputType.PASSWORD),
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(8.dp))

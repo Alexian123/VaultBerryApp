@@ -3,14 +3,14 @@ package com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared
 import androidx.biometric.BiometricPrompt
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.alexianhentiu.vaultberryapp.domain.model.entity.EncryptedAuthCredentials
-import com.alexianhentiu.vaultberryapp.domain.utils.enums.ErrorType
-import com.alexianhentiu.vaultberryapp.presentation.utils.biometric.BiometricAuthManager
-import com.alexianhentiu.vaultberryapp.presentation.utils.biometric.BiometricPromptRequest
-import com.alexianhentiu.vaultberryapp.presentation.utils.biometric.BiometricStatus
-import com.alexianhentiu.vaultberryapp.presentation.utils.containers.AuthCredentials
-import com.alexianhentiu.vaultberryapp.presentation.utils.containers.ErrorInfo
-import com.alexianhentiu.vaultberryapp.presentation.utils.state.BiometricState
+import com.alexianhentiu.vaultberryapp.domain.model.EncryptedAuthCredentials
+import com.alexianhentiu.vaultberryapp.domain.common.enums.ErrorType
+import com.alexianhentiu.vaultberryapp.data.platform.biometric.AndroidBiometricAuthenticator
+import com.alexianhentiu.vaultberryapp.application.usecase.biometric.BiometricPromptRequest
+import com.alexianhentiu.vaultberryapp.domain.common.BiometricStatus
+import com.alexianhentiu.vaultberryapp.domain.model.AuthCredentials
+import com.alexianhentiu.vaultberryapp.domain.common.ErrorInfo
+import com.alexianhentiu.vaultberryapp.presentation.ui.handlers.biometric.BiometricState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -24,7 +24,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class BiometricViewModel @Inject constructor(
-    private val biometricAuthManager: BiometricAuthManager
+    private val androidBiometricAuthenticator: AndroidBiometricAuthenticator
 ) : ViewModel() {
 
     private val _biometricState = MutableStateFlow<BiometricState>(BiometricState.Idle)
@@ -46,18 +46,18 @@ class BiometricViewModel @Inject constructor(
     private var pendingEncryptedData: EncryptedAuthCredentials? = null
 
     init {
-        _hasStoredCredentials.value = biometricAuthManager.hasStoredCredentials()
+        _hasStoredCredentials.value = androidBiometricAuthenticator.hasStoredCredentials()
     }
 
     fun requestStoreCredentials(email: String, password: String) {
         viewModelScope.launch {
             _biometricState.value = BiometricState.Loading
-            when (val result = biometricAuthManager.isBiometricAvailable()) {
+            when (val result = androidBiometricAuthenticator.isBiometricAvailable()) {
                 BiometricStatus.Available -> {
                     try {
                         pendingStoreEmail = email
                         pendingStorePassword = password
-                        val passwordCipher = biometricAuthManager.getCipherForEncryption()
+                        val passwordCipher = androidBiometricAuthenticator.getCipherForEncryption()
                         _startBiometricPrompt.emit(
                             BiometricPromptRequest.Store(passwordCipher)
                         )
@@ -81,9 +81,9 @@ class BiometricViewModel @Inject constructor(
     fun requestAuthenticateAndRetrieveCredentials() {
         viewModelScope.launch {
             _biometricState.value = BiometricState.Loading
-            when (val result = biometricAuthManager.isBiometricAvailable()) {
+            when (val result = androidBiometricAuthenticator.isBiometricAvailable()) {
                 BiometricStatus.Available -> {
-                    val encryptedData = biometricAuthManager.getCredentials()
+                    val encryptedData = androidBiometricAuthenticator.getCredentials()
                     if (encryptedData == null) {
                         _biometricState.value = BiometricState.Error(
                             ErrorInfo(
@@ -96,7 +96,7 @@ class BiometricViewModel @Inject constructor(
                     }
                     try {
                         pendingEncryptedData = encryptedData
-                        val passwordCipher = biometricAuthManager.getCipherForDecryption(
+                        val passwordCipher = androidBiometricAuthenticator.getCipherForDecryption(
                             encryptedData.passwordIv
                         )
                         _startBiometricPrompt.emit(
@@ -126,12 +126,12 @@ class BiometricViewModel @Inject constructor(
                 val password = pendingStorePassword
                     ?: throw IllegalStateException("Password is null.")
 
-                val encryptedAuthCredentials = biometricAuthManager.performEncryption(
+                val encryptedAuthCredentials = androidBiometricAuthenticator.performEncryption(
                     cryptoObject = result.cryptoObject,
                     password = password,
                     email = email
                 )
-                biometricAuthManager.storeCredentials(encryptedAuthCredentials)
+                androidBiometricAuthenticator.storeCredentials(encryptedAuthCredentials)
                 _hasStoredCredentials.value = true
                 _biometricState.value = BiometricState.CredentialsStored
                 clearPendingStoreData()
@@ -153,7 +153,7 @@ class BiometricViewModel @Inject constructor(
                 val encryptedData = pendingEncryptedData
                     ?: throw IllegalStateException("Encrypted data is null.")
 
-                val credentials = biometricAuthManager.performDecryption(
+                val credentials = androidBiometricAuthenticator.performDecryption(
                     cryptoObject = result.cryptoObject,
                     encryptedData = encryptedData
                 )
@@ -185,7 +185,7 @@ class BiometricViewModel @Inject constructor(
 
     fun clearStoredCredentials() {
         viewModelScope.launch {
-            biometricAuthManager.clearStoredCredentials()
+            androidBiometricAuthenticator.clearStoredCredentials()
             _biometricState.value = BiometricState.ClearedCredentials
             _hasStoredCredentials.value = false
             clearPendingData()

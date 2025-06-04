@@ -23,17 +23,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.alexianhentiu.vaultberryapp.R
-import com.alexianhentiu.vaultberryapp.domain.utils.enums.PasswordStrength
-import com.alexianhentiu.vaultberryapp.domain.utils.enums.ValidatedFieldType
+import com.alexianhentiu.vaultberryapp.domain.common.enums.PasswordStrength
+import com.alexianhentiu.vaultberryapp.domain.common.enums.InputType
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.ValidatedTextField
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.PasswordField
-import com.alexianhentiu.vaultberryapp.presentation.utils.enums.NavRoute
+import com.alexianhentiu.vaultberryapp.presentation.ui.common.enums.NavRoute
 
 @Composable
 fun RegisterForm(
     navController: NavHostController,
     onRegisterClicked: (String, String, String?, String?) -> Unit,
-    validator: (ValidatedFieldType) -> (String) -> Boolean = { { true } },
+    validator: (InputType) -> (String) -> Boolean = { { true } },
     evaluatePasswordStrength: (String) -> PasswordStrength = { PasswordStrength.NONE }
 ) {
     var email by remember { mutableStateOf("") }
@@ -73,7 +73,7 @@ fun RegisterForm(
                 isEmailValid = valid
             },
             isValid = isEmailValid,
-            validate = validator(ValidatedFieldType.EMAIL),
+            validate = validator(InputType.EMAIL),
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(8.dp))
@@ -84,7 +84,7 @@ fun RegisterForm(
                 isConfirmPasswordValid = password == confirmPassword
             },
             isValid = isPasswordValid,
-            validate = validator(ValidatedFieldType.PASSWORD),
+            validate = validator(InputType.PASSWORD),
             showStrengthIndicator = true,
             evaluateStrength = evaluatePasswordStrength,
             modifier = Modifier.fillMaxWidth()

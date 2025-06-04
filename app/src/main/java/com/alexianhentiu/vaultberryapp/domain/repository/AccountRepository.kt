@@ -1,24 +1,27 @@
 package com.alexianhentiu.vaultberryapp.domain.repository
 
-import com.alexianhentiu.vaultberryapp.data.utils.APIResult
-import com.alexianhentiu.vaultberryapp.domain.model.entity.AccountInfo
+import com.alexianhentiu.vaultberryapp.data.remote.ApiResult
+import com.alexianhentiu.vaultberryapp.domain.model.AccountInfo
 import com.alexianhentiu.vaultberryapp.domain.model.response.MessageResponse
 import com.alexianhentiu.vaultberryapp.domain.model.request.PasswordChangeRequest
 import com.alexianhentiu.vaultberryapp.domain.model.response.TotpResponse
 
 interface AccountRepository {
 
-    suspend fun getAccountInfo(): APIResult<AccountInfo>
+    suspend fun getAccountInfo(): ApiResult<AccountInfo>
 
-    suspend fun updateAccount(accountInfo: AccountInfo): APIResult<MessageResponse>
+    suspend fun updateAccount(
+        accountInfo: AccountInfo,
+        noActivation: Boolean
+    ): ApiResult<MessageResponse>
 
-    suspend fun deleteAccount(): APIResult<MessageResponse>
+    suspend fun deleteAccount(): ApiResult<MessageResponse>
 
-    suspend fun changePassword(data: PasswordChangeRequest): APIResult<MessageResponse>
+    suspend fun changePassword(data: PasswordChangeRequest): ApiResult<MessageResponse>
 
-    suspend fun setup2FA(): APIResult<TotpResponse>
+    suspend fun setup2FA(): ApiResult<TotpResponse>
 
-    suspend fun get2FAStatus(): APIResult<Boolean>
+    suspend fun get2FAStatus(): ApiResult<Boolean>
 
-    suspend fun disable2FA(): APIResult<MessageResponse>
+    suspend fun disable2FA(): ApiResult<MessageResponse>
 }

@@ -9,7 +9,7 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
-import com.alexianhentiu.vaultberryapp.presentation.utils.enums.AppTheme
+import com.alexianhentiu.vaultberryapp.presentation.ui.common.enums.AppTheme
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,

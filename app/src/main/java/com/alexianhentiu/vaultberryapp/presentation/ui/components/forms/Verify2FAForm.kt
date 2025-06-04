@@ -20,14 +20,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.alexianhentiu.vaultberryapp.R
-import com.alexianhentiu.vaultberryapp.domain.utils.enums.ValidatedFieldType
+import com.alexianhentiu.vaultberryapp.domain.common.enums.InputType
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.ValidatedTextField
 
 @Composable
 fun Verify2FAForm(
     onContinueClicked: (String) -> Unit,
     onCancelClicked: () -> Unit,
-    validator: (ValidatedFieldType) -> (String) -> Boolean = { { true } }
+    validator: (InputType) -> (String) -> Boolean = { { true } }
 ) {
     var code by remember { mutableStateOf("") }
     var isCodeValid by remember { mutableStateOf(false) }
@@ -45,7 +45,7 @@ fun Verify2FAForm(
                 isCodeValid = valid
             },
             isValid = isCodeValid,
-            validate = validator(ValidatedFieldType.MFA_CODE),
+            validate = validator(InputType.MFA_CODE),
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(16.dp))

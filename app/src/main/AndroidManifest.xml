@@ -7,7 +7,7 @@
 
     <application
         android:networkSecurityConfig="@xml/network_security_config"
-        android:name=".di.App"
+        android:name=".App"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -37,7 +37,7 @@
         </activity>
 
         <service
-            android:name=".presentation.utils.services.VaultBerryAutofillService"
+            android:name=".data.platform.autofill.AndroidAutofillService"
             android:exported="true"
             android:label="@string/app_name"
             android:permission="android.permission.BIND_AUTOFILL_SERVICE">

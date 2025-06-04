@@ -1,9 +1,8 @@
 package com.alexianhentiu.vaultberryapp.utils
 
-import com.alexianhentiu.vaultberryapp.domain.utils.security.cryptography.AESHandler
+import com.alexianhentiu.vaultberryapp.data.security.AESHandler
 import org.junit.Before
 import org.junit.Test
-import javax.crypto.SecretKey
 
 class AESHandlerTest {
 
@@ -20,28 +19,28 @@ class AESHandlerTest {
 
     @Test
     fun givenMode_whenGenerateKey_thenReturnNotEmptyKey() {
-        assert(handler.generateKey().encoded.isNotEmpty())
+        assert(handler.generateKey().isNotEmpty())
     }
 
     @Test
     fun givenBytesAndIV_whenEncrypt_thenReturnNotEmptyBytes() {
-        val key: SecretKey = handler.generateKey()
-        val encrypted = handler.encrypt("test".toByteArray(), key.encoded, iv)
+        val key = handler.generateKey()
+        val encrypted = handler.encrypt("test".toByteArray(), key, iv)
         assert(encrypted.isNotEmpty())
     }
 
     @Test
     fun givenBytes_whenDecrypt_thenReturnOriginalBytes() {
-        val key: SecretKey = handler.generateKey()
-        val encrypted = handler.encrypt("test".toByteArray(), key.encoded, iv)
-        val decrypted = handler.decrypt(encrypted, key.encoded, iv)
+        val key = handler.generateKey()
+        val encrypted = handler.encrypt("test".toByteArray(), key, iv)
+        val decrypted = handler.decrypt(encrypted, key, iv)
         assert(String(decrypted) == "test")
     }
 
     @Test
     fun givenNonEmptyPassword_whenDeriveKeyFromPassword_thenReturnNotEmptyKey() {
         val key = handler.deriveKeyFromPassword("password", "salt".toByteArray())
-        assert(key.encoded.isNotEmpty())
+        assert(key.isNotEmpty())
     }
 
     @Test

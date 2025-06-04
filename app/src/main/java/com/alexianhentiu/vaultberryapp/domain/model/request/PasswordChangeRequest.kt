@@ -1,7 +1,7 @@
 package com.alexianhentiu.vaultberryapp.domain.model.request
 
-import com.alexianhentiu.vaultberryapp.domain.model.entity.PasswordPair
-import com.alexianhentiu.vaultberryapp.domain.model.entity.KeyChain
+import com.alexianhentiu.vaultberryapp.domain.model.PasswordPair
+import com.alexianhentiu.vaultberryapp.domain.model.KeyChain
 
 data class PasswordChangeRequest(
     val passwordPair: PasswordPair,

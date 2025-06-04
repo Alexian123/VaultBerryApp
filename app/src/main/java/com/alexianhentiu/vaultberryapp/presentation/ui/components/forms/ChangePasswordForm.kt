@@ -17,15 +17,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.alexianhentiu.vaultberryapp.R
-import com.alexianhentiu.vaultberryapp.domain.utils.enums.PasswordStrength
-import com.alexianhentiu.vaultberryapp.domain.utils.enums.ValidatedFieldType
-import com.alexianhentiu.vaultberryapp.presentation.utils.enums.TextFieldType
+import com.alexianhentiu.vaultberryapp.domain.common.enums.PasswordStrength
+import com.alexianhentiu.vaultberryapp.domain.common.enums.InputType
+import com.alexianhentiu.vaultberryapp.presentation.ui.common.enums.TextFieldType
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.PasswordField
 
 @Composable
 fun ChangePasswordForm(
     onChangePassword: (String, Boolean) -> Unit,
-    validator: (ValidatedFieldType) -> (String) -> Boolean = { { true } },
+    validator: (InputType) -> (String) -> Boolean = { { true } },
     evaluatePasswordStrength: (String) -> PasswordStrength = { PasswordStrength.NONE },
     textFieldType: TextFieldType = TextFieldType.OUTLINED
 ) {
@@ -43,7 +43,7 @@ fun ChangePasswordForm(
                 isConfirmPasswordValid = password == confirmPassword
             },
             isValid = isPasswordValid,
-            validate = validator(ValidatedFieldType.PASSWORD),
+            validate = validator(InputType.PASSWORD),
             label = stringResource(R.string.new_password_label),
             evaluateStrength = evaluatePasswordStrength,
             showStrengthIndicator = true,

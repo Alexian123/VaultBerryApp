@@ -7,10 +7,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.fragment.app.FragmentActivity
-import com.alexianhentiu.vaultberryapp.presentation.ui.handlers.BiometricPromptHandler
+import com.alexianhentiu.vaultberryapp.presentation.ui.handlers.biometric.BiometricPromptHandler
 import com.alexianhentiu.vaultberryapp.presentation.ui.handlers.SettingsErrorHandler
 import com.alexianhentiu.vaultberryapp.presentation.ui.handlers.UtilityErrorHandler
-import com.alexianhentiu.vaultberryapp.presentation.utils.enums.AppTheme
+import com.alexianhentiu.vaultberryapp.presentation.ui.common.enums.AppTheme
 import com.alexianhentiu.vaultberryapp.presentation.ui.navigation.AppNavHost
 import com.alexianhentiu.vaultberryapp.presentation.ui.theme.VaultBerryAppTheme
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.BiometricViewModel
@@ -20,8 +20,10 @@ import dagger.hilt.android.AndroidEntryPoint
 
 /*
     TODO:
-        - Confirm password on register
-        - Email verification & account activation for register/email change
+        - Display password requirement
+        - Figure out why the session disconnects after email change
+        - Create interface and use cases for biometric authentication
+        - Confirmation for account deletion
         - Add option to set the backend ip and import SSL certificate
         - Cleanup code & add comments
 */

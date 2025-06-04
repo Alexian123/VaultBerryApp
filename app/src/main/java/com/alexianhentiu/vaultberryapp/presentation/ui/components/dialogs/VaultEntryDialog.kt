@@ -27,9 +27,9 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.alexianhentiu.vaultberryapp.R
-import com.alexianhentiu.vaultberryapp.domain.model.entity.DecryptedVaultEntry
-import com.alexianhentiu.vaultberryapp.domain.utils.enums.PasswordStrength
-import com.alexianhentiu.vaultberryapp.domain.utils.enums.ValidatedFieldType
+import com.alexianhentiu.vaultberryapp.domain.model.DecryptedVaultEntry
+import com.alexianhentiu.vaultberryapp.domain.common.enums.PasswordStrength
+import com.alexianhentiu.vaultberryapp.domain.common.enums.InputType
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.PasswordField
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.ValidatedTextField
 
@@ -39,7 +39,7 @@ fun VaultEntryDialog(
     initialEntry: DecryptedVaultEntry? = null,
     onDismissRequest: () -> Unit,
     onSubmit: (DecryptedVaultEntry) -> Unit,
-    validator: (ValidatedFieldType) -> (String) -> Boolean = { { true } },
+    validator: (InputType) -> (String) -> Boolean = { { true } },
     evaluatePasswordStrength: (String) -> PasswordStrength = { PasswordStrength.NONE }
 ) {
     var title by remember { mutableStateOf(initialEntry?.title ?: "") }
@@ -48,7 +48,7 @@ fun VaultEntryDialog(
     var password by remember { mutableStateOf(initialEntry?.password ?: "") }
     var notes by remember { mutableStateOf(initialEntry?.notes ?: "") }
 
-    var isTitleValid by remember { mutableStateOf(validator(ValidatedFieldType.ENTRY_TITLE)(title)) }
+    var isTitleValid by remember { mutableStateOf(validator(InputType.ENTRY_TITLE)(title)) }
 
     Dialog(
         onDismissRequest = onDismissRequest,
@@ -90,7 +90,7 @@ fun VaultEntryDialog(
                                 title = newTitle
                                 isTitleValid = valid
                             },
-                            validate = validator(ValidatedFieldType.ENTRY_TITLE)
+                            validate = validator(InputType.ENTRY_TITLE)
                         )
                         ValidatedTextField(
                             modifier = Modifier.fillMaxWidth(),

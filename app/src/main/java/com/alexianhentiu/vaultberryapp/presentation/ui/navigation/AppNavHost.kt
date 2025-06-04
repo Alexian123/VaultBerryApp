@@ -7,15 +7,15 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.AboutScreen
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.AccountScreen
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.LoginScreen
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.PasswordGeneratorScreen
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.RecoveryScreen
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.RegisterScreen
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.SettingsScreen
-import com.alexianhentiu.vaultberryapp.presentation.ui.screens.VaultScreen
-import com.alexianhentiu.vaultberryapp.presentation.utils.enums.NavRoute
+import com.alexianhentiu.vaultberryapp.presentation.ui.screens.about.AboutScreen
+import com.alexianhentiu.vaultberryapp.presentation.ui.screens.account.AccountScreen
+import com.alexianhentiu.vaultberryapp.presentation.ui.screens.login.LoginScreen
+import com.alexianhentiu.vaultberryapp.presentation.ui.screens.passwordGenerator.PasswordGeneratorScreen
+import com.alexianhentiu.vaultberryapp.presentation.ui.screens.recovery.RecoveryScreen
+import com.alexianhentiu.vaultberryapp.presentation.ui.screens.register.RegisterScreen
+import com.alexianhentiu.vaultberryapp.presentation.ui.screens.settings.SettingsScreen
+import com.alexianhentiu.vaultberryapp.presentation.ui.screens.vault.VaultScreen
+import com.alexianhentiu.vaultberryapp.presentation.ui.common.enums.NavRoute
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.BiometricViewModel
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.SessionViewModel
 import com.alexianhentiu.vaultberryapp.presentation.viewmodel.shared.SettingsViewModel
@@ -42,16 +42,16 @@ fun AppNavHost() {
             )
         }
         composable(NavRoute.REGISTER.path) {
-            RegisterScreen(navController, utilityViewModel)
+            RegisterScreen(navController, utilityViewModel, settingsViewModel)
         }
         composable(NavRoute.RECOVERY.path) {
-            RecoveryScreen(navController, sessionViewModel, utilityViewModel)
+            RecoveryScreen(navController, sessionViewModel, utilityViewModel, settingsViewModel)
         }
         composable(NavRoute.VAULT.path) {
-            VaultScreen(navController, sessionViewModel, utilityViewModel)
+            VaultScreen(navController, sessionViewModel, utilityViewModel, settingsViewModel)
         }
         composable(NavRoute.ACCOUNT.path) {
-            AccountScreen(navController, sessionViewModel, utilityViewModel)
+            AccountScreen(navController, sessionViewModel, utilityViewModel, settingsViewModel)
         }
         composable(NavRoute.PASSWORD_GENERATOR.path) {
             PasswordGeneratorScreen(navController, utilityViewModel)

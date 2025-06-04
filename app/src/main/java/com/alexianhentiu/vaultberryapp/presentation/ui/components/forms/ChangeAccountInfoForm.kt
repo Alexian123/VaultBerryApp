@@ -21,16 +21,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.alexianhentiu.vaultberryapp.R
-import com.alexianhentiu.vaultberryapp.domain.model.entity.AccountInfo
-import com.alexianhentiu.vaultberryapp.domain.utils.enums.ValidatedFieldType
+import com.alexianhentiu.vaultberryapp.domain.model.AccountInfo
+import com.alexianhentiu.vaultberryapp.domain.common.enums.InputType
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.ValidatedTextField
-import com.alexianhentiu.vaultberryapp.presentation.utils.enums.TextFieldType
+import com.alexianhentiu.vaultberryapp.presentation.ui.common.enums.TextFieldType
 
 @Composable
 fun ChangeAccountInfoForm(
     accountInfo: AccountInfo,
     onSaveInfo: (String?, String?, String?) -> Unit, // Pass null for unchanged values
-    validator: (ValidatedFieldType) -> (String) -> Boolean = { { true } }
+    validator: (InputType) -> (String) -> Boolean = { { true } }
 ) {
     var firstName by remember { mutableStateOf(accountInfo.firstName) }
     var lastName by remember { mutableStateOf(accountInfo.lastName) }
@@ -65,7 +65,7 @@ fun ChangeAccountInfoForm(
                 isEmailValid = valid
             },
             isValid = isEmailValid,
-            validate = validator(ValidatedFieldType.EMAIL),
+            validate = validator(InputType.EMAIL),
             label = stringResource(R.string.email_label),
             textFieldType = TextFieldType.OUTLINED,
             modifier = Modifier.fillMaxWidth()

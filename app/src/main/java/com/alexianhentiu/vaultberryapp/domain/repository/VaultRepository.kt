@@ -1,26 +1,26 @@
 package com.alexianhentiu.vaultberryapp.domain.repository
 
-import com.alexianhentiu.vaultberryapp.data.utils.APIResult
-import com.alexianhentiu.vaultberryapp.domain.model.entity.EncryptedVaultEntry
-import com.alexianhentiu.vaultberryapp.domain.model.entity.VaultEntryPreview
+import com.alexianhentiu.vaultberryapp.data.remote.ApiResult
+import com.alexianhentiu.vaultberryapp.domain.model.EncryptedVaultEntry
+import com.alexianhentiu.vaultberryapp.domain.model.VaultEntryPreview
 import com.alexianhentiu.vaultberryapp.domain.model.response.MessageResponse
 
 interface VaultRepository {
 
-    suspend fun getAllVaultEntryPreviews(): APIResult<List<VaultEntryPreview>>
+    suspend fun getAllVaultEntryPreviews(): ApiResult<List<VaultEntryPreview>>
 
-    suspend fun getAllVaultEntryDetails(): APIResult<List<EncryptedVaultEntry>>
+    suspend fun getAllVaultEntryDetails(): ApiResult<List<EncryptedVaultEntry>>
 
-    suspend fun getVaultEntryDetails(id: Long): APIResult<EncryptedVaultEntry>
+    suspend fun getVaultEntryDetails(id: Long): ApiResult<EncryptedVaultEntry>
 
-    suspend fun addEntry(encryptedVaultEntry: EncryptedVaultEntry): APIResult<VaultEntryPreview>
+    suspend fun addEntry(encryptedVaultEntry: EncryptedVaultEntry): ApiResult<VaultEntryPreview>
 
     suspend fun updateEntry(
         id: Long,
         encryptedVaultEntry: EncryptedVaultEntry
-    ): APIResult<MessageResponse>
+    ): ApiResult<MessageResponse>
 
-    suspend fun deleteEntry(id: Long): APIResult<MessageResponse>
+    suspend fun deleteEntry(id: Long): ApiResult<MessageResponse>
 
-    suspend fun searchVaultEntries(keywords: List<String>): APIResult<List<EncryptedVaultEntry>>
+    suspend fun searchVaultEntries(keywords: List<String>): ApiResult<List<EncryptedVaultEntry>>
 }

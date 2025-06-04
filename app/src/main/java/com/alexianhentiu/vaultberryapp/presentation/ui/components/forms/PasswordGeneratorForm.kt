@@ -27,11 +27,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.alexianhentiu.vaultberryapp.R
-import com.alexianhentiu.vaultberryapp.domain.utils.enums.PasswordStrength
+import com.alexianhentiu.vaultberryapp.domain.common.enums.PasswordStrength
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.PasswordField
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.misc.CheckboxOptionRow
-import com.alexianhentiu.vaultberryapp.presentation.utils.enums.TextFieldType
-import com.alexianhentiu.vaultberryapp.presentation.utils.containers.PasswordGenOptions
+import com.alexianhentiu.vaultberryapp.presentation.ui.common.enums.TextFieldType
+import com.alexianhentiu.vaultberryapp.domain.common.PasswordGenOptions
 import java.lang.NumberFormatException
 
 @Composable

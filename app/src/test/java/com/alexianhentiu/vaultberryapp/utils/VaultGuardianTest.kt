@@ -1,7 +1,7 @@
 package com.alexianhentiu.vaultberryapp.utils
 
-import com.alexianhentiu.vaultberryapp.domain.utils.security.VaultGuardian
-import com.alexianhentiu.vaultberryapp.domain.utils.security.cryptography.AESHandler
+import com.alexianhentiu.vaultberryapp.data.security.VaultGuardian
+import com.alexianhentiu.vaultberryapp.data.security.AESHandler
 import org.junit.Before
 import org.junit.Test
 

@@ -1,0 +1,31 @@
+package com.alexianhentiu.vaultberryapp.application.usecase.vault
+
+import com.alexianhentiu.vaultberryapp.application.usecase.internal.DecryptVaultEntryUseCase
+import com.alexianhentiu.vaultberryapp.data.remote.ApiResult
+import com.alexianhentiu.vaultberryapp.domain.common.UseCaseResult
+import com.alexianhentiu.vaultberryapp.domain.model.DecryptedVaultEntry
+import com.alexianhentiu.vaultberryapp.domain.repository.VaultRepository
+import com.alexianhentiu.vaultberryapp.domain.common.enums.ErrorType
+import com.alexianhentiu.vaultberryapp.domain.usecase.vault.GetDecryptedVaultEntryUseCase
+
+class GetDecryptedVaultEntryUseCaseImpl(
+    private val vaultRepository: VaultRepository,
+    private val decryptVaultEntryUseCase: DecryptVaultEntryUseCase
+) : GetDecryptedVaultEntryUseCase {
+    override suspend operator fun invoke(
+        id: Long,
+        decryptedKey: ByteArray
+    ): UseCaseResult<DecryptedVaultEntry> {
+        val vaultEntry = vaultRepository.getVaultEntryDetails(id)
+        return if (vaultEntry is ApiResult.Success) {
+            decryptVaultEntryUseCase(vaultEntry.data, decryptedKey)
+        } else {
+            val result = (vaultEntry as ApiResult.Error)
+            UseCaseResult.Error(
+                ErrorType.API,
+                result.source,
+                result.message
+            )
+        }
+    }
+}
