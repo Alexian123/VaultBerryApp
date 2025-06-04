@@ -1,12 +1,18 @@
 package com.alexianhentiu.vaultberryapp.data.security.password
 
+import com.alexianhentiu.vaultberryapp.R
 import com.alexianhentiu.vaultberryapp.domain.common.PasswordGenOptions
 import com.alexianhentiu.vaultberryapp.domain.security.password.PasswordGenerator
+import com.alexianhentiu.vaultberryapp.domain.utils.StringResourceProvider
 
-class RandomPasswordGenerator : PasswordGenerator {
+class RandomPasswordGenerator(
+    private val stringResourceProvider: StringResourceProvider
+) : PasswordGenerator {
 
     override fun generate(options: PasswordGenOptions): String {
-        if (options.length <= 0) throw IllegalArgumentException("Length must be greater than 0")
+        if (options.length <= 0) throw IllegalArgumentException(
+            stringResourceProvider.getString(R.string.error_password_gen_invalid_length)
+        )
         val charPool = mutableListOf<Char>()
         charPool.addAll(('a'..'z').toList())
         if (options.includeUppercase) charPool.addAll(('A'..'Z').toList())

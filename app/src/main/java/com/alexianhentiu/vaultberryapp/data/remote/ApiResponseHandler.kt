@@ -1,5 +1,6 @@
 package com.alexianhentiu.vaultberryapp.data.remote
 
+import com.alexianhentiu.vaultberryapp.domain.utils.StringResourceProvider
 import okio.ProtocolException
 import org.json.JSONException
 import org.json.JSONObject
@@ -8,7 +9,9 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ApiResponseHandler @Inject constructor() {
+class ApiResponseHandler @Inject constructor(
+    private val stringResourceProvider: StringResourceProvider
+) {
 
     companion object {
         private const val BACKEND_ERROR_SOURCE = "Backend"
@@ -31,7 +34,9 @@ class ApiResponseHandler @Inject constructor() {
                 } else {
                     ApiResult.Error(
                         BACKEND_ERROR_SOURCE,
-                        "Empty response body",
+                        stringResourceProvider.getString(
+                            com.alexianhentiu.vaultberryapp.R.string.empty_response_body
+                        ),
                         response.code()
                     )
                 }
@@ -39,12 +44,19 @@ class ApiResponseHandler @Inject constructor() {
                 val errorBody = response.errorBody()?.string()
                 try {
                     val jsonObject = errorBody?.let { JSONObject(it) }
-                    val errorMessage = jsonObject?.getString("error") ?: "Unknown error"
+                    val errorMessage = jsonObject?.getString("error")
+                        ?: stringResourceProvider.getString(
+                            com.alexianhentiu.vaultberryapp.R.string.unknown_error
+                        )
                     ApiResult.Error(BACKEND_ERROR_SOURCE, errorMessage, response.code())
                 } catch (e: JSONException) {
                     ApiResult.Error(
                         JSON_ERROR_SOURCE,
-                        errorBody ?: e.message ?: "An unexpected error occurred",
+                        errorBody
+                            ?: e.message
+                            ?: stringResourceProvider.getString(
+                                com.alexianhentiu.vaultberryapp.R.string.unexpected_error
+                            ),
                         response.code()
                     )
                 }
@@ -52,12 +64,16 @@ class ApiResponseHandler @Inject constructor() {
         } catch (e: ProtocolException) {
             ApiResult.Error(
                 NETWORK_ERROR_SOURCE,
-                e.message ?: "An unexpected error occurred"
+                e.message ?: stringResourceProvider.getString(
+                    com.alexianhentiu.vaultberryapp.R.string.unexpected_error
+                )
             )
         } catch (e: Exception) {
             ApiResult.Error(
                 UNKNOWN_ERROR_SOURCE,
-                e.message ?: "An unexpected error occurred"
+                e.message ?: stringResourceProvider.getString(
+                    com.alexianhentiu.vaultberryapp.R.string.unexpected_error
+                )
             )
         }
     }

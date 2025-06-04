@@ -7,6 +7,7 @@ import com.alexianhentiu.vaultberryapp.application.usecase.utility.GetAppInfoUse
 import com.alexianhentiu.vaultberryapp.application.usecase.utility.GetValidatorFunctionUseCaseImpl
 import com.alexianhentiu.vaultberryapp.data.di.qualifiers.LaxInputValidatorQualifier
 import com.alexianhentiu.vaultberryapp.data.di.qualifiers.StrictInputValidatorQualifier
+import com.alexianhentiu.vaultberryapp.data.platform.utils.AndroidStringResourceProvider
 import com.alexianhentiu.vaultberryapp.domain.clipboard.ClipboardHandler
 import com.alexianhentiu.vaultberryapp.domain.security.password.PasswordEvaluator
 import com.alexianhentiu.vaultberryapp.domain.security.password.PasswordGenerator
@@ -28,18 +29,30 @@ object UtilityUseCaseModule {
 
     @Provides
     fun provideCopyToClipboardUseCase(
+        stringResourceProvider: AndroidStringResourceProvider,
         clipboardHandler: ClipboardHandler
-    ): CopyToClipboardUseCase = CopyToClipboardUseCaseImpl(clipboardHandler)
+    ): CopyToClipboardUseCase = CopyToClipboardUseCaseImpl(
+        stringResourceProvider,
+        clipboardHandler
+    )
 
     @Provides
     fun provideEvalPasswordStrengthUseCase(
+        stringResourceProvider: AndroidStringResourceProvider,
         passwordEvaluator: PasswordEvaluator
-    ): EvalPasswordStrengthUseCase = EvalPasswordStrengthUseCaseImpl(passwordEvaluator)
+    ): EvalPasswordStrengthUseCase = EvalPasswordStrengthUseCaseImpl(
+        stringResourceProvider,
+        passwordEvaluator
+    )
 
     @Provides
     fun provideGeneratePasswordUseCase(
+        stringResourceProvider: AndroidStringResourceProvider,
         passwordGenerator: PasswordGenerator
-    ): GeneratePasswordUseCase = GeneratePasswordUseCaseImpl(passwordGenerator)
+    ): GeneratePasswordUseCase = GeneratePasswordUseCaseImpl(
+        stringResourceProvider,
+        passwordGenerator
+    )
 
     @Provides
     fun provideGetValidatorFunctionUseCase(

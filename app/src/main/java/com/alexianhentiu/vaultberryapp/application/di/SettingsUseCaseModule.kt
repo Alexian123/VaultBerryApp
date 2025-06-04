@@ -3,6 +3,7 @@ package com.alexianhentiu.vaultberryapp.application.di
 import com.alexianhentiu.vaultberryapp.application.usecase.settings.LoadSettingUseCaseImpl
 import com.alexianhentiu.vaultberryapp.application.usecase.settings.ObserveSettingUseCaseImpl
 import com.alexianhentiu.vaultberryapp.application.usecase.settings.SaveSettingUseCaseImpl
+import com.alexianhentiu.vaultberryapp.data.platform.utils.AndroidStringResourceProvider
 import com.alexianhentiu.vaultberryapp.domain.repository.SettingsRepository
 import com.alexianhentiu.vaultberryapp.domain.usecase.settings.LoadSettingUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.settings.ObserveSettingUseCase
@@ -18,16 +19,28 @@ object SettingsUseCaseModule {
 
     @Provides
     fun provideLoadSettingUseCase(
+        stringResourceProvider: AndroidStringResourceProvider,
         settingsRepository: SettingsRepository
-    ): LoadSettingUseCase = LoadSettingUseCaseImpl(settingsRepository)
+    ): LoadSettingUseCase = LoadSettingUseCaseImpl(
+        stringResourceProvider,
+        settingsRepository
+    )
 
     @Provides
     fun provideObserveSettingUseCase(
+        stringResourceProvider: AndroidStringResourceProvider,
         settingsRepository: SettingsRepository
-    ): ObserveSettingUseCase = ObserveSettingUseCaseImpl(settingsRepository)
+    ): ObserveSettingUseCase = ObserveSettingUseCaseImpl(
+        stringResourceProvider,
+        settingsRepository
+    )
 
     @Provides
     fun provideSaveSettingUseCase(
+        stringResourceProvider: AndroidStringResourceProvider,
         settingsRepository: SettingsRepository
-    ): SaveSettingUseCase = SaveSettingUseCaseImpl(settingsRepository)
+    ): SaveSettingUseCase = SaveSettingUseCaseImpl(
+        stringResourceProvider,
+        settingsRepository
+    )
 }

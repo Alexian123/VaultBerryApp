@@ -1,13 +1,16 @@
 package com.alexianhentiu.vaultberryapp.application.usecase.internal
 
+import com.alexianhentiu.vaultberryapp.R
 import com.alexianhentiu.vaultberryapp.domain.model.DecryptedVaultEntry
 import com.alexianhentiu.vaultberryapp.domain.model.EncryptedVaultEntry
 import com.alexianhentiu.vaultberryapp.domain.common.UseCaseResult
 import com.alexianhentiu.vaultberryapp.domain.common.enums.ErrorType
 import com.alexianhentiu.vaultberryapp.domain.security.VaultSecurityHandler
+import com.alexianhentiu.vaultberryapp.domain.utils.StringResourceProvider
 import javax.inject.Inject
 
 class EncryptVaultEntryUseCase @Inject constructor(
+    private val stringResourceProvider: StringResourceProvider,
     private val handler: VaultSecurityHandler
 ) {
 
@@ -31,8 +34,8 @@ class EncryptVaultEntryUseCase @Inject constructor(
         } catch (e: Exception) {
             return UseCaseResult.Error(
                 ErrorType.ENTRY_ENCRYPTION_FAILURE,
-                "Vault Guardian",
-                e.message ?: "Unknown error"
+                stringResourceProvider.getString(R.string.vault_security_handler_error_source),
+                e.message ?: stringResourceProvider.getString(R.string.unknown_error)
             )
         }
     }

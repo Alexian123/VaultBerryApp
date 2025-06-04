@@ -13,13 +13,12 @@ import android.service.autofill.Presentations
 import android.service.autofill.SaveCallback
 import android.service.autofill.SaveInfo
 import android.service.autofill.SaveRequest
-import android.util.Log
 import android.view.autofill.AutofillId
 import android.widget.RemoteViews
 import androidx.annotation.RequiresApi
 import com.alexianhentiu.vaultberryapp.presentation.activity.AutofillActivity
 
-class AndroidAutofillService : AutofillService() {
+class AndroidAutofillService: AutofillService() {
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onFillRequest(
@@ -27,7 +26,6 @@ class AndroidAutofillService : AutofillService() {
         cancellationSignal: CancellationSignal,
         callback: FillCallback
     ) {
-        Log.d("VaultBerryAutofillService", "Autofill request received")
         val structure = request.fillContexts.last().structure
         val component = structure.activityComponent
 
@@ -46,10 +44,8 @@ class AndroidAutofillService : AutofillService() {
                 packageManager.getApplicationInfo(component.packageName, 0)
             ).toString()
             keywords.add(label)
-        } catch (e: Exception) {
-            Log.w("VaultBerryAutofillService", "Label not found for ${component.packageName}", e)
+        } catch (_: Exception) {
         }
-        Log.d("VaultBerryAutofillService", "Extracted keywords: $keywords")
 
         val intent = Intent(this, AutofillActivity::class.java).apply {
             putStringArrayListExtra("keywords", keywords)
@@ -90,7 +86,6 @@ class AndroidAutofillService : AutofillService() {
         request: SaveRequest,
         callback: SaveCallback
     ) {
-        Log.d("VaultBerryAutofillService", "Save request not implemented")
     }
 
     fun findNode(structure: AssistStructure, hint: String): AutofillId? {

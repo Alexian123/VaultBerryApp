@@ -29,34 +29,41 @@ fun BiometricPromptHandler(
     val retrieveTitle = stringResource(R.string.biometric_retrieve_title)
     val retrieveSubtitle = stringResource(R.string.biometric_retrieve_subtitle)
 
+    val authSuccessMsg = stringResource(R.string.auth_success_msg)
+    val credentialsStoredMsg = stringResource(R.string.credentials_stored_msg)
+    val biometricErrorMsg = stringResource(R.string.biometric_error)
+    val credentialsClearedMsg = stringResource(R.string.credentials_cleared_msg)
+    val authFailedMsg = stringResource(R.string.auth_failed_msg)
+    val biometricAuthInitErrorMsg = stringResource(R.string.biometric_auth_init_error)
+
     LaunchedEffect(Unit) {
         biometricViewModel.biometricState.collectLatest { state ->
             when (state) {
                 is BiometricState.Authenticated -> {
                     Toast.makeText(
                         context,
-                        "Authentication successful!",
+                        authSuccessMsg,
                         Toast.LENGTH_LONG
                     ).show()
                     biometricViewModel.resetState()
                 }
                 is BiometricState.CredentialsStored -> {
                     Toast.makeText(context,
-                        "Credentials stored successfully!",
+                        credentialsStoredMsg,
                         Toast.LENGTH_SHORT
                     ).show()
                     biometricViewModel.resetState()
                 }
                 is BiometricState.Error -> {
                     Toast.makeText(context,
-                        "Biometric Error: ${state.info.message}",
+                        "${biometricErrorMsg}${state.info.message}",
                         Toast.LENGTH_LONG
                     ).show()
                     biometricViewModel.resetState()
                 }
                 is BiometricState.ClearedCredentials -> {
                     Toast.makeText(context,
-                        "Credentials cleared successfully!",
+                        credentialsClearedMsg,
                         Toast.LENGTH_SHORT
                     ).show()
                     biometricViewModel.resetState()
@@ -94,7 +101,7 @@ fun BiometricPromptHandler(
                         super.onAuthenticationFailed()
                         Toast.makeText(
                             context,
-                            "Authentication failed. Please try again.",
+                            authFailedMsg,
                             Toast.LENGTH_SHORT
                         ).show()
                     }
@@ -119,9 +126,7 @@ fun BiometricPromptHandler(
             if (cryptoObject != null) {
                 biometricPrompt.authenticate(promptInfo, BiometricPrompt.CryptoObject(cryptoObject))
             } else {
-                biometricViewModel.onBiometricAuthError(
-                    "Biometric authentication could not be initiated."
-                )
+                biometricViewModel.onBiometricAuthError(biometricAuthInitErrorMsg)
             }
         }
     }

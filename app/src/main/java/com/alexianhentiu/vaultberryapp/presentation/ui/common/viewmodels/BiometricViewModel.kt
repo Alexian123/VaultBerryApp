@@ -3,12 +3,14 @@ package com.alexianhentiu.vaultberryapp.presentation.ui.common.viewmodels
 import androidx.biometric.BiometricPrompt
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.alexianhentiu.vaultberryapp.R
 import com.alexianhentiu.vaultberryapp.data.platform.biometric.AndroidBiometricAuthenticator
 import com.alexianhentiu.vaultberryapp.domain.common.BiometricStatus
 import com.alexianhentiu.vaultberryapp.domain.common.ErrorInfo
 import com.alexianhentiu.vaultberryapp.domain.common.enums.ErrorType
 import com.alexianhentiu.vaultberryapp.domain.model.AuthCredentials
 import com.alexianhentiu.vaultberryapp.domain.model.EncryptedAuthCredentials
+import com.alexianhentiu.vaultberryapp.domain.utils.StringResourceProvider
 import com.alexianhentiu.vaultberryapp.presentation.ui.common.BiometricPromptRequest
 import com.alexianhentiu.vaultberryapp.presentation.ui.handlers.biometric.BiometricState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,6 +26,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class BiometricViewModel @Inject constructor(
+    private val stringResourceProvider: StringResourceProvider,
     private val androidBiometricAuthenticator: AndroidBiometricAuthenticator
 ) : ViewModel() {
 
@@ -65,8 +68,12 @@ class BiometricViewModel @Inject constructor(
                         _biometricState.value = BiometricState.Error(
                             ErrorInfo(
                                 type = ErrorType.BIOMETRIC,
-                                source = "BiometricViewModel",
-                                message = "Failed to prepare encryption for storage: ${e.message}"
+                                source = stringResourceProvider.getString(
+                                    R.string.biometric_view_model_error_source
+                                ),
+                                message = stringResourceProvider.getString(
+                                    R.string.failed_to_prepare_encryption_for_storage_error
+                                ) + "${e.message}"
                             )
                         )
                     }
@@ -88,8 +95,12 @@ class BiometricViewModel @Inject constructor(
                         _biometricState.value = BiometricState.Error(
                             ErrorInfo(
                                 type = ErrorType.BIOMETRIC,
-                                source = "BiometricViewModel",
-                                message = "No stored credentials found to retrieve."
+                                source = stringResourceProvider.getString(
+                                    R.string.biometric_view_model_error_source
+                                ),
+                                message = stringResourceProvider.getString(
+                                    R.string.no_credentials_found_error
+                                )
                             )
                         )
                         return@launch
@@ -106,8 +117,12 @@ class BiometricViewModel @Inject constructor(
                         _biometricState.value = BiometricState.Error(
                             ErrorInfo(
                                 type = ErrorType.BIOMETRIC,
-                                source = "BiometricViewModel",
-                                message = "Failed to prepare decryption for retrieval: ${e.message}"
+                                source = stringResourceProvider.getString(
+                                    R.string.biometric_view_model_error_source
+                                ),
+                                message = stringResourceProvider.getString(
+                                    R.string.failed_to_prepare_decryption_for_retrieval_error
+                                ) + "${e.message}"
                             )
                         )
                     }
@@ -122,9 +137,17 @@ class BiometricViewModel @Inject constructor(
     fun onBiometricStoreSuccess(result: BiometricPrompt.AuthenticationResult) {
         viewModelScope.launch {
             try {
-                val email = pendingStoreEmail ?: throw IllegalStateException("Email is null.")
+                val email = pendingStoreEmail ?: throw IllegalStateException(
+                    stringResourceProvider.getString(
+                        R.string.email_is_null_error
+                    )
+                )
                 val password = pendingStorePassword
-                    ?: throw IllegalStateException("Password is null.")
+                    ?: throw IllegalStateException(
+                        stringResourceProvider.getString(
+                            R.string.password_is_null_error
+                        )
+                    )
 
                 val encryptedAuthCredentials = androidBiometricAuthenticator.performEncryption(
                     cryptoObject = result.cryptoObject,
@@ -139,8 +162,12 @@ class BiometricViewModel @Inject constructor(
                 _biometricState.value = BiometricState.Error(
                     ErrorInfo(
                         type = ErrorType.BIOMETRIC,
-                        source = "BiometricViewModel",
-                        message = "Error storing credentials: ${e.message ?: "Unknown error"}"
+                        source = stringResourceProvider.getString(
+                            R.string.biometric_view_model_error_source
+                        ),
+                        message = stringResourceProvider.getString(
+                            R.string.failed_to_store_credentials_error
+                        ) + (e.message ?: stringResourceProvider.getString(R.string.unknown_error))
                     )
                 )
             }
@@ -151,7 +178,11 @@ class BiometricViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val encryptedData = pendingEncryptedData
-                    ?: throw IllegalStateException("Encrypted data is null.")
+                    ?: throw IllegalStateException(
+                        stringResourceProvider.getString(
+                            R.string.encrypted_data_is_null_error
+                        )
+                    )
 
                 val credentials = androidBiometricAuthenticator.performDecryption(
                     cryptoObject = result.cryptoObject,
@@ -164,8 +195,12 @@ class BiometricViewModel @Inject constructor(
                 _biometricState.value = BiometricState.Error(
                     ErrorInfo(
                         type = ErrorType.BIOMETRIC,
-                        source = "BiometricViewModel",
-                        message = "Error decrypting credentials: ${e.message ?: "Unknown error"}"
+                        source = stringResourceProvider.getString(
+                            R.string.biometric_view_model_error_source
+                        ),
+                        message = stringResourceProvider.getString(
+                            R.string.failed_to_retrieve_credentials_error
+                        ) + (e.message ?: stringResourceProvider.getString(R.string.unknown_error))
                     )
                 )
             }
@@ -176,7 +211,9 @@ class BiometricViewModel @Inject constructor(
         _biometricState.value = BiometricState.Error(
             ErrorInfo(
                 type = ErrorType.BIOMETRIC,
-                source = "BiometricViewModel",
+                source = stringResourceProvider.getString(
+                    R.string.biometric_view_model_error_source
+                ),
                 message = message
             )
         )

@@ -1,13 +1,16 @@
 package com.alexianhentiu.vaultberryapp.application.usecase.internal
 
+import com.alexianhentiu.vaultberryapp.R
 import com.alexianhentiu.vaultberryapp.domain.common.PasswordGenOptions
 import com.alexianhentiu.vaultberryapp.domain.model.PasswordPair
 import com.alexianhentiu.vaultberryapp.domain.common.UseCaseResult
 import com.alexianhentiu.vaultberryapp.domain.common.enums.ErrorType
 import com.alexianhentiu.vaultberryapp.domain.security.password.PasswordGenerator
+import com.alexianhentiu.vaultberryapp.domain.utils.StringResourceProvider
 import javax.inject.Inject
 
 class GeneratePasswordPairUseCase @Inject constructor(
+    private val stringResourceProvider: StringResourceProvider,
     private val passwordGenerator: PasswordGenerator,
 ) {
 
@@ -31,8 +34,8 @@ class GeneratePasswordPairUseCase @Inject constructor(
         } catch (e: Exception) {
             return UseCaseResult.Error(
                 ErrorType.PASSWORD_PAIR_GENERATION_FAILURE,
-                "Auth Guardian",
-                e.message ?: "Unknown error"
+                stringResourceProvider.getString(R.string.password_generator_error_source),
+                e.message ?: stringResourceProvider.getString(R.string.unknown_error)
             )
         }
     }

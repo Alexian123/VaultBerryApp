@@ -2,6 +2,8 @@ package com.alexianhentiu.vaultberryapp.data.platform.crypto
 
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
+import com.alexianhentiu.vaultberryapp.R
+import com.alexianhentiu.vaultberryapp.domain.utils.StringResourceProvider
 import java.security.KeyStore
 import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
@@ -11,7 +13,9 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class AndroidEncryptDecryptProcessor @Inject constructor() {
+class AndroidEncryptDecryptProcessor @Inject constructor(
+    private val stringResourceProvider: StringResourceProvider
+) {
 
     companion object {
         private const val KEY_ALIAS = "BiometricCredentialsKey"
@@ -60,7 +64,9 @@ class AndroidEncryptDecryptProcessor @Inject constructor() {
 
     fun getCipherForDecryption(iv: ByteArray): Cipher {
         val cipher = Cipher.getInstance(TRANSFORMATION)
-        val secretKey = getSecretKey() ?: throw IllegalStateException("Secret key not found")
+        val secretKey = getSecretKey() ?: throw IllegalStateException(
+            stringResourceProvider.getString(R.string.error_secret_key_not_found)
+        )
         val spec = GCMParameterSpec(GCM_TAG_LENGTH * 8, iv)
         cipher.init(Cipher.DECRYPT_MODE, secretKey, spec)
         return cipher

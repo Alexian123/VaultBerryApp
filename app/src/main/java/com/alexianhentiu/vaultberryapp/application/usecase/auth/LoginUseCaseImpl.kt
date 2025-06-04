@@ -1,5 +1,6 @@
 package com.alexianhentiu.vaultberryapp.application.usecase.auth
 
+import com.alexianhentiu.vaultberryapp.R
 import com.alexianhentiu.vaultberryapp.application.usecase.internal.DecryptKeyUseCase
 import com.alexianhentiu.vaultberryapp.data.remote.ApiResult
 import com.alexianhentiu.vaultberryapp.domain.common.enums.HttpResponseCode
@@ -9,8 +10,10 @@ import com.alexianhentiu.vaultberryapp.domain.common.UseCaseResult
 import com.alexianhentiu.vaultberryapp.domain.common.enums.ErrorType
 import com.alexianhentiu.vaultberryapp.domain.security.MessageExchangeAuthClient
 import com.alexianhentiu.vaultberryapp.domain.usecase.auth.LoginUseCase
+import com.alexianhentiu.vaultberryapp.domain.utils.StringResourceProvider
 
 class LoginUseCaseImpl(
+    private val stringResourceProvider: StringResourceProvider,
     private val authRepository: AuthRepository,
     private val messageExchangeAuthClient: MessageExchangeAuthClient,
     private val decryptKeyUseCase: DecryptKeyUseCase
@@ -76,8 +79,8 @@ class LoginUseCaseImpl(
         } catch (e: Exception) {
             return UseCaseResult.Error(
                 ErrorType.SERVER_IDENTITY_VERIFICATION_FAILURE,
-                "Auth Guardian",
-                e.message ?: "Unknown error"
+                stringResourceProvider.getString(R.string.message_exchange_auth_client_error_source),
+                e.message ?: stringResourceProvider.getString(R.string.unknown_error)
             )
         }
 
@@ -85,8 +88,8 @@ class LoginUseCaseImpl(
         if (response2Data.keyChain == null) {
             return UseCaseResult.Error(
                 ErrorType.MISSING_KEYCHAIN,
-                "Auth Guardian",
-                "Keychain is missing"
+                stringResourceProvider.getString(R.string.message_exchange_auth_client_error_source),
+                stringResourceProvider.getString(R.string.missing_keychain)
             )
         }
 

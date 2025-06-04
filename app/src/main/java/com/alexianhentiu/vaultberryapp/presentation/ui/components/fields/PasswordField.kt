@@ -60,7 +60,8 @@ fun PasswordField(
             initialText = initialText,
             isValid = isValid,
             validate = validate,
-            visualTransformation = if (isVisible) VisualTransformation.None else PasswordVisualTransformation(),
+            visualTransformation =
+                if (isVisible) VisualTransformation.None else PasswordVisualTransformation(),
             enabled = enabled,
             readOnly = readOnly,
             textFieldType = textFieldType

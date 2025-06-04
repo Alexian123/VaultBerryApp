@@ -1,5 +1,6 @@
 package com.alexianhentiu.vaultberryapp.data.di
 
+import com.alexianhentiu.vaultberryapp.data.platform.utils.AndroidStringResourceProvider
 import com.alexianhentiu.vaultberryapp.data.security.AESHandler
 import com.alexianhentiu.vaultberryapp.data.security.ScramAuthClient
 import com.alexianhentiu.vaultberryapp.data.security.VaultGuardian
@@ -21,7 +22,11 @@ import javax.inject.Singleton
 object SecurityModule {
     @Provides
     @Singleton
-    fun providePasswordGenerator(): PasswordGenerator = RandomPasswordGenerator()
+    fun providePasswordGenerator(
+        stringResourceProvider: AndroidStringResourceProvider,
+    ): PasswordGenerator = RandomPasswordGenerator(
+        stringResourceProvider
+    )
 
     @Provides
     @Singleton
@@ -29,7 +34,11 @@ object SecurityModule {
 
     @Provides
     @Singleton
-    fun provideGeneralCryptoHandler(): GeneralCryptoHandler = AESHandler()
+    fun provideGeneralCryptoHandler(
+        stringResourceProvider: AndroidStringResourceProvider,
+    ): GeneralCryptoHandler = AESHandler(
+        stringResourceProvider
+    )
 
     @Provides
     @Singleton

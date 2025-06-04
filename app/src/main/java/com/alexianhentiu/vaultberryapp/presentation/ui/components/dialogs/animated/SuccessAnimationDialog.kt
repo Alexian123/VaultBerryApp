@@ -55,7 +55,6 @@ fun SuccessAnimationDialog(
         ) {
             Canvas(modifier = Modifier.size(120.dp)) {
                 val path = Path().apply {
-                    // Define the checkmark path (adjust coordinates as needed for your desired shape)
                     moveTo(size.width * 0.2f, size.height * 0.5f)
                     lineTo(size.width * 0.45f, size.height * 0.75f)
                     lineTo(size.width * 0.8f, size.height * 0.3f)

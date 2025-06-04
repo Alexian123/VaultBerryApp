@@ -65,6 +65,11 @@ fun AboutScreen(
     val websiteUrl = remember { context.getString(R.string.website_url) }
     val licenseUrl = remember { context.getString(R.string.license_url) }
 
+    val errorSendingEmailMsg = stringResource(R.string.error_sending_email)
+    val errorOpeningWebsiteMsg = stringResource(R.string.error_opening_website)
+    val errorOpeningLicenseMsg = stringResource(R.string.error_opening_license)
+    val allRightsReserved = stringResource(R.string.all_rights_reserved)
+
     Scaffold(
         topBar = {
             TopBarWithBackButton(
@@ -128,8 +133,8 @@ fun AboutScreen(
                     try {
                         context.startActivity(intent)
                     } catch (e: Exception) {
-                        Toast.makeText(context, "Error sending email", Toast.LENGTH_SHORT).show()
-                        Log.e("AboutScreen", "Error sending email", e)
+                        Toast.makeText(context, errorSendingEmailMsg, Toast.LENGTH_SHORT).show()
+                        Log.e("AboutScreen", errorSendingEmailMsg, e)
                     }
                 }
             )
@@ -143,8 +148,8 @@ fun AboutScreen(
                     try {
                         context.startActivity(intent)
                     } catch (e: Exception) {
-                        Toast.makeText(context, "Error opening website", Toast.LENGTH_SHORT).show()
-                        Log.e("AboutScreen", "Error opening website", e)
+                        Toast.makeText(context, errorOpeningWebsiteMsg, Toast.LENGTH_SHORT).show()
+                        Log.e("AboutScreen", errorOpeningWebsiteMsg, e)
                     }
                 }
             )
@@ -158,8 +163,8 @@ fun AboutScreen(
                     try {
                         context.startActivity(intent)
                     } catch (e: Exception) {
-                        Toast.makeText(context, "Error opening license", Toast.LENGTH_SHORT).show()
-                        Log.e("AboutScreen", "Error opening license", e)
+                        Toast.makeText(context, errorOpeningLicenseMsg, Toast.LENGTH_SHORT).show()
+                        Log.e("AboutScreen", errorOpeningLicenseMsg, e)
                     }
                 }
             )
@@ -171,7 +176,7 @@ fun AboutScreen(
             AboutInfoRow(
                 icon = Icons.Filled.Copyright,
                 label = stringResource(R.string.copyright_label),
-                value = "© $currentYear $developerName. All rights reserved."
+                value = "© $currentYear $developerName. $allRightsReserved."
             )
         }
     }

@@ -1,6 +1,8 @@
 package com.alexianhentiu.vaultberryapp.data.security
 
+import com.alexianhentiu.vaultberryapp.R
 import com.alexianhentiu.vaultberryapp.domain.security.GeneralCryptoHandler
+import com.alexianhentiu.vaultberryapp.domain.utils.StringResourceProvider
 import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
 import javax.crypto.SecretKeyFactory
@@ -8,7 +10,9 @@ import javax.crypto.spec.GCMParameterSpec
 import javax.crypto.spec.PBEKeySpec
 import javax.crypto.spec.SecretKeySpec
 
-class AESHandler : GeneralCryptoHandler {
+class AESHandler(
+    private val stringResourceProvider: StringResourceProvider
+) : GeneralCryptoHandler {
 
     private val algorithm = "AES"
     private val mode = "GCM/NoPadding"
@@ -43,7 +47,9 @@ class AESHandler : GeneralCryptoHandler {
 
     override fun deriveKeyFromPassword(password: String, salt: ByteArray): ByteArray {
         if (password.isBlank()) {
-            throw IllegalArgumentException("Password cannot be empty")
+            throw IllegalArgumentException(
+                stringResourceProvider.getString(R.string.error_password_empty)
+            )
         }
         val keySpec = PBEKeySpec(password.toCharArray(), salt, 65536, keySize)
         val keyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256")

@@ -3,6 +3,7 @@ package com.alexianhentiu.vaultberryapp.data.platform.biometric
 import android.content.Context
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
+import com.alexianhentiu.vaultberryapp.R
 import com.alexianhentiu.vaultberryapp.data.platform.crypto.AndroidEncryptDecryptProcessor
 import com.alexianhentiu.vaultberryapp.domain.common.BiometricStatus
 import com.alexianhentiu.vaultberryapp.domain.common.enums.ErrorType
@@ -10,6 +11,7 @@ import com.alexianhentiu.vaultberryapp.domain.model.AuthCredentials
 import com.alexianhentiu.vaultberryapp.domain.common.ErrorInfo
 import com.alexianhentiu.vaultberryapp.domain.model.EncryptedAuthCredentials
 import com.alexianhentiu.vaultberryapp.domain.repository.CredentialsRepository
+import com.alexianhentiu.vaultberryapp.domain.utils.StringResourceProvider
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.crypto.Cipher
 import javax.inject.Inject
@@ -17,6 +19,7 @@ import javax.inject.Singleton
 
 @Singleton
 class AndroidBiometricAuthenticator @Inject constructor(
+    private val stringResourceProvider: StringResourceProvider,
     private val processor: AndroidEncryptDecryptProcessor,
     private val credentialsRepository: CredentialsRepository,
     @ApplicationContext private val context: Context
@@ -42,7 +45,11 @@ class AndroidBiometricAuthenticator @Inject constructor(
         email: String
     ): EncryptedAuthCredentials {
         val cipher = cryptoObject?.cipher
-            ?: throw IllegalStateException("Cipher not available from crypto object for encryption")
+            ?: throw IllegalStateException(
+                stringResourceProvider.getString(
+                    R.string.error_cipher_not_available_for_encryption
+                )
+            )
         val encryptedPassword = cipher.doFinal(password.toByteArray())
         val passwordIv = cipher.iv
         return EncryptedAuthCredentials(
@@ -57,7 +64,11 @@ class AndroidBiometricAuthenticator @Inject constructor(
         encryptedData: EncryptedAuthCredentials
     ): AuthCredentials {
         val cipher = cryptoObject?.cipher
-            ?: throw IllegalStateException("Cipher not available from crypto object for decryption")
+            ?: throw IllegalStateException(
+                stringResourceProvider.getString(
+                    R.string.error_cipher_not_available_for_decryption
+                )
+            )
         val decryptedPassword = cipher.doFinal(encryptedData.encryptedPassword)
         return AuthCredentials(
             email = encryptedData.email,
@@ -82,43 +93,49 @@ class AndroidBiometricAuthenticator @Inject constructor(
             BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE -> BiometricStatus.Error(
                 ErrorInfo(
                     type = ErrorType.BIOMETRIC,
-                    source = "BiometricAuthManager",
-                    message = "No biometric hardware available on this device."
+                    source = stringResourceProvider.getString(R.string.biometric_error_source),
+                    message = stringResourceProvider.getString(R.string.biometric_error_no_hardware)
                 )
             )
             BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE -> BiometricStatus.Error(
                 ErrorInfo(
                     type = ErrorType.BIOMETRIC,
-                    source = "BiometricAuthManager",
-                    message = "Biometric hardware is currently unavailable or busy."
+                    source = stringResourceProvider.getString(R.string.biometric_error_source),
+                    message = stringResourceProvider.getString(
+                        R.string.biometric_error_hardware_unavailable
+                    )
                 )
             )
             BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED -> BiometricStatus.Error(
                 ErrorInfo(
                     type = ErrorType.BIOMETRIC,
-                    source = "BiometricAuthManager",
-                    message = "No biometrics (fingerprint/face) enrolled."
+                    source = stringResourceProvider.getString(R.string.biometric_error_source),
+                    message = stringResourceProvider.getString(
+                        R.string.biometric_error_none_enrolled
+                    )
                 )
             )
             BiometricManager.BIOMETRIC_ERROR_SECURITY_UPDATE_REQUIRED -> BiometricStatus.Error(
                 ErrorInfo(
                     type = ErrorType.BIOMETRIC,
-                    source = "BiometricAuthManager",
-                    message = "A security update is required for biometric authentication."
+                    source = stringResourceProvider.getString(R.string.biometric_error_source),
+                    message = stringResourceProvider.getString(
+                        R.string.biometric_error_security_update_required
+                    )
                 )
             )
             BiometricManager.BIOMETRIC_ERROR_UNSUPPORTED -> BiometricStatus.Error(
                 ErrorInfo(
                     type = ErrorType.BIOMETRIC,
-                    source = "BiometricAuthManager",
-                    message = "The biometric authentication method is not supported on this device."
+                    source = stringResourceProvider.getString(R.string.biometric_error_source),
+                    message = stringResourceProvider.getString(R.string.biometric_error_unsupported)
                 )
             )
             else -> BiometricStatus.Error(
                 ErrorInfo(
                     type = ErrorType.BIOMETRIC,
-                    source = "BiometricAuthManager",
-                    message = "An unknown biometric status occurred."
+                    source = stringResourceProvider.getString(R.string.biometric_error_source),
+                    message = stringResourceProvider.getString(R.string.biometric_error_unknown)
                 )
             )
         }

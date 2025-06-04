@@ -17,6 +17,7 @@ import com.alexianhentiu.vaultberryapp.domain.usecase.auth.LogoutUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.auth.RecoveryLoginUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.auth.RecoverySendUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.auth.RegisterUseCase
+import com.alexianhentiu.vaultberryapp.domain.utils.StringResourceProvider
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -33,10 +34,12 @@ object AuthUseCaseModule {
 
     @Provides
     fun provideLoginUseCase(
+        stringResourceProvider: StringResourceProvider,
         authRepository: AuthRepository,
         messageExchangeAuthClient: MessageExchangeAuthClient,
         decryptKeyUseCase: DecryptKeyUseCase
     ): LoginUseCase = LoginUseCaseImpl(
+        stringResourceProvider,
         authRepository,
         messageExchangeAuthClient,
         decryptKeyUseCase

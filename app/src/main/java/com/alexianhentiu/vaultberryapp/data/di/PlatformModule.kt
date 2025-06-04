@@ -9,9 +9,11 @@ import com.alexianhentiu.vaultberryapp.data.platform.clipboard.AndroidClipboardH
 import com.alexianhentiu.vaultberryapp.data.platform.utils.AndroidUriParser
 import com.alexianhentiu.vaultberryapp.data.platform.datastore.userDataStore
 import com.alexianhentiu.vaultberryapp.data.platform.utils.AndroidAppInfoProvider
+import com.alexianhentiu.vaultberryapp.data.platform.utils.AndroidStringResourceProvider
 import com.alexianhentiu.vaultberryapp.domain.clipboard.ClipboardHandler
 import com.alexianhentiu.vaultberryapp.domain.utils.UriParser
 import com.alexianhentiu.vaultberryapp.domain.utils.AppInfoProvider
+import com.alexianhentiu.vaultberryapp.domain.utils.StringResourceProvider
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -59,4 +61,10 @@ object PlatformModule {
     fun provideAppInfoProvider(
         @ApplicationContext context: Context,
     ): AppInfoProvider = AndroidAppInfoProvider(context)
+
+    @Singleton
+    @Provides
+    fun provideStringResourceProvider(
+        @ApplicationContext context: Context,
+    ): StringResourceProvider = AndroidStringResourceProvider(context)
 }
