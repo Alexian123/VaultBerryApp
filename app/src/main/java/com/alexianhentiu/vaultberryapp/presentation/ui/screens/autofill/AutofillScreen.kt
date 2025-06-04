@@ -60,7 +60,6 @@ fun AutofillScreen(
     val savedEmail by settingsViewModel.savedEmail.collectAsState()
     val rememberEmail by settingsViewModel.rememberEmail.collectAsState()
     val biometricEnabled by settingsViewModel.biometricEnabled.collectAsState()
-    val isDebugMode by settingsViewModel.debugMode.collectAsState()
 
     val screenState by sessionViewModel.sessionState.collectAsState()
 
@@ -91,7 +90,7 @@ fun AutofillScreen(
                         mutableStateOf(
                             utilityViewModel.getValidatorFunction(
                                 InputType.EMAIL,
-                                isDebugMode
+                                true
                             ).invoke(email) == true
                         )
                     }
@@ -113,7 +112,7 @@ fun AutofillScreen(
                             isValid = isEmailValid,
                             validate = utilityViewModel.getValidatorFunction(
                                 InputType.EMAIL,
-                                isDebugMode
+                                true
                             ),
                             modifier = Modifier.fillMaxWidth()
                         )
@@ -126,7 +125,7 @@ fun AutofillScreen(
                             isValid = isPasswordValid,
                             validate = utilityViewModel.getValidatorFunction(
                                 InputType.PASSWORD,
-                                isDebugMode
+                                true
                             ),
                             modifier = Modifier.fillMaxWidth()
                         )
@@ -182,7 +181,7 @@ fun AutofillScreen(
                             sessionViewModel.resetState()
                         },
                         validator = {
-                            utilityViewModel.getValidatorFunction(it, isDebugMode)
+                            utilityViewModel.getValidatorFunction(it, true)
                         }
                     )
                 }

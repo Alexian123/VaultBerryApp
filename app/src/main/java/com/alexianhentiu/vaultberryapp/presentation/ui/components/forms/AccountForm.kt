@@ -58,6 +58,7 @@ fun AccountForm(
         ConfirmActionDialog(
             title = stringResource(R.string.delete_account_title),
             message = stringResource(R.string.delete_account_message),
+            showConfirmationCheckbox = true,
             onDismissRequest = { showConfirmDeleteDialog = false },
             onSubmit = {
                 if (it) {

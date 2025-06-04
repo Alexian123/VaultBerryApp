@@ -103,7 +103,6 @@
     <string name="change_password_button_text">Change Password</string>
     <string name="save_button_text">Save Changes</string>
     <string name="delete_account_title">Delete Account</string>
-    <string name="delete_account_message">Are you sure you want to delete your account?</string>
     <string name="change_password_title">Change Password</string>
     <string name="change_password_message">Are you sure you want to change your password?</string>
     <string name="account_info_title">Information</string>
@@ -128,4 +127,8 @@
     <string name="confirm_password_label">Confirm password</string>
     <string name="activation_required_title">Activation Required</string>
     <string name="activation_required_message">Your account must be activated before you can log in.\nAn email with an activation link has been sent to you.\nIt will expire in 24 hours.</string>
+    <string name="account_screen_changed_email_title">Email changed successfully</string>
+    <string name="account_screen_changed_email_message">Your new email address will be verified on the next login attempt.\nYou will now be logged out.</string>
+    <string name="confirmation_checkbox_text">I know what I\'m doing</string>
+    <string name="delete_account_message">Are you sure you want to delete your account?\nYour vault will be purged.\nThis cannot be undone!</string>
 </resources>

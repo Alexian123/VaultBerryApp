@@ -21,9 +21,9 @@ import dagger.hilt.android.AndroidEntryPoint
 /*
     TODO:
         - Display password requirement
-        - Figure out why the session disconnects after email change
-        - Create interface and use cases for biometric authentication
         - Confirmation for account deletion
+        - Create interface and use cases for biometric authentication
+        - Create string provider for error messages
         - Add option to set the backend ip and import SSL certificate
         - Cleanup code & add comments
 */

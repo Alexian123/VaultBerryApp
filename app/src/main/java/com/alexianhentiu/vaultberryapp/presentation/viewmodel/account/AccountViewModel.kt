@@ -92,7 +92,6 @@ class AccountViewModel @Inject constructor(
             _accountScreenState.value = AccountScreenState.Loading
             when (val result = deleteAccountUseCase()) {
                 is UseCaseResult.Success -> {
-                    _accountScreenState.value = AccountScreenState.Init
                     clearData()
                 }
 
@@ -127,7 +126,11 @@ class AccountViewModel @Inject constructor(
 
             when (val result = changeAccountInfoUseCase(newAccountInfo, noActivation)) {
                 is UseCaseResult.Success -> {
-                    _accountScreenState.value = AccountScreenState.Idle
+                    if (_accountInfo.value.email != newAccountInfo.email) {
+                        _accountScreenState.value = AccountScreenState.ChangedEmail
+                    } else {
+                        _accountScreenState.value = AccountScreenState.Idle
+                    }
                     _accountInfo.value = newAccountInfo
                 }
 

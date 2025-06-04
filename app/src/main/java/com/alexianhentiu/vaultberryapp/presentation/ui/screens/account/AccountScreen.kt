@@ -105,13 +105,28 @@ fun AccountScreen(
                         },
                         onDeleteAccount = {
                             accountViewModel.deleteAccount()
-                            sessionViewModel.logout()
+                            accountViewModel.setLoadingState()
+                            accountViewModel.clearData()
+                            sessionViewModel.resetState()
                             navController.navigate(NavRoute.LOGIN.path)
                         },
                         validator = {
                             utilityViewModel.getValidatorFunction(it, isDebugMode)
                         },
                         evaluatePasswordStrength = utilityViewModel::evalPasswordStrength
+                    )
+                }
+
+                is AccountScreenState.ChangedEmail -> {
+                    InfoDialog(
+                        title = stringResource(R.string.account_screen_changed_email_title),
+                        message = stringResource(R.string.account_screen_changed_email_message),
+                        onDismissRequest = {
+                            accountViewModel.setLoadingState()
+                            accountViewModel.clearData()
+                            sessionViewModel.logout()
+                            navController.navigate(NavRoute.LOGIN.path)
+                        }
                     )
                 }
 

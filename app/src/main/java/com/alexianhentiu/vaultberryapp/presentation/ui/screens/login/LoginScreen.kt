@@ -48,7 +48,6 @@ fun LoginScreen(
     val savedEmail by settingsViewModel.savedEmail.collectAsState()
     val rememberEmail by settingsViewModel.rememberEmail.collectAsState()
     val biometricEnabled by settingsViewModel.biometricEnabled.collectAsState()
-    val isDebugMode by settingsViewModel.debugMode.collectAsState()
 
     LaunchedEffect(Unit) {
         biometricViewModel.credentialsEvent.collect { credentials ->
@@ -94,7 +93,7 @@ fun LoginScreen(
                                 navController.navigate(NavRoute.RECOVERY.path)
                             },
                             validator = {
-                                utilityViewModel.getValidatorFunction(it, isDebugMode)
+                                utilityViewModel.getValidatorFunction(it, true)
                             },
                             modifier = Modifier.weight(1f)
                         )
@@ -122,7 +121,7 @@ fun LoginScreen(
                         },
                         onCancelClicked = { sessionViewModel.resetState() },
                         validator = {
-                            utilityViewModel.getValidatorFunction(it, isDebugMode)
+                            utilityViewModel.getValidatorFunction(it, true)
                         }
                     )
                 }
