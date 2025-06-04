@@ -87,7 +87,7 @@ fun AboutScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Image(
-                painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                painter = painterResource(id = R.drawable.app_icon_foreground),
                 contentDescription = "$appName Logo",
                 modifier = Modifier
                     .size(100.dp)
