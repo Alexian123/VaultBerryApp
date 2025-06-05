@@ -11,6 +11,7 @@ import com.alexianhentiu.vaultberryapp.domain.security.MessageExchangeAuthClient
 import com.alexianhentiu.vaultberryapp.domain.security.VaultSecurityHandler
 import com.alexianhentiu.vaultberryapp.domain.security.password.PasswordEvaluator
 import com.alexianhentiu.vaultberryapp.domain.security.password.PasswordGenerator
+import com.alexianhentiu.vaultberryapp.domain.utils.Base64Handler
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -43,8 +44,9 @@ object SecurityModule {
     @Provides
     @Singleton
     fun provideVaultSecurityHandler(
+        base64Handler: Base64Handler,
         cryptoHandler: GeneralCryptoHandler
-    ): VaultSecurityHandler = VaultGuardian(cryptoHandler)
+    ): VaultSecurityHandler = VaultGuardian(base64Handler, cryptoHandler)
 
     @Provides
     @Singleton

@@ -2,17 +2,21 @@ package com.alexianhentiu.vaultberryapp.data.di
 
 import android.content.ClipboardManager
 import android.content.Context
-import android.content.SharedPreferences
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import com.alexianhentiu.vaultberryapp.data.di.qualifiers.AppSettingsDataStoreQualifier
+import com.alexianhentiu.vaultberryapp.data.di.qualifiers.AuthCredentialsDataStoreQualifier
 import com.alexianhentiu.vaultberryapp.data.platform.clipboard.AndroidClipboardHandler
 import com.alexianhentiu.vaultberryapp.data.platform.utils.AndroidUriParser
-import com.alexianhentiu.vaultberryapp.data.platform.datastore.userDataStore
+import com.alexianhentiu.vaultberryapp.data.platform.datastore.appSettingsDataStore
+import com.alexianhentiu.vaultberryapp.data.platform.datastore.authCredentialsDataStore
 import com.alexianhentiu.vaultberryapp.data.platform.utils.AndroidAppInfoProvider
+import com.alexianhentiu.vaultberryapp.data.platform.utils.AndroidBase64Handler
 import com.alexianhentiu.vaultberryapp.data.platform.utils.AndroidStringResourceProvider
 import com.alexianhentiu.vaultberryapp.domain.clipboard.ClipboardHandler
 import com.alexianhentiu.vaultberryapp.domain.utils.UriParser
 import com.alexianhentiu.vaultberryapp.domain.utils.AppInfoProvider
+import com.alexianhentiu.vaultberryapp.domain.utils.Base64Handler
 import com.alexianhentiu.vaultberryapp.domain.utils.StringResourceProvider
 import dagger.Module
 import dagger.Provides
@@ -25,20 +29,19 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object PlatformModule {
 
-    @Singleton
     @Provides
-    fun providesDataStore(
+    @Singleton
+    @AppSettingsDataStoreQualifier
+    fun provideAppSettingsDataStore(
         @ApplicationContext context: Context,
-    ): DataStore<Preferences> = context.userDataStore
+    ): DataStore<Preferences> = context.appSettingsDataStore
 
     @Provides
     @Singleton
-    fun provideCredentialsSharedPreferences(
+    @AuthCredentialsDataStoreQualifier
+    fun provideAuthCredentialsDataStore(
         @ApplicationContext context: Context,
-    ): SharedPreferences = context.getSharedPreferences(
-        "auth_credentials",
-        Context.MODE_PRIVATE
-    )
+    ): DataStore<Preferences> = context.authCredentialsDataStore
 
     @Provides
     @Singleton
@@ -62,9 +65,13 @@ object PlatformModule {
         @ApplicationContext context: Context,
     ): AppInfoProvider = AndroidAppInfoProvider(context)
 
-    @Singleton
     @Provides
+    @Singleton
     fun provideStringResourceProvider(
         @ApplicationContext context: Context,
     ): StringResourceProvider = AndroidStringResourceProvider(context)
+
+    @Provides
+    @Singleton
+    fun provideBase64Handler(): Base64Handler = AndroidBase64Handler()
 }

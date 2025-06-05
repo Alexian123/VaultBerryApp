@@ -1,19 +1,23 @@
-package com.alexianhentiu.vaultberryapp.data.repository
+package com.alexianhentiu.vaultberryapp.data.repository.local
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
+import com.alexianhentiu.vaultberryapp.data.di.qualifiers.AppSettingsDataStoreQualifier
 import com.alexianhentiu.vaultberryapp.data.platform.datastore.DataStorePreference
-import com.alexianhentiu.vaultberryapp.domain.repository.SettingsRepository
 import com.alexianhentiu.vaultberryapp.domain.common.SettingDefinition
+import com.alexianhentiu.vaultberryapp.domain.repository.SettingsRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class LocalSettingsRepository(
-    private val dataStore: DataStore<Preferences>
+@Singleton
+class DataStoreSettingsRepository @Inject constructor(
+    @AppSettingsDataStoreQualifier private val dataStore: DataStore<Preferences>
 ) : SettingsRepository {
 
     override suspend fun <T> load(setting: SettingDefinition<T>): T {

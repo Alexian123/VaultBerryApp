@@ -1,21 +1,23 @@
 package com.alexianhentiu.vaultberryapp.data.di
 
-import android.content.SharedPreferences
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import com.alexianhentiu.vaultberryapp.data.di.qualifiers.AppSettingsDataStoreQualifier
+import com.alexianhentiu.vaultberryapp.data.di.qualifiers.AuthCredentialsDataStoreQualifier
 import com.alexianhentiu.vaultberryapp.data.remote.ApiResponseHandler
 import com.alexianhentiu.vaultberryapp.data.remote.ModelConverter
 import com.alexianhentiu.vaultberryapp.data.remote.api.ApiService
-import com.alexianhentiu.vaultberryapp.data.repository.LocalCredentialsRepository
-import com.alexianhentiu.vaultberryapp.data.repository.LocalSettingsRepository
-import com.alexianhentiu.vaultberryapp.data.repository.RemoteAccountRepository
-import com.alexianhentiu.vaultberryapp.data.repository.RemoteAuthRepository
-import com.alexianhentiu.vaultberryapp.data.repository.RemoteVaultRepository
+import com.alexianhentiu.vaultberryapp.data.repository.local.DataStoreCredentialsRepository
+import com.alexianhentiu.vaultberryapp.data.repository.local.DataStoreSettingsRepository
+import com.alexianhentiu.vaultberryapp.data.repository.remote.RemoteAccountRepository
+import com.alexianhentiu.vaultberryapp.data.repository.remote.RemoteAuthRepository
+import com.alexianhentiu.vaultberryapp.data.repository.remote.RemoteVaultRepository
 import com.alexianhentiu.vaultberryapp.domain.repository.AccountRepository
 import com.alexianhentiu.vaultberryapp.domain.repository.AuthRepository
 import com.alexianhentiu.vaultberryapp.domain.repository.CredentialsRepository
 import com.alexianhentiu.vaultberryapp.domain.repository.SettingsRepository
 import com.alexianhentiu.vaultberryapp.domain.repository.VaultRepository
+import com.alexianhentiu.vaultberryapp.domain.utils.Base64Handler
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -54,12 +56,13 @@ object RepositoryModule {
     @Provides
     @Singleton
     fun provideSettingsRepository(
-        dataStore: DataStore<Preferences>
-    ): SettingsRepository = LocalSettingsRepository(dataStore)
+        @AppSettingsDataStoreQualifier dataStore: DataStore<Preferences>
+    ): SettingsRepository = DataStoreSettingsRepository(dataStore)
 
     @Provides
     @Singleton
     fun provideCredentialsRepository(
-        sharedPreferences: SharedPreferences
-    ): CredentialsRepository = LocalCredentialsRepository(sharedPreferences)
+        @AuthCredentialsDataStoreQualifier dataStore: DataStore<Preferences>,
+        base64Handler: Base64Handler
+    ): CredentialsRepository = DataStoreCredentialsRepository(dataStore, base64Handler)
 }

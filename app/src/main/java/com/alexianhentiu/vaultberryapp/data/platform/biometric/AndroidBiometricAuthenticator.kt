@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import com.alexianhentiu.vaultberryapp.R
-import com.alexianhentiu.vaultberryapp.data.platform.crypto.AndroidEncryptDecryptProcessor
+import com.alexianhentiu.vaultberryapp.data.platform.crypto.AndroidCryptoProvider
 import com.alexianhentiu.vaultberryapp.domain.common.BiometricStatus
 import com.alexianhentiu.vaultberryapp.domain.common.enums.ErrorType
 import com.alexianhentiu.vaultberryapp.domain.model.AuthCredentials
@@ -20,13 +20,13 @@ import javax.inject.Singleton
 @Singleton
 class AndroidBiometricAuthenticator @Inject constructor(
     private val stringResourceProvider: StringResourceProvider,
-    private val processor: AndroidEncryptDecryptProcessor,
+    private val processor: AndroidCryptoProvider,
     private val credentialsRepository: CredentialsRepository,
     @ApplicationContext private val context: Context
 ) {
-    fun hasStoredCredentials(): Boolean = credentialsRepository.hasStoredCredentials()
+    suspend fun hasStoredCredentials(): Boolean = credentialsRepository.hasStoredCredentials()
 
-    fun clearStoredCredentials() {
+    suspend fun clearStoredCredentials() {
         credentialsRepository.clearStoredCredentials()
         processor.deleteKey()
     }
@@ -76,9 +76,9 @@ class AndroidBiometricAuthenticator @Inject constructor(
         )
     }
 
-    fun getCredentials(): EncryptedAuthCredentials? = credentialsRepository.getCredentials()
+    suspend fun getCredentials(): EncryptedAuthCredentials? = credentialsRepository.getCredentials()
 
-    fun storeCredentials(encryptedAuthCredentials: EncryptedAuthCredentials) {
+    suspend fun storeCredentials(encryptedAuthCredentials: EncryptedAuthCredentials) {
         credentialsRepository.storeCredentials(encryptedAuthCredentials)
     }
 

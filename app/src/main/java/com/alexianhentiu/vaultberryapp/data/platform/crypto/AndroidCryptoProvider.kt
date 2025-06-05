@@ -13,7 +13,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class AndroidEncryptDecryptProcessor @Inject constructor(
+class AndroidCryptoProvider @Inject constructor(
     private val stringResourceProvider: StringResourceProvider
 ) {
 

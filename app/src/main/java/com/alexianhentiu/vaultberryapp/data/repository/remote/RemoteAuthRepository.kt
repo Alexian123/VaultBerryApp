@@ -1,9 +1,9 @@
-package com.alexianhentiu.vaultberryapp.data.repository
+package com.alexianhentiu.vaultberryapp.data.repository.remote
 
 import com.alexianhentiu.vaultberryapp.data.remote.ApiResponseHandler
 import com.alexianhentiu.vaultberryapp.data.remote.ApiResult
-import com.alexianhentiu.vaultberryapp.data.remote.api.ApiService
 import com.alexianhentiu.vaultberryapp.data.remote.ModelConverter
+import com.alexianhentiu.vaultberryapp.data.remote.api.ApiService
 import com.alexianhentiu.vaultberryapp.domain.model.KeyChain
 import com.alexianhentiu.vaultberryapp.domain.model.User
 import com.alexianhentiu.vaultberryapp.domain.model.request.LoginRequest

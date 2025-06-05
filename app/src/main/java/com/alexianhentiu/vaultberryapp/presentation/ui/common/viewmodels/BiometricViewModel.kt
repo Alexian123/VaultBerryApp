@@ -49,7 +49,9 @@ class BiometricViewModel @Inject constructor(
     private var pendingEncryptedData: EncryptedAuthCredentials? = null
 
     init {
-        _hasStoredCredentials.value = androidBiometricAuthenticator.hasStoredCredentials()
+        viewModelScope.launch {
+            _hasStoredCredentials.value = androidBiometricAuthenticator.hasStoredCredentials()
+        }
     }
 
     fun requestStoreCredentials(email: String, password: String) {

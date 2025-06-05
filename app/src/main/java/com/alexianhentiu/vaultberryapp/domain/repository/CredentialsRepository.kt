@@ -4,16 +4,16 @@ import com.alexianhentiu.vaultberryapp.domain.model.EncryptedAuthCredentials
 
 interface CredentialsRepository {
 
-    fun storeCredentials(encryptedCredentials: EncryptedAuthCredentials)
+    suspend fun storeCredentials(encryptedCredentials: EncryptedAuthCredentials)
 
-    fun storeEncryptedPassword(encryptedData: ByteArray, iv: ByteArray)
+    suspend fun storeEncryptedPassword(encryptedData: ByteArray, iv: ByteArray)
 
-    fun storeEmail(email: String)
+    suspend fun storeEmail(email: String)
 
-    fun getCredentials(): EncryptedAuthCredentials?
+    suspend fun getCredentials(): EncryptedAuthCredentials?
 
-    fun hasStoredCredentials(): Boolean
+    suspend fun hasStoredCredentials(): Boolean
 
-    fun clearStoredCredentials()
+    suspend fun clearStoredCredentials()
 
 }
