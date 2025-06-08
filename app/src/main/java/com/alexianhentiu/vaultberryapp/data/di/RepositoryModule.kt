@@ -2,17 +2,20 @@ package com.alexianhentiu.vaultberryapp.data.di
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import com.alexianhentiu.vaultberryapp.data.di.qualifiers.ApiPreferencesDataStoreQualifier
 import com.alexianhentiu.vaultberryapp.data.di.qualifiers.AppSettingsDataStoreQualifier
 import com.alexianhentiu.vaultberryapp.data.di.qualifiers.AuthCredentialsDataStoreQualifier
 import com.alexianhentiu.vaultberryapp.data.remote.ApiResponseHandler
-import com.alexianhentiu.vaultberryapp.data.remote.ModelConverter
+import com.alexianhentiu.vaultberryapp.data.remote.ModelMapper
 import com.alexianhentiu.vaultberryapp.data.remote.api.ApiService
+import com.alexianhentiu.vaultberryapp.data.repository.local.DataStoreApiConfigRepository
 import com.alexianhentiu.vaultberryapp.data.repository.local.DataStoreCredentialsRepository
 import com.alexianhentiu.vaultberryapp.data.repository.local.DataStoreSettingsRepository
 import com.alexianhentiu.vaultberryapp.data.repository.remote.RemoteAccountRepository
 import com.alexianhentiu.vaultberryapp.data.repository.remote.RemoteAuthRepository
 import com.alexianhentiu.vaultberryapp.data.repository.remote.RemoteVaultRepository
 import com.alexianhentiu.vaultberryapp.domain.repository.AccountRepository
+import com.alexianhentiu.vaultberryapp.domain.repository.ApiConfigRepository
 import com.alexianhentiu.vaultberryapp.domain.repository.AuthRepository
 import com.alexianhentiu.vaultberryapp.domain.repository.CredentialsRepository
 import com.alexianhentiu.vaultberryapp.domain.repository.SettingsRepository
@@ -33,25 +36,25 @@ object RepositoryModule {
     fun provideAuthRepository(
         apiService: ApiService,
         apiResponseHandler: ApiResponseHandler,
-        modelConverter: ModelConverter
-    ): AuthRepository = RemoteAuthRepository(apiService, apiResponseHandler, modelConverter)
+        modelMapper: ModelMapper
+    ): AuthRepository = RemoteAuthRepository(apiService, apiResponseHandler, modelMapper)
 
     @Provides
     @Singleton
     fun provideVaultRepository(
         apiService: ApiService,
         apiResponseHandler: ApiResponseHandler,
-        modelConverter: ModelConverter
+        modelMapper: ModelMapper
     ): VaultRepository =
-        RemoteVaultRepository(apiService, apiResponseHandler, modelConverter)
+        RemoteVaultRepository(apiService, apiResponseHandler, modelMapper)
 
     @Provides
     @Singleton
     fun provideAccountRepository(
         apiService: ApiService,
         apiResponseHandler: ApiResponseHandler,
-        modelConverter: ModelConverter
-    ): AccountRepository = RemoteAccountRepository(apiService, apiResponseHandler, modelConverter)
+        modelMapper: ModelMapper
+    ): AccountRepository = RemoteAccountRepository(apiService, apiResponseHandler, modelMapper)
 
     @Provides
     @Singleton
@@ -65,4 +68,11 @@ object RepositoryModule {
         @AuthCredentialsDataStoreQualifier dataStore: DataStore<Preferences>,
         base64Handler: Base64Handler
     ): CredentialsRepository = DataStoreCredentialsRepository(dataStore, base64Handler)
+
+    @Provides
+    @Singleton
+    fun provideApiConfigRepository(
+        @ApiPreferencesDataStoreQualifier dataStore: DataStore<Preferences>,
+        base64Handler: Base64Handler
+    ): ApiConfigRepository = DataStoreApiConfigRepository(dataStore, base64Handler)
 }

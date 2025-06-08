@@ -30,10 +30,11 @@ import com.alexianhentiu.vaultberryapp.presentation.ui.common.enums.NavRoute
 import com.alexianhentiu.vaultberryapp.presentation.ui.common.EmailIntentUtils.launchErrorReportEmailIntent
 import com.alexianhentiu.vaultberryapp.presentation.ui.common.SessionState
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.InfoDialog
-import com.alexianhentiu.vaultberryapp.presentation.ui.common.viewmodels.BiometricViewModel
-import com.alexianhentiu.vaultberryapp.presentation.ui.common.viewmodels.UtilityViewModel
-import com.alexianhentiu.vaultberryapp.presentation.ui.common.viewmodels.SessionViewModel
-import com.alexianhentiu.vaultberryapp.presentation.ui.common.viewmodels.SettingsViewModel
+import com.alexianhentiu.vaultberryapp.presentation.ui.common.sharedViewModels.BiometricViewModel
+import com.alexianhentiu.vaultberryapp.presentation.ui.common.sharedViewModels.UtilityViewModel
+import com.alexianhentiu.vaultberryapp.presentation.ui.common.sharedViewModels.SessionViewModel
+import com.alexianhentiu.vaultberryapp.presentation.ui.common.sharedViewModels.SettingsViewModel
+import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ConfirmActionDialog
 
 @Composable
 fun LoginScreen(
@@ -49,6 +50,8 @@ fun LoginScreen(
     val rememberEmail by settingsViewModel.rememberEmail.collectAsState()
     val biometricEnabled by settingsViewModel.biometricEnabled.collectAsState()
 
+    var showApiConfigDialog by remember { mutableStateOf(false) }
+
     LaunchedEffect(Unit) {
         biometricViewModel.credentialsEvent.collect { credentials ->
             sessionViewModel.login(credentials.email, credentials.password)
@@ -57,10 +60,20 @@ fun LoginScreen(
 
     BackHandler(enabled = true) {}
 
+    if (showApiConfigDialog) {
+        ConfirmActionDialog(
+            title = "Test",
+            message = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+            showConfirmationCheckbox = true,
+            onDismissRequest = { showApiConfigDialog = false },
+            onSubmit = { showApiConfigDialog = false }
+        )
+    }
+
     Scaffold(
         topBar = {
             AuthTopBar(
-                onSettingsClick = { navController.navigate(NavRoute.SETTINGS.path) },
+                navController = navController,
                 titleText = stringResource(R.string.login_screen_title)
             )
         }

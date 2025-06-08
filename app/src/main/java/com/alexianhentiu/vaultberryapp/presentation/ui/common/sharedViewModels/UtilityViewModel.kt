@@ -1,6 +1,5 @@
-package com.alexianhentiu.vaultberryapp.presentation.ui.common.viewmodels
+package com.alexianhentiu.vaultberryapp.presentation.ui.common.sharedViewModels
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alexianhentiu.vaultberryapp.domain.common.ErrorInfo
@@ -57,12 +56,8 @@ class UtilityViewModel @Inject constructor(
     fun copyToClipboard(text: String, label: String = "") {
         viewModelScope.launch {
             when (val result = copyToClipboardUseCase(text, label)) {
-                is UseCaseResult.Success -> {
-                    Log.d("UtilityViewModel", "Successfully copied to clipboard")
-                }
-
+                is UseCaseResult.Success -> {}
                 is UseCaseResult.Error -> {
-                    Log.e(result.source, result.message)
                     _errorInfo.emit(
                         ErrorInfo(
                             type = result.type,
@@ -76,25 +71,25 @@ class UtilityViewModel @Inject constructor(
     }
 
     fun evalPasswordStrength(password: String): PasswordStrength {
-        when (val result = evalPasswordStrengthUseCase(password)) {
+        return when (val result = evalPasswordStrengthUseCase(password)) {
             is UseCaseResult.Success -> {
-                return result.data
+                result.data
             }
+
             is UseCaseResult.Error -> {
-                Log.e(result.source, result.message)
-                return PasswordStrength.NONE
+                PasswordStrength.NONE
             }
         }
     }
 
     fun generatePassword(options: PasswordGenOptions): String {
-        when (val result = generatePasswordUseCase(options)) {
+        return when (val result = generatePasswordUseCase(options)) {
             is UseCaseResult.Success -> {
-                return result.data
+                result.data
             }
+
             is UseCaseResult.Error -> {
-                Log.e(result.source, result.message)
-                return ""
+                ""
             }
         }
     }

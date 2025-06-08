@@ -4,7 +4,7 @@ import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
-import com.alexianhentiu.vaultberryapp.presentation.ui.common.viewmodels.SettingsViewModel
+import com.alexianhentiu.vaultberryapp.presentation.ui.common.sharedViewModels.SettingsViewModel
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable

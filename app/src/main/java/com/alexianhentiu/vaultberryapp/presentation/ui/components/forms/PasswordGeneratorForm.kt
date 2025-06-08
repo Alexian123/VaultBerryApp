@@ -7,10 +7,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,7 +20,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -32,7 +29,7 @@ import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.Passwor
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.misc.CheckboxOptionRow
 import com.alexianhentiu.vaultberryapp.presentation.ui.common.enums.TextFieldType
 import com.alexianhentiu.vaultberryapp.domain.common.PasswordGenOptions
-import java.lang.NumberFormatException
+import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.BoundedNumberField
 
 @Composable
 fun PasswordGeneratorForm(
@@ -83,25 +80,13 @@ fun PasswordGeneratorForm(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(
-                text = stringResource(R.string.password_length_label),
-                modifier = Modifier.width(80.dp)
-            )
-            OutlinedTextField(
-                value = options.length.toString(),
-                onValueChange = { value ->
-                    val newLength = try {
-                        value.toInt().coerceIn(8, 128)
-                    } catch (_: NumberFormatException) {
-                        if (value.isEmpty()) 0 else options.length // Allow empty for typing, else keep old
-                    }
-                    if (newLength != 0 || value.isEmpty()) { // Update if valid or if user is clearing the field
-                        options = options.copy(length = newLength)
-                    }
-                },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                modifier = Modifier.width(70.dp),
-                singleLine = true,
+            BoundedNumberField(
+                value = options.length,
+                onValueChange = { options = options.copy(length = it) },
+                label = stringResource(R.string.password_length_label),
+                lowerBound = 8,
+                upperBound = 128,
+                modifier = Modifier.width(150.dp),
                 textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.Center)
             )
             Slider(
@@ -109,7 +94,7 @@ fun PasswordGeneratorForm(
                 onValueChange = {
                     options = options.copy(length = it.toInt())
                 },
-                valueRange = 8f..128f, // Adjust range as needed
+                valueRange = 8f..128f,
                 steps = 119, // valueRange.end - valueRange.start - 1
                 modifier = Modifier
                     .weight(1f)

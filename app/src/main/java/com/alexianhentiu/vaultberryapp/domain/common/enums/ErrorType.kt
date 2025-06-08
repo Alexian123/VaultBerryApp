@@ -9,6 +9,7 @@ enum class ErrorType(
     SERVER_IDENTITY_VERIFICATION_FAILURE("Server identity verification failure"),
     TWO_FACTOR_REQUIRED(""),
     ACTIVATION_REQUIRED(""),
+    HOST_UNREACHABLE("Host unreachable"),
 
     // Use case errors
     KEY_DECRYPTION_FAILURE("Key decryption failure"),
@@ -24,8 +25,15 @@ enum class ErrorType(
     LOAD_SETTINGS_FAILURE("Load settings failure"),
     OBSERVE_SETTINGS_FAILURE("Observe settings failure"),
     SAVE_SETTINGS_FAILURE("Save settings failure"),
+    STORE_CERTIFICATE_FAILURE("Store certificate failure"),
+    STORE_URL_FAILURE("Store url failure"),
+    GET_URL_FAILURE("Get url failure"),
+    GET_CERTIFICATE_FAILURE("Get certificate failure"),
+    OPEN_URI_INPUT_STREAM_FAILURE("Open uri input stream failure"),
+    READ_BYTES_FROM_URI_FAILURE("Read bytes from uri failure"),
+    CLEAR_CERTIFICATE_FAILURE("Clear certificate failure"),
 
     // Other errors
     BIOMETRIC("Biometric error"),
-    UNKNOWN("Unknown error")
+    UNKNOWN("Unknown error"),
 }

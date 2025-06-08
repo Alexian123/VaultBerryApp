@@ -27,9 +27,9 @@ import com.alexianhentiu.vaultberryapp.presentation.ui.common.enums.TextFieldTyp
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.animated.LoadingAnimationDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.common.enums.NavRoute
 import com.alexianhentiu.vaultberryapp.presentation.ui.common.EmailIntentUtils.launchErrorReportEmailIntent
-import com.alexianhentiu.vaultberryapp.presentation.ui.common.viewmodels.SessionViewModel
-import com.alexianhentiu.vaultberryapp.presentation.ui.common.viewmodels.SettingsViewModel
-import com.alexianhentiu.vaultberryapp.presentation.ui.common.viewmodels.UtilityViewModel
+import com.alexianhentiu.vaultberryapp.presentation.ui.common.sharedViewModels.SessionViewModel
+import com.alexianhentiu.vaultberryapp.presentation.ui.common.sharedViewModels.SettingsViewModel
+import com.alexianhentiu.vaultberryapp.presentation.ui.common.sharedViewModels.UtilityViewModel
 
 @Composable
 fun RecoveryScreen(
@@ -56,7 +56,7 @@ fun RecoveryScreen(
     Scaffold(
         topBar = {
             AuthTopBar(
-                onSettingsClick = { navController.navigate(NavRoute.SETTINGS.path) },
+                navController = navController,
                 titleText = stringResource(R.string.recovery_screen_title),
             )
         }

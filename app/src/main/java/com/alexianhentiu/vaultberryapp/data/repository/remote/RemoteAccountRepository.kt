@@ -2,7 +2,7 @@ package com.alexianhentiu.vaultberryapp.data.repository.remote
 
 import com.alexianhentiu.vaultberryapp.data.remote.ApiResponseHandler
 import com.alexianhentiu.vaultberryapp.data.remote.ApiResult
-import com.alexianhentiu.vaultberryapp.data.remote.ModelConverter
+import com.alexianhentiu.vaultberryapp.data.remote.ModelMapper
 import com.alexianhentiu.vaultberryapp.data.remote.api.ApiService
 import com.alexianhentiu.vaultberryapp.data.remote.model.request.AccountInfoChangeRequestDTO
 import com.alexianhentiu.vaultberryapp.domain.model.AccountInfo
@@ -14,13 +14,13 @@ import com.alexianhentiu.vaultberryapp.domain.repository.AccountRepository
 class RemoteAccountRepository(
     private val apiService: ApiService,
     private val apiResponseHandler: ApiResponseHandler,
-    private val modelConverter: ModelConverter
+    private val modelMapper: ModelMapper
 ) : AccountRepository {
 
     override suspend fun getAccountInfo(): ApiResult<AccountInfo> {
         return apiResponseHandler.safeApiCall(
             apiCall = { apiService.getAccountInfo() },
-            transform = { modelConverter.accountInfoFromDTO(it) }
+            transform = { modelMapper.accountInfoFromDTO(it) }
         )
     }
 
@@ -28,33 +28,33 @@ class RemoteAccountRepository(
         accountInfo: AccountInfo,
         noActivation: Boolean
     ): ApiResult<MessageResponse> {
-        val accountDTO = modelConverter.accountInfoToDTO(accountInfo)
+        val accountDTO = modelMapper.accountInfoToDTO(accountInfo)
         val request = AccountInfoChangeRequestDTO(accountDTO, noActivation)
         return apiResponseHandler.safeApiCall(
             apiCall = { apiService.updateAccount(request) },
-            transform = { modelConverter.messageResponseFromDTO(it) }
+            transform = { modelMapper.messageResponseFromDTO(it) }
         )
     }
 
     override suspend fun deleteAccount(): ApiResult<MessageResponse> {
         return apiResponseHandler.safeApiCall(
             apiCall = { apiService.deleteAccount() },
-            transform = { modelConverter.messageResponseFromDTO(it) }
+            transform = { modelMapper.messageResponseFromDTO(it) }
         )
     }
 
     override suspend fun changePassword(data: PasswordChangeRequest): ApiResult<MessageResponse> {
-        val dto = modelConverter.passwordChangeRequestToDTO(data)
+        val dto = modelMapper.passwordChangeRequestToDTO(data)
         return apiResponseHandler.safeApiCall(
             apiCall = { apiService.changePassword(dto) },
-            transform = { modelConverter.messageResponseFromDTO(it) }
+            transform = { modelMapper.messageResponseFromDTO(it) }
         )
     }
 
     override suspend fun setup2FA(): ApiResult<TotpResponse> {
         return apiResponseHandler.safeApiCall(
             apiCall = { apiService.setup2FA() },
-            transform = { modelConverter.totpResponseFromDTO(it) }
+            transform = { modelMapper.totpResponseFromDTO(it) }
         )
     }
 
@@ -68,7 +68,7 @@ class RemoteAccountRepository(
     override suspend fun disable2FA(): ApiResult<MessageResponse> {
         return apiResponseHandler.safeApiCall(
             apiCall = { apiService.disable2FA() },
-            transform = { modelConverter.messageResponseFromDTO(it) }
+            transform = { modelMapper.messageResponseFromDTO(it) }
         )
     }
 }

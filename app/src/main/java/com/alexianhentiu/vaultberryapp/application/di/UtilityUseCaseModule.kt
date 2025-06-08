@@ -5,9 +5,9 @@ import com.alexianhentiu.vaultberryapp.application.usecase.utility.EvalPasswordS
 import com.alexianhentiu.vaultberryapp.application.usecase.utility.GeneratePasswordUseCaseImpl
 import com.alexianhentiu.vaultberryapp.application.usecase.utility.GetAppInfoUseCaseImpl
 import com.alexianhentiu.vaultberryapp.application.usecase.utility.GetValidatorFunctionUseCaseImpl
+import com.alexianhentiu.vaultberryapp.application.usecase.utility.ReadBytesFromUriUseCaseImpl
 import com.alexianhentiu.vaultberryapp.data.di.qualifiers.LaxInputValidatorQualifier
 import com.alexianhentiu.vaultberryapp.data.di.qualifiers.StrictInputValidatorQualifier
-import com.alexianhentiu.vaultberryapp.data.platform.utils.AndroidStringResourceProvider
 import com.alexianhentiu.vaultberryapp.domain.clipboard.ClipboardHandler
 import com.alexianhentiu.vaultberryapp.domain.security.password.PasswordEvaluator
 import com.alexianhentiu.vaultberryapp.domain.security.password.PasswordGenerator
@@ -16,7 +16,10 @@ import com.alexianhentiu.vaultberryapp.domain.usecase.utility.EvalPasswordStreng
 import com.alexianhentiu.vaultberryapp.domain.usecase.utility.GeneratePasswordUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.utility.GetAppInfoUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.utility.GetValidatorFunctionUseCase
+import com.alexianhentiu.vaultberryapp.domain.usecase.utility.ReadBytesFromUriUseCase
 import com.alexianhentiu.vaultberryapp.domain.utils.AppInfoProvider
+import com.alexianhentiu.vaultberryapp.domain.utils.StringResourceProvider
+import com.alexianhentiu.vaultberryapp.domain.utils.UriStreamProvider
 import com.alexianhentiu.vaultberryapp.domain.validation.InputValidator
 import dagger.Module
 import dagger.Provides
@@ -29,7 +32,7 @@ object UtilityUseCaseModule {
 
     @Provides
     fun provideCopyToClipboardUseCase(
-        stringResourceProvider: AndroidStringResourceProvider,
+        stringResourceProvider: StringResourceProvider,
         clipboardHandler: ClipboardHandler
     ): CopyToClipboardUseCase = CopyToClipboardUseCaseImpl(
         stringResourceProvider,
@@ -38,7 +41,7 @@ object UtilityUseCaseModule {
 
     @Provides
     fun provideEvalPasswordStrengthUseCase(
-        stringResourceProvider: AndroidStringResourceProvider,
+        stringResourceProvider: StringResourceProvider,
         passwordEvaluator: PasswordEvaluator
     ): EvalPasswordStrengthUseCase = EvalPasswordStrengthUseCaseImpl(
         stringResourceProvider,
@@ -47,7 +50,7 @@ object UtilityUseCaseModule {
 
     @Provides
     fun provideGeneratePasswordUseCase(
-        stringResourceProvider: AndroidStringResourceProvider,
+        stringResourceProvider: StringResourceProvider,
         passwordGenerator: PasswordGenerator
     ): GeneratePasswordUseCase = GeneratePasswordUseCaseImpl(
         stringResourceProvider,
@@ -67,4 +70,13 @@ object UtilityUseCaseModule {
     fun provideGetAppInfoUseCase(
         appInfoProvider: AppInfoProvider
     ): GetAppInfoUseCase = GetAppInfoUseCaseImpl(appInfoProvider)
+
+    @Provides
+    fun provideReadBytesFromUriUseCase(
+        uriStreamProvider: UriStreamProvider,
+        stringResourceProvider: StringResourceProvider
+    ): ReadBytesFromUriUseCase = ReadBytesFromUriUseCaseImpl(
+        uriStreamProvider,
+        stringResourceProvider
+    )
 }

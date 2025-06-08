@@ -13,14 +13,14 @@ import com.alexianhentiu.vaultberryapp.presentation.ui.handlers.UtilityErrorHand
 import com.alexianhentiu.vaultberryapp.presentation.ui.common.enums.AppTheme
 import com.alexianhentiu.vaultberryapp.presentation.ui.navigation.AppNavHost
 import com.alexianhentiu.vaultberryapp.presentation.ui.theme.VaultBerryAppTheme
-import com.alexianhentiu.vaultberryapp.presentation.ui.common.viewmodels.BiometricViewModel
-import com.alexianhentiu.vaultberryapp.presentation.ui.common.viewmodels.SettingsViewModel
-import com.alexianhentiu.vaultberryapp.presentation.ui.common.viewmodels.UtilityViewModel
+import com.alexianhentiu.vaultberryapp.presentation.ui.common.sharedViewModels.BiometricViewModel
+import com.alexianhentiu.vaultberryapp.presentation.ui.common.sharedViewModels.SettingsViewModel
+import com.alexianhentiu.vaultberryapp.presentation.ui.common.sharedViewModels.UtilityViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 /*
     TODO:
-        - Add option to set the backend ip and import SSL certificate
+        - Fix Clean Code violations in BiometricViewModel & BiometricPromptHandler
         - Cleanup code & add comments
 */
 

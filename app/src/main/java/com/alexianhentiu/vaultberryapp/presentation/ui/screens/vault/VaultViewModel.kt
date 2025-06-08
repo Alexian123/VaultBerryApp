@@ -1,6 +1,5 @@
 package com.alexianhentiu.vaultberryapp.presentation.ui.screens.vault
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alexianhentiu.vaultberryapp.domain.common.ErrorInfo
@@ -61,7 +60,6 @@ class VaultViewModel @Inject constructor(
                             message = result.message
                         )
                     )
-                    Log.e(result.source, result.message)
                 }
             }
             _isRefreshing.value = false
@@ -99,7 +97,6 @@ class VaultViewModel @Inject constructor(
                             message = result.message
                         )
                     )
-                    Log.e(result.source, result.message)
                 }
             }
         }
@@ -119,7 +116,6 @@ class VaultViewModel @Inject constructor(
                             message = result.message
                         )
                     )
-                    Log.e(result.source, result.message)
                 }
             }
         }
@@ -153,7 +149,6 @@ class VaultViewModel @Inject constructor(
                             message = result.message
                         )
                     )
-                    Log.e(result.source, result.message)
                 }
             }
         }
@@ -179,7 +174,6 @@ class VaultViewModel @Inject constructor(
                             message = result.message
                         )
                     )
-                    Log.e(result.source, result.message)
                 }
             }
         }
@@ -209,7 +203,6 @@ class VaultViewModel @Inject constructor(
                             message = result.message
                         )
                     )
-                    Log.e(result.source, result.message)
                 }
             }
         }

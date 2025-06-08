@@ -4,7 +4,8 @@ import android.content.Context
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import com.alexianhentiu.vaultberryapp.R
-import com.alexianhentiu.vaultberryapp.data.platform.crypto.AndroidCryptoProvider
+import com.alexianhentiu.vaultberryapp.data.platform.crypto.AndroidSecureKeyHandler
+import com.alexianhentiu.vaultberryapp.data.security.AESCipherProvider
 import com.alexianhentiu.vaultberryapp.domain.common.BiometricStatus
 import com.alexianhentiu.vaultberryapp.domain.common.enums.ErrorType
 import com.alexianhentiu.vaultberryapp.domain.model.AuthCredentials
@@ -20,23 +21,32 @@ import javax.inject.Singleton
 @Singleton
 class AndroidBiometricAuthenticator @Inject constructor(
     private val stringResourceProvider: StringResourceProvider,
-    private val processor: AndroidCryptoProvider,
+    private val keyHandler: AndroidSecureKeyHandler,
+    private val cipherProvider: AESCipherProvider,
     private val credentialsRepository: CredentialsRepository,
     @ApplicationContext private val context: Context
 ) {
+    companion object {
+        private const val KEY_ALIAS = "BiometricCredentialsKey"
+    }
+
     suspend fun hasStoredCredentials(): Boolean = credentialsRepository.hasStoredCredentials()
 
     suspend fun clearStoredCredentials() {
         credentialsRepository.clearStoredCredentials()
-        processor.deleteKey()
+        keyHandler.deleteKey(KEY_ALIAS)
     }
 
     fun getCipherForEncryption(): Cipher {
-        return processor.getCipherForEncryption()
+        val key = keyHandler.getKey(KEY_ALIAS) ?: keyHandler.generateKey(KEY_ALIAS)
+        return cipherProvider.getCipherForEncryption(key)
     }
 
     fun getCipherForDecryption(iv: ByteArray): Cipher {
-        return processor.getCipherForDecryption(iv)
+        val key = keyHandler.getKey(KEY_ALIAS) ?: throw IllegalStateException(
+            stringResourceProvider.getString(R.string.error_secret_key_not_found)
+        )
+        return cipherProvider.getCipherForDecryption(iv, key)
     }
 
     fun performEncryption(

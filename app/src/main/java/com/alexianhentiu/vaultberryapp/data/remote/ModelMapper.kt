@@ -29,7 +29,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ModelConverter @Inject constructor() {
+class ModelMapper @Inject constructor() {
 
     fun recoveryLoginRequestToDTO(request: RecoveryLoginRequest): RecoveryLoginRequestDTO {
         return RecoveryLoginRequestDTO(

@@ -1,6 +1,5 @@
 package com.alexianhentiu.vaultberryapp.presentation.ui.screens.autofill
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alexianhentiu.vaultberryapp.domain.common.ErrorInfo
@@ -39,7 +38,6 @@ class AutofillViewModel @Inject constructor(
                 }
 
                 is UseCaseResult.Error -> {
-                    Log.e(result.source, result.message)
                     _state.value = AutofillState.Error(
                         ErrorInfo(
                             type = result.type,

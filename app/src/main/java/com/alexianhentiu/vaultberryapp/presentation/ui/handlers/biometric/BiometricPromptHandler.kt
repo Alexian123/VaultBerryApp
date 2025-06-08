@@ -10,7 +10,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import com.alexianhentiu.vaultberryapp.R
 import com.alexianhentiu.vaultberryapp.presentation.ui.common.BiometricPromptRequest
-import com.alexianhentiu.vaultberryapp.presentation.ui.common.viewmodels.BiometricViewModel
+import com.alexianhentiu.vaultberryapp.presentation.ui.common.sharedViewModels.BiometricViewModel
 import kotlinx.coroutines.flow.collectLatest
 
 /**

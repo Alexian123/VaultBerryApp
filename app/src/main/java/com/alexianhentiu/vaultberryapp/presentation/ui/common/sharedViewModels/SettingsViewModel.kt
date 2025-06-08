@@ -1,6 +1,5 @@
-package com.alexianhentiu.vaultberryapp.presentation.ui.common.viewmodels
+package com.alexianhentiu.vaultberryapp.presentation.ui.common.sharedViewModels
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alexianhentiu.vaultberryapp.domain.common.AppSettings
@@ -32,7 +31,6 @@ class SettingsViewModel @Inject constructor(
         when (val result = observeSettingUseCase(AppSettings.USE_SYSTEM_THEME)) {
             is UseCaseResult.Success -> result.data
             is UseCaseResult.Error -> {
-                Log.e(result.source, result.message)
                 flowOf(AppSettings.USE_SYSTEM_THEME.defaultValue)
             }
         }.stateIn(
@@ -45,7 +43,6 @@ class SettingsViewModel @Inject constructor(
         when (val result = observeSettingUseCase(AppSettings.DARK_THEME)) {
             is UseCaseResult.Success -> result.data
             is UseCaseResult.Error -> {
-                Log.e(result.source, result.message)
                 flowOf(AppSettings.DARK_THEME.defaultValue)
             }
         }.stateIn(
@@ -58,7 +55,6 @@ class SettingsViewModel @Inject constructor(
         when (val result = observeSettingUseCase(AppSettings.DEBUG_MODE)) {
             is UseCaseResult.Success -> result.data
             is UseCaseResult.Error -> {
-                Log.e(result.source, result.message)
                 flowOf(AppSettings.DEBUG_MODE.defaultValue)
             }
         }.stateIn(
@@ -71,7 +67,6 @@ class SettingsViewModel @Inject constructor(
         when (val result = observeSettingUseCase(AppSettings.SAVED_EMAIL)) {
             is UseCaseResult.Success -> result.data
             is UseCaseResult.Error -> {
-                Log.e(result.source, result.message)
                 flowOf(AppSettings.SAVED_EMAIL.defaultValue)
             }
         }.stateIn(
@@ -84,7 +79,6 @@ class SettingsViewModel @Inject constructor(
         when (val result = observeSettingUseCase(AppSettings.REMEMBER_EMAIL)) {
             is UseCaseResult.Success -> result.data
             is UseCaseResult.Error -> {
-                Log.e(result.source, result.message)
                 flowOf(AppSettings.REMEMBER_EMAIL.defaultValue)
             }
         }.stateIn(
@@ -97,7 +91,6 @@ class SettingsViewModel @Inject constructor(
         when (val result = observeSettingUseCase(AppSettings.BIOMETRIC_ENABLED)) {
             is UseCaseResult.Success -> result.data
             is UseCaseResult.Error -> {
-                Log.e(result.source, result.message)
                 flowOf(AppSettings.BIOMETRIC_ENABLED.defaultValue)
             }
         }.stateIn(
@@ -109,12 +102,8 @@ class SettingsViewModel @Inject constructor(
     fun setUseSystemTheme(useSystemTheme: Boolean) {
         viewModelScope.launch {
             when (val result = saveSettingUseCase(AppSettings.USE_SYSTEM_THEME, useSystemTheme)) {
-                is UseCaseResult.Success -> {
-                    Log.d("SettingsViewModel", "setUseSystemTheme: $useSystemTheme")
-                }
-
+                is UseCaseResult.Success -> {}
                 is UseCaseResult.Error -> {
-                    Log.e(result.source, result.message)
                     _errorInfo.emit(
                         ErrorInfo(
                             type = result.type,
@@ -130,11 +119,8 @@ class SettingsViewModel @Inject constructor(
     fun setDarkTheme(useDarkTheme: Boolean) {
         viewModelScope.launch {
             when (val result = saveSettingUseCase(AppSettings.DARK_THEME, useDarkTheme)) {
-                is UseCaseResult.Success -> {
-                    Log.d("SettingsViewModel", "setUseDarkTheme: $useDarkTheme")
-                }
+                is UseCaseResult.Success -> {}
                 is UseCaseResult.Error -> {
-                    Log.e(result.source, result.message)
                     _errorInfo.emit(
                         ErrorInfo(
                             type = result.type,
@@ -150,11 +136,8 @@ class SettingsViewModel @Inject constructor(
     fun setDebugMode(debugMode: Boolean) {
         viewModelScope.launch {
             when (val result = saveSettingUseCase(AppSettings.DEBUG_MODE, debugMode)) {
-                is UseCaseResult.Success -> {
-                    Log.d("SettingsViewModel", "setDebugMode: $debugMode")
-                }
+                is UseCaseResult.Success -> {}
                 is UseCaseResult.Error -> {
-                    Log.e(result.source, result.message)
                     _errorInfo.emit(
                         ErrorInfo(
                             type = result.type,
@@ -170,11 +153,8 @@ class SettingsViewModel @Inject constructor(
     fun setSavedEmail(email: String) {
         viewModelScope.launch {
             when (val result = saveSettingUseCase(AppSettings.SAVED_EMAIL, email)) {
-                is UseCaseResult.Success -> {
-                    Log.d("SettingsViewModel", "setSavedEmail: $email")
-                }
+                is UseCaseResult.Success -> {}
                 is UseCaseResult.Error -> {
-                    Log.e(result.source, result.message)
                     _errorInfo.emit(
                         ErrorInfo(
                             type = result.type,
@@ -190,11 +170,8 @@ class SettingsViewModel @Inject constructor(
     fun setRememberEmail(rememberEmail: Boolean) {
         viewModelScope.launch {
             when (val result = saveSettingUseCase(AppSettings.REMEMBER_EMAIL, rememberEmail)) {
-                is UseCaseResult.Success -> {
-                    Log.d("SettingsViewModel", "setRememberEmail: $rememberEmail")
-                }
+                is UseCaseResult.Success -> {}
                 is UseCaseResult.Error -> {
-                    Log.e(result.source, result.message)
                     _errorInfo.emit(
                         ErrorInfo(
                             type = result.type,
@@ -210,11 +187,8 @@ class SettingsViewModel @Inject constructor(
     fun setBiometricEnabled(biometricEnabled: Boolean) {
         viewModelScope.launch {
             when (val result = saveSettingUseCase(AppSettings.BIOMETRIC_ENABLED, biometricEnabled)) {
-                is UseCaseResult.Success -> {
-                    Log.d("SettingsViewModel", "setBiometricEnabled: $biometricEnabled")
-                }
+                is UseCaseResult.Success -> {}
                 is UseCaseResult.Error -> {
-                    Log.e(result.source, result.message)
                     _errorInfo.emit(
                         ErrorInfo(
                             type = result.type,

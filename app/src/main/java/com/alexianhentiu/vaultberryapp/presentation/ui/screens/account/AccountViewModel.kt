@@ -1,6 +1,5 @@
 package com.alexianhentiu.vaultberryapp.presentation.ui.screens.account
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alexianhentiu.vaultberryapp.domain.common.ErrorInfo
@@ -67,7 +66,6 @@ class AccountViewModel @Inject constructor(
                                     message = result2FA.message
                                 )
                             )
-                            Log.e(result2FA.source, result2FA.message)
                         }
                     }
                 }
@@ -80,7 +78,6 @@ class AccountViewModel @Inject constructor(
                             message = resultAccount.message
                         )
                     )
-                    Log.e(resultAccount.source, resultAccount.message)
                 }
             }
         }
@@ -102,7 +99,6 @@ class AccountViewModel @Inject constructor(
                             message = result.message
                         )
                     )
-                    Log.e(result.source, result.message)
                 }
             }
         }
@@ -141,7 +137,6 @@ class AccountViewModel @Inject constructor(
                             message = result.message
                         )
                     )
-                    Log.e(result.source, result.message)
                 }
             }
         }
@@ -164,7 +159,6 @@ class AccountViewModel @Inject constructor(
                             message = result.message
                         )
                     )
-                    Log.e(result.source, result.message)
                 }
             }
         }
@@ -187,7 +181,6 @@ class AccountViewModel @Inject constructor(
                             message = result.message
                         )
                     )
-                    Log.e(result.source, result.message)
                 }
             }
         }
@@ -210,7 +203,6 @@ class AccountViewModel @Inject constructor(
                             message = result.message
                         )
                     )
-                    Log.e(result.source, result.message)
                 }
             }
         }

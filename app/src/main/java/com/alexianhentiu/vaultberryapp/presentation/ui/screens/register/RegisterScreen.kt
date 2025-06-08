@@ -25,8 +25,8 @@ import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.Register
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.animated.LoadingAnimationDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.common.enums.NavRoute
 import com.alexianhentiu.vaultberryapp.presentation.ui.common.EmailIntentUtils.launchErrorReportEmailIntent
-import com.alexianhentiu.vaultberryapp.presentation.ui.common.viewmodels.SettingsViewModel
-import com.alexianhentiu.vaultberryapp.presentation.ui.common.viewmodels.UtilityViewModel
+import com.alexianhentiu.vaultberryapp.presentation.ui.common.sharedViewModels.SettingsViewModel
+import com.alexianhentiu.vaultberryapp.presentation.ui.common.sharedViewModels.UtilityViewModel
 
 @Composable
 fun RegisterScreen(
@@ -51,7 +51,7 @@ fun RegisterScreen(
     Scaffold(
         topBar = {
             AuthTopBar(
-                onSettingsClick = { navController.navigate(NavRoute.SETTINGS.path) },
+                navController = navController,
                 titleText = stringResource(R.string.register_screen_title)
             )
         }

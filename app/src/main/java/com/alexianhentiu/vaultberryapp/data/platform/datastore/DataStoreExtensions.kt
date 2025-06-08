@@ -13,3 +13,6 @@ val Context.authCredentialsDataStore: DataStore<Preferences> by preferencesDataS
     name = "auth_credentials"
 )
 
+val Context.apiPreferencesDataStore: DataStore<Preferences> by preferencesDataStore(
+    name = "api_preferences"
+)

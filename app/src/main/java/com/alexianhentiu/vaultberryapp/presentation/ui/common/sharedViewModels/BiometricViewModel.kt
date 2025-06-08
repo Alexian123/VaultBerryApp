@@ -1,4 +1,4 @@
-package com.alexianhentiu.vaultberryapp.presentation.ui.common.viewmodels
+package com.alexianhentiu.vaultberryapp.presentation.ui.common.sharedViewModels
 
 import androidx.biometric.BiometricPrompt
 import androidx.lifecycle.ViewModel

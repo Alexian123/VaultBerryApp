@@ -6,18 +6,22 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import com.alexianhentiu.vaultberryapp.data.di.qualifiers.AppSettingsDataStoreQualifier
 import com.alexianhentiu.vaultberryapp.data.di.qualifiers.AuthCredentialsDataStoreQualifier
+import com.alexianhentiu.vaultberryapp.data.di.qualifiers.ApiPreferencesDataStoreQualifier
 import com.alexianhentiu.vaultberryapp.data.platform.clipboard.AndroidClipboardHandler
+import com.alexianhentiu.vaultberryapp.data.platform.datastore.apiPreferencesDataStore
 import com.alexianhentiu.vaultberryapp.data.platform.utils.AndroidUriParser
 import com.alexianhentiu.vaultberryapp.data.platform.datastore.appSettingsDataStore
 import com.alexianhentiu.vaultberryapp.data.platform.datastore.authCredentialsDataStore
 import com.alexianhentiu.vaultberryapp.data.platform.utils.AndroidAppInfoProvider
 import com.alexianhentiu.vaultberryapp.data.platform.utils.AndroidBase64Handler
 import com.alexianhentiu.vaultberryapp.data.platform.utils.AndroidStringResourceProvider
+import com.alexianhentiu.vaultberryapp.data.platform.utils.AndroidUriStreamProvider
 import com.alexianhentiu.vaultberryapp.domain.clipboard.ClipboardHandler
 import com.alexianhentiu.vaultberryapp.domain.utils.UriParser
 import com.alexianhentiu.vaultberryapp.domain.utils.AppInfoProvider
 import com.alexianhentiu.vaultberryapp.domain.utils.Base64Handler
 import com.alexianhentiu.vaultberryapp.domain.utils.StringResourceProvider
+import com.alexianhentiu.vaultberryapp.domain.utils.UriStreamProvider
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -31,17 +35,30 @@ object PlatformModule {
 
     @Provides
     @Singleton
+    fun provideStringResourceProvider(
+        @ApplicationContext context: Context,
+    ): StringResourceProvider = AndroidStringResourceProvider(context)
+
+    @Provides
+    @Singleton
     @AppSettingsDataStoreQualifier
     fun provideAppSettingsDataStore(
-        @ApplicationContext context: Context,
+        @ApplicationContext context: Context
     ): DataStore<Preferences> = context.appSettingsDataStore
 
     @Provides
     @Singleton
     @AuthCredentialsDataStoreQualifier
     fun provideAuthCredentialsDataStore(
-        @ApplicationContext context: Context,
+        @ApplicationContext context: Context
     ): DataStore<Preferences> = context.authCredentialsDataStore
+
+    @Provides
+    @Singleton
+    @ApiPreferencesDataStoreQualifier
+    fun provideApiPreferencesDataStore(
+        @ApplicationContext context: Context
+    ): DataStore<Preferences> = context.apiPreferencesDataStore
 
     @Provides
     @Singleton
@@ -67,11 +84,11 @@ object PlatformModule {
 
     @Provides
     @Singleton
-    fun provideStringResourceProvider(
-        @ApplicationContext context: Context,
-    ): StringResourceProvider = AndroidStringResourceProvider(context)
+    fun provideBase64Handler(): Base64Handler = AndroidBase64Handler()
 
     @Provides
     @Singleton
-    fun provideBase64Handler(): Base64Handler = AndroidBase64Handler()
+    fun provideUriStreamProvider(
+        @ApplicationContext context: Context
+    ): UriStreamProvider = AndroidUriStreamProvider(context)
 }

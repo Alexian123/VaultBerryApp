@@ -1,28 +1,35 @@
 package com.alexianhentiu.vaultberryapp.data.security
 
-import com.alexianhentiu.vaultberryapp.R
 import com.alexianhentiu.vaultberryapp.domain.security.GeneralCryptoHandler
-import com.alexianhentiu.vaultberryapp.domain.utils.StringResourceProvider
+import java.security.SecureRandom
 import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
-import javax.crypto.SecretKeyFactory
 import javax.crypto.spec.GCMParameterSpec
-import javax.crypto.spec.PBEKeySpec
 import javax.crypto.spec.SecretKeySpec
 
-class AESHandler(
-    private val stringResourceProvider: StringResourceProvider
-) : GeneralCryptoHandler {
+class AESHandler : GeneralCryptoHandler {
 
-    private val algorithm = "AES"
-    private val mode = "GCM/NoPadding"
-    private val keySize = 256
+    override val algorithm = "AES"
+    override val mode = "GCM/NoPadding"
+    override val keySizeBits = 256
+    override val ivLengthBytes = 12
+    override val tagLengthBits = 128
+
+    private val secureRandom = SecureRandom()
 
     override fun generateKey(): ByteArray {
         val keyGenerator = KeyGenerator.getInstance(algorithm)
-        keyGenerator.init(keySize)
+        keyGenerator.init(keySizeBits)
         val key = keyGenerator.generateKey()
         return key.encoded
+    }
+
+    override fun generateIV(): ByteArray {
+        return ByteArray(ivLengthBytes).apply { secureRandom.nextBytes(this) }
+    }
+
+    override fun generateSalt(lengthBytes: Int): ByteArray {
+        return secureRandom.generateSeed(lengthBytes)
     }
 
     override fun encrypt(bytes: ByteArray, keyBytes: ByteArray, iv: ByteArray): ByteArray {
@@ -30,7 +37,7 @@ class AESHandler(
         cipher.init(
             Cipher.ENCRYPT_MODE,
             SecretKeySpec(keyBytes, algorithm),
-            GCMParameterSpec(128, iv)
+            GCMParameterSpec(tagLengthBits, iv)
         )
         return cipher.doFinal(bytes)
     }
@@ -40,21 +47,8 @@ class AESHandler(
         cipher.init(
             Cipher.DECRYPT_MODE,
             SecretKeySpec(keyBytes, algorithm),
-            GCMParameterSpec(128, iv)
+            GCMParameterSpec(tagLengthBits, iv)
         )
         return cipher.doFinal(bytes)
-    }
-
-    override fun deriveKeyFromPassword(password: String, salt: ByteArray): ByteArray {
-        if (password.isBlank()) {
-            throw IllegalArgumentException(
-                stringResourceProvider.getString(R.string.error_password_empty)
-            )
-        }
-        val keySpec = PBEKeySpec(password.toCharArray(), salt, 65536, keySize)
-        val keyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256")
-        val keyBytes = keyFactory.generateSecret(keySpec).encoded
-        val secretKey = SecretKeySpec(keyBytes, algorithm)
-        return secretKey.encoded
     }
 }

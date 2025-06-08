@@ -60,9 +60,7 @@ class DataStoreCredentialsRepository @Inject constructor(
                     passwordIv = base64Handler.decode(iv),
                     email = email
                 )
-            } else {
-                null
-            }
+            } else null
         }.first()
     }
 

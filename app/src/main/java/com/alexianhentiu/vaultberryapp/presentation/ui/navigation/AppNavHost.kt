@@ -16,10 +16,11 @@ import com.alexianhentiu.vaultberryapp.presentation.ui.screens.register.Register
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.settings.SettingsScreen
 import com.alexianhentiu.vaultberryapp.presentation.ui.screens.vault.VaultScreen
 import com.alexianhentiu.vaultberryapp.presentation.ui.common.enums.NavRoute
-import com.alexianhentiu.vaultberryapp.presentation.ui.common.viewmodels.BiometricViewModel
-import com.alexianhentiu.vaultberryapp.presentation.ui.common.viewmodels.SessionViewModel
-import com.alexianhentiu.vaultberryapp.presentation.ui.common.viewmodels.SettingsViewModel
-import com.alexianhentiu.vaultberryapp.presentation.ui.common.viewmodels.UtilityViewModel
+import com.alexianhentiu.vaultberryapp.presentation.ui.common.sharedViewModels.BiometricViewModel
+import com.alexianhentiu.vaultberryapp.presentation.ui.common.sharedViewModels.SessionViewModel
+import com.alexianhentiu.vaultberryapp.presentation.ui.common.sharedViewModels.SettingsViewModel
+import com.alexianhentiu.vaultberryapp.presentation.ui.common.sharedViewModels.UtilityViewModel
+import com.alexianhentiu.vaultberryapp.presentation.ui.screens.apiConfig.ApiConfigScreen
 
 @Composable
 fun AppNavHost() {
@@ -61,6 +62,9 @@ fun AppNavHost() {
         }
         composable(NavRoute.ABOUT.path) {
             AboutScreen(navController)
+        }
+        composable(NavRoute.API_CONFIG.path) {
+            ApiConfigScreen(navController, utilityViewModel)
         }
     }
 }

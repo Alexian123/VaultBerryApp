@@ -11,7 +11,7 @@ import androidx.navigation.NavController
 import com.alexianhentiu.vaultberryapp.R
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.PasswordGeneratorForm
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.topBars.TopBarWithBackButton
-import com.alexianhentiu.vaultberryapp.presentation.ui.common.viewmodels.UtilityViewModel
+import com.alexianhentiu.vaultberryapp.presentation.ui.common.sharedViewModels.UtilityViewModel
 
 @Composable
 fun PasswordGeneratorScreen(

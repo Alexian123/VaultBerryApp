@@ -1,6 +1,5 @@
 package com.alexianhentiu.vaultberryapp.presentation.ui.screens.recovery
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alexianhentiu.vaultberryapp.domain.common.ErrorInfo
@@ -76,7 +75,6 @@ class RecoveryViewModel @Inject constructor(
                             message = result.message
                         )
                     )
-                    Log.e(result.source, result.message)
                 }
             }
         }
@@ -102,7 +100,6 @@ class RecoveryViewModel @Inject constructor(
                             message = result.message
                         )
                     )
-                    Log.e(result.source, result.message)
                 }
             }
         }

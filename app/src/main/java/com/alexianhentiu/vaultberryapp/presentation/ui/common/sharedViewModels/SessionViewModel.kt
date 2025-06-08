@@ -1,6 +1,5 @@
-package com.alexianhentiu.vaultberryapp.presentation.ui.common.viewmodels
+package com.alexianhentiu.vaultberryapp.presentation.ui.common.sharedViewModels
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alexianhentiu.vaultberryapp.domain.common.ErrorInfo
@@ -73,7 +72,6 @@ class SessionViewModel @Inject constructor(
                                             message = activationResult.message
                                         )
                                     )
-                                    Log.e(activationResult.source, activationResult.message)
                                 }
                             }
                         }
@@ -93,7 +91,6 @@ class SessionViewModel @Inject constructor(
                                 )
                             )
                             clearTempData()
-                            Log.e(result.source, result.message)
                         }
 
                     }
@@ -118,7 +115,6 @@ class SessionViewModel @Inject constructor(
                             message = result.message
                         )
                     )
-                    Log.e(result.source, result.message)
                 }
             }
         }

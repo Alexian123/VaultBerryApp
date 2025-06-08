@@ -1,21 +1,49 @@
 package com.alexianhentiu.vaultberryapp.utils
 
-import com.alexianhentiu.vaultberryapp.data.security.VaultGuardian
 import com.alexianhentiu.vaultberryapp.data.security.AESHandler
+import com.alexianhentiu.vaultberryapp.data.security.PBKDF2SHA256Handler
+import com.alexianhentiu.vaultberryapp.data.security.VaultGuardian
+import com.alexianhentiu.vaultberryapp.domain.security.GeneralCryptoHandler
+import com.alexianhentiu.vaultberryapp.domain.security.KeyDerivationHandler
+import com.alexianhentiu.vaultberryapp.domain.security.VaultSecurityHandler
+import com.alexianhentiu.vaultberryapp.domain.utils.Base64Handler
+import com.alexianhentiu.vaultberryapp.domain.utils.StringResourceProvider
 import org.junit.Before
 import org.junit.Test
+import java.util.Base64
 
 class VaultGuardianTest {
 
-    companion object {
-        private val handler = AESHandler()
+    private object StubBase64Handler : Base64Handler {
+        override fun encode(bytes: ByteArray): String {
+            return Base64.getEncoder().encodeToString(bytes)
+        }
+
+        override fun decode(encoded: String): ByteArray {
+            return Base64.getDecoder().decode(encoded)
+        }
+
     }
 
-    private lateinit var guardian: VaultGuardian
+    private object StubStringResourceProvider : StringResourceProvider {
+        override fun getString(resId: Int): String {
+            return "Password cannot be empty"
+        }
+
+        override fun getString(resId: Int, vararg args: Any): String {
+            return ""
+        }
+    }
+
+    private lateinit var cryptoHandler: GeneralCryptoHandler
+    private lateinit var keyDerivationHandler: KeyDerivationHandler
+    private lateinit var guardian: VaultSecurityHandler
 
     @Before
     fun initGuardian() {
-        guardian = VaultGuardian(handler)
+        cryptoHandler = AESHandler()
+        keyDerivationHandler = PBKDF2SHA256Handler(StubStringResourceProvider)
+        guardian = VaultGuardian(StubBase64Handler, cryptoHandler, keyDerivationHandler)
     }
 
     @Test

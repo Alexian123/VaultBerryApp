@@ -41,10 +41,10 @@ import com.alexianhentiu.vaultberryapp.domain.model.AutofillEntry
 import com.alexianhentiu.vaultberryapp.presentation.ui.common.EmailIntentUtils.launchErrorReportEmailIntent
 import com.alexianhentiu.vaultberryapp.presentation.ui.common.SessionState
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.InfoDialog
-import com.alexianhentiu.vaultberryapp.presentation.ui.common.viewmodels.BiometricViewModel
-import com.alexianhentiu.vaultberryapp.presentation.ui.common.viewmodels.SessionViewModel
-import com.alexianhentiu.vaultberryapp.presentation.ui.common.viewmodels.SettingsViewModel
-import com.alexianhentiu.vaultberryapp.presentation.ui.common.viewmodels.UtilityViewModel
+import com.alexianhentiu.vaultberryapp.presentation.ui.common.sharedViewModels.BiometricViewModel
+import com.alexianhentiu.vaultberryapp.presentation.ui.common.sharedViewModels.SessionViewModel
+import com.alexianhentiu.vaultberryapp.presentation.ui.common.sharedViewModels.SettingsViewModel
+import com.alexianhentiu.vaultberryapp.presentation.ui.common.sharedViewModels.UtilityViewModel
 
 @Composable
 fun AutofillScreen(
