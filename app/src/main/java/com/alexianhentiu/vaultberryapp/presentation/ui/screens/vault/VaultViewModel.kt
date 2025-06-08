@@ -2,7 +2,6 @@ package com.alexianhentiu.vaultberryapp.presentation.ui.screens.vault
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.alexianhentiu.vaultberryapp.domain.model.ErrorInfo
 import com.alexianhentiu.vaultberryapp.domain.common.UseCaseResult
 import com.alexianhentiu.vaultberryapp.domain.model.DecryptedVaultEntry
 import com.alexianhentiu.vaultberryapp.domain.model.VaultEntryPreview
@@ -53,13 +52,7 @@ class VaultViewModel @Inject constructor(
                 }
 
                 is UseCaseResult.Error -> {
-                    _vaultScreenState.value = VaultScreenState.Error(
-                        ErrorInfo(
-                            type = result.type,
-                            source = result.source,
-                            message = result.message
-                        )
-                    )
+                    _vaultScreenState.value = VaultScreenState.Error(result.info)
                 }
             }
             _isRefreshing.value = false
@@ -90,13 +83,7 @@ class VaultViewModel @Inject constructor(
                 }
 
                 is UseCaseResult.Error -> {
-                    _vaultScreenState.value = VaultScreenState.Error(
-                        ErrorInfo(
-                            type = result.type,
-                            source = result.source,
-                            message = result.message
-                        )
-                    )
+                    _vaultScreenState.value = VaultScreenState.Error(result.info)
                 }
             }
         }
@@ -109,13 +96,7 @@ class VaultViewModel @Inject constructor(
                     _expandedEntriesMap.update { it + (id to result.data) }
                 }
                 is UseCaseResult.Error -> {
-                    _vaultScreenState.value = VaultScreenState.Error(
-                        ErrorInfo(
-                            type = result.type,
-                            source = result.source,
-                            message = result.message
-                        )
-                    )
+                    _vaultScreenState.value = VaultScreenState.Error(result.info)
                 }
             }
         }
@@ -142,13 +123,7 @@ class VaultViewModel @Inject constructor(
                 }
 
                 is UseCaseResult.Error -> {
-                    _vaultScreenState.value = VaultScreenState.Error(
-                        ErrorInfo(
-                            type = result.type,
-                            source = result.source,
-                            message = result.message
-                        )
-                    )
+                    _vaultScreenState.value = VaultScreenState.Error(result.info)
                 }
             }
         }
@@ -167,13 +142,7 @@ class VaultViewModel @Inject constructor(
                 }
 
                 is UseCaseResult.Error -> {
-                    _vaultScreenState.value = VaultScreenState.Error(
-                        ErrorInfo(
-                            type = result.type,
-                            source = result.source,
-                            message = result.message
-                        )
-                    )
+                    _vaultScreenState.value = VaultScreenState.Error(result.info)
                 }
             }
         }
@@ -196,13 +165,7 @@ class VaultViewModel @Inject constructor(
                 }
 
                 is UseCaseResult.Error -> {
-                    _vaultScreenState.value = VaultScreenState.Error(
-                        ErrorInfo(
-                            type = result.type,
-                            source = result.source,
-                            message = result.message
-                        )
-                    )
+                    _vaultScreenState.value = VaultScreenState.Error(result.info)
                 }
             }
         }

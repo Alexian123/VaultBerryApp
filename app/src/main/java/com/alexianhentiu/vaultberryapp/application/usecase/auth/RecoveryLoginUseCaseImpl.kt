@@ -6,6 +6,7 @@ import com.alexianhentiu.vaultberryapp.domain.common.UseCaseResult
 import com.alexianhentiu.vaultberryapp.domain.model.request.RecoveryLoginRequest
 import com.alexianhentiu.vaultberryapp.domain.repository.AuthRepository
 import com.alexianhentiu.vaultberryapp.domain.common.enums.ErrorType
+import com.alexianhentiu.vaultberryapp.domain.model.ErrorInfo
 import com.alexianhentiu.vaultberryapp.domain.usecase.auth.RecoveryLoginUseCase
 
 class RecoveryLoginUseCaseImpl(
@@ -40,9 +41,11 @@ class RecoveryLoginUseCaseImpl(
             }
             is ApiResult.Error -> {
                 return UseCaseResult.Error(
-                    ErrorType.API,
-                    response.source,
-                    response.message
+                    ErrorInfo(
+                        ErrorType.API,
+                        response.source,
+                        response.message
+                    )
                 )
             }
         }

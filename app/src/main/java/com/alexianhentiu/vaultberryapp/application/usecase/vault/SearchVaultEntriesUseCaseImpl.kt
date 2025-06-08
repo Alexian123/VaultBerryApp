@@ -6,6 +6,7 @@ import com.alexianhentiu.vaultberryapp.domain.common.UseCaseResult
 import com.alexianhentiu.vaultberryapp.domain.model.DecryptedVaultEntry
 import com.alexianhentiu.vaultberryapp.domain.repository.VaultRepository
 import com.alexianhentiu.vaultberryapp.domain.common.enums.ErrorType
+import com.alexianhentiu.vaultberryapp.domain.model.ErrorInfo
 import com.alexianhentiu.vaultberryapp.domain.usecase.vault.SearchVaultEntriesUseCase
 
 class SearchVaultEntriesUseCaseImpl(
@@ -19,9 +20,11 @@ class SearchVaultEntriesUseCaseImpl(
         val vaultEntriesResult = vaultRepository.searchVaultEntries(keywords)
         if (vaultEntriesResult is ApiResult.Error) {
             return UseCaseResult.Error(
-                ErrorType.API,
-                vaultEntriesResult.source,
-                vaultEntriesResult.message
+                ErrorInfo(
+                    ErrorType.API,
+                    vaultEntriesResult.source,
+                    vaultEntriesResult.message
+                )
             )
         }
         val vaultEntries = (vaultEntriesResult as ApiResult.Success).data

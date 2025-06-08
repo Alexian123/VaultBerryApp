@@ -103,15 +103,7 @@ class SettingsViewModel @Inject constructor(
         viewModelScope.launch {
             when (val result = saveSettingUseCase(AppSettings.USE_SYSTEM_THEME, useSystemTheme)) {
                 is UseCaseResult.Success -> {}
-                is UseCaseResult.Error -> {
-                    _errorInfo.emit(
-                        ErrorInfo(
-                            type = result.type,
-                            source = result.source,
-                            message = result.message
-                        )
-                    )
-                }
+                is UseCaseResult.Error -> _errorInfo.emit(result.info)
             }
         }
     }
@@ -120,15 +112,7 @@ class SettingsViewModel @Inject constructor(
         viewModelScope.launch {
             when (val result = saveSettingUseCase(AppSettings.DARK_THEME, useDarkTheme)) {
                 is UseCaseResult.Success -> {}
-                is UseCaseResult.Error -> {
-                    _errorInfo.emit(
-                        ErrorInfo(
-                            type = result.type,
-                            source = result.source,
-                            message = result.message
-                        )
-                    )
-                }
+                is UseCaseResult.Error -> _errorInfo.emit(result.info)
             }
         }
     }
@@ -137,15 +121,7 @@ class SettingsViewModel @Inject constructor(
         viewModelScope.launch {
             when (val result = saveSettingUseCase(AppSettings.DEBUG_MODE, debugMode)) {
                 is UseCaseResult.Success -> {}
-                is UseCaseResult.Error -> {
-                    _errorInfo.emit(
-                        ErrorInfo(
-                            type = result.type,
-                            source = result.source,
-                            message = result.message
-                        )
-                    )
-                }
+                is UseCaseResult.Error -> _errorInfo.emit(result.info)
             }
         }
     }
@@ -154,15 +130,7 @@ class SettingsViewModel @Inject constructor(
         viewModelScope.launch {
             when (val result = saveSettingUseCase(AppSettings.SAVED_EMAIL, email)) {
                 is UseCaseResult.Success -> {}
-                is UseCaseResult.Error -> {
-                    _errorInfo.emit(
-                        ErrorInfo(
-                            type = result.type,
-                            source = result.source,
-                            message = result.message
-                        )
-                    )
-                }
+                is UseCaseResult.Error -> _errorInfo.emit(result.info)
             }
         }
     }
@@ -171,15 +139,7 @@ class SettingsViewModel @Inject constructor(
         viewModelScope.launch {
             when (val result = saveSettingUseCase(AppSettings.REMEMBER_EMAIL, rememberEmail)) {
                 is UseCaseResult.Success -> {}
-                is UseCaseResult.Error -> {
-                    _errorInfo.emit(
-                        ErrorInfo(
-                            type = result.type,
-                            source = result.source,
-                            message = result.message
-                        )
-                    )
-                }
+                is UseCaseResult.Error -> _errorInfo.emit(result.info)
             }
         }
     }
@@ -188,15 +148,7 @@ class SettingsViewModel @Inject constructor(
         viewModelScope.launch {
             when (val result = saveSettingUseCase(AppSettings.BIOMETRIC_ENABLED, biometricEnabled)) {
                 is UseCaseResult.Success -> {}
-                is UseCaseResult.Error -> {
-                    _errorInfo.emit(
-                        ErrorInfo(
-                            type = result.type,
-                            source = result.source,
-                            message = result.message
-                        )
-                    )
-                }
+                is UseCaseResult.Error -> _errorInfo.emit(result.info)
             }
         }
     }

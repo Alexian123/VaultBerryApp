@@ -9,6 +9,7 @@ import com.alexianhentiu.vaultberryapp.domain.common.UseCaseResult
 import com.alexianhentiu.vaultberryapp.domain.model.request.PasswordChangeRequest
 import com.alexianhentiu.vaultberryapp.domain.repository.AccountRepository
 import com.alexianhentiu.vaultberryapp.domain.common.enums.ErrorType
+import com.alexianhentiu.vaultberryapp.domain.model.ErrorInfo
 import com.alexianhentiu.vaultberryapp.domain.usecase.account.ChangePasswordUseCase
 
 class ChangePasswordUseCaseImpl(
@@ -49,9 +50,11 @@ class ChangePasswordUseCaseImpl(
         val changeResult = accountRepository.changePassword(passwordChangeRequest)
         if (changeResult is ApiResult.Error) {
             return UseCaseResult.Error(
-                ErrorType.API,
-                changeResult.source,
-                changeResult.message
+                ErrorInfo(
+                    ErrorType.API,
+                    changeResult.source,
+                    changeResult.message
+                )
             )
         }
 

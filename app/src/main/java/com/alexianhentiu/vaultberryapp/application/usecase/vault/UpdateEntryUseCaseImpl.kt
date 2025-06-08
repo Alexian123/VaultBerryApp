@@ -7,6 +7,7 @@ import com.alexianhentiu.vaultberryapp.domain.model.DecryptedVaultEntry
 import com.alexianhentiu.vaultberryapp.domain.model.response.MessageResponse
 import com.alexianhentiu.vaultberryapp.domain.repository.VaultRepository
 import com.alexianhentiu.vaultberryapp.domain.common.enums.ErrorType
+import com.alexianhentiu.vaultberryapp.domain.model.ErrorInfo
 import com.alexianhentiu.vaultberryapp.domain.usecase.vault.UpdateEntryUseCase
 
 class UpdateEntryUseCaseImpl(
@@ -31,9 +32,11 @@ class UpdateEntryUseCaseImpl(
 
             is ApiResult.Error -> {
                 UseCaseResult.Error(
-                    ErrorType.API,
-                    response.source,
-                    response.message
+                    ErrorInfo(
+                        ErrorType.API,
+                        response.source,
+                        response.message
+                    )
                 )
             }
         }

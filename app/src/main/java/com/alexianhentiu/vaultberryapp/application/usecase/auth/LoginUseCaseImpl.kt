@@ -8,6 +8,7 @@ import com.alexianhentiu.vaultberryapp.domain.model.request.LoginRequest
 import com.alexianhentiu.vaultberryapp.domain.repository.AuthRepository
 import com.alexianhentiu.vaultberryapp.domain.common.UseCaseResult
 import com.alexianhentiu.vaultberryapp.domain.common.enums.ErrorType
+import com.alexianhentiu.vaultberryapp.domain.model.ErrorInfo
 import com.alexianhentiu.vaultberryapp.domain.security.MessageExchangeAuthClient
 import com.alexianhentiu.vaultberryapp.domain.usecase.auth.LoginUseCase
 import com.alexianhentiu.vaultberryapp.domain.utils.StringResourceProvider
@@ -36,22 +37,28 @@ class LoginUseCaseImpl(
             when (response1.code) {
                 HttpResponseCode.BAD_REQUEST.code -> { // 2FA is required
                     return UseCaseResult.Error(
-                        ErrorType.TWO_FACTOR_REQUIRED,
-                        response1.source,
-                        response1.message
+                        ErrorInfo(
+                            ErrorType.TWO_FACTOR_REQUIRED,
+                            response1.source,
+                            response1.message
+                        )
                     )
                 }
                 HttpResponseCode.FORBIDDEN.code -> { // Activation is required
                     return UseCaseResult.Error(
-                        ErrorType.ACTIVATION_REQUIRED,
-                        response1.source,
-                        response1.message
+                        ErrorInfo(
+                            ErrorType.ACTIVATION_REQUIRED,
+                            response1.source,
+                            response1.message
+                        )
                     )
                 }
                 else -> return UseCaseResult.Error(
-                    ErrorType.API,
-                    response1.source,
-                    response1.message
+                    ErrorInfo(
+                        ErrorType.API,
+                        response1.source,
+                        response1.message
+                    )
                 )
             }
         }
@@ -66,9 +73,11 @@ class LoginUseCaseImpl(
         val response2 = authRepository.loginSecondStep(credentials2)
         if (response2 is ApiResult.Error) {
             return UseCaseResult.Error(
-                ErrorType.API,
-                response2.source,
-                response2.message
+                ErrorInfo(
+                    ErrorType.API,
+                    response2.source,
+                    response2.message
+                )
             )
         }
         val response2Data = (response2 as ApiResult.Success).data
@@ -78,18 +87,26 @@ class LoginUseCaseImpl(
             messageExchangeAuthClient.checkServerFinalMessage(response2Data.serverMessage)
         } catch (e: Exception) {
             return UseCaseResult.Error(
-                ErrorType.SERVER_IDENTITY_VERIFICATION_FAILURE,
-                stringResourceProvider.getString(R.string.message_exchange_auth_client_error_source),
-                e.message ?: stringResourceProvider.getString(R.string.unknown_error)
+                ErrorInfo(
+                    ErrorType.SERVER_IDENTITY_VERIFICATION_FAILURE,
+                    stringResourceProvider.getString(
+                        R.string.message_exchange_auth_client_error_source
+                    ),
+                    e.message ?: stringResourceProvider.getString(R.string.unknown_error)
+                )
             )
         }
 
         // Check if keychain is null
         if (response2Data.keyChain == null) {
             return UseCaseResult.Error(
-                ErrorType.MISSING_KEYCHAIN,
-                stringResourceProvider.getString(R.string.message_exchange_auth_client_error_source),
-                stringResourceProvider.getString(R.string.missing_keychain)
+                ErrorInfo(
+                    ErrorType.MISSING_KEYCHAIN,
+                    stringResourceProvider.getString(
+                        R.string.message_exchange_auth_client_error_source
+                    ),
+                    stringResourceProvider.getString(R.string.missing_keychain)
+                )
             )
         }
 

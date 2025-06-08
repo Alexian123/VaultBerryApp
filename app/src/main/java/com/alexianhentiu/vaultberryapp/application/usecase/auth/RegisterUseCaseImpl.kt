@@ -8,6 +8,7 @@ import com.alexianhentiu.vaultberryapp.domain.model.AccountInfo
 import com.alexianhentiu.vaultberryapp.domain.model.User
 import com.alexianhentiu.vaultberryapp.domain.repository.AuthRepository
 import com.alexianhentiu.vaultberryapp.domain.common.enums.ErrorType
+import com.alexianhentiu.vaultberryapp.domain.model.ErrorInfo
 import com.alexianhentiu.vaultberryapp.domain.usecase.auth.RegisterUseCase
 
 class RegisterUseCaseImpl(
@@ -45,9 +46,11 @@ class RegisterUseCaseImpl(
 
             is ApiResult.Error -> {
                 UseCaseResult.Error(
-                    ErrorType.API,
-                    result.source,
-                    result.message
+                    ErrorInfo(
+                        ErrorType.API,
+                        result.source,
+                        result.message
+                    )
                 )
             }
         }

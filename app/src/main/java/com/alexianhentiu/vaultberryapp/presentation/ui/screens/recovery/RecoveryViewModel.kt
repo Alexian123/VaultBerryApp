@@ -2,7 +2,6 @@ package com.alexianhentiu.vaultberryapp.presentation.ui.screens.recovery
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.alexianhentiu.vaultberryapp.domain.model.ErrorInfo
 import com.alexianhentiu.vaultberryapp.domain.common.UseCaseResult
 import com.alexianhentiu.vaultberryapp.domain.usecase.account.ChangePasswordUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.auth.RecoveryLoginUseCase
@@ -46,13 +45,7 @@ class RecoveryViewModel @Inject constructor(
                 }
 
                 is UseCaseResult.Error -> {
-                    _recoveryScreenState.value = RecoveryScreenState.Error(
-                        ErrorInfo(
-                            type = result.type,
-                            source = result.source,
-                            message = result.message
-                        )
-                    )
+                    _recoveryScreenState.value = RecoveryScreenState.Error(result.info)
                 }
             }
         }
@@ -68,13 +61,7 @@ class RecoveryViewModel @Inject constructor(
                 }
 
                 is UseCaseResult.Error -> {
-                    _recoveryScreenState.value = RecoveryScreenState.Error(
-                        ErrorInfo(
-                            type = result.type,
-                            source = result.source,
-                            message = result.message
-                        )
-                    )
+                    _recoveryScreenState.value = RecoveryScreenState.Error(result.info)
                 }
             }
         }
@@ -93,13 +80,7 @@ class RecoveryViewModel @Inject constructor(
                 }
 
                 is UseCaseResult.Error -> {
-                    _recoveryScreenState.value = RecoveryScreenState.Error(
-                        ErrorInfo(
-                            type = result.type,
-                            source = result.source,
-                            message = result.message
-                        )
-                    )
+                    _recoveryScreenState.value = RecoveryScreenState.Error(result.info)
                 }
             }
         }

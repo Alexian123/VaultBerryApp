@@ -5,6 +5,7 @@ import com.alexianhentiu.vaultberryapp.domain.common.UseCaseResult
 import com.alexianhentiu.vaultberryapp.domain.model.response.MessageResponse
 import com.alexianhentiu.vaultberryapp.domain.repository.VaultRepository
 import com.alexianhentiu.vaultberryapp.domain.common.enums.ErrorType
+import com.alexianhentiu.vaultberryapp.domain.model.ErrorInfo
 import com.alexianhentiu.vaultberryapp.domain.usecase.vault.DeleteEntryUseCase
 
 class DeleteEntryUseCaseImpl(
@@ -19,9 +20,11 @@ class DeleteEntryUseCaseImpl(
 
             is ApiResult.Error -> {
                 UseCaseResult.Error(
-                    ErrorType.API,
-                    response.source,
-                    response.message
+                    ErrorInfo(
+                        ErrorType.API,
+                        response.source,
+                        response.message
+                    )
                 )
             }
         }

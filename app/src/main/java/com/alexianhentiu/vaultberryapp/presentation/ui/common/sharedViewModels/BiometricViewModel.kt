@@ -45,7 +45,7 @@ class BiometricViewModel @Inject constructor(
     private val _hasStoredCredentials = MutableStateFlow<Boolean>(false)
     val hasStoredCredentials: StateFlow<Boolean> = _hasStoredCredentials
 
-    // Internal state to hold pending data until biometric authentication is successful
+    // Internal state to hold pending data until authentication is successful
     private var pendingStoreEmail: String? = null
     private var pendingStorePassword: String? = null
     private var pendingEncryptedData: EncryptedAuthCredentials? = null

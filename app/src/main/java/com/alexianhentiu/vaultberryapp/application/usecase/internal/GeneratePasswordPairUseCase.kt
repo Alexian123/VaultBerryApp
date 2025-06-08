@@ -5,6 +5,7 @@ import com.alexianhentiu.vaultberryapp.domain.model.PasswordGenOptions
 import com.alexianhentiu.vaultberryapp.domain.model.PasswordPair
 import com.alexianhentiu.vaultberryapp.domain.common.UseCaseResult
 import com.alexianhentiu.vaultberryapp.domain.common.enums.ErrorType
+import com.alexianhentiu.vaultberryapp.domain.model.ErrorInfo
 import com.alexianhentiu.vaultberryapp.domain.security.password.PasswordGenerator
 import com.alexianhentiu.vaultberryapp.domain.utils.StringResourceProvider
 import javax.inject.Inject
@@ -33,9 +34,11 @@ class GeneratePasswordPairUseCase @Inject constructor(
             )
         } catch (e: Exception) {
             return UseCaseResult.Error(
-                ErrorType.PASSWORD_PAIR_GENERATION_FAILURE,
-                stringResourceProvider.getString(R.string.password_generator_error_source),
-                e.message ?: stringResourceProvider.getString(R.string.unknown_error)
+                ErrorInfo(
+                    ErrorType.PASSWORD_PAIR_GENERATION_FAILURE,
+                    stringResourceProvider.getString(R.string.password_generator_error_source),
+                    e.message ?: stringResourceProvider.getString(R.string.unknown_error)
+                )
             )
         }
     }

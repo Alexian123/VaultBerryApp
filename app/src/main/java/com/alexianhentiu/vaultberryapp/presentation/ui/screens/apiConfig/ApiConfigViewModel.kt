@@ -3,7 +3,6 @@ package com.alexianhentiu.vaultberryapp.presentation.ui.screens.apiConfig
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.alexianhentiu.vaultberryapp.domain.model.ErrorInfo
 import com.alexianhentiu.vaultberryapp.domain.common.UseCaseResult
 import com.alexianhentiu.vaultberryapp.domain.usecase.apiConfig.ClearApiCertificateUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.apiConfig.GetApiCertificateUseCase
@@ -54,25 +53,13 @@ class ApiConfigViewModel @Inject constructor(
                             _certificate.value = certificateResult.data
                         }
                         is UseCaseResult.Error -> {
-                            _screenState.value = ApiConfigScreenState.Error(
-                                ErrorInfo(
-                                    type = certificateResult.type,
-                                    source = certificateResult.source,
-                                    message = certificateResult.message
-                                )
-                            )
+                            _screenState.value = ApiConfigScreenState.Error(certificateResult.info)
                         }
                     }
                 }
 
                 is UseCaseResult.Error -> {
-                    _screenState.value = ApiConfigScreenState.Error(
-                        ErrorInfo(
-                            type = urlResult.type,
-                            source = urlResult.source,
-                            message = urlResult.message
-                        )
-                    )
+                    _screenState.value = ApiConfigScreenState.Error(urlResult.info)
                 }
             }
         }
@@ -87,13 +74,7 @@ class ApiConfigViewModel @Inject constructor(
                     _url.value = url
                 }
                 is UseCaseResult.Error -> {
-                    _screenState.value = ApiConfigScreenState.Error(
-                        ErrorInfo(
-                            type = result.type,
-                            source = result.source,
-                            message = result.message
-                        )
-                    )
+                    _screenState.value = ApiConfigScreenState.Error(result.info)
                 }
             }
         }
@@ -107,7 +88,7 @@ class ApiConfigViewModel @Inject constructor(
                     _pingState.value = PingState.Success(host, port)
                 }
                 is UseCaseResult.Error -> {
-                    _pingState.value = PingState.Failure(result.message)
+                    _pingState.value = PingState.Failure(result.info.message)
                 }
             }
         }
@@ -125,26 +106,14 @@ class ApiConfigViewModel @Inject constructor(
                             _certificate.value = readResult.data
                         }
                         is UseCaseResult.Error -> {
-                            _screenState.value = ApiConfigScreenState.Error(
-                                ErrorInfo(
-                                    type = saveResult.type,
-                                    source = saveResult.source,
-                                    message = saveResult.message
-                                )
-                            )
+                            _screenState.value = ApiConfigScreenState.Error(saveResult.info)
                         }
                     }
 
                 }
 
                 is UseCaseResult.Error -> {
-                    _screenState.value = ApiConfigScreenState.Error(
-                        ErrorInfo(
-                            type = readResult.type,
-                            source = readResult.source,
-                            message = readResult.message
-                        )
-                    )
+                    _screenState.value = ApiConfigScreenState.Error(readResult.info)
                 }
             }
         }
@@ -159,13 +128,7 @@ class ApiConfigViewModel @Inject constructor(
                     _certificate.value = null
                 }
                 is UseCaseResult.Error -> {
-                    _screenState.value = ApiConfigScreenState.Error(
-                        ErrorInfo(
-                            type = result.type,
-                            source = result.source,
-                            message = result.message
-                        )
-                    )
+                    _screenState.value = ApiConfigScreenState.Error(result.info)
                 }
             }
         }

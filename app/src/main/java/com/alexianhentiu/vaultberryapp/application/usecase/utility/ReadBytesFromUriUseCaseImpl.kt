@@ -3,6 +3,7 @@ package com.alexianhentiu.vaultberryapp.application.usecase.utility
 import com.alexianhentiu.vaultberryapp.R
 import com.alexianhentiu.vaultberryapp.domain.common.UseCaseResult
 import com.alexianhentiu.vaultberryapp.domain.common.enums.ErrorType
+import com.alexianhentiu.vaultberryapp.domain.model.ErrorInfo
 import com.alexianhentiu.vaultberryapp.domain.usecase.utility.ReadBytesFromUriUseCase
 import com.alexianhentiu.vaultberryapp.domain.utils.StringResourceProvider
 import com.alexianhentiu.vaultberryapp.domain.utils.UriStreamProvider
@@ -20,12 +21,14 @@ class ReadBytesFromUriUseCaseImpl(
             try {
                 val inputStream = uriStreamProvider.openInputStream(uri)
                     ?: return@withContext UseCaseResult.Error(
-                        type = ErrorType.OPEN_URI_INPUT_STREAM_FAILURE,
-                        source = stringResourceProvider.getString(
-                            R.string.error_source_uri_stream_provider
-                        ),
-                        message = stringResourceProvider.getString(
-                            R.string.error_message_uri_stream_provider
+                        ErrorInfo(
+                            type = ErrorType.OPEN_URI_INPUT_STREAM_FAILURE,
+                            source = stringResourceProvider.getString(
+                                R.string.error_source_uri_stream_provider
+                            ),
+                            message = stringResourceProvider.getString(
+                                R.string.error_message_uri_stream_provider
+                            )
                         )
                     )
                 val bytes = inputStream.readBytes()
@@ -33,11 +36,14 @@ class ReadBytesFromUriUseCaseImpl(
                 UseCaseResult.Success(bytes)
             } catch (e: Exception) {
                 UseCaseResult.Error(
-                    type = ErrorType.READ_BYTES_FROM_URI_FAILURE,
-                    source = stringResourceProvider.getString(
-                        R.string.error_source_uri_stream_provider
-                    ),
-                    message = e.message ?: stringResourceProvider.getString(R.string.unknown_error)
+                    ErrorInfo(
+                        type = ErrorType.READ_BYTES_FROM_URI_FAILURE,
+                        source = stringResourceProvider.getString(
+                            R.string.error_source_uri_stream_provider
+                        ),
+                        message = e.message
+                            ?: stringResourceProvider.getString(R.string.unknown_error)
+                    )
                 )
             }
         }

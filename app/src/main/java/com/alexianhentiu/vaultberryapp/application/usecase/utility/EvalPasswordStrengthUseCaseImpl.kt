@@ -4,6 +4,7 @@ import com.alexianhentiu.vaultberryapp.R
 import com.alexianhentiu.vaultberryapp.domain.common.UseCaseResult
 import com.alexianhentiu.vaultberryapp.domain.common.enums.ErrorType
 import com.alexianhentiu.vaultberryapp.domain.common.enums.PasswordStrength
+import com.alexianhentiu.vaultberryapp.domain.model.ErrorInfo
 import com.alexianhentiu.vaultberryapp.domain.security.password.PasswordEvaluator
 import com.alexianhentiu.vaultberryapp.domain.usecase.utility.EvalPasswordStrengthUseCase
 import com.alexianhentiu.vaultberryapp.domain.utils.StringResourceProvider
@@ -19,9 +20,11 @@ class EvalPasswordStrengthUseCaseImpl(
             return UseCaseResult.Success(strength)
         } catch (e: Exception) {
             return UseCaseResult.Error(
-                ErrorType.PASSWORD_STRENGTH_EVALUATION_FAILURE,
-                stringResourceProvider.getString(R.string.password_evaluator_error_source),
-                e.message ?: stringResourceProvider.getString(R.string.unknown_error)
+                ErrorInfo(
+                    ErrorType.PASSWORD_STRENGTH_EVALUATION_FAILURE,
+                    stringResourceProvider.getString(R.string.password_evaluator_error_source),
+                    e.message ?: stringResourceProvider.getString(R.string.unknown_error)
+                )
             )
         }
     }

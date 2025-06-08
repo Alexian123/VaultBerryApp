@@ -57,15 +57,7 @@ class UtilityViewModel @Inject constructor(
         viewModelScope.launch {
             when (val result = copyToClipboardUseCase(text, label)) {
                 is UseCaseResult.Success -> {}
-                is UseCaseResult.Error -> {
-                    _errorInfo.emit(
-                        ErrorInfo(
-                            type = result.type,
-                            source = result.source,
-                            message = result.message
-                        )
-                    )
-                }
+                is UseCaseResult.Error -> _errorInfo.emit(result.info)
             }
         }
     }

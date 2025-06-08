@@ -7,6 +7,7 @@ import com.alexianhentiu.vaultberryapp.domain.model.VaultEntryPreview
 import com.alexianhentiu.vaultberryapp.domain.model.response.MessageResponse
 import com.alexianhentiu.vaultberryapp.domain.repository.VaultRepository
 import com.alexianhentiu.vaultberryapp.domain.common.enums.ErrorType
+import com.alexianhentiu.vaultberryapp.domain.model.ErrorInfo
 import javax.inject.Inject
 
 class ReEncryptVaultUseCase @Inject constructor(
@@ -27,9 +28,11 @@ class ReEncryptVaultUseCase @Inject constructor(
 
                     is ApiResult.Error -> {
                         return UseCaseResult.Error(
-                            ErrorType.API,
-                            detailsResult.source,
-                            detailsResult.message
+                            ErrorInfo(
+                                ErrorType.API,
+                                detailsResult.source,
+                                detailsResult.message
+                            )
                         )
                     }
                 }
@@ -37,9 +40,11 @@ class ReEncryptVaultUseCase @Inject constructor(
 
             is ApiResult.Error -> {
                 return UseCaseResult.Error(
-                    ErrorType.API,
-                    previewsResult.source,
-                    previewsResult.message
+                    ErrorInfo(
+                        ErrorType.API,
+                        previewsResult.source,
+                        previewsResult.message
+                    )
                 )
             }
         }
@@ -68,9 +73,11 @@ class ReEncryptVaultUseCase @Inject constructor(
             val updateResult = vaultRepository.updateEntry(id, newEncryptedEntry)
             if (updateResult is ApiResult.Error) {
                 return UseCaseResult.Error(
-                    ErrorType.API,
-                    updateResult.source,
-                    updateResult.message
+                    ErrorInfo(
+                        ErrorType.API,
+                        updateResult.source,
+                        updateResult.message
+                    )
                 )
             }
         }

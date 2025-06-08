@@ -2,7 +2,6 @@ package com.alexianhentiu.vaultberryapp.presentation.ui.screens.autofill
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.alexianhentiu.vaultberryapp.domain.model.ErrorInfo
 import com.alexianhentiu.vaultberryapp.domain.common.UseCaseResult
 import com.alexianhentiu.vaultberryapp.domain.model.AutofillEntry
 import com.alexianhentiu.vaultberryapp.domain.usecase.vault.SearchVaultEntriesUseCase
@@ -38,13 +37,7 @@ class AutofillViewModel @Inject constructor(
                 }
 
                 is UseCaseResult.Error -> {
-                    _state.value = AutofillState.Error(
-                        ErrorInfo(
-                            type = result.type,
-                            source = result.source,
-                            message = result.message
-                        )
-                    )
+                    _state.value = AutofillState.Error(result.info)
                 }
             }
         }

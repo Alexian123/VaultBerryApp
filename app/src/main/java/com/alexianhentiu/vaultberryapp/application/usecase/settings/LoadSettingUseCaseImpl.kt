@@ -5,6 +5,7 @@ import com.alexianhentiu.vaultberryapp.domain.repository.SettingsRepository
 import com.alexianhentiu.vaultberryapp.domain.common.enums.ErrorType
 import com.alexianhentiu.vaultberryapp.domain.model.SettingDefinition
 import com.alexianhentiu.vaultberryapp.domain.common.UseCaseResult
+import com.alexianhentiu.vaultberryapp.domain.model.ErrorInfo
 import com.alexianhentiu.vaultberryapp.domain.usecase.settings.LoadSettingUseCase
 import com.alexianhentiu.vaultberryapp.domain.utils.StringResourceProvider
 
@@ -18,9 +19,13 @@ class LoadSettingUseCaseImpl(
             return UseCaseResult.Success(value)
         } catch (e: Exception) {
             return UseCaseResult.Error(
-                type = ErrorType.LOAD_SETTINGS_FAILURE,
-                source = stringResourceProvider.getString(R.string.settings_repository_error_source),
-                message = e.message ?: stringResourceProvider.getString(R.string.unknown_error)
+                ErrorInfo(
+                    type = ErrorType.LOAD_SETTINGS_FAILURE,
+                    source = stringResourceProvider.getString(
+                        R.string.settings_repository_error_source
+                    ),
+                    message = e.message ?: stringResourceProvider.getString(R.string.unknown_error)
+                )
             )
         }
     }

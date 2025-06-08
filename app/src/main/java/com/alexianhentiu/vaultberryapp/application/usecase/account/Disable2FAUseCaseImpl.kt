@@ -5,6 +5,7 @@ import com.alexianhentiu.vaultberryapp.domain.common.UseCaseResult
 import com.alexianhentiu.vaultberryapp.domain.model.response.MessageResponse
 import com.alexianhentiu.vaultberryapp.domain.repository.AccountRepository
 import com.alexianhentiu.vaultberryapp.domain.common.enums.ErrorType
+import com.alexianhentiu.vaultberryapp.domain.model.ErrorInfo
 import com.alexianhentiu.vaultberryapp.domain.usecase.account.Disable2FAUseCase
 
 class Disable2FAUseCaseImpl(
@@ -19,9 +20,11 @@ class Disable2FAUseCaseImpl(
 
             is ApiResult.Error -> {
                 UseCaseResult.Error(
-                    ErrorType.API,
-                    result.source,
-                    result.message
+                    ErrorInfo(
+                        ErrorType.API,
+                        result.source,
+                        result.message
+                    )
                 )
             }
         }

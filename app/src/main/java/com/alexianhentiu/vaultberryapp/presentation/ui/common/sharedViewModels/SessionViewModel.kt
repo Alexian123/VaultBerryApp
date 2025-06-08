@@ -2,7 +2,6 @@ package com.alexianhentiu.vaultberryapp.presentation.ui.common.sharedViewModels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.alexianhentiu.vaultberryapp.domain.model.ErrorInfo
 import com.alexianhentiu.vaultberryapp.domain.common.UseCaseResult
 import com.alexianhentiu.vaultberryapp.domain.common.enums.ErrorType
 import com.alexianhentiu.vaultberryapp.domain.model.AuthCredentials
@@ -58,20 +57,14 @@ class SessionViewModel @Inject constructor(
                 }
 
                 is UseCaseResult.Error -> {  // Handle special cases
-                    when (result.type) {
+                    when (result.info.type) {
                         ErrorType.ACTIVATION_REQUIRED -> {
                             when (val activationResult = activateSendUseCase(email!!)) {
                                 is UseCaseResult.Success -> {
                                     _sessionState.value = SessionState.ActivationEmailSent
                                 }
                                 is UseCaseResult.Error -> {
-                                    _sessionState.value = SessionState.Error(
-                                        ErrorInfo(
-                                            type = activationResult.type,
-                                            source = activationResult.source,
-                                            message = activationResult.message
-                                        )
-                                    )
+                                    _sessionState.value = SessionState.Error(activationResult.info)
                                 }
                             }
                         }
@@ -83,13 +76,7 @@ class SessionViewModel @Inject constructor(
                         }
 
                         else -> {
-                            _sessionState.value = SessionState.Error(
-                                ErrorInfo(
-                                    type = result.type,
-                                    source = result.source,
-                                    message = result.message
-                                )
-                            )
+                            _sessionState.value = SessionState.Error(result.info)
                             clearTempData()
                         }
 
@@ -108,13 +95,7 @@ class SessionViewModel @Inject constructor(
                 }
 
                 is UseCaseResult.Error -> {
-                    _sessionState.value = SessionState.Error(
-                        ErrorInfo(
-                            type = result.type,
-                            source = result.source,
-                            message = result.message
-                        )
-                    )
+                    _sessionState.value = SessionState.Error(result.info)
                 }
             }
         }

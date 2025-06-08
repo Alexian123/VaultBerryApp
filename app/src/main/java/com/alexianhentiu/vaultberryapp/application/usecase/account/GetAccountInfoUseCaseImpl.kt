@@ -5,6 +5,7 @@ import com.alexianhentiu.vaultberryapp.domain.common.UseCaseResult
 import com.alexianhentiu.vaultberryapp.domain.model.AccountInfo
 import com.alexianhentiu.vaultberryapp.domain.repository.AccountRepository
 import com.alexianhentiu.vaultberryapp.domain.common.enums.ErrorType
+import com.alexianhentiu.vaultberryapp.domain.model.ErrorInfo
 import com.alexianhentiu.vaultberryapp.domain.usecase.account.GetAccountInfoUseCase
 
 class GetAccountInfoUseCaseImpl(
@@ -19,9 +20,11 @@ class GetAccountInfoUseCaseImpl(
 
             is ApiResult.Error -> {
                 UseCaseResult.Error(
-                    ErrorType.API,
-                    accountResult.source,
-                    accountResult.message
+                    ErrorInfo(
+                        ErrorType.API,
+                        accountResult.source,
+                        accountResult.message
+                    )
                 )
             }
         }

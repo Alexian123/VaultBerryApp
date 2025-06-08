@@ -6,6 +6,7 @@ import com.alexianhentiu.vaultberryapp.domain.common.UseCaseResult
 import com.alexianhentiu.vaultberryapp.domain.model.DecryptedVaultEntry
 import com.alexianhentiu.vaultberryapp.domain.repository.VaultRepository
 import com.alexianhentiu.vaultberryapp.domain.common.enums.ErrorType
+import com.alexianhentiu.vaultberryapp.domain.model.ErrorInfo
 import com.alexianhentiu.vaultberryapp.domain.usecase.vault.GetDecryptedVaultEntryUseCase
 
 class GetDecryptedVaultEntryUseCaseImpl(
@@ -22,9 +23,11 @@ class GetDecryptedVaultEntryUseCaseImpl(
         } else {
             val result = (vaultEntry as ApiResult.Error)
             UseCaseResult.Error(
-                ErrorType.API,
-                result.source,
-                result.message
+                ErrorInfo(
+                    ErrorType.API,
+                    result.source,
+                    result.message
+                )
             )
         }
     }

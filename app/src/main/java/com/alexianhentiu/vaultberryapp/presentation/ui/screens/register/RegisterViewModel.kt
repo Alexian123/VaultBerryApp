@@ -2,7 +2,6 @@ package com.alexianhentiu.vaultberryapp.presentation.ui.screens.register
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.alexianhentiu.vaultberryapp.domain.model.ErrorInfo
 import com.alexianhentiu.vaultberryapp.domain.common.UseCaseResult
 import com.alexianhentiu.vaultberryapp.domain.model.AccountInfo
 import com.alexianhentiu.vaultberryapp.domain.usecase.auth.RegisterUseCase
@@ -47,13 +46,7 @@ class RegisterViewModel @Inject constructor(
                 }
 
                 is UseCaseResult.Error -> {
-                    _registerScreenState.value = RegisterScreenState.Error(
-                        ErrorInfo(
-                            type = result.type,
-                            source = result.source,
-                            message = result.message
-                        )
-                    )
+                    _registerScreenState.value = RegisterScreenState.Error(result.info)
                 }
             }
         }

@@ -4,6 +4,7 @@ import com.alexianhentiu.vaultberryapp.data.remote.ApiResult
 import com.alexianhentiu.vaultberryapp.domain.common.UseCaseResult
 import com.alexianhentiu.vaultberryapp.domain.repository.AccountRepository
 import com.alexianhentiu.vaultberryapp.domain.common.enums.ErrorType
+import com.alexianhentiu.vaultberryapp.domain.model.ErrorInfo
 import com.alexianhentiu.vaultberryapp.domain.usecase.account.Get2FAStatusUseCase
 
 class Get2FAStatusUseCaseImpl(
@@ -18,9 +19,11 @@ class Get2FAStatusUseCaseImpl(
 
             is ApiResult.Error -> {
                 UseCaseResult.Error(
-                    ErrorType.API,
-                    result.source,
-                    result.message
+                    ErrorInfo(
+                        ErrorType.API,
+                        result.source,
+                        result.message
+                    )
                 )
             }
         }

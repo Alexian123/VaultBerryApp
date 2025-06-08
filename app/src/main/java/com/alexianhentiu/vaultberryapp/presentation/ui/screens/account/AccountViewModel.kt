@@ -2,7 +2,6 @@ package com.alexianhentiu.vaultberryapp.presentation.ui.screens.account
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.alexianhentiu.vaultberryapp.domain.model.ErrorInfo
 import com.alexianhentiu.vaultberryapp.domain.common.UseCaseResult
 import com.alexianhentiu.vaultberryapp.domain.model.AccountInfo
 import com.alexianhentiu.vaultberryapp.domain.usecase.account.ChangeAccountInfoUseCase
@@ -59,25 +58,13 @@ class AccountViewModel @Inject constructor(
                         }
 
                         is UseCaseResult.Error -> {
-                            _accountScreenState.value = AccountScreenState.Error(
-                                ErrorInfo(
-                                    type = result2FA.type,
-                                    source = result2FA.source,
-                                    message = result2FA.message
-                                )
-                            )
+                            _accountScreenState.value = AccountScreenState.Error(result2FA.info)
                         }
                     }
                 }
 
                 is UseCaseResult.Error -> {
-                    _accountScreenState.value = AccountScreenState.Error(
-                        ErrorInfo(
-                            type = resultAccount.type,
-                            source = resultAccount.source,
-                            message = resultAccount.message
-                        )
-                    )
+                    _accountScreenState.value = AccountScreenState.Error(resultAccount.info)
                 }
             }
         }
@@ -92,13 +79,7 @@ class AccountViewModel @Inject constructor(
                 }
 
                 is UseCaseResult.Error -> {
-                    _accountScreenState.value = AccountScreenState.Error(
-                        ErrorInfo(
-                            type = result.type,
-                            source = result.source,
-                            message = result.message
-                        )
-                    )
+                    _accountScreenState.value = AccountScreenState.Error(result.info)
                 }
             }
         }
@@ -130,13 +111,7 @@ class AccountViewModel @Inject constructor(
                 }
 
                 is UseCaseResult.Error -> {
-                    _accountScreenState.value = AccountScreenState.Error(
-                        ErrorInfo(
-                            type = result.type,
-                            source = result.source,
-                            message = result.message
-                        )
-                    )
+                    _accountScreenState.value = AccountScreenState.Error(result.info)
                 }
             }
         }
@@ -152,13 +127,7 @@ class AccountViewModel @Inject constructor(
                 }
 
                 is UseCaseResult.Error -> {
-                    _accountScreenState.value = AccountScreenState.Error(
-                        ErrorInfo(
-                            type = result.type,
-                            source = result.source,
-                            message = result.message
-                        )
-                    )
+                    _accountScreenState.value = AccountScreenState.Error(result.info)
                 }
             }
         }
@@ -174,13 +143,7 @@ class AccountViewModel @Inject constructor(
                 }
 
                 is UseCaseResult.Error -> {
-                    _accountScreenState.value = AccountScreenState.Error(
-                        ErrorInfo(
-                            type = result.type,
-                            source = result.source,
-                            message = result.message
-                        )
-                    )
+                    _accountScreenState.value = AccountScreenState.Error(result.info)
                 }
             }
         }
@@ -196,13 +159,7 @@ class AccountViewModel @Inject constructor(
                 }
 
                 is UseCaseResult.Error -> {
-                    _accountScreenState.value = AccountScreenState.Error(
-                        ErrorInfo(
-                            type = result.type,
-                            source = result.source,
-                            message = result.message
-                        )
-                    )
+                    _accountScreenState.value = AccountScreenState.Error(result.info)
                 }
             }
         }

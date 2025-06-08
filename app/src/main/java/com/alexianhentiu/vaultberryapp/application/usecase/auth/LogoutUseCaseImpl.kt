@@ -5,6 +5,7 @@ import com.alexianhentiu.vaultberryapp.domain.common.UseCaseResult
 import com.alexianhentiu.vaultberryapp.domain.model.response.MessageResponse
 import com.alexianhentiu.vaultberryapp.domain.repository.AuthRepository
 import com.alexianhentiu.vaultberryapp.domain.common.enums.ErrorType
+import com.alexianhentiu.vaultberryapp.domain.model.ErrorInfo
 import com.alexianhentiu.vaultberryapp.domain.usecase.auth.LogoutUseCase
 
 class LogoutUseCaseImpl(private val authRepository: AuthRepository) : LogoutUseCase {
@@ -17,9 +18,11 @@ class LogoutUseCaseImpl(private val authRepository: AuthRepository) : LogoutUseC
 
             is ApiResult.Error -> {
                 UseCaseResult.Error(
-                    ErrorType.API,
-                    response.source,
-                    response.message
+                    ErrorInfo(
+                        ErrorType.API,
+                        response.source,
+                        response.message
+                    )
                 )
             }
         }

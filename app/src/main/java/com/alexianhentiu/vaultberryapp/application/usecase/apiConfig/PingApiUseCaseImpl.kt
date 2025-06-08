@@ -3,6 +3,7 @@ package com.alexianhentiu.vaultberryapp.application.usecase.apiConfig
 import com.alexianhentiu.vaultberryapp.R
 import com.alexianhentiu.vaultberryapp.domain.common.UseCaseResult
 import com.alexianhentiu.vaultberryapp.domain.common.enums.ErrorType
+import com.alexianhentiu.vaultberryapp.domain.model.ErrorInfo
 import com.alexianhentiu.vaultberryapp.domain.usecase.apiConfig.PingApiUseCase
 import com.alexianhentiu.vaultberryapp.domain.utils.NetworkUtils
 import com.alexianhentiu.vaultberryapp.domain.utils.StringResourceProvider
@@ -21,9 +22,11 @@ class PingApiUseCaseImpl(
             UseCaseResult.Success(Unit)
         } else {
             UseCaseResult.Error(
-                ErrorType.HOST_UNREACHABLE,
-                stringResourceProvider.getString(R.string.network_utils_error_source),
-                "Host $host:$port not reachable"
+                ErrorInfo(
+                    ErrorType.HOST_UNREACHABLE,
+                    stringResourceProvider.getString(R.string.network_utils_error_source),
+                    "Host $host:$port not reachable"
+                )
             )
         }
     }
