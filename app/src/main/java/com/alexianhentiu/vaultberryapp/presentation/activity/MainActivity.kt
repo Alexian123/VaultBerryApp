@@ -18,11 +18,6 @@ import com.alexianhentiu.vaultberryapp.presentation.ui.common.sharedViewModels.S
 import com.alexianhentiu.vaultberryapp.presentation.ui.common.sharedViewModels.UtilityViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
-/*
-    TODO:
-        - Cleanup code & add comments
-*/
-
 @AndroidEntryPoint
 class MainActivity : FragmentActivity() {
 
