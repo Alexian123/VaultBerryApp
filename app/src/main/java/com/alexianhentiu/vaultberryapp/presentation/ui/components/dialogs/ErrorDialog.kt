@@ -16,7 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.alexianhentiu.vaultberryapp.R
 import com.alexianhentiu.vaultberryapp.domain.common.enums.ErrorType
-import com.alexianhentiu.vaultberryapp.domain.common.ErrorInfo
+import com.alexianhentiu.vaultberryapp.domain.model.ErrorInfo
 
 @Composable
 fun ErrorDialog(

@@ -3,7 +3,7 @@ package com.alexianhentiu.vaultberryapp.application.usecase.settings
 import com.alexianhentiu.vaultberryapp.R
 import com.alexianhentiu.vaultberryapp.domain.common.enums.ErrorType
 import com.alexianhentiu.vaultberryapp.domain.repository.SettingsRepository
-import com.alexianhentiu.vaultberryapp.domain.common.SettingDefinition
+import com.alexianhentiu.vaultberryapp.domain.model.SettingDefinition
 import com.alexianhentiu.vaultberryapp.domain.common.UseCaseResult
 import com.alexianhentiu.vaultberryapp.domain.usecase.settings.SaveSettingUseCase
 import com.alexianhentiu.vaultberryapp.domain.utils.StringResourceProvider

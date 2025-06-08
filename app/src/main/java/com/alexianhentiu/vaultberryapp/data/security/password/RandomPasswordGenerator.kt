@@ -1,7 +1,7 @@
 package com.alexianhentiu.vaultberryapp.data.security.password
 
 import com.alexianhentiu.vaultberryapp.R
-import com.alexianhentiu.vaultberryapp.domain.common.PasswordGenOptions
+import com.alexianhentiu.vaultberryapp.domain.model.PasswordGenOptions
 import com.alexianhentiu.vaultberryapp.domain.security.password.PasswordGenerator
 import com.alexianhentiu.vaultberryapp.domain.utils.StringResourceProvider
 

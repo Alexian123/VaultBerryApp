@@ -1,4 +1,4 @@
-package com.alexianhentiu.vaultberryapp.domain.common
+package com.alexianhentiu.vaultberryapp.domain.model
 
 import com.alexianhentiu.vaultberryapp.domain.common.enums.ErrorType
 

@@ -20,7 +20,6 @@ import dagger.hilt.android.AndroidEntryPoint
 
 /*
     TODO:
-        - Fix Clean Code violations in BiometricViewModel & BiometricPromptHandler
         - Cleanup code & add comments
 */
 

@@ -1,6 +1,6 @@
 package com.alexianhentiu.vaultberryapp.presentation.ui.screens.autofill
 
-import com.alexianhentiu.vaultberryapp.domain.common.ErrorInfo
+import com.alexianhentiu.vaultberryapp.domain.model.ErrorInfo
 
 sealed class AutofillState {
     data object Idle : AutofillState()

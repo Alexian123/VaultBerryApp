@@ -1,5 +1,7 @@
 package com.alexianhentiu.vaultberryapp.domain.common
 
+import com.alexianhentiu.vaultberryapp.domain.model.SettingDefinition
+
 object AppSettings {
 
     val USE_SYSTEM_THEME = SettingDefinition.BooleanDefinition("use_system_theme", true)

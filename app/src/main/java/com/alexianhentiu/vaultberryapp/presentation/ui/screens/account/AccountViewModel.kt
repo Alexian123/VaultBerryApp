@@ -2,7 +2,7 @@ package com.alexianhentiu.vaultberryapp.presentation.ui.screens.account
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.alexianhentiu.vaultberryapp.domain.common.ErrorInfo
+import com.alexianhentiu.vaultberryapp.domain.model.ErrorInfo
 import com.alexianhentiu.vaultberryapp.domain.common.UseCaseResult
 import com.alexianhentiu.vaultberryapp.domain.model.AccountInfo
 import com.alexianhentiu.vaultberryapp.domain.usecase.account.ChangeAccountInfoUseCase

@@ -7,7 +7,9 @@ import androidx.datastore.preferences.core.Preferences
 import com.alexianhentiu.vaultberryapp.data.di.qualifiers.AppSettingsDataStoreQualifier
 import com.alexianhentiu.vaultberryapp.data.di.qualifiers.AuthCredentialsDataStoreQualifier
 import com.alexianhentiu.vaultberryapp.data.di.qualifiers.ApiPreferencesDataStoreQualifier
+import com.alexianhentiu.vaultberryapp.data.platform.biometric.AndroidBiometricAuthenticator
 import com.alexianhentiu.vaultberryapp.data.platform.clipboard.AndroidClipboardHandler
+import com.alexianhentiu.vaultberryapp.data.platform.crypto.AndroidSecureKeyHandler
 import com.alexianhentiu.vaultberryapp.data.platform.datastore.apiPreferencesDataStore
 import com.alexianhentiu.vaultberryapp.data.platform.utils.AndroidUriParser
 import com.alexianhentiu.vaultberryapp.data.platform.datastore.appSettingsDataStore
@@ -16,7 +18,11 @@ import com.alexianhentiu.vaultberryapp.data.platform.utils.AndroidAppInfoProvide
 import com.alexianhentiu.vaultberryapp.data.platform.utils.AndroidBase64Handler
 import com.alexianhentiu.vaultberryapp.data.platform.utils.AndroidStringResourceProvider
 import com.alexianhentiu.vaultberryapp.data.platform.utils.AndroidUriStreamProvider
+import com.alexianhentiu.vaultberryapp.data.security.AESCipherProvider
 import com.alexianhentiu.vaultberryapp.domain.clipboard.ClipboardHandler
+import com.alexianhentiu.vaultberryapp.domain.repository.CredentialsRepository
+import com.alexianhentiu.vaultberryapp.domain.security.BiometricAuthenticator
+import com.alexianhentiu.vaultberryapp.domain.security.CipherCache
 import com.alexianhentiu.vaultberryapp.domain.utils.UriParser
 import com.alexianhentiu.vaultberryapp.domain.utils.AppInfoProvider
 import com.alexianhentiu.vaultberryapp.domain.utils.Base64Handler
@@ -91,4 +97,22 @@ object PlatformModule {
     fun provideUriStreamProvider(
         @ApplicationContext context: Context
     ): UriStreamProvider = AndroidUriStreamProvider(context)
+
+    @Provides
+    @Singleton
+    fun provideBiometricAuthenticator(
+        stringResourceProvider: StringResourceProvider,
+        keyHandler: AndroidSecureKeyHandler,
+        cipherProvider: AESCipherProvider,
+        cipherCache: CipherCache,
+        credentialsRepository: CredentialsRepository,
+        @ApplicationContext context: Context
+    ): BiometricAuthenticator = AndroidBiometricAuthenticator(
+        stringResourceProvider,
+        keyHandler,
+        cipherProvider,
+        cipherCache,
+        credentialsRepository,
+        context
+    )
 }

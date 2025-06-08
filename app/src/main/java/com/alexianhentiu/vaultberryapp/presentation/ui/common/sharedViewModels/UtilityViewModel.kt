@@ -2,8 +2,8 @@ package com.alexianhentiu.vaultberryapp.presentation.ui.common.sharedViewModels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.alexianhentiu.vaultberryapp.domain.common.ErrorInfo
-import com.alexianhentiu.vaultberryapp.domain.common.PasswordGenOptions
+import com.alexianhentiu.vaultberryapp.domain.model.ErrorInfo
+import com.alexianhentiu.vaultberryapp.domain.model.PasswordGenOptions
 import com.alexianhentiu.vaultberryapp.domain.common.UseCaseResult
 import com.alexianhentiu.vaultberryapp.domain.common.enums.AppInfo
 import com.alexianhentiu.vaultberryapp.domain.common.enums.InputType

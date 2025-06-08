@@ -1,6 +1,6 @@
 package com.alexianhentiu.vaultberryapp.presentation.ui.common
 
-import com.alexianhentiu.vaultberryapp.domain.common.ErrorInfo
+import com.alexianhentiu.vaultberryapp.domain.model.ErrorInfo
 
 sealed class SessionState {
     data object LoggedOut : SessionState()

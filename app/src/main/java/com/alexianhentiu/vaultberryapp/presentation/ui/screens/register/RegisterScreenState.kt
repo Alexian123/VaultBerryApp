@@ -1,6 +1,6 @@
 package com.alexianhentiu.vaultberryapp.presentation.ui.screens.register
 
-import com.alexianhentiu.vaultberryapp.domain.common.ErrorInfo
+import com.alexianhentiu.vaultberryapp.domain.model.ErrorInfo
 
 sealed class RegisterScreenState {
     data object Idle : RegisterScreenState()

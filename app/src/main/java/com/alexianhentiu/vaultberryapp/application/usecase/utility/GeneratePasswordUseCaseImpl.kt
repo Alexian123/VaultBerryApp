@@ -2,7 +2,7 @@ package com.alexianhentiu.vaultberryapp.application.usecase.utility
 
 import com.alexianhentiu.vaultberryapp.R
 import com.alexianhentiu.vaultberryapp.domain.common.enums.ErrorType
-import com.alexianhentiu.vaultberryapp.domain.common.PasswordGenOptions
+import com.alexianhentiu.vaultberryapp.domain.model.PasswordGenOptions
 import com.alexianhentiu.vaultberryapp.domain.common.UseCaseResult
 import com.alexianhentiu.vaultberryapp.domain.security.password.PasswordGenerator
 import com.alexianhentiu.vaultberryapp.domain.usecase.utility.GeneratePasswordUseCase

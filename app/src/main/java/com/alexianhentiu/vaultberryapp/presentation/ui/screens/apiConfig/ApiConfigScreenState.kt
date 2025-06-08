@@ -1,6 +1,6 @@
 package com.alexianhentiu.vaultberryapp.presentation.ui.screens.apiConfig
 
-import com.alexianhentiu.vaultberryapp.domain.common.ErrorInfo
+import com.alexianhentiu.vaultberryapp.domain.model.ErrorInfo
 
 sealed class ApiConfigScreenState {
     data object Loading : ApiConfigScreenState()

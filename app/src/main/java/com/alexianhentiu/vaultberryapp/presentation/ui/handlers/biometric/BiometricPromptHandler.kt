@@ -12,6 +12,7 @@ import com.alexianhentiu.vaultberryapp.R
 import com.alexianhentiu.vaultberryapp.presentation.ui.common.BiometricPromptRequest
 import com.alexianhentiu.vaultberryapp.presentation.ui.common.sharedViewModels.BiometricViewModel
 import kotlinx.coroutines.flow.collectLatest
+import javax.crypto.Cipher
 
 /**
  * A Composable that observes the BiometricViewModel's requests to show a biometric prompt
@@ -50,7 +51,7 @@ fun BiometricPromptHandler(
                 is BiometricState.CredentialsStored -> {
                     Toast.makeText(context,
                         credentialsStoredMsg,
-                        Toast.LENGTH_SHORT
+                        Toast.LENGTH_LONG
                     ).show()
                     biometricViewModel.resetState()
                 }
@@ -64,7 +65,7 @@ fun BiometricPromptHandler(
                 is BiometricState.ClearedCredentials -> {
                     Toast.makeText(context,
                         credentialsClearedMsg,
-                        Toast.LENGTH_SHORT
+                        Toast.LENGTH_LONG
                     ).show()
                     biometricViewModel.resetState()
                 }
@@ -89,11 +90,18 @@ fun BiometricPromptHandler(
                         result: BiometricPrompt.AuthenticationResult
                     ) {
                         super.onAuthenticationSucceeded(result)
+                        biometricViewModel.cipherCache.setCipher(
+                            request.context,
+                            result.cryptoObject?.cipher
+                        )
                         when (request) {
-                            is BiometricPromptRequest.Store ->
-                                biometricViewModel.onBiometricStoreSuccess(result)
-                            is BiometricPromptRequest.Retrieve ->
-                                biometricViewModel.onBiometricRetrieveSuccess(result)
+                            is BiometricPromptRequest.Store -> {
+                                biometricViewModel.onBiometricStoreSuccess(request.context)
+                            }
+
+                            is BiometricPromptRequest.Retrieve -> {
+                                biometricViewModel.onBiometricRetrieveSuccess(request.context)
+                            }
                         }
                     }
 
@@ -102,7 +110,7 @@ fun BiometricPromptHandler(
                         Toast.makeText(
                             context,
                             authFailedMsg,
-                            Toast.LENGTH_SHORT
+                            Toast.LENGTH_LONG
                         ).show()
                     }
                 }
@@ -122,9 +130,9 @@ fun BiometricPromptHandler(
                 .setNegativeButtonText("Cancel")
                 .build()
 
-            val cryptoObject = request.cryptoObject
-            if (cryptoObject != null) {
-                biometricPrompt.authenticate(promptInfo, BiometricPrompt.CryptoObject(cryptoObject))
+            val cipher = biometricViewModel.cipherCache.getCipher(request.context) as? Cipher
+            if (cipher != null) {
+                biometricPrompt.authenticate(promptInfo, BiometricPrompt.CryptoObject(cipher))
             } else {
                 biometricViewModel.onBiometricAuthError(biometricAuthInitErrorMsg)
             }

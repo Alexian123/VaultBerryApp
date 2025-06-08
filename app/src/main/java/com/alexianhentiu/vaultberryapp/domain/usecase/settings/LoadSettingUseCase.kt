@@ -1,6 +1,6 @@
 package com.alexianhentiu.vaultberryapp.domain.usecase.settings
 
-import com.alexianhentiu.vaultberryapp.domain.common.SettingDefinition
+import com.alexianhentiu.vaultberryapp.domain.model.SettingDefinition
 import com.alexianhentiu.vaultberryapp.domain.common.UseCaseResult
 
 interface LoadSettingUseCase {

@@ -28,7 +28,7 @@ import com.alexianhentiu.vaultberryapp.domain.common.enums.PasswordStrength
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.PasswordField
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.misc.CheckboxOptionRow
 import com.alexianhentiu.vaultberryapp.presentation.ui.common.enums.TextFieldType
-import com.alexianhentiu.vaultberryapp.domain.common.PasswordGenOptions
+import com.alexianhentiu.vaultberryapp.domain.model.PasswordGenOptions
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.BoundedNumberField
 
 @Composable

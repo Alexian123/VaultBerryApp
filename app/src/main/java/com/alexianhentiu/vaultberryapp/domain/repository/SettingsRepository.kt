@@ -1,6 +1,6 @@
 package com.alexianhentiu.vaultberryapp.domain.repository
 
-import com.alexianhentiu.vaultberryapp.domain.common.SettingDefinition
+import com.alexianhentiu.vaultberryapp.domain.model.SettingDefinition
 import kotlinx.coroutines.flow.Flow
 
 interface SettingsRepository {

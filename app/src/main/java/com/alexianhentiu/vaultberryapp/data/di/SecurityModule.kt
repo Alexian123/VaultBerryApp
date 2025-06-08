@@ -2,11 +2,13 @@ package com.alexianhentiu.vaultberryapp.data.di
 
 import com.alexianhentiu.vaultberryapp.data.platform.utils.AndroidStringResourceProvider
 import com.alexianhentiu.vaultberryapp.data.security.AESHandler
+import com.alexianhentiu.vaultberryapp.data.security.CipherCacheImpl
 import com.alexianhentiu.vaultberryapp.data.security.PBKDF2SHA256Handler
 import com.alexianhentiu.vaultberryapp.data.security.ScramAuthClient
 import com.alexianhentiu.vaultberryapp.data.security.VaultGuardian
 import com.alexianhentiu.vaultberryapp.data.security.password.DefaultPasswordEvaluator
 import com.alexianhentiu.vaultberryapp.data.security.password.RandomPasswordGenerator
+import com.alexianhentiu.vaultberryapp.domain.security.CipherCache
 import com.alexianhentiu.vaultberryapp.domain.security.GeneralCryptoHandler
 import com.alexianhentiu.vaultberryapp.domain.security.KeyDerivationHandler
 import com.alexianhentiu.vaultberryapp.domain.security.MessageExchangeAuthClient
@@ -58,4 +60,8 @@ object SecurityModule {
     @Provides
     @Singleton
     fun provideMessageExchangeAuthClient(): MessageExchangeAuthClient = ScramAuthClient()
+
+    @Provides
+    @Singleton
+    fun provideCipherCache(): CipherCache = CipherCacheImpl()
 }

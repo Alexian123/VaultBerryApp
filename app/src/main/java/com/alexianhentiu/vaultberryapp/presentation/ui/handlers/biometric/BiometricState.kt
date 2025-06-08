@@ -1,6 +1,6 @@
 package com.alexianhentiu.vaultberryapp.presentation.ui.handlers.biometric
 
-import com.alexianhentiu.vaultberryapp.domain.common.ErrorInfo
+import com.alexianhentiu.vaultberryapp.domain.model.ErrorInfo
 
 sealed class BiometricState {
     object Idle : BiometricState()

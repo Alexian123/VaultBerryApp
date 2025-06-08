@@ -1,4 +1,4 @@
-package com.alexianhentiu.vaultberryapp.domain.common
+package com.alexianhentiu.vaultberryapp.domain.model
 
 data class PasswordGenOptions(
     val length: Int = 16,

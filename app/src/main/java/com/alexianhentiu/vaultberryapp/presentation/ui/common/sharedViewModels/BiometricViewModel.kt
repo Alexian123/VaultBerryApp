@@ -1,15 +1,16 @@
 package com.alexianhentiu.vaultberryapp.presentation.ui.common.sharedViewModels
 
-import androidx.biometric.BiometricPrompt
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alexianhentiu.vaultberryapp.R
-import com.alexianhentiu.vaultberryapp.data.platform.biometric.AndroidBiometricAuthenticator
 import com.alexianhentiu.vaultberryapp.domain.common.BiometricStatus
-import com.alexianhentiu.vaultberryapp.domain.common.ErrorInfo
+import com.alexianhentiu.vaultberryapp.domain.model.ErrorInfo
 import com.alexianhentiu.vaultberryapp.domain.common.enums.ErrorType
 import com.alexianhentiu.vaultberryapp.domain.model.AuthCredentials
+import com.alexianhentiu.vaultberryapp.domain.model.CipherContext
 import com.alexianhentiu.vaultberryapp.domain.model.EncryptedAuthCredentials
+import com.alexianhentiu.vaultberryapp.domain.security.BiometricAuthenticator
+import com.alexianhentiu.vaultberryapp.domain.security.CipherCache
 import com.alexianhentiu.vaultberryapp.domain.utils.StringResourceProvider
 import com.alexianhentiu.vaultberryapp.presentation.ui.common.BiometricPromptRequest
 import com.alexianhentiu.vaultberryapp.presentation.ui.handlers.biometric.BiometricState
@@ -27,7 +28,8 @@ import javax.inject.Inject
 @HiltViewModel
 class BiometricViewModel @Inject constructor(
     private val stringResourceProvider: StringResourceProvider,
-    private val androidBiometricAuthenticator: AndroidBiometricAuthenticator
+    private val biometricAuthenticator: BiometricAuthenticator,
+    val cipherCache: CipherCache
 ) : ViewModel() {
 
     private val _biometricState = MutableStateFlow<BiometricState>(BiometricState.Idle)
@@ -50,19 +52,19 @@ class BiometricViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            _hasStoredCredentials.value = androidBiometricAuthenticator.hasStoredCredentials()
+            _hasStoredCredentials.value = biometricAuthenticator.hasStoredCredentials()
         }
     }
 
     fun requestStoreCredentials(email: String, password: String) {
         viewModelScope.launch {
             _biometricState.value = BiometricState.Loading
-            when (val result = androidBiometricAuthenticator.isBiometricAvailable()) {
+            when (val result = biometricAuthenticator.isBiometricAvailable()) {
                 BiometricStatus.Available -> {
                     try {
                         pendingStoreEmail = email
                         pendingStorePassword = password
-                        val passwordCipher = androidBiometricAuthenticator.getCipherForEncryption()
+                        val passwordCipher = biometricAuthenticator.getEncryptionContext()
                         _startBiometricPrompt.emit(
                             BiometricPromptRequest.Store(passwordCipher)
                         )
@@ -90,9 +92,9 @@ class BiometricViewModel @Inject constructor(
     fun requestAuthenticateAndRetrieveCredentials() {
         viewModelScope.launch {
             _biometricState.value = BiometricState.Loading
-            when (val result = androidBiometricAuthenticator.isBiometricAvailable()) {
+            when (val result = biometricAuthenticator.isBiometricAvailable()) {
                 BiometricStatus.Available -> {
-                    val encryptedData = androidBiometricAuthenticator.getCredentials()
+                    val encryptedData = biometricAuthenticator.getCredentials()
                     if (encryptedData == null) {
                         _biometricState.value = BiometricState.Error(
                             ErrorInfo(
@@ -109,11 +111,11 @@ class BiometricViewModel @Inject constructor(
                     }
                     try {
                         pendingEncryptedData = encryptedData
-                        val passwordCipher = androidBiometricAuthenticator.getCipherForDecryption(
+                        val passwordCipher = biometricAuthenticator.getDecryptionContext(
                             encryptedData.passwordIv
                         )
                         _startBiometricPrompt.emit(
-                            BiometricPromptRequest.Retrieve(passwordCipher, encryptedData)
+                            BiometricPromptRequest.Retrieve(passwordCipher)
                         )
                     } catch (e: Exception) {
                         _biometricState.value = BiometricState.Error(
@@ -136,7 +138,7 @@ class BiometricViewModel @Inject constructor(
         }
     }
 
-    fun onBiometricStoreSuccess(result: BiometricPrompt.AuthenticationResult) {
+    fun onBiometricStoreSuccess(encryptionContext: CipherContext) {
         viewModelScope.launch {
             try {
                 val email = pendingStoreEmail ?: throw IllegalStateException(
@@ -151,12 +153,12 @@ class BiometricViewModel @Inject constructor(
                         )
                     )
 
-                val encryptedAuthCredentials = androidBiometricAuthenticator.performEncryption(
-                    cryptoObject = result.cryptoObject,
+                val encryptedAuthCredentials = biometricAuthenticator.performEncryption(
+                    context = encryptionContext,
                     password = password,
                     email = email
                 )
-                androidBiometricAuthenticator.storeCredentials(encryptedAuthCredentials)
+                biometricAuthenticator.storeCredentials(encryptedAuthCredentials)
                 _hasStoredCredentials.value = true
                 _biometricState.value = BiometricState.CredentialsStored
                 clearPendingStoreData()
@@ -172,11 +174,13 @@ class BiometricViewModel @Inject constructor(
                         ) + (e.message ?: stringResourceProvider.getString(R.string.unknown_error))
                     )
                 )
+            } finally {
+                cipherCache.deleteCipher(encryptionContext)
             }
         }
     }
 
-    fun onBiometricRetrieveSuccess(result: BiometricPrompt.AuthenticationResult) {
+    fun onBiometricRetrieveSuccess(decryptionContext: CipherContext) {
         viewModelScope.launch {
             try {
                 val encryptedData = pendingEncryptedData
@@ -186,8 +190,8 @@ class BiometricViewModel @Inject constructor(
                         )
                     )
 
-                val credentials = androidBiometricAuthenticator.performDecryption(
-                    cryptoObject = result.cryptoObject,
+                val credentials = biometricAuthenticator.performDecryption(
+                    context = decryptionContext,
                     encryptedData = encryptedData
                 )
                 _biometricState.value = BiometricState.Authenticated
@@ -205,6 +209,8 @@ class BiometricViewModel @Inject constructor(
                         ) + (e.message ?: stringResourceProvider.getString(R.string.unknown_error))
                     )
                 )
+            } finally {
+                cipherCache.deleteCipher(decryptionContext)
             }
         }
     }
@@ -224,7 +230,7 @@ class BiometricViewModel @Inject constructor(
 
     fun clearStoredCredentials() {
         viewModelScope.launch {
-            androidBiometricAuthenticator.clearStoredCredentials()
+            biometricAuthenticator.clearStoredCredentials()
             _biometricState.value = BiometricState.ClearedCredentials
             _hasStoredCredentials.value = false
             clearPendingData()

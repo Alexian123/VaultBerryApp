@@ -2,59 +2,69 @@ package com.alexianhentiu.vaultberryapp.data.platform.biometric
 
 import android.content.Context
 import androidx.biometric.BiometricManager
-import androidx.biometric.BiometricPrompt
 import com.alexianhentiu.vaultberryapp.R
 import com.alexianhentiu.vaultberryapp.data.platform.crypto.AndroidSecureKeyHandler
 import com.alexianhentiu.vaultberryapp.data.security.AESCipherProvider
 import com.alexianhentiu.vaultberryapp.domain.common.BiometricStatus
 import com.alexianhentiu.vaultberryapp.domain.common.enums.ErrorType
 import com.alexianhentiu.vaultberryapp.domain.model.AuthCredentials
-import com.alexianhentiu.vaultberryapp.domain.common.ErrorInfo
+import com.alexianhentiu.vaultberryapp.domain.model.CipherContext
+import com.alexianhentiu.vaultberryapp.domain.model.ErrorInfo
 import com.alexianhentiu.vaultberryapp.domain.model.EncryptedAuthCredentials
 import com.alexianhentiu.vaultberryapp.domain.repository.CredentialsRepository
+import com.alexianhentiu.vaultberryapp.domain.security.BiometricAuthenticator
+import com.alexianhentiu.vaultberryapp.domain.security.CipherCache
 import com.alexianhentiu.vaultberryapp.domain.utils.StringResourceProvider
-import dagger.hilt.android.qualifiers.ApplicationContext
+import java.util.UUID
 import javax.crypto.Cipher
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class AndroidBiometricAuthenticator @Inject constructor(
+class AndroidBiometricAuthenticator(
     private val stringResourceProvider: StringResourceProvider,
     private val keyHandler: AndroidSecureKeyHandler,
     private val cipherProvider: AESCipherProvider,
+    private val cipherCache: CipherCache,
     private val credentialsRepository: CredentialsRepository,
-    @ApplicationContext private val context: Context
-) {
+    private val context: Context
+) : BiometricAuthenticator {
+
     companion object {
         private const val KEY_ALIAS = "BiometricCredentialsKey"
     }
 
-    suspend fun hasStoredCredentials(): Boolean = credentialsRepository.hasStoredCredentials()
+    override suspend fun hasStoredCredentials(): Boolean =
+        credentialsRepository.hasStoredCredentials()
 
-    suspend fun clearStoredCredentials() {
+    override suspend fun clearStoredCredentials() {
         credentialsRepository.clearStoredCredentials()
         keyHandler.deleteKey(KEY_ALIAS)
     }
 
-    fun getCipherForEncryption(): Cipher {
+    override fun getEncryptionContext(): CipherContext {
         val key = keyHandler.getKey(KEY_ALIAS) ?: keyHandler.generateKey(KEY_ALIAS)
-        return cipherProvider.getCipherForEncryption(key)
+        val cipher = cipherProvider.getCipherForEncryption(key)
+        val token = UUID.randomUUID().toString()
+        val context = CipherContext(token)
+        cipherCache.setCipher(context, cipher)
+        return context
     }
 
-    fun getCipherForDecryption(iv: ByteArray): Cipher {
+    override fun getDecryptionContext(iv: ByteArray): CipherContext {
         val key = keyHandler.getKey(KEY_ALIAS) ?: throw IllegalStateException(
             stringResourceProvider.getString(R.string.error_secret_key_not_found)
         )
-        return cipherProvider.getCipherForDecryption(iv, key)
+        val cipher = cipherProvider.getCipherForDecryption(iv, key)
+        val token = UUID.randomUUID().toString()
+        val context = CipherContext(token)
+        cipherCache.setCipher(context, cipher)
+        return context
     }
 
-    fun performEncryption(
-        cryptoObject: BiometricPrompt.CryptoObject?,
+    override fun performEncryption(
+        context: CipherContext,
         password: String,
         email: String
     ): EncryptedAuthCredentials {
-        val cipher = cryptoObject?.cipher
+        val cipher = cipherCache.getCipher(context) as? Cipher
             ?: throw IllegalStateException(
                 stringResourceProvider.getString(
                     R.string.error_cipher_not_available_for_encryption
@@ -69,11 +79,11 @@ class AndroidBiometricAuthenticator @Inject constructor(
         )
     }
 
-    fun performDecryption(
-        cryptoObject: BiometricPrompt.CryptoObject?,
+    override fun performDecryption(
+        context: CipherContext,
         encryptedData: EncryptedAuthCredentials
     ): AuthCredentials {
-        val cipher = cryptoObject?.cipher
+        val cipher = cipherCache.getCipher(context) as? Cipher
             ?: throw IllegalStateException(
                 stringResourceProvider.getString(
                     R.string.error_cipher_not_available_for_decryption
@@ -86,13 +96,14 @@ class AndroidBiometricAuthenticator @Inject constructor(
         )
     }
 
-    suspend fun getCredentials(): EncryptedAuthCredentials? = credentialsRepository.getCredentials()
+    override suspend fun getCredentials(): EncryptedAuthCredentials? =
+        credentialsRepository.getCredentials()
 
-    suspend fun storeCredentials(encryptedAuthCredentials: EncryptedAuthCredentials) {
+    override suspend fun storeCredentials(encryptedAuthCredentials: EncryptedAuthCredentials) {
         credentialsRepository.storeCredentials(encryptedAuthCredentials)
     }
 
-    fun isBiometricAvailable(): BiometricStatus {
+    override fun isBiometricAvailable(): BiometricStatus {
         val biometricManager = BiometricManager.from(context)
         return when (biometricManager.canAuthenticate(
             BiometricManager.Authenticators.BIOMETRIC_STRONG or

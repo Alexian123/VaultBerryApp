@@ -7,7 +7,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.alexianhentiu.vaultberryapp.data.di.qualifiers.AppSettingsDataStoreQualifier
 import com.alexianhentiu.vaultberryapp.data.platform.datastore.DataStorePreference
-import com.alexianhentiu.vaultberryapp.domain.common.SettingDefinition
+import com.alexianhentiu.vaultberryapp.domain.model.SettingDefinition
 import com.alexianhentiu.vaultberryapp.domain.repository.SettingsRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first

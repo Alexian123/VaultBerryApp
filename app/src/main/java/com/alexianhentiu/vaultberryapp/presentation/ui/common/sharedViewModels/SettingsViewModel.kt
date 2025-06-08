@@ -3,7 +3,7 @@ package com.alexianhentiu.vaultberryapp.presentation.ui.common.sharedViewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alexianhentiu.vaultberryapp.domain.common.AppSettings
-import com.alexianhentiu.vaultberryapp.domain.common.ErrorInfo
+import com.alexianhentiu.vaultberryapp.domain.model.ErrorInfo
 import com.alexianhentiu.vaultberryapp.domain.common.UseCaseResult
 import com.alexianhentiu.vaultberryapp.domain.usecase.settings.ObserveSettingUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.settings.SaveSettingUseCase
