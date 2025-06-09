@@ -1,6 +1,6 @@
 # VaultBerry App
 
-Client app for [VaultBerry](https://github.com/Alexian123/VaultBerry), a private, secure and minimalist password manager.
+Client app for [VaultBerry](https://github.com/Alexian123/VaultBerry), a self-hosted, secure and minimalist password manager.
 
 
 ## Initial Configuration Steps
