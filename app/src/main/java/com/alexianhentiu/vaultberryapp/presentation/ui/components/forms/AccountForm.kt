@@ -30,6 +30,7 @@ import com.alexianhentiu.vaultberryapp.domain.model.AccountInfo
 import com.alexianhentiu.vaultberryapp.domain.common.enums.PasswordStrength
 import com.alexianhentiu.vaultberryapp.domain.common.enums.InputType
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ConfirmActionDialog
+import com.alexianhentiu.vaultberryapp.presentation.ui.components.fields.PasswordField
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.misc.ExpandableSectionItem
 
 @Composable
@@ -40,7 +41,7 @@ fun AccountForm(
     onChangePassword: (String, Boolean) -> Unit,
     onEnable2FA: () -> Unit,
     onDisable2FA: () -> Unit,
-    onDeleteAccount: () -> Unit,
+    onDeleteAccount: (String) -> Unit,
     validator: (InputType) -> (String) -> Boolean = { { true } },
     evaluatePasswordStrength: (String) -> PasswordStrength = { PasswordStrength.NONE },
 ) {
@@ -50,6 +51,11 @@ fun AccountForm(
 
     var newPassword by remember { mutableStateOf("") }
     var shouldReEncrypt by remember { mutableStateOf(false) }
+
+    var passwordForConfirmation by remember { mutableStateOf("") }
+    var isPasswordValid by remember { mutableStateOf(
+        validator(InputType.PASSWORD)(passwordForConfirmation)
+    ) }
 
     var showConfirmPasswordChangeDialog by remember { mutableStateOf(false) }
     var showConfirmDeleteDialog by remember { mutableStateOf(false) }
@@ -62,7 +68,7 @@ fun AccountForm(
             onDismissRequest = { showConfirmDeleteDialog = false },
             onSubmit = {
                 if (it) {
-                    onDeleteAccount()
+                    onDeleteAccount(passwordForConfirmation)
                     showConfirmDeleteDialog = false
                 }
             }
@@ -157,8 +163,19 @@ fun AccountForm(
                     modifier = Modifier.fillMaxWidth()
                         .padding(16.dp)
                 ) {
+                    PasswordField(
+                        onPasswordChange = { newPassword, valid ->
+                            passwordForConfirmation = newPassword
+                            isPasswordValid = valid
+                        },
+                        isValid = isPasswordValid,
+                        validate = validator(InputType.PASSWORD),
+                        modifier = Modifier.fillMaxWidth()
+                    )
                     Button(
-                        onClick = { showConfirmDeleteDialog = true }
+                        onClick = { showConfirmDeleteDialog = true },
+                        enabled = isPasswordValid,
+                        modifier = Modifier.padding(top = 16.dp)
                     ) {
                         Text(stringResource(R.string.delete_account_button_text))
                     }

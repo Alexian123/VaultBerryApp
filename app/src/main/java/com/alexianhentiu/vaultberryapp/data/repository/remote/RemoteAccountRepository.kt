@@ -6,6 +6,8 @@ import com.alexianhentiu.vaultberryapp.data.remote.ModelMapper
 import com.alexianhentiu.vaultberryapp.data.remote.api.ApiService
 import com.alexianhentiu.vaultberryapp.data.remote.model.request.AccountInfoChangeRequestDTO
 import com.alexianhentiu.vaultberryapp.domain.model.AccountInfo
+import com.alexianhentiu.vaultberryapp.domain.model.request.Activate2FARequest
+import com.alexianhentiu.vaultberryapp.domain.model.request.DeleteAccountRequest
 import com.alexianhentiu.vaultberryapp.domain.model.request.PasswordChangeRequest
 import com.alexianhentiu.vaultberryapp.domain.model.response.MessageResponse
 import com.alexianhentiu.vaultberryapp.domain.model.response.TotpResponse
@@ -36,9 +38,10 @@ class RemoteAccountRepository(
         )
     }
 
-    override suspend fun deleteAccount(): ApiResult<MessageResponse> {
+    override suspend fun deleteAccount(data: DeleteAccountRequest): ApiResult<MessageResponse> {
+        val dto = modelMapper.deleteAccountRequestToDTO(data)
         return apiResponseHandler.safeApiCall(
-            apiCall = { apiService.deleteAccount() },
+            apiCall = { apiService.deleteAccount(dto) },
             transform = { modelMapper.messageResponseFromDTO(it) }
         )
     }
@@ -55,6 +58,14 @@ class RemoteAccountRepository(
         return apiResponseHandler.safeApiCall(
             apiCall = { apiService.setup2FA() },
             transform = { modelMapper.totpResponseFromDTO(it) }
+        )
+    }
+
+    override suspend fun activate2FA(data: Activate2FARequest): ApiResult<MessageResponse> {
+        val dto = modelMapper.activate2FARequestToDTO(data)
+        return apiResponseHandler.safeApiCall(
+            apiCall = { apiService.activate2FA(dto) },
+            transform = { modelMapper.messageResponseFromDTO(it) }
         )
     }
 

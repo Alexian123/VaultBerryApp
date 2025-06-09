@@ -24,105 +24,116 @@ class LoginUseCaseImpl(
         password: String,
         totpCode: String?
     ): UseCaseResult<ByteArray> {
-        // Initialize guardian
-        messageExchangeAuthClient.init(email, password)
+        try {
+            // Initialize guardian
+            messageExchangeAuthClient.init(email, password)
 
-        // Get client first message
-        val firstMessage = messageExchangeAuthClient.getClientFirstMessage()
+            // Get client first message
+            val firstMessage = messageExchangeAuthClient.getClientFirstMessage()
 
-        // Send first message to server
-        val credentials1 = LoginRequest(email, firstMessage, totpCode)
-        val response1 = authRepository.loginFirstStep(credentials1)
-        if (response1 is ApiResult.Error) {
-            when (response1.code) {
-                HttpResponseCode.BAD_REQUEST.code -> { // 2FA is required
-                    return UseCaseResult.Error(
+            // Send first message to server
+            val credentials1 = LoginRequest(email, firstMessage, totpCode)
+            val response1 = authRepository.loginFirstStep(credentials1)
+            if (response1 is ApiResult.Error) {
+                when (response1.code) {
+                    HttpResponseCode.BAD_REQUEST.code -> { // 2FA is required
+                        return UseCaseResult.Error(
+                            ErrorInfo(
+                                ErrorType.TWO_FACTOR_REQUIRED,
+                                response1.source,
+                                response1.message
+                            )
+                        )
+                    }
+
+                    HttpResponseCode.FORBIDDEN.code -> { // Activation is required
+                        return UseCaseResult.Error(
+                            ErrorInfo(
+                                ErrorType.ACTIVATION_REQUIRED,
+                                response1.source,
+                                response1.message
+                            )
+                        )
+                    }
+
+                    else -> return UseCaseResult.Error(
                         ErrorInfo(
-                            ErrorType.TWO_FACTOR_REQUIRED,
+                            ErrorType.API,
                             response1.source,
                             response1.message
                         )
                     )
                 }
-                HttpResponseCode.FORBIDDEN.code -> { // Activation is required
-                    return UseCaseResult.Error(
-                        ErrorInfo(
-                            ErrorType.ACTIVATION_REQUIRED,
-                            response1.source,
-                            response1.message
-                        )
-                    )
-                }
-                else -> return UseCaseResult.Error(
+            }
+            val response1Data = (response1 as ApiResult.Success).data
+
+            // Get client final message
+            val clientFinalMessage = messageExchangeAuthClient
+                .getClientFinalMessage(response1Data.serverMessage)
+
+            // Send client final message to server
+            val credentials2 = LoginRequest(email, clientFinalMessage, totpCode)
+            val response2 = authRepository.loginSecondStep(credentials2)
+            if (response2 is ApiResult.Error) {
+                return UseCaseResult.Error(
                     ErrorInfo(
                         ErrorType.API,
-                        response1.source,
-                        response1.message
+                        response2.source,
+                        response2.message
                     )
                 )
             }
-        }
-        val response1Data = (response1 as ApiResult.Success).data
+            val response2Data = (response2 as ApiResult.Success).data
 
-        // Get client final message
-        val clientFinalMessage = messageExchangeAuthClient
-            .getClientFinalMessage(response1Data.serverMessage)
-
-        // Send client final message to server
-        val credentials2 = LoginRequest(email, clientFinalMessage, totpCode)
-        val response2 = authRepository.loginSecondStep(credentials2)
-        if (response2 is ApiResult.Error) {
-            return UseCaseResult.Error(
-                ErrorInfo(
-                    ErrorType.API,
-                    response2.source,
-                    response2.message
+            // Check server final message
+            try {
+                messageExchangeAuthClient.checkServerFinalMessage(response2Data.serverMessage)
+            } catch (e: Exception) {
+                return UseCaseResult.Error(
+                    ErrorInfo(
+                        ErrorType.SERVER_IDENTITY_VERIFICATION_FAILURE,
+                        stringResourceProvider.getString(
+                            R.string.message_exchange_auth_client_error_source
+                        ),
+                        e.message ?: stringResourceProvider.getString(R.string.unknown_error)
+                    )
                 )
-            )
-        }
-        val response2Data = (response2 as ApiResult.Success).data
+            }
 
-        // Check server final message
-        try {
-            messageExchangeAuthClient.checkServerFinalMessage(response2Data.serverMessage)
+            // Check if keychain is null
+            if (response2Data.keyChain == null) {
+                return UseCaseResult.Error(
+                    ErrorInfo(
+                        ErrorType.MISSING_KEYCHAIN,
+                        stringResourceProvider.getString(
+                            R.string.message_exchange_auth_client_error_source
+                        ),
+                        stringResourceProvider.getString(R.string.missing_keychain)
+                    )
+                )
+            }
+
+            // Decrypt vault key
+            val decryptedKeyResult = decryptKeyUseCase(
+                password,
+                response2Data.keyChain.salt,
+                response2Data.keyChain.vaultKey
+            )
+            if (decryptedKeyResult is UseCaseResult.Error) {
+                return decryptedKeyResult
+            }
+            val decryptedKey = (decryptedKeyResult as UseCaseResult.Success).data
+
+            // Return decrypted key
+            return UseCaseResult.Success(decryptedKey)
         } catch (e: Exception) {
             return UseCaseResult.Error(
                 ErrorInfo(
-                    ErrorType.SERVER_IDENTITY_VERIFICATION_FAILURE,
-                    stringResourceProvider.getString(
-                        R.string.message_exchange_auth_client_error_source
-                    ),
+                    ErrorType.UNKNOWN,
+                    stringResourceProvider.getString(R.string.unknown_error_source),
                     e.message ?: stringResourceProvider.getString(R.string.unknown_error)
                 )
             )
         }
-
-        // Check if keychain is null
-        if (response2Data.keyChain == null) {
-            return UseCaseResult.Error(
-                ErrorInfo(
-                    ErrorType.MISSING_KEYCHAIN,
-                    stringResourceProvider.getString(
-                        R.string.message_exchange_auth_client_error_source
-                    ),
-                    stringResourceProvider.getString(R.string.missing_keychain)
-                )
-            )
-        }
-
-        // Decrypt vault key
-        val decryptedKeyResult = decryptKeyUseCase(
-            password,
-            response2Data.keyChain.salt,
-            response2Data.keyChain.vaultKey
-        )
-        if (decryptedKeyResult is UseCaseResult.Error) {
-            return decryptedKeyResult
-        }
-        val decryptedKey = (decryptedKeyResult as UseCaseResult.Success).data
-
-        // Return decrypted key
-        return UseCaseResult.Success(decryptedKey)
     }
-
 }

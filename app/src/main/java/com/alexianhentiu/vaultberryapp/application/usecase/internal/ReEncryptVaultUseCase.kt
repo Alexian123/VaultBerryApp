@@ -1,5 +1,6 @@
 package com.alexianhentiu.vaultberryapp.application.usecase.internal
 
+import com.alexianhentiu.vaultberryapp.R
 import com.alexianhentiu.vaultberryapp.data.remote.ApiResult
 import com.alexianhentiu.vaultberryapp.domain.common.UseCaseResult
 import com.alexianhentiu.vaultberryapp.domain.model.EncryptedVaultEntry
@@ -8,45 +9,62 @@ import com.alexianhentiu.vaultberryapp.domain.model.response.MessageResponse
 import com.alexianhentiu.vaultberryapp.domain.repository.VaultRepository
 import com.alexianhentiu.vaultberryapp.domain.common.enums.ErrorType
 import com.alexianhentiu.vaultberryapp.domain.model.ErrorInfo
+import com.alexianhentiu.vaultberryapp.domain.utils.StringResourceProvider
 import javax.inject.Inject
 
 class ReEncryptVaultUseCase @Inject constructor(
     private val vaultRepository: VaultRepository,
     private val decryptVaultEntryUseCase: DecryptVaultEntryUseCase,
-    private val encryptVaultEntryUseCase: EncryptVaultEntryUseCase
+    private val encryptVaultEntryUseCase: EncryptVaultEntryUseCase,
+    private val stringResourceProvider: StringResourceProvider
 ) {
     suspend operator fun invoke(
         oldKey: ByteArray,
         newKey: ByteArray
     ): UseCaseResult<MessageResponse> {
-        when (val previewsResult = vaultRepository.getAllVaultEntryPreviews()) {
-            is ApiResult.Success -> {
-                return when (val detailsResult = vaultRepository.getAllVaultEntryDetails()) {
-                    is ApiResult.Success -> {
-                        reEncryptEntries(previewsResult.data, detailsResult.data, oldKey, newKey)
-                    }
-
-                    is ApiResult.Error -> {
-                        return UseCaseResult.Error(
-                            ErrorInfo(
-                                ErrorType.API,
-                                detailsResult.source,
-                                detailsResult.message
+        try {
+            when (val previewsResult = vaultRepository.getAllVaultEntryPreviews()) {
+                is ApiResult.Success -> {
+                    return when (val detailsResult = vaultRepository.getAllVaultEntryDetails()) {
+                        is ApiResult.Success -> {
+                            reEncryptEntries(
+                                previewsResult.data,
+                                detailsResult.data,
+                                oldKey,
+                                newKey
                             )
-                        )
+                        }
+
+                        is ApiResult.Error -> {
+                            return UseCaseResult.Error(
+                                ErrorInfo(
+                                    ErrorType.API,
+                                    detailsResult.source,
+                                    detailsResult.message
+                                )
+                            )
+                        }
                     }
                 }
-            }
 
-            is ApiResult.Error -> {
-                return UseCaseResult.Error(
-                    ErrorInfo(
-                        ErrorType.API,
-                        previewsResult.source,
-                        previewsResult.message
+                is ApiResult.Error -> {
+                    return UseCaseResult.Error(
+                        ErrorInfo(
+                            ErrorType.API,
+                            previewsResult.source,
+                            previewsResult.message
+                        )
                     )
-                )
+                }
             }
+        } catch (e: Exception) {
+            return UseCaseResult.Error(
+                ErrorInfo(
+                    ErrorType.UNKNOWN,
+                    stringResourceProvider.getString(R.string.unknown_error_source),
+                    e.message ?: stringResourceProvider.getString(R.string.unknown_error)
+                )
+            )
         }
     }
 

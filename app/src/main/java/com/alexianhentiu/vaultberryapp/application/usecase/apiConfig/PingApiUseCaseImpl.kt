@@ -17,15 +17,25 @@ class PingApiUseCaseImpl(
         port: Int,
         timeoutMs: Int
     ): UseCaseResult<Unit> {
-        val isReachable = networkUtils.isHostReachable(host, port, timeoutMs)
-        return if (isReachable) {
-            UseCaseResult.Success(Unit)
-        } else {
-            UseCaseResult.Error(
+        try {
+            val isReachable = networkUtils.isHostReachable(host, port, timeoutMs)
+            return if (isReachable) {
+                UseCaseResult.Success(Unit)
+            } else {
+                UseCaseResult.Error(
+                    ErrorInfo(
+                        ErrorType.HOST_UNREACHABLE,
+                        stringResourceProvider.getString(R.string.network_utils_error_source),
+                        "Host $host:$port not reachable"
+                    )
+                )
+            }
+        }  catch (e: Exception) {
+            return UseCaseResult.Error(
                 ErrorInfo(
-                    ErrorType.HOST_UNREACHABLE,
-                    stringResourceProvider.getString(R.string.network_utils_error_source),
-                    "Host $host:$port not reachable"
+                    ErrorType.UNKNOWN,
+                    stringResourceProvider.getString(R.string.unknown_error_source),
+                    e.message ?: stringResourceProvider.getString(R.string.unknown_error)
                 )
             )
         }

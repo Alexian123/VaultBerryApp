@@ -28,6 +28,7 @@ import com.alexianhentiu.vaultberryapp.presentation.ui.common.EmailIntentUtils.l
 import com.alexianhentiu.vaultberryapp.presentation.ui.common.sharedViewModels.UtilityViewModel
 import com.alexianhentiu.vaultberryapp.presentation.ui.common.sharedViewModels.SessionViewModel
 import com.alexianhentiu.vaultberryapp.presentation.ui.common.sharedViewModels.SettingsViewModel
+import com.alexianhentiu.vaultberryapp.presentation.ui.components.forms.Activate2FAForm
 
 @Composable
 fun AccountScreen(
@@ -38,19 +39,12 @@ fun AccountScreen(
     accountViewModel: AccountViewModel = hiltViewModel(),
 ) {
     val screenState by accountViewModel.accountScreenState.collectAsState()
-    val secretKey by accountViewModel.secretKeyEvent.collectAsState(initial = "")
+
     val recoveryPassword by accountViewModel.recoveryPasswordEvent.collectAsState(initial = "")
 
     val isDebugMode by settingsViewModel.debugMode.collectAsState()
 
-    var show2FAInfoDialog by remember { mutableStateOf(false) }
     var showRecoveryPasswordDialog by remember { mutableStateOf(false) }
-
-    LaunchedEffect(secretKey) {
-        if (secretKey.isNotEmpty()) {
-            show2FAInfoDialog = true
-        }
-    }
 
     LaunchedEffect(recoveryPassword) {
         if (recoveryPassword.isNotEmpty()) {
@@ -102,12 +96,8 @@ fun AccountScreen(
                         onDisable2FA = {
                             accountViewModel.disable2FA()
                         },
-                        onDeleteAccount = {
-                            accountViewModel.deleteAccount()
-                            accountViewModel.setLoadingState()
-                            accountViewModel.clearData()
-                            sessionViewModel.resetState()
-                            navController.navigate(NavRoute.LOGIN.path)
+                        onDeleteAccount = { password ->
+                            accountViewModel.deleteAccount(password)
                         },
                         validator = {
                             utilityViewModel.getValidatorFunction(it, isDebugMode)
@@ -149,18 +139,36 @@ fun AccountScreen(
                 }
 
                 is AccountScreenState.Setup2FA -> {
-                    if (show2FAInfoDialog) {
-                        InfoDialog(
-                            title = stringResource(R.string.account_screen_setup_2fa_title),
-                            message = stringResource(R.string.account_screen_setup_2fa_message_p1) +
-                                    "\n$secretKey" +
-                                    stringResource(R.string.account_screen_setup_2fa_message_p2),
-                            onDismissRequest = {
-                                utilityViewModel.copyToClipboard(secretKey)
-                                accountViewModel.resetState()
-                            }
-                        )
-                    }
+                    val secretKey by accountViewModel.secretKey.collectAsState()
+                    val qrBitmap by accountViewModel.qrBitmap.collectAsState()
+                    Activate2FAForm(
+                        secretKey = secretKey,
+                        qrBitmap = qrBitmap,
+                        onActivate2FA = { code ->
+                            accountViewModel.activate2FA(code)
+                        },
+                        onCopyClicked = utilityViewModel::copyToClipboard,
+                        validator = {
+                            utilityViewModel.getValidatorFunction(it, isDebugMode)
+                        }
+                    )
+                }
+
+                is AccountScreenState.Activated2FA -> {
+                    InfoDialog(
+                        title = stringResource(R.string.success_title),
+                        message = stringResource(R.string.account_screen_2fa_activated_message),
+                        onDismissRequest = {
+                            accountViewModel.resetState()
+                        }
+                    )
+                }
+
+                is AccountScreenState.DeletedAccount -> {
+                    accountViewModel.setLoadingState()
+                    accountViewModel.clearData()
+                    sessionViewModel.resetState()
+                    navController.navigate(NavRoute.LOGIN.path)
                 }
 
                 is AccountScreenState.Error -> {

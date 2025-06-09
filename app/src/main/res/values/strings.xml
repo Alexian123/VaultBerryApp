@@ -202,4 +202,13 @@
     <string name="clear_cert_dialog_message">Are you sure you want to clear the currently loaded certificate?</string>
     <string name="success_title">Success</string>
     <string name="failure_title">Failure</string>
+    <string name="secret_totp_key_label">Secret Key</string>
+    <string name="verify_button_text">Verify</string>
+    <string name="account_screen_2fa_activated_message">Two-Factor Authentication was successfully activated.</string>
+    <string name="base64_handler_error_source">Base64 Handler</string>
+    <string name="unknown_error_source">Unknown Source</string>
+    <string name="activate_2fa_qr_code_text">Scan the QR Code below with the TOTP Authenticator app of your choice.</string>
+    <string name="activate_2fa_qr_code_image_description">2FA QR Code</string>
+    <string name="activate_2fa_text">Alternatively, manually input the following secret key into a supported authenticator app.</string>
+    <string name="verify_2fa_code_text">Use a generated code from the authenticator app to verify access to your account. This will be required every time you log in.</string>
 </resources>

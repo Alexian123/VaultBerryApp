@@ -1,9 +1,13 @@
 package com.alexianhentiu.vaultberryapp.presentation.ui.screens.account
 
+import android.graphics.BitmapFactory
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alexianhentiu.vaultberryapp.domain.common.UseCaseResult
 import com.alexianhentiu.vaultberryapp.domain.model.AccountInfo
+import com.alexianhentiu.vaultberryapp.domain.usecase.account.Activate2FAUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.account.ChangeAccountInfoUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.account.ChangePasswordUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.account.DeleteAccountUseCase
@@ -27,6 +31,7 @@ class AccountViewModel @Inject constructor(
     private val changeAccountInfoUseCase: ChangeAccountInfoUseCase,
     private val changePasswordUseCase: ChangePasswordUseCase,
     private val setup2FAUseCase: Setup2FAUseCase,
+    private val activate2FAUseCase: Activate2FAUseCase,
     private val disable2FAUseCase: Disable2FAUseCase
 ) : ViewModel() {
 
@@ -39,8 +44,11 @@ class AccountViewModel @Inject constructor(
     private val _is2FAEnabled = MutableStateFlow<Boolean>(false)
     val is2FAEnabled: StateFlow<Boolean> = _is2FAEnabled
 
-    private val _secretKeyEvent = Channel<String>()
-    val secretKeyEvent = _secretKeyEvent.receiveAsFlow()
+    private val _secretKey = MutableStateFlow<String>("")
+    val secretKey: StateFlow<String> = _secretKey
+
+    private val _qrBitmap = MutableStateFlow<ImageBitmap?>(null)
+    val qrBitmap: StateFlow<ImageBitmap?> = _qrBitmap
 
     private val _recoveryPasswordEvent = Channel<String>()
     val recoveryPasswordEvent = _recoveryPasswordEvent.receiveAsFlow()
@@ -70,12 +78,12 @@ class AccountViewModel @Inject constructor(
         }
     }
 
-    fun deleteAccount() {
+    fun deleteAccount(password: String) {
         viewModelScope.launch {
             _accountScreenState.value = AccountScreenState.Loading
-            when (val result = deleteAccountUseCase()) {
+            when (val result = deleteAccountUseCase(password)) {
                 is UseCaseResult.Success -> {
-                    clearData()
+                    _accountScreenState.value = AccountScreenState.DeletedAccount
                 }
 
                 is UseCaseResult.Error -> {
@@ -138,10 +146,34 @@ class AccountViewModel @Inject constructor(
             _accountScreenState.value = AccountScreenState.Loading
             when (val result = setup2FAUseCase()) {
                 is UseCaseResult.Success -> {
-                    _accountScreenState.value = AccountScreenState.Setup2FA
-                    _secretKeyEvent.send(result.data)
+                    val totpData = result.data
+                    _secretKey.value = totpData.secret
+                    try {
+                        val imageBytes = totpData.qrCodeBytes
+                        val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+                        _qrBitmap.value = bitmap?.asImageBitmap()
+                    } catch (_: Exception) {
+                        _qrBitmap.value = null
+                    } finally {
+                        _accountScreenState.value = AccountScreenState.Setup2FA
+                    }
                 }
 
+                is UseCaseResult.Error -> {
+                    _accountScreenState.value = AccountScreenState.Error(result.info)
+                }
+            }
+        }
+    }
+
+    fun activate2FA(code: String) {
+        viewModelScope.launch {
+            _accountScreenState.value = AccountScreenState.Loading
+            when (val result = activate2FAUseCase(code)) {
+                is UseCaseResult.Success -> {
+                    _accountScreenState.value = AccountScreenState.Activated2FA
+                    _is2FAEnabled.value = true
+                }
                 is UseCaseResult.Error -> {
                     _accountScreenState.value = AccountScreenState.Error(result.info)
                 }

@@ -6,6 +6,8 @@ import com.alexianhentiu.vaultberryapp.data.remote.model.KeyChainDTO
 import com.alexianhentiu.vaultberryapp.data.remote.model.PasswordPairDTO
 import com.alexianhentiu.vaultberryapp.data.remote.model.UserDTO
 import com.alexianhentiu.vaultberryapp.data.remote.model.VaultEntryPreviewDTO
+import com.alexianhentiu.vaultberryapp.data.remote.model.request.Activate2FARequestDTO
+import com.alexianhentiu.vaultberryapp.data.remote.model.request.DeleteAccountRequestDTO
 import com.alexianhentiu.vaultberryapp.data.remote.model.request.LoginRequestDTO
 import com.alexianhentiu.vaultberryapp.data.remote.model.request.PasswordChangeRequestDTO
 import com.alexianhentiu.vaultberryapp.data.remote.model.request.RecoveryLoginRequestDTO
@@ -19,6 +21,8 @@ import com.alexianhentiu.vaultberryapp.domain.model.KeyChain
 import com.alexianhentiu.vaultberryapp.domain.model.PasswordPair
 import com.alexianhentiu.vaultberryapp.domain.model.User
 import com.alexianhentiu.vaultberryapp.domain.model.VaultEntryPreview
+import com.alexianhentiu.vaultberryapp.domain.model.request.Activate2FARequest
+import com.alexianhentiu.vaultberryapp.domain.model.request.DeleteAccountRequest
 import com.alexianhentiu.vaultberryapp.domain.model.request.LoginRequest
 import com.alexianhentiu.vaultberryapp.domain.model.request.PasswordChangeRequest
 import com.alexianhentiu.vaultberryapp.domain.model.request.RecoveryLoginRequest
@@ -62,7 +66,8 @@ class ModelMapper @Inject constructor() {
 
     fun totpResponseFromDTO(totpResponseDTO: TotpResponseDTO): TotpResponse {
         return TotpResponse(
-            provisioningUri = totpResponseDTO.provisioningUri
+            provisioningUri = totpResponseDTO.provisioningUri,
+            qrCode = totpResponseDTO.qrCode
         )
     }
 
@@ -127,6 +132,22 @@ class ModelMapper @Inject constructor() {
             passwordPair = passwordPairToDTO(passwordChangeRequest.passwordPair),
             keyChain = keyChainToDTO(passwordChangeRequest.keyChain),
             reEncrypt = passwordChangeRequest.reEncrypt
+        )
+    }
+
+    fun deleteAccountRequestToDTO(
+        deleteAccountRequest: DeleteAccountRequest
+    ): DeleteAccountRequestDTO {
+        return DeleteAccountRequestDTO(
+            password = deleteAccountRequest.password
+        )
+    }
+
+    fun activate2FARequestToDTO(
+        activate2FARequest: Activate2FARequest
+    ): Activate2FARequestDTO {
+        return Activate2FARequestDTO(
+            totpCode = activate2FARequest.totpCode
         )
     }
 

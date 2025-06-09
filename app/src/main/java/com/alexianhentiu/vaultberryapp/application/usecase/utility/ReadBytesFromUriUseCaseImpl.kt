@@ -17,35 +17,45 @@ class ReadBytesFromUriUseCaseImpl(
 ) : ReadBytesFromUriUseCase {
 
     override suspend fun invoke(uri: URI): UseCaseResult<ByteArray> {
-        return withContext(Dispatchers.IO) {
-            try {
-                val inputStream = uriStreamProvider.openInputStream(uri)
-                    ?: return@withContext UseCaseResult.Error(
+        return try {
+            withContext(Dispatchers.IO) {
+                try {
+                    val inputStream = uriStreamProvider.openInputStream(uri)
+                        ?: return@withContext UseCaseResult.Error(
+                            ErrorInfo(
+                                type = ErrorType.OPEN_URI_INPUT_STREAM_FAILURE,
+                                source = stringResourceProvider.getString(
+                                    R.string.error_source_uri_stream_provider
+                                ),
+                                message = stringResourceProvider.getString(
+                                    R.string.error_message_uri_stream_provider
+                                )
+                            )
+                        )
+                    val bytes = inputStream.readBytes()
+                    inputStream.close()
+                    UseCaseResult.Success(bytes)
+                } catch (e: Exception) {
+                    UseCaseResult.Error(
                         ErrorInfo(
-                            type = ErrorType.OPEN_URI_INPUT_STREAM_FAILURE,
+                            type = ErrorType.READ_BYTES_FROM_URI_FAILURE,
                             source = stringResourceProvider.getString(
                                 R.string.error_source_uri_stream_provider
                             ),
-                            message = stringResourceProvider.getString(
-                                R.string.error_message_uri_stream_provider
-                            )
+                            message = e.message
+                                ?: stringResourceProvider.getString(R.string.unknown_error)
                         )
                     )
-                val bytes = inputStream.readBytes()
-                inputStream.close()
-                UseCaseResult.Success(bytes)
-            } catch (e: Exception) {
-                UseCaseResult.Error(
-                    ErrorInfo(
-                        type = ErrorType.READ_BYTES_FROM_URI_FAILURE,
-                        source = stringResourceProvider.getString(
-                            R.string.error_source_uri_stream_provider
-                        ),
-                        message = e.message
-                            ?: stringResourceProvider.getString(R.string.unknown_error)
-                    )
-                )
+                }
             }
+        } catch (e: Exception) {
+            UseCaseResult.Error(
+                ErrorInfo(
+                    ErrorType.UNKNOWN,
+                    stringResourceProvider.getString(R.string.unknown_error_source),
+                    e.message ?: stringResourceProvider.getString(R.string.unknown_error)
+                )
+            )
         }
     }
 

@@ -29,8 +29,12 @@ object AuthUseCaseModule {
 
     @Provides
     fun provideActivationSendUseCase(
-        authRepository: AuthRepository
-    ): ActivationSendUseCase = ActivationSendUseCaseImpl(authRepository)
+        authRepository: AuthRepository,
+        stringResourceProvider: StringResourceProvider
+    ): ActivationSendUseCase = ActivationSendUseCaseImpl(
+        authRepository,
+        stringResourceProvider
+    )
 
     @Provides
     fun provideLoginUseCase(
@@ -47,31 +51,43 @@ object AuthUseCaseModule {
 
     @Provides
     fun provideLogoutUseCase(
-        authRepository: AuthRepository
-    ): LogoutUseCase = LogoutUseCaseImpl(authRepository)
+        authRepository: AuthRepository,
+        stringResourceProvider: StringResourceProvider
+    ): LogoutUseCase = LogoutUseCaseImpl(
+        authRepository,
+        stringResourceProvider
+    )
 
     @Provides
     fun provideRecoveryLoginUseCase(
         authRepository: AuthRepository,
-        decryptKeyUseCase: DecryptKeyUseCase
+        decryptKeyUseCase: DecryptKeyUseCase,
+        stringResourceProvider: StringResourceProvider
     ): RecoveryLoginUseCase = RecoveryLoginUseCaseImpl(
         authRepository,
-        decryptKeyUseCase
+        decryptKeyUseCase,
+        stringResourceProvider
     )
 
     @Provides
     fun provideRecoverySendUseCase(
-        authRepository: AuthRepository
-    ): RecoverySendUseCase = RecoverySendUseCaseImpl(authRepository)
+        authRepository: AuthRepository,
+        stringResourceProvider: StringResourceProvider
+    ): RecoverySendUseCase = RecoverySendUseCaseImpl(
+        authRepository,
+        stringResourceProvider
+    )
 
     @Provides
     fun provideRegisterUseCase(
         authRepository: AuthRepository,
         generatePasswordPairUseCase: GeneratePasswordPairUseCase,
-        generateKeyChainUseCase: GenerateKeyChainUseCase
+        generateKeyChainUseCase: GenerateKeyChainUseCase,
+        stringResourceProvider: StringResourceProvider
     ): RegisterUseCase = RegisterUseCaseImpl(
         authRepository,
         generatePasswordPairUseCase,
-        generateKeyChainUseCase
+        generateKeyChainUseCase,
+        stringResourceProvider
     )
 }

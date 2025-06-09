@@ -6,6 +6,8 @@ import com.alexianhentiu.vaultberryapp.data.remote.model.KeyChainDTO
 import com.alexianhentiu.vaultberryapp.data.remote.model.UserDTO
 import com.alexianhentiu.vaultberryapp.data.remote.model.VaultEntryPreviewDTO
 import com.alexianhentiu.vaultberryapp.data.remote.model.request.AccountInfoChangeRequestDTO
+import com.alexianhentiu.vaultberryapp.data.remote.model.request.Activate2FARequestDTO
+import com.alexianhentiu.vaultberryapp.data.remote.model.request.DeleteAccountRequestDTO
 import com.alexianhentiu.vaultberryapp.data.remote.model.request.LoginRequestDTO
 import com.alexianhentiu.vaultberryapp.data.remote.model.request.PasswordChangeRequestDTO
 import com.alexianhentiu.vaultberryapp.data.remote.model.request.RecoveryLoginRequestDTO
@@ -28,6 +30,7 @@ interface ApiService {
     companion object {
         const val VAULT_PREFIX = "vault"
         const val ACCOUNT_PREFIX = "account"
+        const val TWO_FACTOR_PREFIX = "$ACCOUNT_PREFIX/2fa"
     }
 
     @POST("activation/send")
@@ -85,18 +88,21 @@ interface ApiService {
         @Body data: AccountInfoChangeRequestDTO
     ): Response<MessageResponseDTO>
 
-    @DELETE(ACCOUNT_PREFIX)
-    suspend fun deleteAccount(): Response<MessageResponseDTO>
+    @POST("$ACCOUNT_PREFIX/delete")
+    suspend fun deleteAccount(@Body data: DeleteAccountRequestDTO): Response<MessageResponseDTO>
 
     @PATCH("$ACCOUNT_PREFIX/password")
     suspend fun changePassword(@Body data: PasswordChangeRequestDTO): Response<MessageResponseDTO>
 
-    @POST("$ACCOUNT_PREFIX/2fa/setup")
+    @POST("$TWO_FACTOR_PREFIX/setup")
     suspend fun setup2FA(): Response<TotpResponseDTO>
 
-    @GET("$ACCOUNT_PREFIX/2fa/status")
+    @POST("$TWO_FACTOR_PREFIX/activate")
+    suspend fun activate2FA(@Body data: Activate2FARequestDTO): Response<MessageResponseDTO>
+
+    @GET("$TWO_FACTOR_PREFIX/status")
     suspend fun get2FAStatus(): Response<BooleanResponseDTO>
 
-    @POST("$ACCOUNT_PREFIX/2fa/disable")
+    @POST("$TWO_FACTOR_PREFIX/disable")
     suspend fun disable2FA(): Response<MessageResponseDTO>
 }

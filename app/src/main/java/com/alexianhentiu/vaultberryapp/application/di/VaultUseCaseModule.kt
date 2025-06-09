@@ -15,6 +15,7 @@ import com.alexianhentiu.vaultberryapp.domain.usecase.vault.GetAllVaultEntryPrev
 import com.alexianhentiu.vaultberryapp.domain.usecase.vault.GetDecryptedVaultEntryUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.vault.SearchVaultEntriesUseCase
 import com.alexianhentiu.vaultberryapp.domain.usecase.vault.UpdateEntryUseCase
+import com.alexianhentiu.vaultberryapp.domain.utils.StringResourceProvider
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -27,40 +28,62 @@ object VaultUseCaseModule {
     @Provides
     fun provideAddEntryUseCase(
         vaultRepository: VaultRepository,
-        encryptVaultEntryUseCase: EncryptVaultEntryUseCase
-    ): AddEntryUseCase = AddEntryUseCaseImpl(vaultRepository, encryptVaultEntryUseCase)
+        encryptVaultEntryUseCase: EncryptVaultEntryUseCase,
+        stringResourceProvider: StringResourceProvider
+    ): AddEntryUseCase = AddEntryUseCaseImpl(
+        vaultRepository,
+        encryptVaultEntryUseCase,
+        stringResourceProvider
+    )
 
     @Provides
     fun provideDeleteEntryUseCase(
-        vaultRepository: VaultRepository
-    ): DeleteEntryUseCase = DeleteEntryUseCaseImpl(vaultRepository)
+        vaultRepository: VaultRepository,
+        stringResourceProvider: StringResourceProvider
+    ): DeleteEntryUseCase = DeleteEntryUseCaseImpl(
+        vaultRepository,
+        stringResourceProvider
+    )
 
     @Provides
     fun provideGetAllVaultEntryPreviewsUseCase(
         vaultRepository: VaultRepository,
-    ): GetAllVaultEntryPreviewsUseCase = GetAllVaultEntryPreviewsUseCaseImpl(vaultRepository)
+        stringResourceProvider: StringResourceProvider
+    ): GetAllVaultEntryPreviewsUseCase = GetAllVaultEntryPreviewsUseCaseImpl(
+        vaultRepository,
+        stringResourceProvider
+    )
 
     @Provides
     fun getDecryptedVaultEntryUseCase(
         vaultRepository: VaultRepository,
-        decryptVaultEntryUseCase: DecryptVaultEntryUseCase
+        decryptVaultEntryUseCase: DecryptVaultEntryUseCase,
+        stringResourceProvider: StringResourceProvider
     ): GetDecryptedVaultEntryUseCase = GetDecryptedVaultEntryUseCaseImpl(
         vaultRepository,
-        decryptVaultEntryUseCase
+        decryptVaultEntryUseCase,
+        stringResourceProvider
     )
 
     @Provides
     fun provideSearchVaultEntriesUseCase(
         vaultRepository: VaultRepository,
-        decryptVaultEntryUseCase: DecryptVaultEntryUseCase
+        decryptVaultEntryUseCase: DecryptVaultEntryUseCase,
+        stringResourceProvider: StringResourceProvider
     ): SearchVaultEntriesUseCase = SearchVaultEntriesUseCaseImpl(
         vaultRepository,
-        decryptVaultEntryUseCase
+        decryptVaultEntryUseCase,
+        stringResourceProvider
     )
 
     @Provides
     fun provideUpdateEntryUseCase(
         vaultRepository: VaultRepository,
-        encryptVaultEntryUseCase: EncryptVaultEntryUseCase
-    ): UpdateEntryUseCase = UpdateEntryUseCaseImpl(vaultRepository, encryptVaultEntryUseCase)
+        encryptVaultEntryUseCase: EncryptVaultEntryUseCase,
+        stringResourceProvider: StringResourceProvider
+    ): UpdateEntryUseCase = UpdateEntryUseCaseImpl(
+        vaultRepository,
+        encryptVaultEntryUseCase,
+        stringResourceProvider
+    )
 }

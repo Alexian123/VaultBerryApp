@@ -60,16 +60,22 @@ object UtilityUseCaseModule {
     @Provides
     fun provideGetValidatorFunctionUseCase(
         @LaxInputValidatorQualifier laxValidator: InputValidator,
-        @StrictInputValidatorQualifier strictValidator: InputValidator
+        @StrictInputValidatorQualifier strictValidator: InputValidator,
+        stringResourceProvider: StringResourceProvider
     ): GetValidatorFunctionUseCase = GetValidatorFunctionUseCaseImpl(
         laxValidator,
-        strictValidator
+        strictValidator,
+        stringResourceProvider
     )
 
     @Provides
     fun provideGetAppInfoUseCase(
-        appInfoProvider: AppInfoProvider
-    ): GetAppInfoUseCase = GetAppInfoUseCaseImpl(appInfoProvider)
+        appInfoProvider: AppInfoProvider,
+        stringResourceProvider: StringResourceProvider
+    ): GetAppInfoUseCase = GetAppInfoUseCaseImpl(
+        appInfoProvider,
+        stringResourceProvider
+    )
 
     @Provides
     fun provideReadBytesFromUriUseCase(

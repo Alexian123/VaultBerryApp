@@ -94,22 +94,23 @@ class BiometricViewModel @Inject constructor(
             _biometricState.value = BiometricState.Loading
             when (val result = biometricAuthenticator.isBiometricAvailable()) {
                 BiometricStatus.Available -> {
-                    val encryptedData = biometricAuthenticator.getCredentials()
-                    if (encryptedData == null) {
-                        _biometricState.value = BiometricState.Error(
-                            ErrorInfo(
-                                type = ErrorType.BIOMETRIC,
-                                source = stringResourceProvider.getString(
-                                    R.string.biometric_view_model_error_source
-                                ),
-                                message = stringResourceProvider.getString(
-                                    R.string.no_credentials_found_error
+                    try {
+                        val encryptedData = biometricAuthenticator.getCredentials()
+                        if (encryptedData == null) {
+                            _biometricState.value = BiometricState.Error(
+                                ErrorInfo(
+                                    type = ErrorType.BIOMETRIC,
+                                    source = stringResourceProvider.getString(
+                                        R.string.biometric_view_model_error_source
+                                    ),
+                                    message = stringResourceProvider.getString(
+                                        R.string.no_credentials_found_error
+                                    )
                                 )
                             )
-                        )
-                        return@launch
-                    }
-                    try {
+                            return@launch
+                        }
+
                         pendingEncryptedData = encryptedData
                         val passwordCipher = biometricAuthenticator.getDecryptionContext(
                             encryptedData.passwordIv
