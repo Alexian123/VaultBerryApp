@@ -43,7 +43,7 @@ android {
 }
 
 dependencies {
-
+    // Core
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -53,31 +53,43 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.material.icons.extended)
-    implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.material)
 
+    // Navigation
+    implementation(libs.androidx.navigation.compose)
+
+    // Network
     implementation(libs.retrofit)
     implementation(libs.okhttp)
     implementation(libs.logging.interceptor)
 
+    // Serialization
     implementation(libs.squareup.converter.moshi)
     implementation(libs.moshi.kotlin)
     ksp(libs.moshi.kotlin.codegen)
 
+    // Dependency injection
     implementation(libs.hilt.navigation.compose)
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
     ksp(libs.dagger.compiler)
 
+    // Datastore
     implementation(libs.androidx.datastore.preferences)
 
+    // SCRAM authentication
     implementation(libs.scram.common)
     implementation(libs.scram.client)
     implementation(libs.saslprep)
     implementation(libs.stringprep)
 
+    // Biometric authentication
     implementation(libs.androidx.biometric)
 
+    // Logging
+    implementation(libs.jakewharton.timber)
+
+    // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
