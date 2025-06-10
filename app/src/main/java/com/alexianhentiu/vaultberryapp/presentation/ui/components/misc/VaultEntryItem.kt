@@ -183,7 +183,8 @@ fun VaultEntryItem(
                         ) {
                             IconButton(
                                 modifier = Modifier.weight(0.1f),
-                                onClick = { onDelete(preview.id) }
+                                onClick = { onDelete(preview.id) },
+                                enabled = decryptedEntry != null
                             ) {
                                 Icon(
                                     Icons.Filled.DeleteOutline,
@@ -194,10 +195,13 @@ fun VaultEntryItem(
                             IconButton(
                                 onClick = { onEdit(preview.id) },
                                 modifier = Modifier.weight(0.1f),
+                                enabled = decryptedEntry != null
                             ) {
                                 Icon(
                                     Icons.Filled.Edit,
-                                    stringResource(R.string.entry_edit_mode_action_content_description)
+                                    stringResource(
+                                        R.string.entry_edit_mode_action_content_description
+                                    )
                                 )
                             }
                         }
