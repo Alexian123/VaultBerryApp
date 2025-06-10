@@ -182,7 +182,7 @@
     <string name="api_config_icon_content_description">API Config</string>
     <string name="network_utils_error_source">Network Utils</string>
     <string name="api_config_screen_title">API Config</string>
-    <string name="ip_and_port_title"><![CDATA[IP Address & Port\"]]></string>
+    <string name="ip_and_port_title">IP Address and Port</string>
     <string name="byte_4_label">Byte 4</string>
     <string name="byte_3_label">Byte 3</string>
     <string name="byte_2_label">Byte 2</string>
