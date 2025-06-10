@@ -20,5 +20,5 @@ Client app for [VaultBerry](https://github.com/Alexian123/VaultBerry), a self-ho
 - 2FA with [TOTP](https://en.wikipedia.org/wiki/Time-based_one-time_password)
 - [Autofill Service](https://developer.android.com/reference/android/service/autofill/AutofillService) to fill requests in compatible apps
 - Biometric authentication
-- Secure eandom password generator with configurable parameters
+- Secure random password generator with configurable parameters
 - Failsafe measures to prevent encrypted data loss while changing the password and/or master key
