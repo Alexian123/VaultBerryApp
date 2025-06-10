@@ -44,7 +44,7 @@ fun PasswordField(
 ) {
     var password by remember(initialText) { mutableStateOf(initialText) }
     var isVisible by remember { mutableStateOf(initiallyVisible) }
-    var passwordStrength by remember {
+    var passwordStrength by remember(initialText) {
         mutableStateOf(evaluateStrength(initialText))
     }
 
