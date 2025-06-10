@@ -2,7 +2,7 @@ package com.alexianhentiu.vaultberryapp.data.platform.clipboard
 
 import android.content.ClipData
 import android.content.ClipboardManager
-import com.alexianhentiu.vaultberryapp.domain.clipboard.ClipboardHandler
+import com.alexianhentiu.vaultberryapp.domain.utils.ClipboardHandler
 
 class AndroidClipboardHandler(
     private val clipboardManager: ClipboardManager

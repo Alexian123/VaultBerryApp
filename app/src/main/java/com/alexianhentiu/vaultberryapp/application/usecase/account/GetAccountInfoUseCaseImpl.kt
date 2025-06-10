@@ -6,6 +6,7 @@ import com.alexianhentiu.vaultberryapp.domain.common.UseCaseResult
 import com.alexianhentiu.vaultberryapp.domain.model.AccountInfo
 import com.alexianhentiu.vaultberryapp.domain.repository.AccountRepository
 import com.alexianhentiu.vaultberryapp.domain.common.enums.ErrorType
+import com.alexianhentiu.vaultberryapp.domain.common.enums.HttpResponseCode
 import com.alexianhentiu.vaultberryapp.domain.model.ErrorInfo
 import com.alexianhentiu.vaultberryapp.domain.usecase.account.GetAccountInfoUseCase
 import com.alexianhentiu.vaultberryapp.domain.utils.StringResourceProvider
@@ -23,13 +24,23 @@ class GetAccountInfoUseCaseImpl(
                 }
 
                 is ApiResult.Error -> {
-                    UseCaseResult.Error(
-                        ErrorInfo(
-                            ErrorType.API,
-                            accountResult.source,
-                            accountResult.message
+                    if (accountResult.code == HttpResponseCode.UNAUTHORIZED.code) {
+                        return UseCaseResult.Error(
+                            ErrorInfo(
+                                ErrorType.LOGGED_OUT,
+                                accountResult.source,
+                                accountResult.message
+                            )
                         )
-                    )
+                    } else {
+                        UseCaseResult.Error(
+                            ErrorInfo(
+                                ErrorType.API,
+                                accountResult.source,
+                                accountResult.message
+                            )
+                        )
+                    }
                 }
             }
         } catch (e: Exception) {

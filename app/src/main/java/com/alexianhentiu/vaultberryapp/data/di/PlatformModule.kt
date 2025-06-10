@@ -19,7 +19,7 @@ import com.alexianhentiu.vaultberryapp.data.platform.utils.AndroidBase64Handler
 import com.alexianhentiu.vaultberryapp.data.platform.utils.AndroidStringResourceProvider
 import com.alexianhentiu.vaultberryapp.data.platform.utils.AndroidUriStreamProvider
 import com.alexianhentiu.vaultberryapp.data.security.AESCipherProvider
-import com.alexianhentiu.vaultberryapp.domain.clipboard.ClipboardHandler
+import com.alexianhentiu.vaultberryapp.domain.utils.ClipboardHandler
 import com.alexianhentiu.vaultberryapp.domain.repository.CredentialsRepository
 import com.alexianhentiu.vaultberryapp.domain.security.BiometricAuthenticator
 import com.alexianhentiu.vaultberryapp.domain.security.CipherCache

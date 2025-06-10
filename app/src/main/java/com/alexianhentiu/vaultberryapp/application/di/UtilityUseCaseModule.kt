@@ -8,7 +8,7 @@ import com.alexianhentiu.vaultberryapp.application.usecase.utility.GetValidatorF
 import com.alexianhentiu.vaultberryapp.application.usecase.utility.ReadBytesFromUriUseCaseImpl
 import com.alexianhentiu.vaultberryapp.data.di.qualifiers.LaxInputValidatorQualifier
 import com.alexianhentiu.vaultberryapp.data.di.qualifiers.StrictInputValidatorQualifier
-import com.alexianhentiu.vaultberryapp.domain.clipboard.ClipboardHandler
+import com.alexianhentiu.vaultberryapp.domain.utils.ClipboardHandler
 import com.alexianhentiu.vaultberryapp.domain.security.password.PasswordEvaluator
 import com.alexianhentiu.vaultberryapp.domain.security.password.PasswordGenerator
 import com.alexianhentiu.vaultberryapp.domain.usecase.utility.CopyToClipboardUseCase
@@ -20,7 +20,7 @@ import com.alexianhentiu.vaultberryapp.domain.usecase.utility.ReadBytesFromUriUs
 import com.alexianhentiu.vaultberryapp.domain.utils.AppInfoProvider
 import com.alexianhentiu.vaultberryapp.domain.utils.StringResourceProvider
 import com.alexianhentiu.vaultberryapp.domain.utils.UriStreamProvider
-import com.alexianhentiu.vaultberryapp.domain.validation.InputValidator
+import com.alexianhentiu.vaultberryapp.domain.utils.InputValidator
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

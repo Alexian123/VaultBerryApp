@@ -9,6 +9,7 @@ enum class ErrorType(
     SERVER_IDENTITY_VERIFICATION_FAILURE("Server identity verification failure"),
     TWO_FACTOR_REQUIRED(""),
     ACTIVATION_REQUIRED(""),
+    LOGGED_OUT(""),
     HOST_UNREACHABLE("Host unreachable"),
 
     // Use case errors

@@ -31,6 +31,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.alexianhentiu.vaultberryapp.R
 import com.alexianhentiu.vaultberryapp.domain.common.enums.AppInfo
+import com.alexianhentiu.vaultberryapp.domain.common.enums.ErrorType
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.VaultEntryDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.dialogs.ConfirmActionDialog
 import com.alexianhentiu.vaultberryapp.presentation.ui.components.topBars.VaultTopBar
@@ -236,7 +237,16 @@ fun VaultScreen(
                     val context = LocalContext.current
                     val contactEmail = stringResource(R.string.contact_email)
                     ErrorDialog(
-                        onConfirm = { vaultViewModel.resetState() },
+                        onConfirm = {
+                            if (errorInfo.type == ErrorType.LOGGED_OUT) {
+                                // Logged out, clear data and redirect to login screen
+                                vaultViewModel.clearData()
+                                sessionViewModel.logout()
+                                navController.navigate(NavRoute.LOGIN.path)
+                            } else {
+                                vaultViewModel.resetState()
+                            }
+                        },
                         errorInfo = errorInfo,
                         onSendReport = {
                             launchErrorReportEmailIntent(

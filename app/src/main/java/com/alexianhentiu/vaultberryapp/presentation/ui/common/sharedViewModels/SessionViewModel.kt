@@ -95,7 +95,11 @@ class SessionViewModel @Inject constructor(
                 }
 
                 is UseCaseResult.Error -> {
-                    _sessionState.value = SessionState.Error(result.info)
+                    if (result.info.type == ErrorType.LOGGED_OUT) {  // Already logged out
+                        resetState()
+                    } else {
+                        _sessionState.value = SessionState.Error(result.info)
+                    }
                 }
             }
         }

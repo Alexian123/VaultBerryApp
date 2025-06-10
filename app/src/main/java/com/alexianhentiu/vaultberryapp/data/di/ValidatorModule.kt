@@ -4,7 +4,7 @@ import com.alexianhentiu.vaultberryapp.data.di.qualifiers.LaxInputValidatorQuali
 import com.alexianhentiu.vaultberryapp.data.di.qualifiers.StrictInputValidatorQualifier
 import com.alexianhentiu.vaultberryapp.data.validation.LaxInputValidator
 import com.alexianhentiu.vaultberryapp.data.validation.StrictInputValidator
-import com.alexianhentiu.vaultberryapp.domain.validation.InputValidator
+import com.alexianhentiu.vaultberryapp.domain.utils.InputValidator
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

@@ -1,4 +1,4 @@
-package com.alexianhentiu.vaultberryapp.domain.validation
+package com.alexianhentiu.vaultberryapp.domain.utils
 
 import com.alexianhentiu.vaultberryapp.domain.common.enums.InputType
 

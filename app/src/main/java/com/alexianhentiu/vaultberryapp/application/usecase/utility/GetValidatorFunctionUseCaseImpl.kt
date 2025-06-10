@@ -7,7 +7,7 @@ import com.alexianhentiu.vaultberryapp.domain.common.enums.InputType
 import com.alexianhentiu.vaultberryapp.domain.model.ErrorInfo
 import com.alexianhentiu.vaultberryapp.domain.usecase.utility.GetValidatorFunctionUseCase
 import com.alexianhentiu.vaultberryapp.domain.utils.StringResourceProvider
-import com.alexianhentiu.vaultberryapp.domain.validation.InputValidator
+import com.alexianhentiu.vaultberryapp.domain.utils.InputValidator
 
 class GetValidatorFunctionUseCaseImpl(
     private val laxValidator: InputValidator,

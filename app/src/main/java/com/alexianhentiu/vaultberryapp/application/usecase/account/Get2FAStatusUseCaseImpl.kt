@@ -5,6 +5,7 @@ import com.alexianhentiu.vaultberryapp.data.remote.ApiResult
 import com.alexianhentiu.vaultberryapp.domain.common.UseCaseResult
 import com.alexianhentiu.vaultberryapp.domain.repository.AccountRepository
 import com.alexianhentiu.vaultberryapp.domain.common.enums.ErrorType
+import com.alexianhentiu.vaultberryapp.domain.common.enums.HttpResponseCode
 import com.alexianhentiu.vaultberryapp.domain.model.ErrorInfo
 import com.alexianhentiu.vaultberryapp.domain.usecase.account.Get2FAStatusUseCase
 import com.alexianhentiu.vaultberryapp.domain.utils.StringResourceProvider
@@ -22,13 +23,23 @@ class Get2FAStatusUseCaseImpl(
                 }
 
                 is ApiResult.Error -> {
-                    UseCaseResult.Error(
-                        ErrorInfo(
-                            ErrorType.API,
-                            result.source,
-                            result.message
+                    if (result.code == HttpResponseCode.UNAUTHORIZED.code) {
+                        return UseCaseResult.Error(
+                            ErrorInfo(
+                                ErrorType.LOGGED_OUT,
+                                result.source,
+                                result.message
+                            )
                         )
-                    )
+                    } else {
+                        UseCaseResult.Error(
+                            ErrorInfo(
+                                ErrorType.API,
+                                result.source,
+                                result.message
+                            )
+                        )
+                    }
                 }
             }
         } catch (e: Exception) {

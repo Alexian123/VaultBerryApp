@@ -1,7 +1,7 @@
 package com.alexianhentiu.vaultberryapp.data.validation
 
 import com.alexianhentiu.vaultberryapp.domain.common.enums.InputType
-import com.alexianhentiu.vaultberryapp.domain.validation.InputValidator
+import com.alexianhentiu.vaultberryapp.domain.utils.InputValidator
 
 class StrictInputValidator : InputValidator {
 
